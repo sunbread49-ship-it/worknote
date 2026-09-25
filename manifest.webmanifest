@@ -1,0 +1,42 @@
+{
+ "name": "yj 워크노트",
+ "short_name": "워크노트",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#EEF0EC",
+ "theme_color": "#2D4BCB",
+ "lang": "ko",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-maskable.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "할 일",
+   "url": "./#todos"
+  },
+  {
+   "name": "메모",
+   "url": "./#notes"
+  },
+  {
+   "name": "일정",
+   "url": "./#cal"
+  }
+ ]
+}
