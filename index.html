@@ -1287,7 +1287,7 @@ async function start(user){
   subscribe();
 }
 sb.auth.onAuthStateChange((evt, session) => {
-  if (session && session.user) start(session.user);
+  if (session && session.user) setTimeout(() => start(session.user), 0);
   else if (evt === 'SIGNED_OUT' || evt === 'INITIAL_SESSION') { if (!session) showAuth(true); }
 });
 
