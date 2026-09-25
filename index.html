@@ -1048,7 +1048,21 @@ async function askNotif(){
   const r = await Notification.requestPermission();
   updateNotifBtn();
   toast(r === 'granted' ? '알림을 켰어요.' : '알림이 꺼져 있어요. 브라우저 설정에서 허용해주세요.');
-  if (r === 'granted') sysNotify('워크노트', '이렇게 알림이 와요.', 'test');
+  if (r === 'granted') { sysNotify('워크노트', '이렇게 알림이 와요.', 'test'); ensurePush(); }
+}
+const FN_URL = SUPABASE_URL + '/functions/v1/push-reminders';
+let pushOn = false;
+function b64uToU8(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); s += '='.repeat((4 - s.length % 4) % 4); return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+async function ensurePush(){
+  try {
+    if (!me || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window) || Notification.permission !== 'granted') return;
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) { const { publicKey } = await (await fetch(FN_URL)).json(); sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:b64uToU8(publicKey) }); }
+    const j = sub.toJSON();
+    const { error } = await sb.from('push_subs').upsert({ endpoint:j.endpoint, p256dh:j.keys.p256dh, auth:j.keys.auth, user_id:me.id });
+    if (!error) pushOn = true;
+  } catch(e) { console.warn('push setup failed', e); }
 }
 
 /* ---------- install (PWA) ---------- */
@@ -1063,7 +1077,7 @@ function openSettings(){
   const np = 'Notification' in window ? Notification.permission : 'unsupported';
   s.innerHTML = `<div class="sheet" role="dialog" aria-modal="true"><h3>설정</h3>
     <div class="set-row"><div>계정<div class="d">${esc(me && me.email)}</div></div><button class="btn sm" data-act="logout">로그아웃</button></div>
-    <div class="set-row"><div>알림<div class="d">${np === 'granted' ? '켜짐' : np === 'denied' ? '차단됨 · 브라우저 설정에서 허용' : np === 'unsupported' ? '홈 화면에 추가하면 쓸 수 있어요' : '꺼짐'}</div></div>${np === 'default' ? '<button class="btn sm primary" data-act="notif">켜기</button>' : ''}</div>
+    <div class="set-row"><div>알림<div class="d">${np === 'granted' ? (pushOn ? '켜짐 · 앱을 닫아도 와요' : '켜짐') : np === 'denied' ? '차단됨 · 브라우저 설정에서 허용' : np === 'unsupported' ? '홈 화면에 추가하면 쓸 수 있어요' : '꺼짐'}</div></div>${np === 'default' ? '<button class="btn sm primary" data-act="notif">켜기</button>' : ''}</div>
     <div class="set-row"><div>동기화<div class="d" id="setSync">${$('#syncTx').textContent}</div></div><button class="btn sm" data-act="resync">새로 고침</button></div>
     <div class="acts"><button class="btn sp" data-act="close-settings">닫기</button></div></div>`;
   s.hidden = false;
@@ -1285,6 +1299,7 @@ async function start(user){
   setSync('');
   await refresh();
   subscribe();
+  ensurePush();
 }
 sb.auth.onAuthStateChange((evt, session) => {
   if (session && session.user) setTimeout(() => start(session.user), 0);
