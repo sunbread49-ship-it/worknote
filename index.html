@@ -12,9 +12,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="워크노트">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#EEF0EC; --surface:#FFFFFF; --surface-2:#F6F7F4; --ink:#1A1D23; --ink-2:#5E6470; --ink-3:#8C919B;
@@ -302,6 +303,111 @@ mark{background:var(--hl-soft);color:inherit;border-radius:2px}
 .set-row:first-of-type{border-top:0}
 .set-row .d{font-size:12.5px;color:var(--ink-3)}
 @media (max-width:760px){.m-only{display:inline-flex}}
+
+/* ===== v3: bolder, roomier, to-do first ===== */
+:root{
+  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --t-meet:#E4572E; --t-call:#1F9D6B; --t-report:#7C4DDB; --t-out:#D99A00;
+  --row-hover:#F1F3EE;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){ --t-meet:#FF7A52; --t-call:#45C98F; --t-report:#A58BFF; --t-out:#F2C14E; --row-hover:#22262D; }}
+:root[data-theme="dark"]{ --t-meet:#FF7A52; --t-call:#45C98F; --t-report:#A58BFF; --t-out:#F2C14E; --row-hover:#22262D; }
+body{font-size:15.5px;font-weight:500;letter-spacing:-.01em}
+.brand{font-size:20px;font-weight:800}
+.brand span{font-size:15px;font-weight:700}
+.nav button{font-size:15.5px;font-weight:600;padding:10px 12px;border-radius:10px}
+.nav button[aria-current="true"]{font-weight:800}
+.nav svg{width:20px;height:20px}
+.top{padding:18px 32px}
+.top h1{font-size:24px;font-weight:800;letter-spacing:-.03em}
+.search input{height:40px;border-radius:11px;font-weight:500}
+.view{padding:6px 32px 44px}
+.btn{height:38px;padding:0 15px;border-radius:10px;font-size:14.5px;font-weight:700}
+.btn.sm{height:31px;font-size:13px;font-weight:700}
+.field{border-radius:10px;padding:10px 12px;font-weight:500}
+.panel{border-radius:18px;padding:20px 22px;border-color:var(--line-2);box-shadow:0 1px 2px rgba(20,24,40,.04)}
+.panel h2{font-size:16px;font-weight:800;letter-spacing:-.02em;text-transform:none;color:var(--ink);margin-bottom:12px}
+.panel h2 .more{font-size:13px;font-weight:700}
+.today-head{padding:6px 0 20px}
+.today-head .date{font-size:36px;font-weight:800;letter-spacing:-.04em}
+.today-head .meta{font-size:14px;font-weight:600}
+.home-grid{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:18px;align-items:start}
+.side-col{display:flex;flex-direction:column;gap:18px;min-width:0}
+.quick{flex-direction:column;align-items:stretch}
+.quick textarea{height:88px;min-height:88px}
+.quick .btn{align-self:flex-end}
+.empty{font-size:14.5px;font-weight:500}
+/* to-do hero */
+.todo-hero{padding:22px 24px 16px;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--hl)}
+.th-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.th-head h2{margin:0;font-size:24px}
+.hlt{background:linear-gradient(transparent 52%,var(--hl) 52%,var(--hl) 90%,transparent 90%);padding:0 3px}
+.th-count{font-size:14px;font-weight:700;color:var(--ink-2)}
+.th-count b{color:var(--danger);font-weight:800}
+.th-head .more{margin-left:auto;color:var(--accent);font-weight:700;font-size:13.5px}
+.todo-hero .tq input{height:46px;font-size:16px;font-weight:600}
+.todo-hero .tq .btn{height:46px;padding:0 20px}
+.hint{font-size:13px;font-weight:500}
+.grp{font-size:14px;font-weight:800;color:var(--ink);margin:18px 0 6px;letter-spacing:-.01em}
+.grp .n{font-weight:700}
+.grp .sub{font-weight:600;color:var(--ink-3);font-size:12.5px}
+.grp.late{color:var(--danger)}
+/* rows */
+.todo{padding:11px 10px;gap:12px;border-top:0;border-radius:12px;align-items:center;transition:opacity .25s, transform .25s}
+.todo + .todo{margin-top:2px}
+.todo:hover{background:var(--row-hover)}
+.todo.is-today{background:var(--hl-soft)}
+.todo.is-today:hover{filter:brightness(.98)}
+.todo.leaving{opacity:0;transform:translateX(12px)}
+.chk{width:24px;height:24px;border-radius:8px;border:2.2px solid var(--ink-3);margin-top:0}
+.chk:hover{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.chk svg{width:14px;height:14px}
+.todo .tx{font-size:16.5px;font-weight:650;line-height:1.4;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.todo.done .tx{font-weight:500}
+.todo .meta{margin-top:4px;gap:6px}
+.chip{font-family:var(--sans);font-size:12.5px;font-weight:700;padding:2px 8px;border-radius:7px}
+.chip.late{font-weight:800}
+.chip.today{background:var(--hl);color:#1A1D23}
+.tagc{display:inline-flex;align-items:center;font-size:12px;font-weight:800;line-height:1;padding:4px 8px;border-radius:7px;color:#fff;background:var(--tag);letter-spacing:0;white-space:nowrap}
+.ev{padding:9px 0;gap:12px}
+.ev .time{font-size:13px;font-weight:600;width:78px}
+.ev .tt{font-weight:700;font-size:15px}
+/* calendar */
+.cal-head .m{font-size:24px;font-weight:800}
+.cal{border-radius:14px}
+.cal .wd{font-size:12.5px;font-weight:800;padding:8px}
+.cell{min-height:124px;padding:6px 5px;gap:3px}
+.cell .n{font-size:13.5px;font-weight:700;font-family:var(--sans)}
+.cell.today .n{font-weight:800}
+.cell .e{display:block;font-size:12.5px;font-weight:700;line-height:1.35;border-left:0;border-radius:6px;padding:2px 6px;background:color-mix(in srgb,var(--tag,var(--c1)) 15%,var(--surface));color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell .e{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:normal;overflow-wrap:anywhere}
+.cal-layout{grid-template-columns:1fr 280px}
+.cell .e.solid{background:var(--tag);color:#fff}
+.cell .e .tm{font-weight:600;opacity:.85;margin-right:3px;white-space:nowrap}
+.cell .e.td::before{content:"☐\00a0";font-weight:700}
+.cell .e.td.dn{opacity:.5;text-decoration:line-through}
+.cell .e.td.dn::before{content:"☑\00a0"}
+.cell .more{font-size:12px;font-weight:700;color:var(--ink-2);padding-left:6px}
+.cell .dots,.cell .tdn{display:none!important}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:10px 2px 0;font-size:12.5px;font-weight:700;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:3px;background:var(--tag)}
+/* toast with action */
+#toast{display:flex;align-items:center;gap:14px;font-weight:600;font-size:14.5px;padding:11px 16px;border-radius:12px}
+#toast[hidden]{display:none!important}
+#toast button{color:var(--hl);font-weight:800;font-size:14px}
+@media (max-width:1020px){ .home-grid{grid-template-columns:1fr} }
+@media (max-width:760px){
+  .top{padding:12px 16px}
+  .view{padding:6px 16px 28px}
+  .today-head .date{font-size:28px}
+  .todo-hero{padding:18px 16px 12px;box-shadow:4px 4px 0 var(--hl)}
+  .th-head h2{font-size:21px}
+  .cell{min-height:74px;padding:3px 2px;gap:2px}
+  .cell .e{display:block!important;font-size:10px;padding:1px 3px;border-radius:4px;white-space:nowrap;-webkit-line-clamp:unset}
+  .cell .e .tm{display:none}
+  .cell .more{display:block!important;font-size:10px;padding-left:2px}
+}
 </style>
 
 </head>
@@ -349,15 +455,32 @@ mark{background:var(--hl-soft);color:inherit;border-radius:2px}
         <div class="meta mono" id="hMeta"></div>
       </div>
       <div class="home-grid">
-        <div class="panel wide">
-          <h2>빠른 메모</h2>
-          <div class="quick">
-            <textarea class="field" id="quickNote" placeholder="떠오른 걸 바로 적어두세요. 첫 줄이 제목이 돼요."></textarea>
-            <button class="btn primary" id="quickSave">저장</button>
+        <div class="panel todo-hero">
+          <div class="th-head">
+            <h2><span class="hlt">할 일</span></h2>
+            <span class="th-count" id="hTodoCount"></span>
+            <button class="more" data-view="todos">전체 보기 →</button>
+          </div>
+          <form class="tq" id="hTqForm" autocomplete="off">
+            <input class="field" id="hTqText" placeholder="할 일 입력 후 Enter · 예) 10/2 2시 골프존 미팅">
+            <button class="btn primary" type="submit">추가</button>
+          </form>
+          <div class="hint" id="hTqHint"></div>
+          <div id="hTodos"></div>
+        </div>
+        <div class="side-col">
+          <div class="panel">
+            <h2>오늘 일정 <button class="more" data-view="cal">일정표 →</button></h2>
+            <div id="hEvents"></div>
+          </div>
+          <div class="panel">
+            <h2>빠른 메모</h2>
+            <div class="quick">
+              <textarea class="field" id="quickNote" placeholder="떠오른 걸 바로 적어두세요. 첫 줄이 제목이 돼요."></textarea>
+              <button class="btn primary" id="quickSave">저장</button>
+            </div>
           </div>
         </div>
-        <div class="panel"><h2>오늘 일정 <button class="more" data-view="cal">일정표 →</button></h2><div id="hEvents"></div></div>
-        <div class="panel"><h2>할 일 <button class="more" data-view="todos">전체 →</button></h2><div id="hTodos"></div></div>
         <div class="panel wide"><h2>고정·최근 메모 <button class="more" data-view="notes">메모 →</button></h2><div id="hNotes"></div></div>
         <div class="panel wide" id="hFilesPanel"><h2>최근 파일 <button class="more" data-view="files">파일함 →</button></h2><div id="hFiles"></div></div>
       </div>
@@ -403,6 +526,7 @@ mark{background:var(--hl-soft);color:inherit;border-radius:2px}
             <button class="btn sm" id="calNext" aria-label="다음 달">›</button>
           </div>
           <div class="cal" id="cal"></div>
+          <div class="legend"><span style="--tag:var(--t-meet)"><i></i>미팅·외근</span><span style="--tag:var(--t-call)"><i></i>통화</span><span style="--tag:var(--t-report)"><i></i>보고·마감</span><span style="--tag:var(--t-out)"><i></i>개인</span><span>☐ 할 일</span></div>
         </div>
         <div class="panel">
           <h2 id="dayTitle"></h2>
@@ -499,7 +623,11 @@ function isoWeek(d){ const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), 
 const ls = { get(k,d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch{ return d; } }, set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} } };
 
 let toastT;
-function toast(msg){ const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
+function toast(msg, action){
+  const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT);
+  if (action) { const b = document.createElement('button'); b.textContent = action.label; b.onclick = () => { t.hidden = true; action.fn(); }; t.appendChild(b); }
+  toastT = setTimeout(() => t.hidden = true, action ? 5000 : 2600);
+}
 function banner(msg){ const b = $('#banner'); b.textContent = msg || ''; b.hidden = !msg; }
 
 /* ---------- supabase ---------- */
@@ -654,17 +782,22 @@ function sortEvents(a,b){ return (a.date + (a.allDay ? '' : a.start||'')).locale
 function evRow(e, showDate){
   return `<button class="ev" data-act="edit-event" data-id="${e.id}">
     <span class="time">${showDate ? fmtMD(e.date) + '<br>' : ''}${esc(evTime(e))}</span>
-    <span class="bar" style="background:var(--${e.color||'c1'})"></span>
-    <span><span class="tt">${esc(e.title)}</span>${e.memo ? `<div class="sub">${esc(e.memo.split('\n')[0])}</div>` : ''}${e.alarm >= 0 ? `<div class="sub">${IC.bell.replace('<svg','<svg width="11" height="11"')} ${e.alarm ? (e.alarm >= 1440 ? '하루 전' : e.alarm >= 60 ? e.alarm/60 + '시간 전' : e.alarm + '분 전') : '시작 시'}</div>` : ''}</span>
+    <span class="bar" style="background:${tagVar(e.tag) || 'var(--' + (e.color||'c1') + ')'}"></span>
+    <span><span class="tt">${tagChip(e.tag)} ${esc(e.title)}</span>${e.memo ? `<div class="sub">${esc(e.memo.split('\n')[0])}</div>` : ''}${e.alarm >= 0 ? `<div class="sub">${IC.bell.replace('<svg','<svg width="11" height="11"')} ${e.alarm ? (e.alarm >= 1440 ? '하루 전' : e.alarm >= 60 ? e.alarm/60 + '시간 전' : e.alarm + '분 전') : '시작 시'}</div>` : ''}</span>
   </button>`;
 }
+const TAGS = { meet:['미팅·외근','t-meet'], call:['통화','t-call'], report:['보고·마감','t-report'], personal:['개인','t-out'] };
+function autoTag(s){ s = s || ''; if (/미팅|외근|방문|출장|미팅/.test(s)) return 'meet'; if (/통화|전화|콜백/.test(s)) return 'call'; if (/보고|마감|제출|결재/.test(s)) return 'report'; return ''; }
+function tagVar(tag){ return TAGS[tag] ? `var(--${TAGS[tag][1]})` : ''; }
+function tagChip(tag){ return TAGS[tag] ? `<span class="tagc" style="--tag:${tagVar(tag)}">${TAGS[tag][0]}</span>` : ''; }
+function tagSelect(id, v){ return `<select class="field" id="${id}"><option value="">없음</option>${Object.entries(TAGS).map(([k,[l]]) => `<option value="${k}"${k === v ? ' selected' : ''}>${l}</option>`).join('')}</select>`; }
 function todoRow(t){
   const d = t.due ? dueDate(t.due) : null, late = d && !t.done && d < new Date();
   const isToday = t.due && t.due.slice(0,10) === todayKey();
-  return `<div class="todo${t.done ? ' done' : ''}">
+  return `<div class="todo${t.done ? ' done' : ''}${isToday && !t.done ? ' is-today' : ''}${late ? ' is-late' : ''}" data-row="${t.id}">
     <button class="chk" data-act="toggle-todo" data-id="${t.id}" aria-label="완료 표시">${IC.check}</button>
     <button class="body" data-act="edit-todo" data-id="${t.id}">
-      <div class="tx">${esc(t.text)}</div>
+      <div class="tx">${tagChip(t.tag)}<span>${esc(t.text)}</span></div>
       ${(t.due || t.memo) ? `<div class="meta">${t.due ? `<span class="chip${late ? ' late' : isToday ? ' today' : ''}">${t.remind && hasTime(t.due) ? IC.bell : ''}${esc(dueLabel(t.due))}</span>` : ''}${t.memo ? `<span class="chip">메모</span>` : ''}</div>` : ''}
     </button>
   </div>`;
@@ -682,14 +815,19 @@ function renderHome(){
   const upcoming = S.events.filter(e => e.date > tk && e.date <= dkey(addDays(d,6))).sort(sortEvents).slice(0,3);
   $('#hEvents').innerHTML = (evs.length ? evs.map(e => evRow(e)).join('') : '<div class="empty">오늘 잡힌 일정이 없어요.</div>')
     + (upcoming.length ? `<div class="grp">이번 주 남은 일정</div>` + upcoming.map(e => evRow(e,true)).join('') : '');
-  const late = lateTodos().sort((a,b) => a.due.localeCompare(b.due));
-  const todays = openTodos().filter(t => t.due && t.due.slice(0,10) === tk && dueDate(t.due) >= d).sort((a,b) => a.due.localeCompare(b.due));
-  const nodate = openTodos().filter(t => !t.due).slice(0,3);
+  const open = openTodos();
+  const todays = open.filter(t => t.due && t.due.slice(0,10) === tk).sort((a,b) => a.due.localeCompare(b.due));
+  const past = open.filter(t => t.due && t.due.slice(0,10) < tk).sort((a,b) => a.due.localeCompare(b.due));
+  const future = open.filter(t => t.due && t.due.slice(0,10) > tk).sort((a,b) => a.due.localeCompare(b.due));
+  const nodate = open.filter(t => !t.due).sort((a,b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+  const lateN = lateTodos().length;
+  $('#hTodoCount').innerHTML = open.length ? `남은 ${open.length}개${lateN ? ` · <b>지남 ${lateN}</b>` : ''}` : '모두 끝!';
   let h = '';
-  if (late.length) h += `<div class="grp late">지난 할 일 <span class="n">${late.length}</span></div>` + late.slice(0,5).map(todoRow).join('');
-  if (todays.length) h += `<div class="grp">오늘</div>` + todays.map(todoRow).join('');
-  if (nodate.length) h += `<div class="grp">날짜 없음</div>` + nodate.map(todoRow).join('');
-  $('#hTodos').innerHTML = h || '<div class="empty">오늘 할 일이 없어요.</div>';
+  h += `<div class="grp">오늘 <span class="n">${todays.length}</span></div>` + (todays.length ? todays.map(todoRow).join('') : '<div class="empty" style="padding:4px 10px 6px">오늘 마감인 할 일이 없어요.</div>');
+  const others = [...past, ...future];
+  if (others.length) h += `<div class="grp">오늘 외 <span class="n">${others.length}</span> <span class="sub">${past.length ? `놓친 것 ${past.length} · ` : ''}다가올 것 ${future.length}</span></div>` + others.map(todoRow).join('');
+  if (nodate.length) h += `<div class="grp">날짜 없음 <span class="n">${nodate.length}</span></div>` + nodate.map(todoRow).join('');
+  $('#hTodos').innerHTML = h;
   const ns = sortedNotes().slice(0,6);
   const empty = !S.notes.length && !S.todos.length && !S.events.length;
   $('#hNotes').innerHTML = ns.length ? `<div class="cards">${ns.map(noteCard).join('')}</div>`
@@ -823,7 +961,7 @@ function parseQuick(txt){
   if (hh !== null && !date) { date = new Date(now); const probe = new Date(now); probe.setHours(hh, mm, 0, 0); if (probe < now) date = addDays(now, 1); }
   const text = t.replace(/\s+/g,' ').trim();
   const due = date ? dkey(date) + (hh !== null ? `T${pad(hh)}:${pad(mm)}` : '') : '';
-  return { text: text || txt.trim(), due, remind: hh !== null };
+  return { text: text || txt.trim(), due, remind: hh !== null, tag: autoTag(txt) };
 }
 function renderTodos(){
   const now = new Date(), tk = todayKey();
@@ -837,13 +975,14 @@ function renderTodos(){
   const html = grp('지남', late, 'late') + grp('오늘', today) + grp('예정', later) + grp('날짜 없음', nodate) + grp('최근 완료', done);
   $('#todoLists').innerHTML = html || '<div class="empty" style="padding:18px 2px">할 일이 없어요. 위에 적어서 추가하세요.</div>';
 }
-function tqHint(){
-  const v = $('#tqText').value.trim();
-  if (!v) { $('#tqHint').innerHTML = '날짜·시간을 적으면 알아서 마감과 알림을 잡아요 (오늘, 내일, 모레, 금요일, 9/30, 오후 3시, 15:30)'; return; }
+function hintFor(inputSel, hintSel){
+  const v = $(inputSel).value.trim();
+  if (!v) { $(hintSel).innerHTML = '날짜·시간을 적으면 알아서 마감과 알림을 잡아요 (오늘, 내일, 금요일, 10/2, 오후 3시, 15:30) · "미팅"이 들어가면 미팅 태그'; return; }
   const p = parseQuick(v);
-  $('#tqHint').innerHTML = p.due ? `→ <b>${esc(p.text)}</b> · ${esc(dueLabel(p.due))}${p.remind ? ' · 알림' : ''}` : `→ <b>${esc(p.text)}</b> · 날짜 없음`;
+  $(hintSel).innerHTML = `→ ${tagChip(p.tag)} <b>${esc(p.text)}</b> · ${p.due ? esc(dueLabel(p.due)) + (p.remind ? ' · 알림' : '') : '날짜 없음'}`;
 }
-function addTodo(obj){ return put('todos', rid(), { text:obj.text, due:obj.due||'', remind:!!obj.remind, memo:obj.memo||'', done:false, doneAt:'', createdAt:nowISO() }); }
+function tqHint(){ hintFor('#tqText', '#tqHint'); }
+function addTodo(obj){ return put('todos', rid(), { text:obj.text, due:obj.due||'', remind:!!obj.remind, memo:obj.memo||'', tag:obj.tag||'', done:false, doneAt:'', createdAt:nowISO() }); }
 function todoSheet(t, preset){
   const isNew = !t; t = t || { text:'', due:preset||'', remind:false, memo:'' };
   const date = t.due ? t.due.slice(0,10) : '', time = hasTime(t.due) ? t.due.slice(11,16) : '';
@@ -851,17 +990,20 @@ function todoSheet(t, preset){
     <div><label class="lb" for="stText">내용</label><input class="field" id="stText" value="${esc(t.text)}"></div>
     <div class="row"><div><label class="lb" for="stDate">날짜</label><input class="field" type="date" id="stDate" value="${date}"></div>
     <div><label class="lb" for="stTime">시간</label><input class="field" type="time" id="stTime" value="${time}"></div></div>
-    <label class="tog"><input type="checkbox" id="stRemind" ${t.remind ? 'checked' : ''}> 시간이 되면 알림</label>
+    <div class="row"><div><label class="lb" for="stTag">종류</label>${tagSelect('stTag', t.tag || '')}</div><div style="display:flex;align-items:flex-end;padding-bottom:10px"><label class="tog"><input type="checkbox" id="stRemind" ${t.remind ? 'checked' : ''}> 시간이 되면 알림</label></div></div>
     <div><label class="lb" for="stMemo">메모</label><textarea class="field" id="stMemo">${esc(t.memo)}</textarea></div>
     <div class="acts">${isNew ? '' : `<button class="btn danger sp" id="stDel">삭제</button>`}<button class="btn ${isNew ? 'sp' : ''}" data-act="close-sheet">취소</button><button class="btn primary" id="stSave">저장</button></div>`);
   $('#stTime').addEventListener('change', () => { if ($('#stTime').value) $('#stRemind').checked = true; });
+  let tagTouched = !!t.tag; $('#stTag').addEventListener('change', () => tagTouched = true);
+  $('#stText').addEventListener('input', () => { if (!tagTouched) $('#stTag').value = autoTag($('#stText').value); });
   $('#stSave').onclick = async () => {
     const text = $('#stText').value.trim(); if (!text) { $('#stText').focus(); return; }
     const d = $('#stDate').value, tm = $('#stTime').value;
     const due = d ? d + (tm ? 'T' + tm : '') : '';
     closeSheet();
-    if (isNew) await addTodo({ text, due, remind:$('#stRemind').checked && !!tm, memo:$('#stMemo').value });
-    else await put('todos', t.id, { ...strip(t), text, due, remind:$('#stRemind').checked && !!tm, memo:$('#stMemo').value });
+    const tag = $('#stTag').value;
+    if (isNew) await addTodo({ text, due, tag, remind:$('#stRemind').checked && !!tm, memo:$('#stMemo').value });
+    else await put('todos', t.id, { ...strip(t), text, due, tag, remind:$('#stRemind').checked && !!tm, memo:$('#stMemo').value });
   };
   if (!isNew) $('#stDel').onclick = e => { if (armed(e.currentTarget)) { closeSheet(); del('todos', t.id); } };
   $('#stText').focus();
@@ -874,18 +1016,18 @@ function renderCal(){
   const start = addDays(new Date(y, m, 1), -new Date(y, m, 1).getDay());
   const tk = todayKey();
   const byDay = {}; S.events.forEach(e => (byDay[e.date] = byDay[e.date] || []).push(e));
-  const tdDay = {}; openTodos().forEach(t => { if (t.due) { const k = t.due.slice(0,10); tdDay[k] = (tdDay[k]||0) + 1; } });
+  const tdByDay = {}; S.todos.forEach(t => { if (t.due) (tdByDay[t.due.slice(0,10)] = tdByDay[t.due.slice(0,10)] || []).push(t); });
   let h = WD.map(w => `<div class="wd">${w}</div>`).join('');
   for (let i = 0; i < 42; i++) {
     const d = addDays(start, i), k = dkey(d);
-    const evs = (byDay[k]||[]).sort(sortEvents);
+    const evs = (byDay[k]||[]).sort(sortEvents).map(e => ({ sort: '0' + (e.allDay ? '' : e.start||''), html: `<span class="e${e.tag ? ' solid' : ''}" style="--tag:${tagVar(e.tag) || 'var(--' + (e.color||'c1') + ')'}">${!e.allDay && e.start ? `<span class="tm">${e.start}</span>` : ''}${esc(e.title)}</span>` }));
+    const tds = (tdByDay[k]||[]).map(t => ({ sort: (t.done ? '2' : '1') + (hasTime(t.due) ? t.due.slice(11) : ''), html: `<span class="e td${t.done ? ' dn' : ''}${t.tag && !t.done ? ' solid' : ''}" style="--tag:${tagVar(t.tag) || 'var(--ink-3)'}">${hasTime(t.due) ? `<span class="tm">${t.due.slice(11,16)}</span>` : ''}${esc(t.text)}</span>` }));
+    const all = [...evs, ...tds].sort((a,b) => a.sort.localeCompare(b.sort));
     const cls = ['cell', d.getMonth() !== m && 'out', d.getDay() === 0 && 'sun', k === tk && 'today', k === selDay && 'sel'].filter(Boolean).join(' ');
     h += `<button class="${cls}" data-act="day" data-date="${k}">
       <span class="n">${d.getDate()}</span>
-      ${evs.slice(0,2).map(e => `<span class="e" style="border-color:var(--${e.color||'c1'})">${esc(e.title)}</span>`).join('')}
-      ${evs.length > 2 ? `<span class="more">+${evs.length-2}</span>` : ''}
-      <span class="dots">${evs.slice(0,4).map(e => `<i style="background:var(--${e.color||'c1'})"></i>`).join('')}</span>
-      ${tdDay[k] ? `<span class="tdn">할 일 ${tdDay[k]}</span>` : ''}
+      ${all.slice(0,4).map(x => x.html).join('')}
+      ${all.length > 4 ? `<span class="more">+${all.length-4}</span>` : ''}
     </button>`;
   }
   $('#cal').innerHTML = h;
@@ -903,19 +1045,22 @@ function eventSheet(e){
     <div class="row"><div><label class="lb" for="seDate">날짜</label><input class="field" type="date" id="seDate" value="${e.date}"></div></div>
     <label class="tog"><input type="checkbox" id="seAll" ${e.allDay ? 'checked' : ''}> 종일</label>
     <div class="row" id="seTimes" ${e.allDay ? 'hidden' : ''}><div><label class="lb" for="seStart">시작</label><input class="field" type="time" id="seStart" value="${e.start||''}"></div><div><label class="lb" for="seEnd">끝</label><input class="field" type="time" id="seEnd" value="${e.end||''}"></div></div>
+    <div class="row"><div><label class="lb" for="seTag">종류</label>${tagSelect('seTag', e.tag || '')}</div></div>
     <div class="row"><div><label class="lb" for="seAlarm">알림</label><select class="field" id="seAlarm">
       ${[[-1,'없음'],[0,'시작할 때'],[5,'5분 전'],[10,'10분 전'],[30,'30분 전'],[60,'1시간 전'],[1440,'하루 전']].map(([v,l]) => `<option value="${v}"${(e.alarm ?? -1) == v ? ' selected' : ''}>${l}</option>`).join('')}
     </select></div><div><span class="lb">색</span><div class="sw" id="seColor">${['c1','c2','c3','c4','c5'].map(c => `<button type="button" data-c="${c}" style="background:var(--${c})" aria-pressed="${c === color}" aria-label="색 ${c}"></button>`).join('')}</div></div></div>
     <div><label class="lb" for="seMemo">메모</label><textarea class="field" id="seMemo" placeholder="장소, 준비물, 참석자…">${esc(e.memo)}</textarea></div>
     <div class="acts">${isNew ? '' : `<button class="btn danger sp" id="seDel">삭제</button>`}<button class="btn ${isNew ? 'sp' : ''}" data-act="close-sheet">취소</button><button class="btn primary" id="seSave">저장</button></div>`);
   $('#seAll').onchange = () => $('#seTimes').hidden = $('#seAll').checked;
+  let etTouched = !!e.tag; $('#seTag').addEventListener('change', () => etTouched = true);
+  $('#seTitle').addEventListener('input', () => { if (!etTouched) $('#seTag').value = autoTag($('#seTitle').value); });
   $('#seColor').onclick = ev => { const b = ev.target.closest('[data-c]'); if (!b) return; color = b.dataset.c; $('#seColor').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); };
   $('#seStart').addEventListener('change', () => { const s = $('#seStart').value; if (s && (!$('#seEnd').value || $('#seEnd').value <= s)) { const [h,m] = s.split(':').map(Number); $('#seEnd').value = pad(Math.min(23,h+1)) + ':' + pad(m); } });
   $('#seSave').onclick = async () => {
     const title = $('#seTitle').value.trim(); if (!title) { $('#seTitle').focus(); return; }
     const date = $('#seDate').value; if (!date) { $('#seDate').focus(); return; }
     const allDay = $('#seAll').checked;
-    const data = { title, date, allDay, start: allDay ? '' : $('#seStart').value, end: allDay ? '' : $('#seEnd').value, color, alarm: +$('#seAlarm').value, memo:$('#seMemo').value, createdAt: e.createdAt || nowISO() };
+    const data = { title, date, allDay, start: allDay ? '' : $('#seStart').value, end: allDay ? '' : $('#seEnd').value, color, tag: $('#seTag').value, alarm: +$('#seAlarm').value, memo:$('#seMemo').value, createdAt: e.createdAt || nowISO() };
     closeSheet(); selDay = date;
     await put('events', isNew ? rid() : e.id, data);
   };
@@ -1091,7 +1236,15 @@ document.addEventListener('click', async ev => {
   const act = a.dataset.act, id = a.dataset.id;
   const find = (arr) => arr.find(x => x.id === id);
   switch (act) {
-    case 'toggle-todo': { const t = find(S.todos); if (t) await put('todos', id, { ...strip(t), done:!t.done, doneAt: t.done ? '' : nowISO() }); break; }
+    case 'toggle-todo': {
+      const t = find(S.todos); if (!t) break;
+      if (t.done) { await put('todos', id, { ...strip(t), done:false, doneAt:'' }); break; }
+      const row = a.closest('.todo'); if (row) { row.classList.add('done','leaving'); await new Promise(r => setTimeout(r, 220)); }
+      const before = strip(t);
+      await put('todos', id, { ...before, done:true, doneAt:nowISO() });
+      toast(`완료 · ${t.text.length > 18 ? t.text.slice(0,18) + '…' : t.text}`, { label:'되돌리기', fn: () => put('todos', id, { ...before, done:false, doneAt:'' }) });
+      break;
+    }
     case 'edit-todo': { const t = find(S.todos); if (t) todoSheet(t); break; }
     case 'open-note': openNote(id); break;
     case 'new-note': newNote(); break;
@@ -1181,6 +1334,12 @@ $('#quickSave').onclick = async () => {
 $('#quickNote').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) $('#quickSave').click(); });
 
 $('#tqText').addEventListener('input', tqHint);
+$('#hTqText').addEventListener('input', () => hintFor('#hTqText', '#hTqHint'));
+$('#hTqForm').addEventListener('submit', async e => {
+  e.preventDefault(); const v = $('#hTqText').value.trim(); if (!v) return;
+  const p = parseQuick(v); $('#hTqText').value = ''; $('#hTqHint').innerHTML = '';
+  await addTodo(p); toast(p.remind ? `추가했어요 · ${dueLabel(p.due)}에 알려줄게요` : '추가했어요');
+});
 $('#tqForm').addEventListener('submit', async e => {
   e.preventDefault(); const v = $('#tqText').value.trim(); if (!v) return;
   const p = parseQuick(v); $('#tqText').value = ''; tqHint();
