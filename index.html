@@ -526,6 +526,25 @@ body{font-size:15.5px;font-weight:500;letter-spacing:-.01em}
   .cell .e .tm{display:none}
   .cell .more{display:block!important;font-size:10px;padding-left:2px}
 }
+
+/* v4.1: never wider than the screen (large system font on phones) */
+main{overflow-x:hidden}
+.dash>*,.card-hero,.card-prog,.sec,.panel,.bcol,.todo .body{min-width:0}
+.ch-head,.sec-head{flex-wrap:wrap;row-gap:6px}
+.hero-tq button{flex:none}
+.p-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.todo .tx span{overflow-wrap:anywhere;min-width:0}
+@media (max-width:1020px){ .dash{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:760px){
+  .board3,.kanban{grid-template-columns:minmax(0,1fr)}
+  .top{gap:10px}
+  .search{min-width:0}
+  .hero-tq input{font-size:15px;padding:0 8px}
+  .hero-tq button{padding:0 16px}
+  .p-stats div{padding:9px 10px}
+  .p-stats b{font-size:20px}
+  .prog{gap:16px}
+}
 </style>
 </head>
 <body>
