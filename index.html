@@ -526,7 +526,6 @@ body{font-size:15.5px;font-weight:500;letter-spacing:-.01em}
   .cell .e .tm{display:none}
   .cell .more{display:block!important;font-size:10px;padding-left:2px}
 }
-
 /* v4.1: never wider than the screen (large system font on phones) */
 main{overflow-x:hidden}
 .dash>*,.card-hero,.card-prog,.sec,.panel,.bcol,.todo .body{min-width:0}
@@ -545,6 +544,32 @@ main{overflow-x:hidden}
   .p-stats b{font-size:20px}
   .prog{gap:16px}
 }
+/* v5: to-do list main + week schedule */
+.card-week{background:var(--teal);color:#fff;border-radius:26px;padding:24px;display:flex;flex-direction:column;min-width:0;box-shadow:0 18px 40px -18px color-mix(in srgb,var(--teal) 80%,transparent)}
+.wk-sub{font-size:13px;font-weight:700;opacity:.85;margin:-8px 0 12px 44px}
+.wk-list{display:flex;flex-direction:column;gap:12px}
+.card-week{align-self:start;position:sticky;top:16px}
+@media (max-width:1020px){.card-week{position:static}}
+.wk-day{display:flex;flex-direction:column;gap:6px}
+.wk-dh{font-size:13.5px;font-weight:800;display:flex;gap:8px;align-items:center}
+.wk-dh .tdy{background:#fff;color:var(--teal);border-radius:7px;padding:1px 8px;font-size:12.5px}
+.wk-dh .dt{opacity:.8;font-weight:700}
+.wk-it{display:flex;gap:10px;align-items:center;text-align:left;width:100%;background:rgba(255,255,255,.14);border-radius:12px;padding:9px 12px;color:#fff;min-width:0}
+.wk-it:hover{background:rgba(255,255,255,.24)}
+.wk-it .tm{font-size:13px;font-weight:800;min-width:44px;opacity:.95;font-variant-numeric:tabular-nums}
+.wk-it .tt{font-size:15px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.wk-it .tagc{background:#fff!important;color:var(--tag)!important}
+.wk-it .kind{font-size:11.5px;font-weight:800;opacity:.8;flex:none}
+.wk-empty{background:rgba(255,255,255,.12);border-radius:14px;padding:18px;font-weight:700;text-align:center}
+.wk-add{margin-top:14px;align-self:flex-start;background:#fff;color:var(--teal);font-weight:800;font-size:14px;border-radius:12px;padding:9px 16px}
+.hero-grp{font-size:13.5px;font-weight:800;margin:14px 2px 2px;display:flex;gap:8px;align-items:center;color:rgba(255,255,255,.95)}
+.hero-grp .n{background:rgba(255,255,255,.22);border-radius:7px;padding:0 7px;font-size:12.5px}
+.hero-grp.late{color:#fff}
+.hero-grp.late .n{background:#fff;color:#D94A3A}
+.ico-g{background:color-mix(in srgb,var(--green) 14%,transparent);color:var(--green)}
+#hDone .todo{padding:8px 6px}
+#hDone .todo .tx{font-size:15px}
+@media (max-width:760px){ .card-week{border-radius:22px;padding:18px 16px} .wk-sub{margin-left:0} }
 </style>
 </head>
 <body>
@@ -598,7 +623,7 @@ main{overflow-x:hidden}
         <div class="card-hero">
           <div class="ch-head">
             <span class="ico ico-w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="m8 12 3 3 5-6"/></svg></span>
-            <h2>오늘 할 일</h2>
+            <h2>해야 할 일</h2>
             <span class="ch-count" id="hTodoCount"></span>
             <button class="ch-more" data-view="todos">보드 보기 ›</button>
           </div>
@@ -607,45 +632,29 @@ main{overflow-x:hidden}
             <button type="submit">추가</button>
           </form>
           <div class="hero-hint" id="hTqHint"></div>
-          <div class="hero-list" id="hToday"></div>
+          <div class="hero-list" id="hTodos"></div>
         </div>
-        <div class="card-prog">
+        <div class="card-week">
           <div class="ch-head">
-            <span class="ico ico-w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12h8.5"/></svg></span>
-            <h2>오늘 진행 상황</h2>
+            <span class="ico ico-w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+            <h2>이번 주 일정</h2>
+            <button class="ch-more" data-view="cal">일정표 ›</button>
           </div>
-          <div class="prog">
-            <div class="donut" id="hDonut"></div>
-            <div class="prog-tx">
-              <div class="p-lbl">오늘 할 일 처리율</div>
-              <div class="p-num" id="hPct">0<small>%</small></div>
-            </div>
-          </div>
-          <div class="p-stats" id="hStats"></div>
-        </div>
-
-        <div class="sec wide">
-          <div class="sec-head">
-            <span class="ico ico-o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M5 21V4h12l-2 4 2 4H5"/></svg></span>
-            <h2>할 일 보드</h2><span class="sec-sub">체크하면 완료로, 되돌리면 다시 올라와요</span>
-          </div>
-          <div class="board3">
-            <div class="bcol"><div class="bcol-h bh-orange">오늘 외 <span class="bn" id="cOther"></span><span class="bsub" id="cOtherSub"></span></div><div class="bcol-body" id="hOther"></div></div>
-            <div class="bcol"><div class="bcol-h bh-navy">날짜 없음 <span class="bn" id="cNodate"></span></div><div class="bcol-body" id="hNodate"></div></div>
-            <div class="bcol"><div class="bcol-h bh-green">완료 <span class="bn" id="cDone"></span><span class="bsub">오늘·어제</span></div><div class="bcol-body" id="hDone"></div></div>
-          </div>
+          <div class="wk-sub" id="hWeekRange"></div>
+          <div class="wk-list" id="hWeek"></div>
+          <button class="wk-add" data-act="week-add-event">+ 일정 추가</button>
         </div>
 
         <div class="panel">
-          <div class="sec-head in"><span class="ico ico-n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><h2>오늘 일정</h2><button class="more" data-view="cal">일정표 ›</button></div>
-          <div id="hEvents"></div>
-        </div>
-        <div class="panel">
-          <div class="sec-head in"><span class="ico ico-y"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/></svg></span><h2>빠른 메모</h2></div>
+          <div class="sec-head in"><span class="ico ico-y"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></span><h2>아이디어 노트</h2></div>
           <div class="quick">
-            <textarea class="field" id="quickNote" placeholder="떠오른 걸 바로 적어두세요. 첫 줄이 제목이 돼요."></textarea>
+            <textarea class="field" id="quickNote" placeholder="떠오른 아이디어를 바로 적어두세요. 첫 줄이 제목이 돼요."></textarea>
             <button class="btn primary" id="quickSave">저장</button>
           </div>
+        </div>
+        <div class="panel">
+          <div class="sec-head in"><span class="ico ico-g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><h2>최근 완료</h2><span class="sec-sub">오늘·어제</span><button class="more" data-view="todos">전체 ›</button></div>
+          <div id="hDone"></div>
         </div>
         <div class="panel wide"><div class="sec-head in"><span class="ico ico-y"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 3 21 9l-2.5 1-3 3 .5 4.5-1.5 1.5-4-4-4.5 4.5L5 18.5l4.5-4.5-4-4 1.5-1.5L11.5 9l3-3z"/></svg></span><h2>고정·최근 메모</h2><button class="more" data-view="notes">메모 ›</button></div><div id="hNotes"></div></div>
         <div class="panel wide" id="hFilesPanel"><div class="sec-head in"><span class="ico ico-n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H10l2 2.5h7.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg></span><h2>최근 파일</h2><button class="more" data-view="files">파일함 ›</button></div><div id="hFiles"></div></div>
@@ -983,34 +992,32 @@ function renderHome(){
   const tk = todayKey();
   const evs = S.events.filter(e => e.date === tk).sort(sortEvents);
   const upcoming = S.events.filter(e => e.date > tk && e.date <= dkey(addDays(d,6))).sort(sortEvents).slice(0,3);
-  $('#hEvents').innerHTML = (evs.length ? evs.map(e => evRow(e)).join('') : '<div class="empty">오늘 잡힌 일정이 없어요.</div>')
-    + (upcoming.length ? `<div class="grp">이번 주 남은 일정</div>` + upcoming.map(e => evRow(e,true)).join('') : '');
   const open = openTodos();
-  const todays = open.filter(t => t.due && t.due.slice(0,10) === tk).sort(byStarDue);
   const past = open.filter(t => t.due && t.due.slice(0,10) < tk).sort(byStarDue);
+  const todays = open.filter(t => t.due && t.due.slice(0,10) === tk).sort(byStarDue);
   const future = open.filter(t => t.due && t.due.slice(0,10) > tk).sort(byStarDue);
   const nodate = open.filter(t => !t.due).sort(byStarDue);
   const yk = dkey(addDays(d,-1));
   const doneRecent = S.todos.filter(t => t.done && t.doneAt && (dkey(new Date(t.doneAt)) === tk || dkey(new Date(t.doneAt)) === yk)).sort((a,b) => String(b.doneAt).localeCompare(String(a.doneAt)));
-  const lateN = lateTodos().length;
-  $('#hTodoCount').innerHTML = `${todays.length}개${lateN ? ` <b>지남 ${lateN}</b>` : ''}`;
+  $('#hTodoCount').innerHTML = open.length ? `남은 ${open.length}개${past.length ? ` <b>지남 ${past.length}</b>` : ''}` : '모두 끝!';
   dragOn = false;
-  $('#hToday').innerHTML = todays.length ? todays.map(todoRow).join('') : '<div class="hero-empty">오늘 마감인 할 일이 없어요. 위에 입력해서 추가하세요.</div>';
-  const others = [...past, ...future];
-  $('#cOther').textContent = others.length; $('#cOtherSub').textContent = past.length ? `놓친 것 ${past.length}` : '';
-  $('#hOther').innerHTML = others.length ? others.map(todoRow).join('') : '<div class="empty">비어 있어요</div>';
-  $('#cNodate').textContent = nodate.length;
-  $('#hNodate').innerHTML = nodate.length ? nodate.map(todoRow).join('') : '<div class="empty">비어 있어요</div>';
-  $('#cDone').textContent = doneRecent.length;
-  $('#hDone').innerHTML = doneRecent.length ? doneRecent.map(todoRow).join('') : '<div class="empty">체크한 할 일이 여기 모여요</div>';
-  // progress: today's due items done vs total (including ones finished today)
-  const todayAll = S.todos.filter(t => t.due && t.due.slice(0,10) === tk);
-  const todayDone = todayAll.filter(t => t.done).length;
-  const doneToday = S.todos.filter(t => t.done && t.doneAt && dkey(new Date(t.doneAt)) === tk).length;
-  const pct = todayAll.length ? Math.round(todayDone / todayAll.length * 100) : (doneToday ? 100 : 0);
-  $('#hPct').innerHTML = `${pct}<small>%</small>`;
-  $('#hDonut').style.background = `conic-gradient(#fff ${pct * 3.6}deg, rgba(255,255,255,.22) 0)`;
-  $('#hStats').innerHTML = `<div><b>${doneToday}</b><span>오늘 처리</span></div><div><b>${open.length}</b><span>남은 할 일</span></div><div><b>${lateN}</b><span>기한 지남</span></div>`;
+  const grp = (label, list, cls='') => list.length ? `<div class="hero-grp ${cls}">${label} <span class="n">${list.length}</span></div>` + list.map(todoRow).join('') : '';
+  const body = grp('지난 할 일', past, 'late') + grp('오늘', todays) + grp('다가올 할 일', future) + grp('날짜 없음', nodate);
+  $('#hTodos').innerHTML = body || '<div class="hero-empty">남은 할 일이 없어요. 위에 입력해서 추가하세요.</div>';
+  $('#hDone').innerHTML = doneRecent.length ? doneRecent.slice(0,8).map(todoRow).join('') : '<div class="empty">체크한 할 일이 여기 모여요</div>';
+  // this week: events (and timed meeting to-dos) from today to +7 days
+  const endK = dkey(addDays(d,7));
+  $('#hWeekRange').textContent = `${fmtMD(tk)} ~ ${fmtMD(endK)}`;
+  const items = [];
+  S.events.filter(e => e.date >= tk && e.date <= endK).forEach(e => items.push({ k:e.date, tm: e.allDay || !e.start ? '종일' : e.start, sort: e.date + (e.allDay || !e.start ? '00' : e.start), title:e.title, tag:e.tag, act:'edit-event', id:e.id, kind:'' }));
+  open.filter(t => t.tag === 'meet' && t.due && t.due.slice(0,10) >= tk && t.due.slice(0,10) <= endK).forEach(t => items.push({ k:t.due.slice(0,10), tm: hasTime(t.due) ? t.due.slice(11,16) : '종일', sort: t.due.slice(0,10) + (hasTime(t.due) ? t.due.slice(11,16) : '00'), title:t.text, tag:t.tag, act:'edit-todo', id:t.id, kind:'할 일' }));
+  items.sort((a,b) => a.sort.localeCompare(b.sort));
+  const byK = {}; items.forEach(x => (byK[x.k] = byK[x.k] || []).push(x));
+  const days = Object.keys(byK).sort();
+  $('#hWeek').innerHTML = days.length ? days.map(k => {
+    const dd = fromKey(k), rel = k === tk ? '<span class="tdy">오늘</span>' : k === dkey(addDays(d,1)) ? '<span class="tdy">내일</span>' : '';
+    return `<div class="wk-day"><div class="wk-dh">${rel}<span>${dd.getMonth()+1}/${dd.getDate()} (${WD[dd.getDay()]})</span></div>${byK[k].map(x => `<button class="wk-it" data-act="${x.act}" data-id="${x.id}"><span class="tm">${x.tm}</span><span class="tt">${esc(x.title)}</span>${tagChip(x.tag)}</button>`).join('')}</div>`;
+  }).join('') : '<div class="wk-empty">일주일 안에 잡힌 일정이 없어요.</div>';
   const ns = sortedNotes().slice(0,6);
   const empty = !S.notes.length && !S.todos.length && !S.events.length;
   $('#hNotes').innerHTML = ns.length ? `<div class="cards">${ns.map(noteCard).join('')}</div>`
@@ -1434,6 +1441,7 @@ document.addEventListener('click', async ev => {
     case 'edit-todo': { const t = find(S.todos); if (t) todoSheet(t); break; }
     case 'star-todo': { const t = find(S.todos); if (t) await put('todos', id, { ...strip(t), star: !t.star }); break; }
     case 'quick-todo': todoSheet(null, todayKey()); break;
+    case 'week-add-event': selDay = todayKey(); eventSheet(null); break;
     case 'open-note': openNote(id); break;
     case 'new-note': newNote(); break;
     case 'close-note': flushNote(); ed = null; renderNotes(); break;
@@ -1516,8 +1524,8 @@ $('#quickSave').onclick = async () => {
   const v = $('#quickNote').value.trim(); if (!v) { $('#quickNote').focus(); return; }
   const lines = v.split('\n'); const ts = nowISO();
   $('#quickNote').value = '';
-  await put('notes', rid(), { title: lines[0].slice(0,80), body: lines.slice(1).join('\n').trim() || (lines[0].length > 80 ? v : ''), tags:[], photos:[], pinned:false, createdAt:ts, updatedAt:ts });
-  toast('메모에 저장했어요.');
+  await put('notes', rid(), { title: lines[0].slice(0,80), body: lines.slice(1).join('\n').trim() || (lines[0].length > 80 ? v : ''), tags:['아이디어'], photos:[], pinned:false, createdAt:ts, updatedAt:ts });
+  toast('아이디어 노트에 저장했어요.');
 };
 $('#quickNote').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) $('#quickSave').click(); });
 
