@@ -700,7 +700,7 @@ main{overflow-x:hidden}
 .dtot span{font-size:12.5px;font-weight:700;color:var(--ink-3)}
 .dtot .ok{background:color-mix(in srgb,var(--green) 14%,var(--surface))} .dtot .ok b{color:var(--green)}
 .dtot .over{background:var(--danger-soft)} .dtot .over b{color:var(--danger)}
-.dform{display:grid;grid-template-columns:90px minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
+.dform{display:grid;grid-template-columns:90px minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto auto;gap:8px}
 .dpre{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
 .chipbtn{background:var(--surface-2);border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13.5px}
 .chipbtn em{font-style:normal;color:var(--ink-3);font-size:12px;margin-left:3px}
@@ -725,6 +725,16 @@ main{overflow-x:hidden}
 .rnum input{padding:8px 6px;text-align:center}
 .rnum em{white-space:nowrap;font-style:normal;font-size:12px;font-weight:700;color:var(--ink-3)}
 .racts{display:flex;gap:2px;align-items:center}
+.dpre-h{display:flex;align-items:center;gap:8px;margin-top:14px}
+.dpre-h b{font-weight:800;font-size:14.5px}
+.dpre-h span{font-size:12.5px;font-weight:700;color:var(--ink-3)}
+.dpre-h .btn{margin-left:auto}
+.dpre{margin-top:8px}
+.dpre.editing .chipbtn{display:inline-flex;align-items:center;gap:4px;padding-right:4px}
+.cx{width:24px;height:24px;border-radius:50%;background:var(--danger-soft);color:var(--danger);font-weight:800;font-size:15px;line-height:1;display:grid;place-items:center}
+.cx.armed{width:auto;padding:0 8px;background:var(--danger);color:#fff}
+.dstar{font-size:18px;color:var(--hero-acc)}
+.dstar.on{color:#E0A800}
 @media (max-width:760px){
   #restBar{bottom:calc(84px + env(safe-area-inset-bottom,0px));left:12px;right:12px;transform:none;justify-content:space-between}
   .fit-tabs button{font-size:14px;padding:0 10px}
@@ -737,6 +747,13 @@ main{overflow-x:hidden}
   .dform{grid-template-columns:repeat(3,minmax(0,1fr))}
   .dform #dName{grid-column:1/-1;order:-1}
   .dform .btn{grid-column:1/-1}
+  .dform .dfav{grid-column:1/-1}
+  .drow{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;column-gap:8px;row-gap:2px}
+  .drow .dm{grid-column:1;grid-row:1;align-self:start;margin-top:2px}
+  .drow .dn{grid-column:2;grid-row:1}
+  .drow .dv{grid-column:2;grid-row:2}
+  .drow .dstar{grid-column:3;grid-row:1/3}
+  .drow .x-del:last-child{grid-column:4;grid-row:1/3}
   .rrow{grid-template-columns:repeat(3,minmax(0,1fr))}
   .rrow>input:first-child{grid-column:1/-1}
   .rrow>select{grid-column:1/3}
@@ -1750,6 +1767,9 @@ const FIT_DEFAULT = {
 };
 const FIT_DAYS = [['1','월'],['2','화'],['3','수'],['4','목'],['5','금'],['6','주말']];
 const DIET_PRESETS = [['닭가슴살 100g',23,110],['단백질쉐이크',35,150],['계란 1개',6,75],['그릭요거트 100g',10,100],['두부 반 모',15,150],['두유 1팩',8,130],['밥 반 공기',3,150],['바나나 1개',1,100]];
+function dietPresets(){ const d = S.fit.find(x => x.id === 'fit-diet-presets'); return (d && Array.isArray(d.items)) ? d.items : DIET_PRESETS; }
+async function savePresets(items){ await put('fit', 'fit-diet-presets', { items, updatedAt: nowISO() }); }
+let presetEdit = false;
 const DIET_MEALS = ['점심','간식','저녁','아침','기타'];
 let fitTab = 'today', fitDate = todayKey(), fitDayOverride = null, fitDraft = null, fitSaveT = null;
 let restEnd = 0, restTimer = null, restLen = 90, routineDraft = null, routineDay = '1', dietDate = todayKey();
@@ -1872,9 +1892,11 @@ function fitDietHtml(){
         <input class="field" id="dP" type="number" inputmode="numeric" placeholder="단백질 g" aria-label="단백질">
         <input class="field" id="dC" type="number" inputmode="numeric" placeholder="kcal" aria-label="칼로리">
         <button class="btn primary" type="submit">추가</button>
+        <button class="btn dfav" type="button" data-act="diet-fav-form" title="입력한 메뉴를 자주 먹는 목록에 저장">☆ 즐겨찾기 저장</button>
       </form>
-      <div class="dpre">${DIET_PRESETS.map(([n,p,c],i) => `<button class="chipbtn" data-act="diet-pre" data-i="${i}">${n} <em>${p}g·${c}</em></button>`).join('')}</div>
-      <div class="dlist">${meals.length ? meals.map((m,i) => `<div class="drow"><span class="dm">${esc(m.meal)}</span><span class="dn">${esc(m.name)}</span><span class="dv">${m.p||0}g · ${m.c||0}kcal</span><button class="x-del" data-act="diet-del" data-i="${i}" aria-label="삭제">×</button></div>`).join('') : '<div class="empty">이 날 기록이 없어요. 위에서 추가하거나 자주 먹는 걸 눌러서 바로 넣으세요.</div>'}</div>
+      <div class="dpre-h"><b>자주 먹는 것</b><span>${presetEdit ? '× 를 눌러 지우세요' : '누르면 바로 추가'}</span><button class="btn ghost sm" data-act="diet-pre-edit">${presetEdit ? '완료' : '편집'}</button></div>
+      <div class="dpre${presetEdit ? ' editing' : ''}">${dietPresets().map(([n,p,c],i) => presetEdit ? `<span class="chipbtn">${esc(n)} <em>${p}g·${c}</em><button class="cx" data-act="diet-pre-del" data-i="${i}" aria-label="삭제">×</button></span>` : `<button class="chipbtn" data-act="diet-pre" data-i="${i}">${esc(n)} <em>${p}g·${c}</em></button>`).join('') || '<span class="empty">아직 없어요. 메뉴를 입력하고 ☆ 즐겨찾기 저장을 누르세요.</span>'}</div>
+      <div class="dlist">${meals.length ? meals.map((m,i) => `<div class="drow"><span class="dm">${esc(m.meal)}</span><span class="dn">${esc(m.name)}</span><span class="dv">${m.p||0}g · ${m.c||0}kcal</span><button class="x-del dstar${dietPresets().some(x => x[0] === m.name) ? ' on' : ''}" data-act="diet-fav" data-i="${i}" aria-label="자주 먹는 것에 저장" title="자주 먹는 것에 저장">${dietPresets().some(x => x[0] === m.name) ? '★' : '☆'}</button><button class="x-del" data-act="diet-del" data-i="${i}" aria-label="삭제">×</button></div>`).join('') : '<div class="empty">이 날 기록이 없어요. 위에서 추가하거나 자주 먹는 걸 눌러서 바로 넣으세요.</div>'}</div>
       <p class="hint">표시된 영양값은 대략치예요. 저녁 고기 종류, 소스, 커피, 주말 식사까지 빠짐없이 적는 게 핵심이에요.</p>
     </div>
     <div class="panel"><h2 style="margin-bottom:10px">최근 7일</h2><div class="d7">${days.map(k => { const tt = dietTotals(k); return `<button class="d7c${k === dietDate ? ' on' : ''}" data-act="diet-day" data-date="${k}"><span>${fmtMD(k)}</span><b class="${tt.n ? (tt.p >= 110 ? 'g' : 'b') : ''}">${tt.n ? tt.p + 'g' : '—'}</b><em class="${tt.c > 2000 ? 'b' : ''}">${tt.n ? tt.c.toLocaleString() + 'kcal' : ''}</em></button>`; }).join('')}</div></div>`;
@@ -1950,7 +1972,17 @@ async function fitAction(act, a){
     }
     case 'fit-addset': { const e = fitDraft.ex[+a.dataset.e]; e.sets.push({ w:'', r:'', done:false }); saveFitDraft(); renderFit(); return true; }
     case 'fb-del': if (armed(a, '삭제?')) { await del('fit', a.dataset.id); } return true;
-    case 'diet-pre': { const [n,p,c] = DIET_PRESETS[+a.dataset.i]; await dietAdd({ meal: ($('#dMeal') && $('#dMeal').value) || '점심', name:n, p, c }); return true; }
+    case 'diet-pre-edit': presetEdit = !presetEdit; renderFit(); return true;
+    case 'diet-pre-del': { if (!armed(a, '!')) return true; const L = dietPresets().slice(); L.splice(+a.dataset.i, 1); await savePresets(L); return true; }
+    case 'diet-fav': case 'diet-fav-form': {
+      let n, p, c;
+      if (act === 'diet-fav') { const m = (dietDoc(dietDate).meals || [])[+a.dataset.i]; if (!m) return true; n = m.name; p = +m.p || 0; c = +m.c || 0; }
+      else { n = $('#dName').value.trim(); p = +$('#dP').value || 0; c = +$('#dC').value || 0; if (!n) { toast('메뉴 이름을 먼저 입력하세요'); $('#dName').focus(); return true; } }
+      const L = dietPresets().slice(), i = L.findIndex(x => x[0] === n);
+      if (i >= 0) { if (act === 'diet-fav') { toast('이미 자주 먹는 목록에 있어요'); return true; } L[i] = [n, p, c]; } else L.push([n, p, c]);
+      await savePresets(L); toast(`"${n}" 자주 먹는 목록에 저장했어요`); return true;
+    }
+    case 'diet-pre': { const [n,p,c] = dietPresets()[+a.dataset.i]; await dietAdd({ meal: ($('#dMeal') && $('#dMeal').value) || '점심', name:n, p, c }); return true; }
     case 'diet-del': { if (!armed(a, '삭제?')) return true; const d = dietDoc(dietDate); const meals = [...d.meals]; meals.splice(+a.dataset.i, 1); await put('fit', 'fd-' + dietDate, { date:dietDate, meals }); return true; }
     case 'diet-day': dietDate = a.dataset.date; renderFit(); return true;
     case 'r-day': routineDay = a.dataset.k; renderFit(); return true;
