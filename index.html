@@ -284,7 +284,7 @@ mark{background:var(--hl-soft);color:inherit;border-radius:2px}
   .cell .dots{display:flex}
   .cal .wd{padding:5px 4px;text-align:center}
   .ftable .hide-sm{display:none}
-  .tabbar{display:grid;grid-template-columns:repeat(6,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+  .tabbar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
   .tabbar button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--ink-3);padding:4px 0;position:relative}
   .tabbar button[aria-current="true"]{color:var(--accent)}
   .tabbar .badge{position:absolute;top:0;left:calc(50% + 6px);background:var(--danger);color:#fff;font-family:var(--mono);font-size:9.5px;border-radius:8px;padding:0 4px;line-height:14px}
@@ -631,6 +631,117 @@ main{overflow-x:hidden}
 .sheet.nudge{animation:nudge .3s}
 @keyframes nudge{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){.sheet.nudge{animation:none}}
+/* v9: workout log */
+#fitBox{max-width:860px}
+#fitBox .panel{margin-bottom:14px}
+#fitBox .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+#fitBox .sec-sub{font-size:13px;font-weight:700;color:var(--ink-3)}
+.fit-tabs{display:flex;gap:6px;background:var(--surface);border-radius:16px;padding:5px;box-shadow:var(--shadow-card);margin-bottom:14px;overflow-x:auto}
+.fit-tabs button{flex:1;min-width:max-content;height:40px;padding:0 12px;border-radius:12px;font-weight:800;font-size:14.5px;color:var(--ink-2)}
+.fit-tabs button[aria-current="true"]{background:var(--navy);color:#fff}
+.wkstrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-bottom:12px}
+.wkd{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 0 5px;border-radius:14px;background:var(--surface);box-shadow:var(--shadow-card);font-weight:700;color:var(--ink-2);min-width:0}
+.wkd span{font-size:11.5px}
+.wkd b{font-size:17px;font-weight:800;color:var(--ink)}
+.wkd i{font-style:normal;font-size:11px;height:15px;line-height:15px;color:var(--green)}
+.wkd.tdy b{background:var(--hl);color:#1A1D23;border-radius:8px;padding:0 6px}
+.wkd.on{outline:2.5px solid var(--navy);outline-offset:-2.5px}
+.fit-day{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow-card);margin-bottom:12px}
+.fd-title{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.fd-title b{font-size:18px;font-weight:800;white-space:nowrap}
+.fd-title select{flex:1;min-width:0;font-weight:800;font-size:15px}
+.ftennis{font-weight:800;font-size:14.5px;padding:8px 12px;background:var(--surface-2);border-radius:12px;white-space:nowrap}
+.fexs{display:flex;flex-direction:column;gap:12px}
+.fex{background:var(--surface);border-radius:20px;padding:16px;box-shadow:var(--shadow-card);border-left:5px solid var(--line);min-width:0}
+.fex.alldone{border-left-color:var(--green)}
+.fex-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.fex-n{font-size:17px;font-weight:800;letter-spacing:-.02em;min-width:0;overflow-wrap:anywhere}
+.fex-t{font-size:13px;font-weight:700;color:var(--ink-3)}
+.fex-c{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink-2)}
+.fex.alldone .fex-c{color:var(--green)}
+.fex-up{display:inline-block;margin-top:8px;background:var(--hl);color:#1A1D23;font-weight:800;font-size:13.5px;border-radius:9px;padding:3px 10px}
+.fex-last{margin-top:6px;font-size:13px;font-weight:600;color:var(--ink-3)}
+.fsets{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.fsets>.btn{align-self:flex-start}
+.fset{display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:14px;padding:6px 6px 6px 10px}
+.fset.done{background:color-mix(in srgb,var(--green) 13%,var(--surface))}
+.fsn{width:22px;font-family:var(--mono);font-weight:700;color:var(--ink-3);text-align:center;flex:none}
+.fin{display:flex;align-items:center;gap:4px;flex:1;min-width:0}
+.fin input{width:100%;min-width:0;height:44px;border:1.5px solid var(--line);border-radius:11px;background:var(--surface);text-align:center;font-size:18px;font-weight:800;color:var(--ink);font-family:inherit;outline:none}
+.fin input:focus{border-color:var(--navy)}
+.fin input::placeholder{color:var(--ink-3);opacity:.55;font-weight:700}
+.fin em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--ink-3);white-space:nowrap}
+.fdone{flex:none;width:48px;height:44px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink-3);display:grid;place-items:center}
+.fdone svg{width:22px;height:22px}
+.fset.done .fdone{background:var(--green);border-color:var(--green);color:#fff}
+#restBar{position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:24px;display:flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:18px;padding:10px 12px 10px 18px;box-shadow:0 14px 40px -10px rgba(0,0,0,.45);font-weight:800}
+#restBar[hidden]{display:none}
+#restBar .rl{font-size:14px;opacity:.8}
+#restBar b{font-family:var(--mono);font-size:24px;min-width:64px;text-align:center}
+#restBar button{height:38px;padding:0 12px;border-radius:11px;background:rgba(255,255,255,.14);color:#fff;font-weight:800;font-size:14px}
+#restBar select{height:38px;border-radius:11px;background:rgba(255,255,255,.14);color:#fff;border:0;font-weight:700;padding:0 6px}
+#restBar select option{color:#000}
+#restBar.soon{background:#D94A3A}
+.fb-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:10px;align-items:end}
+.sparks{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:12px;margin-bottom:14px}
+.spark{background:var(--surface);border-radius:20px;padding:14px 16px 6px;box-shadow:var(--shadow-card);min-width:0}
+.spark svg{width:100%;height:auto;display:block}
+.sp-h{display:flex;align-items:baseline;gap:8px}
+.sp-h span{font-weight:800;color:var(--ink-2);font-size:14px}
+.sp-h b{font-size:20px;font-weight:800}
+.sp-h em{font-style:normal;font-weight:800;font-size:13px;margin-left:auto;color:var(--ink-3)}
+.sp-h em.g{color:var(--green)} .sp-h em.b{color:var(--danger)}
+.fbt{width:100%;border-collapse:collapse;font-weight:700}
+.fbt th{font-size:12.5px;color:var(--ink-3);text-align:left;padding:6px 4px}
+.fbt td{padding:8px 4px;border-top:1px solid var(--line-2)}
+.dtot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.dtot>div{background:var(--surface-2);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column}
+.dtot b{font-size:24px;font-weight:800}
+.dtot span{font-size:12.5px;font-weight:700;color:var(--ink-3)}
+.dtot .ok{background:color-mix(in srgb,var(--green) 14%,var(--surface))} .dtot .ok b{color:var(--green)}
+.dtot .over{background:var(--danger-soft)} .dtot .over b{color:var(--danger)}
+.dform{display:grid;grid-template-columns:90px minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
+.dpre{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chipbtn{background:var(--surface-2);border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13.5px}
+.chipbtn em{font-style:normal;color:var(--ink-3);font-size:12px;margin-left:3px}
+.chipbtn:hover{border-color:var(--navy)}
+.dlist{display:flex;flex-direction:column}
+.drow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line-2);min-width:0}
+.drow .dm{flex:none;font-size:12px;font-weight:800;background:var(--hl-soft);border-radius:7px;padding:2px 8px}
+.drow .dn{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}
+.drow .dv{flex:none;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink-2)}
+.d7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.d7c{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface-2);border-radius:14px;padding:8px 2px;min-width:0}
+.d7c span{font-size:11.5px;font-weight:700;color:var(--ink-3);white-space:nowrap}
+.d7c b{font-size:15px;font-weight:800} .d7c b.g{color:var(--green)} .d7c b.b{color:var(--danger)}
+.d7c em{font-style:normal;font-size:10.5px;font-weight:700;color:var(--ink-3)} .d7c em.b{color:var(--danger)}
+.d7c.on{outline:2.5px solid var(--navy);outline-offset:-2.5px}
+.rdays{display:flex;gap:6px;flex-wrap:wrap}
+.rdays button{height:38px;padding:0 14px;border-radius:12px;background:var(--surface-2);font-weight:800}
+.rdays button.on{background:var(--navy);color:#fff}
+.rex{display:flex;flex-direction:column;gap:8px}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) 92px 78px 78px 96px auto;gap:6px;align-items:center;background:var(--surface-2);border-radius:14px;padding:8px}
+.rnum{display:flex;align-items:center;gap:3px}
+.rnum input{padding:8px 6px;text-align:center}
+.rnum em{white-space:nowrap;font-style:normal;font-size:12px;font-weight:700;color:var(--ink-3)}
+.racts{display:flex;gap:2px;align-items:center}
+@media (max-width:760px){
+  #restBar{bottom:calc(84px + env(safe-area-inset-bottom,0px));left:12px;right:12px;transform:none;justify-content:space-between}
+  .fit-tabs button{font-size:14px;padding:0 10px}
+  .fex{padding:14px 12px}
+  .fd-title{flex-basis:100%}
+  .ftennis{flex:1;justify-content:center}
+  #fitBox{padding-bottom:84px}
+  .fb-form{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .fb-form .btn{grid-column:1/-1}
+  .dform{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .dform #dName{grid-column:1/-1;order:-1}
+  .dform .btn{grid-column:1/-1}
+  .rrow{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rrow>input:first-child{grid-column:1/-1}
+  .rrow>select{grid-column:1/3}
+  .wkd b{font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -793,6 +904,8 @@ main{overflow-x:hidden}
     <!-- VAULT -->
     <section class="view" id="v-vault" hidden><div class="vault-wrap" id="vaultBox"></div></section>
 
+    <section class="view" id="v-fit" hidden><div id="fitBox"><div class="fit-tabs"><button data-act="fit-tab" data-ft="today">오늘 운동</button><button data-act="fit-tab" data-ft="body">인바디</button><button data-act="fit-tab" data-ft="diet">식단</button><button data-act="fit-tab" data-ft="routine">루틴</button></div><div id="fitBody"></div></div></section>
+    <div id="restBar" hidden><span class="rl">휴식</span><b id="restTx">1:30</b><button id="restPlus" type="button">+30초</button><select id="restLen" aria-label="휴식 시간"><option value="60">60초</option><option value="90" selected>90초</option><option value="120">120초</option></select><button id="restStop" type="button">끝</button></div>
     <!-- SEARCH -->
     <section class="view" id="v-search" hidden><div class="sres" id="sres"></div></section>
   </main>
@@ -824,9 +937,10 @@ const IC = {
   bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
   pin:'<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M15 3 21 9l-2.5 1-3 3 .5 4.5-1.5 1.5-4-4-4.5 4.5L5 18.5l4.5-4.5-4-4 1.5-1.5L11.5 9l3-3z"/></svg>',
-  vault:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.4"/></svg>'
+  vault:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.4"/></svg>',
+  fit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg>'
 };
-const VIEWS = [['home','오늘'],['notes','메모'],['todos','할 일'],['cal','일정'],['files','파일'],['vault','보안']];
+const VIEWS = [['home','오늘'],['notes','메모'],['todos','할 일'],['cal','일정'],['files','파일'],['fit','운동'],['vault','보안']];
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -876,7 +990,7 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { pe
 let me = null;
 
 /* ---------- state ---------- */
-const S = { notes:[], todos:[], events:[], files:[], vault:[] };
+const S = { notes:[], todos:[], events:[], files:[], vault:[], fit:[] };
 let loaded = false;
 let view = 'home';
 let calCursor = new Date(); calCursor.setDate(1);
@@ -1007,6 +1121,7 @@ function renderNow(){
   else if (view === 'files') renderFiles();
   else if (view === 'search') renderSearch();
   else if (view === 'vault') renderVault();
+  else if (view === 'fit') renderFit();
   hydrateImgs();
 }
 function openTodos(){ return S.todos.filter(t => !t.done); }
@@ -1624,12 +1739,237 @@ $('#vaultBox').addEventListener('submit', async e => {
 });
 $('#vaultBox').addEventListener('pointerdown', vTouch);
 
+/* ---------- workout log ---------- */
+const FIT_DEFAULT = {
+  '1': { name:'가슴·어깨·삼두', ex:[ {n:'체스트프레스 머신',s:4,lo:8,hi:10,u:'kg'}, {n:'인클라인 체스트프레스',s:3,lo:10,hi:12,u:'kg'}, {n:'숄더프레스 머신',s:3,lo:8,hi:10,u:'kg'}, {n:'사이드 레터럴 레이즈',s:3,lo:12,hi:15,u:'kg'} ] },
+  '2': { name:'하체 A', ex:[ {n:'레그프레스',s:4,lo:8,hi:12,u:'kg'}, {n:'덤벨 루마니안 데드리프트',s:3,lo:8,hi:10,u:'kg'}, {n:'레그컬 머신',s:3,lo:10,hi:12,u:'kg'}, {n:'카프레이즈',s:2,lo:15,hi:15,u:'kg'} ] },
+  '3': { name:'등·이두', ex:[ {n:'랫풀다운',s:4,lo:8,hi:10,u:'kg'}, {n:'시티드 케이블 로우',s:3,lo:10,hi:12,u:'kg'}, {n:'페이스풀 (케이블)',s:3,lo:15,hi:15,u:'kg'}, {n:'덤벨 컬',s:2,lo:10,hi:12,u:'kg'} ] },
+  '4': { name:'하체 B + 코어', ex:[ {n:'스미스머신 스쿼트',s:4,lo:8,hi:10,u:'kg'}, {n:'레그 익스텐션',s:3,lo:12,hi:12,u:'kg'}, {n:'워킹 런지 (한쪽)',s:3,lo:10,hi:10,u:'kg'}, {n:'케이블 크런치',s:3,lo:12,hi:15,u:'kg'} ] },
+  '5': { name:'상체 종합', ex:[ {n:'인클라인 체스트프레스',s:3,lo:8,hi:10,u:'kg'}, {n:'어시스트 풀업 머신',s:3,lo:6,hi:8,u:'kg',inv:true}, {n:'머신 로우',s:3,lo:10,hi:10,u:'kg'}, {n:'숄더프레스',s:3,lo:10,hi:10,u:'kg'} ] },
+  '6': { name:'주말 홈트', ex:[ {n:'푸시업',s:3,lo:10,hi:20,u:'bw'}, {n:'불가리안 스플릿 스쿼트 (한쪽)',s:3,lo:10,hi:10,u:'bw'}, {n:'플랭크',s:3,lo:40,hi:40,u:'sec'} ] }
+};
+const FIT_DAYS = [['1','월'],['2','화'],['3','수'],['4','목'],['5','금'],['6','주말']];
+const DIET_PRESETS = [['닭가슴살 100g',23,110],['단백질쉐이크',35,150],['계란 1개',6,75],['그릭요거트 100g',10,100],['두부 반 모',15,150],['두유 1팩',8,130],['밥 반 공기',3,150],['바나나 1개',1,100]];
+const DIET_MEALS = ['점심','간식','저녁','아침','기타'];
+let fitTab = 'today', fitDate = todayKey(), fitDayOverride = null, fitDraft = null, fitSaveT = null;
+let restEnd = 0, restTimer = null, restLen = 90, routineDraft = null, routineDay = '1', dietDate = todayKey();
+const fitDoc = id => S.fit.find(x => x.id === id);
+function fitRoutine(){ const d = fitDoc('fit-routine'); return (d && d.days) || FIT_DEFAULT; }
+const dayKeyOf = k => { const g = fromKey(k).getDay(); return g === 0 || g === 6 ? '6' : String(g); };
+function lastRecord(name, before){
+  const logs = S.fit.filter(x => x.id.startsWith('fw-') && x.date < before).sort((a,b) => b.date.localeCompare(a.date));
+  for (const l of logs) { const e = (l.ex || []).find(x => x.n === name); if (e && (e.sets || []).some(s => s.done)) return { date:l.date, sets:e.sets.filter(s => s.done) }; }
+  return null;
+}
+function progressHint(ex, last){
+  if (!last || last.sets.length < ex.s) return '';
+  if (!last.sets.every(s => +s.r >= ex.hi)) return '';
+  if (ex.u === 'sec') return '⬆ 이번엔 시간 늘리기';
+  if (ex.u === 'bw') return '⬆ 이번엔 횟수·난이도 올리기';
+  return ex.inv ? '⬇ 이번엔 보조 무게 줄이기' : '⬆ 이번엔 무게 올리기';
+}
+const unitLbl = u => u === 'sec' ? '초' : '회';
+function buildDraft(date){
+  const doc = fitDoc('fw-' + date);
+  const dk = fitDayOverride || (doc && doc.day) || dayKeyOf(date);
+  const r = fitRoutine()[dk] || { name:'', ex:[] };
+  const ex = r.ex.map(e => { const saved = doc && doc.day === dk && (doc.ex || []).find(x => x.n === e.n); const sets = []; for (let i = 0; i < Math.max(e.s, saved ? saved.sets.length : 0); i++) sets.push(saved && saved.sets[i] ? { ...saved.sets[i] } : { w:'', r:'', done:false }); return { n:e.n, sets }; });
+  return { date, day:dk, name:r.name, ex, tennis: !!(doc && doc.tennis), note: (doc && doc.note) || '' };
+}
+function saveFitDraft(now){
+  clearTimeout(fitSaveT);
+  const go = () => { fitSaveT = null; const d = fitDraft; put('fit', 'fw-' + d.date, { date:d.date, day:d.day, name:d.name, ex:d.ex, tennis:d.tennis, note:d.note, updatedAt:nowISO() }); };
+  if (now) go(); else fitSaveT = setTimeout(go, 700);
+}
+function renderFit(force){
+  const box = $('#fitBox'); if (!box) return;
+  if (!force && box.contains(document.activeElement) && document.activeElement.matches('input,textarea,select')) return; // keep what is being typed
+  box.querySelectorAll('.fit-tabs button').forEach(b => b.setAttribute('aria-current', b.dataset.ft === fitTab));
+  const body = $('#fitBody');
+  if (fitTab === 'today') body.innerHTML = fitTodayHtml();
+  else if (fitTab === 'body') body.innerHTML = fitBodyHtml();
+  else if (fitTab === 'diet') body.innerHTML = fitDietHtml();
+  else body.innerHTML = fitRoutineHtml();
+}
+function weekStrip(){
+  const d = fromKey(fitDate), mon = addDays(d, -((d.getDay() + 6) % 7));
+  return `<div class="wkstrip">${[0,1,2,3,4,5,6].map(i => { const k = dkey(addDays(mon, i)), doc = fitDoc('fw-' + k); const did = doc && ((doc.ex || []).some(e => e.sets.some(s => s.done)) || doc.tennis);
+    return `<button class="wkd${k === fitDate ? ' on' : ''}${k === todayKey() ? ' tdy' : ''}" data-act="fit-date" data-date="${k}"><span>${WD[addDays(mon,i).getDay()]}</span><b>${addDays(mon,i).getDate()}</b><i class="${did ? 'y' : ''}">${doc && doc.tennis ? '🎾' : did ? '●' : ''}</i></button>`; }).join('')}</div>`;
+}
+function fitTodayHtml(){
+  if (!fitDraft || fitDraft.date !== fitDate || (fitDayOverride && fitDraft.day !== fitDayOverride)) { if (!fitSaveT) fitDraft = buildDraft(fitDate); }
+  const d = fitDraft, routine = fitRoutine();
+  const exHtml = d.ex.map((e, i) => {
+    const def = (routine[d.day] && routine[d.day].ex.find(x => x.n === e.n)) || { s:e.sets.length, lo:'', hi:'', u:'kg' };
+    const last = lastRecord(e.n, d.date), hint = progressHint(def, last);
+    const lastW = last && last.sets[0] ? last.sets[0].w : '';
+    const doneN = e.sets.filter(s => s.done).length;
+    return `<div class="fex${doneN === e.sets.length && doneN ? ' alldone' : ''}">
+      <div class="fex-h"><div class="fex-n">${esc(e.n)}</div><span class="fex-t">${def.s}세트 × ${def.lo}${def.hi !== def.lo ? '~' + def.hi : ''}${unitLbl(def.u)}</span><span class="fex-c">${doneN}/${e.sets.length}</span></div>
+      ${hint ? `<div class="fex-up">${hint}</div>` : ''}
+      <div class="fex-last">${last ? `지난번 ${fmtMD(last.date)} · ${last.sets.map(s => (def.u === 'kg' && s.w !== '' ? s.w + '×' : '') + s.r).join(', ')}` : '첫 기록이에요'}</div>
+      <div class="fsets">${e.sets.map((s, j) => `<div class="fset${s.done ? ' done' : ''}"><span class="fsn">${j+1}</span>
+        ${def.u === 'kg' ? `<label class="fin"><input type="number" inputmode="decimal" step="0.5" min="0" data-fe="${i}" data-fs="${j}" data-ff="w" value="${esc(s.w)}" placeholder="${esc(lastW)}"><em>${def.inv ? '보조kg' : 'kg'}</em></label>` : ''}
+        <label class="fin"><input type="number" inputmode="numeric" min="0" data-fe="${i}" data-fs="${j}" data-ff="r" value="${esc(s.r)}" placeholder="${def.hi || ''}"><em>${unitLbl(def.u)}</em></label>
+        <button class="fdone" data-act="fit-set" data-e="${i}" data-s="${j}" aria-label="세트 완료">${IC.check}</button></div>`).join('')}
+        <button class="btn ghost sm" data-act="fit-addset" data-e="${i}">+ 세트</button></div>
+    </div>`;
+  }).join('');
+  return `${weekStrip()}
+    <div class="fit-day">
+      <div class="fd-title"><b>${fmtMD(d.date)}</b> <select class="field" id="fitDaySel" aria-label="루틴 선택">${FIT_DAYS.map(([k,l]) => `<option value="${k}"${k === d.day ? ' selected' : ''}>${l} · ${esc((routine[k]||{}).name||'')}</option>`).join('')}</select></div>
+      <label class="tog ftennis"><input type="checkbox" id="fitTennis" ${d.tennis ? 'checked' : ''}> 🎾 테니스 30분</label>
+    </div>
+    <div class="fexs">${exHtml || '<div class="empty">이 날 루틴에 종목이 없어요. 루틴 편집에서 추가하세요.</div>'}</div>
+    <div class="panel" style="margin-top:14px"><label class="lb" for="fitNote">오늘 메모 (컨디션, 통증 등)</label><textarea class="field" id="fitNote">${esc(d.note)}</textarea></div>`;
+}
+function startRest(){
+  restEnd = Date.now() + restLen * 1000; $('#restBar').hidden = false; clearInterval(restTimer);
+  const tick = () => { const left = Math.max(0, Math.round((restEnd - Date.now()) / 1000)); $('#restTx').textContent = `${Math.floor(left/60)}:${pad(left%60)}`; $('#restBar').classList.toggle('soon', left <= 10);
+    if (left <= 0) { clearInterval(restTimer); ding(); try { navigator.vibrate && navigator.vibrate([250,120,250]); } catch {} $('#restTx').textContent = '다음 세트!'; setTimeout(() => { if (Date.now() >= restEnd) $('#restBar').hidden = true; }, 4000); } };
+  tick(); restTimer = setInterval(tick, 250);
+}
+/* body (InBody) */
+function sparkSvg(pts, label, unit, good){
+  if (!pts.length) return '';
+  const W = 300, H = 110, P = 26, vals = pts.map(p => p.v), mn = Math.min(...vals), mx = Math.max(...vals), span = (mx - mn) || 1;
+  const x = i => pts.length === 1 ? W/2 : P + i * (W - 2*P) / (pts.length - 1), y = v => H - 24 - (v - mn) / span * (H - 50);
+  const path = pts.map((p,i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
+  const first = pts[0].v, lastv = pts[pts.length-1].v, diff = +(lastv - first).toFixed(1), better = good === 'up' ? diff > 0 : diff < 0;
+  return `<div class="spark"><div class="sp-h"><span>${label}</span><b>${lastv}${unit}</b>${pts.length > 1 ? `<em class="${diff === 0 ? '' : better ? 'g' : 'b'}">${diff > 0 ? '+' : ''}${diff}${unit}</em>` : ''}</div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label} 추이"><path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map((p,i) => `<circle cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="${i === pts.length-1 ? 4.5 : 3}" fill="${i === pts.length-1 ? 'var(--accent)' : 'var(--surface)'}" stroke="var(--accent)" stroke-width="2"/>`).join('')}
+    ${pts.map((p,i) => (i === 0 || i === pts.length-1) ? `<text x="${x(i).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="11" fill="var(--ink-3)">${p.k.slice(5).replace('-','/')}</text>` : '').join('')}</svg></div>`;
+}
+function fitBodyHtml(){
+  const list = S.fit.filter(x => x.id.startsWith('fb-')).sort((a,b) => a.date.localeCompare(b.date));
+  const ser = f => list.filter(x => x[f] !== '' && x[f] != null).map(x => ({ k:x.date, v:+x[f] }));
+  return `<div class="panel"><div class="sec-head in"><h2>인바디 기록</h2><span class="sec-sub">4주마다 · 아침 공복 · 같은 조건</span></div>
+      <form class="fb-form" id="fbForm" autocomplete="off">
+        <div><label class="lb" for="fbDate">날짜</label><input class="field" type="date" id="fbDate" value="${todayKey()}" required></div>
+        <div><label class="lb" for="fbW">체중 kg</label><input class="field" type="number" step="0.1" inputmode="decimal" id="fbW"></div>
+        <div><label class="lb" for="fbM">골격근량 kg</label><input class="field" type="number" step="0.1" inputmode="decimal" id="fbM"></div>
+        <div><label class="lb" for="fbF">체지방률 %</label><input class="field" type="number" step="0.1" inputmode="decimal" id="fbF"></div>
+        <button class="btn primary" type="submit">기록</button>
+      </form></div>
+    ${list.length ? `<div class="sparks">${sparkSvg(ser('smm'),'골격근량','kg','up')}${sparkSvg(ser('fat'),'체지방률','%','down')}${sparkSvg(ser('weight'),'체중','kg','down')}</div>
+      <div class="panel"><table class="fbt"><thead><tr><th>날짜</th><th>체중</th><th>골격근량</th><th>체지방률</th><th></th></tr></thead><tbody>${[...list].reverse().map(x => `<tr><td>${fmtMD(x.date)}</td><td>${x.weight ?? ''}</td><td>${x.smm ?? ''}</td><td>${x.fat ?? ''}</td><td><button class="x-del" data-act="fb-del" data-id="${x.id}" aria-label="삭제">×</button></td></tr>`).join('')}</tbody></table></div>`
+      : '<div class="empty" style="padding:16px 4px">첫 인바디 결과를 입력하면 골격근량·체지방률 추이 그래프가 그려져요.</div>'}`;
+}
+/* diet (1-week check) */
+function dietDoc(k){ return fitDoc('fd-' + k); }
+function dietTotals(k){ const d = dietDoc(k); const m = (d && d.meals) || []; return { p: m.reduce((a,x) => a + (+x.p||0), 0), c: m.reduce((a,x) => a + (+x.c||0), 0), n: m.length }; }
+function fitDietHtml(){
+  const d = dietDoc(dietDate), meals = (d && d.meals) || [], t = dietTotals(dietDate);
+  const pOk = t.p >= 110, cOk = t.c > 0 && t.c <= 2000;
+  const days = [...Array(7)].map((_, i) => dkey(addDays(fromKey(dietDate), -i))).reverse();
+  return `<div class="panel">
+      <div class="sec-head in"><h2>식단 기록</h2><span class="sec-sub">1주일만 · 새는 칼로리 찾기용</span><input class="field" type="date" id="dietDate" value="${dietDate}" style="width:auto;margin-left:auto"></div>
+      <div class="dtot"><div class="${pOk ? 'ok' : ''}"><b>${t.p}g</b><span>단백질 · 목표 110~130g</span></div><div class="${t.c > 2000 ? 'over' : cOk ? 'ok' : ''}"><b>${t.c.toLocaleString()}kcal</b><span>칼로리 · 목표 1,900 전후</span></div></div>
+      <form class="dform" id="dietForm" autocomplete="off">
+        <select class="field" id="dMeal" aria-label="끼니">${DIET_MEALS.map(x => `<option>${x}</option>`).join('')}</select>
+        <input class="field" id="dName" placeholder="메뉴 (예: 삼겹살 200g)" aria-label="메뉴">
+        <input class="field" id="dP" type="number" inputmode="numeric" placeholder="단백질 g" aria-label="단백질">
+        <input class="field" id="dC" type="number" inputmode="numeric" placeholder="kcal" aria-label="칼로리">
+        <button class="btn primary" type="submit">추가</button>
+      </form>
+      <div class="dpre">${DIET_PRESETS.map(([n,p,c],i) => `<button class="chipbtn" data-act="diet-pre" data-i="${i}">${n} <em>${p}g·${c}</em></button>`).join('')}</div>
+      <div class="dlist">${meals.length ? meals.map((m,i) => `<div class="drow"><span class="dm">${esc(m.meal)}</span><span class="dn">${esc(m.name)}</span><span class="dv">${m.p||0}g · ${m.c||0}kcal</span><button class="x-del" data-act="diet-del" data-i="${i}" aria-label="삭제">×</button></div>`).join('') : '<div class="empty">이 날 기록이 없어요. 위에서 추가하거나 자주 먹는 걸 눌러서 바로 넣으세요.</div>'}</div>
+      <p class="hint">표시된 영양값은 대략치예요. 저녁 고기 종류, 소스, 커피, 주말 식사까지 빠짐없이 적는 게 핵심이에요.</p>
+    </div>
+    <div class="panel"><h2 style="margin-bottom:10px">최근 7일</h2><div class="d7">${days.map(k => { const tt = dietTotals(k); return `<button class="d7c${k === dietDate ? ' on' : ''}" data-act="diet-day" data-date="${k}"><span>${fmtMD(k)}</span><b class="${tt.n ? (tt.p >= 110 ? 'g' : 'b') : ''}">${tt.n ? tt.p + 'g' : '—'}</b><em class="${tt.c > 2000 ? 'b' : ''}">${tt.n ? tt.c.toLocaleString() + 'kcal' : ''}</em></button>`; }).join('')}</div></div>`;
+}
+async function dietAdd(m){ const k = dietDate, d = dietDoc(k); const meals = [...((d && d.meals) || []), m]; await put('fit', 'fd-' + k, { date:k, meals }); }
+/* routine editor */
+function fitRoutineHtml(){
+  if (!routineDraft) routineDraft = JSON.parse(JSON.stringify(fitRoutine()));
+  const r = routineDraft[routineDay] || { name:'', ex:[] };
+  return `<div class="panel">
+    <div class="rdays">${FIT_DAYS.map(([k,l]) => `<button class="${k === routineDay ? 'on' : ''}" data-act="r-day" data-k="${k}">${l}</button>`).join('')}</div>
+    <div style="margin:12px 0"><label class="lb" for="rName">루틴 이름</label><input class="field" id="rName" value="${esc(r.name)}"></div>
+    <div class="rex">${r.ex.map((e,i) => `<div class="rrow">
+      <input class="field" data-ri="${i}" data-rf="n" value="${esc(e.n)}" aria-label="종목" placeholder="종목">
+      <label class="rnum"><input class="field" type="number" min="1" data-ri="${i}" data-rf="s" value="${e.s}"><em>세트</em></label>
+      <label class="rnum"><input class="field" type="number" min="1" data-ri="${i}" data-rf="lo" value="${e.lo}"><em>~</em></label>
+      <label class="rnum"><input class="field" type="number" min="1" data-ri="${i}" data-rf="hi" value="${e.hi}"><em>${unitLbl(e.u)}</em></label>
+      <select class="field" data-ri="${i}" data-rf="u" aria-label="단위"><option value="kg"${e.u === 'kg' ? ' selected' : ''}>무게</option><option value="bw"${e.u === 'bw' ? ' selected' : ''}>맨몸</option><option value="sec"${e.u === 'sec' ? ' selected' : ''}>시간(초)</option></select>
+      <span class="racts"><button class="btn ghost sm" data-act="r-up" data-i="${i}" aria-label="위로">↑</button><button class="btn ghost sm" data-act="r-down" data-i="${i}" aria-label="아래로">↓</button><button class="x-del" data-act="r-del" data-i="${i}" aria-label="삭제">×</button></span>
+    </div>`).join('')}</div>
+    <div class="acts" style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn" data-act="r-add">+ 종목 추가</button><button class="btn ghost sm" data-act="r-reset" style="margin-left:auto">기본 루틴으로 되돌리기</button><button class="btn primary" data-act="r-save">루틴 저장</button></div>
+    <p class="hint">무게를 올릴지 판단하는 기준은 "모든 세트에서 횟수 범위의 상한(~ 뒤 숫자)을 채웠는지"예요.</p>
+  </div>`;
+}
+$('#fitBox').addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.fe != null && fitDraft) { fitDraft.ex[+t.dataset.fe].sets[+t.dataset.fs][t.dataset.ff] = t.value; saveFitDraft(); }
+  else if (t.id === 'fitNote' && fitDraft) { fitDraft.note = t.value; saveFitDraft(); }
+  else if (t.dataset.ri != null && routineDraft) { const e2 = routineDraft[routineDay].ex[+t.dataset.ri]; const f = t.dataset.rf; e2[f] = ['s','lo','hi'].includes(f) ? +t.value : t.value; }
+  else if (t.id === 'rName' && routineDraft) routineDraft[routineDay].name = t.value;
+});
+$('#fitBox').addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'fitDaySel') { if (fitSaveT) saveFitDraft(true); fitDayOverride = t.value; fitDraft = null; t.blur(); renderFit(); }
+  else if (t.id === 'fitTennis' && fitDraft) { fitDraft.tennis = t.checked; saveFitDraft(true); }
+  else if (t.id === 'dietDate') { dietDate = t.value || todayKey(); t.blur(); renderFit(); }
+  else if (t.dataset.rf === 'u' && routineDraft) { t.blur(); renderFit(); }
+});
+$('#fitBox').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (e.target.id === 'fbForm') {
+    const date = $('#fbDate').value, num = id => $(id).value === '' ? '' : +$(id).value;
+    const rec = { date, weight:num('#fbW'), smm:num('#fbM'), fat:num('#fbF') };
+    if (!date || (rec.weight === '' && rec.smm === '' && rec.fat === '')) { toast('숫자를 하나 이상 입력하세요'); return; }
+    document.activeElement && document.activeElement.blur();
+    await put('fit', 'fb-' + date, rec); toast('인바디를 기록했어요');
+  } else if (e.target.id === 'dietForm') {
+    const name = $('#dName').value.trim(), p = +$('#dP').value || 0, c = +$('#dC').value || 0;
+    if (!name && !p && !c) { $('#dName').focus(); return; }
+    const meal = $('#dMeal').value; document.activeElement && document.activeElement.blur();
+    await dietAdd({ meal, name: name || '(메뉴)', p, c });
+  }
+});
+$('#restPlus').onclick = () => { restEnd += 30000; };
+$('#restStop').onclick = () => { clearInterval(restTimer); $('#restBar').hidden = true; };
+$('#restLen').onchange = e => { restLen = +e.target.value; try { localStorage.setItem('wn.rest', restLen); } catch {} };
+try { const v = +localStorage.getItem('wn.rest'); if (v) { restLen = v; $('#restLen').value = String(v); } } catch {}
+async function fitAction(act, a){
+  if (!a.closest('#fitBox')) return false;
+  const ae = document.activeElement; if (ae && ae !== a && $('#fitBox').contains(ae) && ae.matches('input,textarea,select')) ae.blur();
+  switch (act) {
+    case 'fit-tab': if (fitSaveT) saveFitDraft(true); fitTab = a.dataset.ft; routineDraft = null; renderFit(); return true;
+    case 'fit-date': if (fitSaveT) saveFitDraft(true); fitDate = a.dataset.date; fitDayOverride = null; fitDraft = null; renderFit(); return true;
+    case 'fit-set': {
+      const e = fitDraft.ex[+a.dataset.e], s = e.sets[+a.dataset.s];
+      if (!s.done) {
+        const row = a.closest('.fset'), wIn = row.querySelector('[data-ff="w"]'), rIn = row.querySelector('[data-ff="r"]');
+        if (wIn && s.w === '' && wIn.placeholder) s.w = wIn.placeholder;
+        if (s.r === '' && rIn.placeholder) s.r = rIn.placeholder;
+        s.done = true; saveFitDraft(true); renderFit(); startRest();
+      } else { s.done = false; saveFitDraft(true); renderFit(); }
+      return true;
+    }
+    case 'fit-addset': { const e = fitDraft.ex[+a.dataset.e]; e.sets.push({ w:'', r:'', done:false }); saveFitDraft(); renderFit(); return true; }
+    case 'fb-del': if (armed(a, '삭제?')) { await del('fit', a.dataset.id); } return true;
+    case 'diet-pre': { const [n,p,c] = DIET_PRESETS[+a.dataset.i]; await dietAdd({ meal: ($('#dMeal') && $('#dMeal').value) || '점심', name:n, p, c }); return true; }
+    case 'diet-del': { if (!armed(a, '삭제?')) return true; const d = dietDoc(dietDate); const meals = [...d.meals]; meals.splice(+a.dataset.i, 1); await put('fit', 'fd-' + dietDate, { date:dietDate, meals }); return true; }
+    case 'diet-day': dietDate = a.dataset.date; renderFit(); return true;
+    case 'r-day': routineDay = a.dataset.k; renderFit(); return true;
+    case 'r-add': routineDraft[routineDay].ex.push({ n:'', s:3, lo:8, hi:12, u:'kg' }); renderFit(); return true;
+    case 'r-del': if (armed(a, '삭제?')) { routineDraft[routineDay].ex.splice(+a.dataset.i, 1); renderFit(); } return true;
+    case 'r-up': case 'r-down': { const L = routineDraft[routineDay].ex, i = +a.dataset.i, j = act === 'r-up' ? i - 1 : i + 1; if (j >= 0 && j < L.length) { [L[i], L[j]] = [L[j], L[i]]; renderFit(); } return true; }
+    case 'r-reset': if (armed(a, '정말 되돌릴까요?')) { routineDraft = JSON.parse(JSON.stringify(FIT_DEFAULT)); renderFit(); } return true;
+    case 'r-save': { for (const k in routineDraft) routineDraft[k].ex = routineDraft[k].ex.filter(e => e.n.trim()); await put('fit', 'fit-routine', { days: routineDraft, updatedAt: nowISO() }); fitDraft = null; toast('루틴을 저장했어요'); renderFit(); return true; }
+  }
+  return false;
+}
+
 /* ---------- events ---------- */
 document.addEventListener('click', async ev => {
   const v = ev.target.closest('[data-view]');
   if (v) { go(v.dataset.view); return; }
   const a = ev.target.closest('[data-act]'); if (!a) return;
   const act = a.dataset.act, id = a.dataset.id;
+  if (await fitAction(act, a)) return;
   const find = (arr) => arr.find(x => x.id === id);
   switch (act) {
     case 'toggle-todo': {
