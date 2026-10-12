@@ -628,6 +628,9 @@ main{overflow-x:hidden}
 .vv{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}
 .vmemo{font-size:13.5px;color:var(--ink-2);white-space:pre-wrap;overflow-wrap:anywhere}
 @media (max-width:760px){ .tabbar button{font-size:10px} .vcard{padding:22px 18px} }
+.sheet.nudge{animation:nudge .3s}
+@keyframes nudge{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.sheet.nudge{animation:none}}
 </style>
 </head>
 <body>
@@ -1395,7 +1398,8 @@ function renderSearch(){
 }
 
 /* ---------- sheet & lightbox ---------- */
-function openSheet(html){ const s = $('#sheet'); s.innerHTML = `<div class="sheet" role="dialog" aria-modal="true">${html}</div>`; s.hidden = false; }
+let sheetDirty = false;
+function openSheet(html){ const s = $('#sheet'); s.innerHTML = `<div class="sheet" role="dialog" aria-modal="true">${html}</div>`; s.hidden = false; sheetDirty = false; }
 function closeSheet(){ $('#sheet').hidden = true; $('#sheet').innerHTML = ''; }
 function lightbox(src, cap){ const l = $('#lightbox'); l.innerHTML = `<button class="close" data-act="close-lb" aria-label="닫기">×</button><img src="${esc(src)}" alt="">${cap ? `<p>${esc(cap)}</p>` : ''}`; l.hidden = false; }
 
@@ -1692,10 +1696,19 @@ document.addEventListener('click', async ev => {
     case 'close-settings': $('#settings').hidden = true; break;
   }
 });
-$('#sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSheet(); });
-$('#settings').addEventListener('click', e => { if (e.target.id === 'settings') $('#settings').hidden = true; });
-$('#lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox') $('#lightbox').hidden = true; });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#lightbox').hidden) $('#lightbox').hidden = true; else if (!$('#sheet').hidden) closeSheet(); else if (!$('#settings').hidden) $('#settings').hidden = true; } });
+// close on backdrop only when the press AND release both happen on the backdrop
+// (dragging a text selection out of the popup must not close it)
+let downOn = null;
+document.addEventListener('pointerdown', e => { downOn = e.target; }, true);
+$('#sheet').addEventListener('input', () => { sheetDirty = true; });
+$('#sheet').addEventListener('click', e => {
+  if (e.target.id !== 'sheet' || downOn !== e.target) return;
+  if (sheetDirty) { const sh = $('#sheet .sheet'); toast('작성 중이에요. 저장하거나 취소를 눌러주세요'); if (sh) { sh.classList.remove('nudge'); void sh.offsetWidth; sh.classList.add('nudge'); } return; }
+  closeSheet();
+});
+$('#settings').addEventListener('click', e => { if (e.target.id === 'settings' && downOn === e.target) $('#settings').hidden = true; });
+$('#lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox' && downOn === e.target) $('#lightbox').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#lightbox').hidden) $('#lightbox').hidden = true; else if (!$('#sheet').hidden) { if (sheetDirty) toast('작성 중이에요. 저장하거나 취소를 눌러주세요'); else closeSheet(); } else if (!$('#settings').hidden) $('#settings').hidden = true; } });
 $('#mMenu').onclick = openSettings;
 $('#notifBtn').onclick = askNotif;
 $('#logoutBtn').onclick = () => logout();
