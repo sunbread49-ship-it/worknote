@@ -381,9 +381,9 @@ function vSetup() {
     <p class="hint" style="margin-top:4px">워크노트와 같은 Supabase 프로젝트에 규격대조용 저장 공간과 AI 연결을 추가해요. Supabase 대시보드(supabase.com)에서 아래 순서대로 하면 돼요.</p>
     <ol>
       <li><b>저장 테이블 만들기</b> ${tableOk ? `<span class="pill ok">완료</span>` : ""}<br><span class="hint">SQL Editor → New query → 아래 내용을 붙여넣고 Run</span>
-        <div class="actions" style="margin-top:6px"><button class="btn sm" data-act="copy" data-k="sql">SQL 복사</button></div><pre>${esc(setupText.sql || "불러오는 중…")}</pre></li>
+        <div class="actions" style="margin-top:6px"><button class="btn sm" data-act="copy" data-k="sql">SQL 복사</button></div><pre translate="no">${esc(setupText.sql || "불러오는 중…")}</pre></li>
       <li><b>AI 연결 함수 만들기</b><br><span class="hint">Edge Functions → Deploy a new function → Via Editor → 이름을 <code>bid-ai</code>로 하고 아래 코드를 붙여넣은 뒤 Deploy</span>
-        <div class="actions" style="margin-top:6px"><button class="btn sm" data-act="copy" data-k="fn">함수 코드 복사</button></div><pre>${esc(setupText.fn || "불러오는 중…")}</pre></li>
+        <div class="actions" style="margin-top:6px"><button class="btn sm" data-act="copy" data-k="fn">함수 코드 복사</button></div><pre translate="no">${esc(setupText.fn || "불러오는 중…")}</pre></li>
       <li><b>비밀값 넣기</b><br><span class="hint">Edge Functions → Secrets 에 두 개 추가</span><br>
         <code>GEMINI_API_KEY</code> = aistudio.google.com 에서 만든 무료 API 키 (결제 설정은 하지 마세요)<br>
         <code>ALLOWED_EMAILS</code> = 이 사이트를 쓸 이메일 (지금 로그인한 계정: <b>${esc(S.email)}</b>)</li>
