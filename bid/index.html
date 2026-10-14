@@ -284,7 +284,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v6</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v7</p>
   </form>
 </div>
 
@@ -778,7 +778,8 @@ async function callAIOnce(prompt, effort, signal) {
     r = await fetch(FN_URL, {
       method: "POST", signal,
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, apikey: SUPABASE_KEY },
-      body: JSON.stringify({ prompt, effort }),
+      // 3.6-flash가 빠르고 안정적(짧은 질문 2초), 막히면 lite → 3.8 순서. effort는 Gemini의 생각 단계로 옮긴다
+      body: JSON.stringify({ prompt, models: ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"], thinking: effort === "low" ? "low" : "medium" }),
     });
   } catch (e) {
     if (e?.name === "AbortError") throw { code: "cancelled" };
