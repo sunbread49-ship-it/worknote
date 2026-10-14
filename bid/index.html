@@ -284,7 +284,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v5</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v6</p>
   </form>
 </div>
 
@@ -757,7 +757,20 @@ function parseJSON(text) {
   if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch {} }
   throw { code: "invalid_json" };
 }
-async function callAI(prompt, effort, signal) {
+// 서버가 로그인 만료로 거절하면 한 번 갱신해서 다시 보내고, 그래도 안 되면 로그인 화면을 띄운다
+async function callAI(prompt, effort, signal, retried) {
+  try { return await callAIOnce(prompt, effort, signal); }
+  catch (e) {
+    if (e?.code !== "not_signed_in") throw e;
+    if (!retried) {
+      try { const { data } = await withTimeout(S.sb.auth.refreshSession(), 10000); if (data?.session) { S.session = data.session; return await callAI(prompt, effort, signal, true); } } catch {}
+    }
+    S.session = null; S.me = null; showAuth(true);
+    const er = $("#authErr"); er.textContent = "로그인이 만료됐어요. 다시 로그인한 뒤 같은 버튼을 눌러 주세요."; er.hidden = false;
+    throw { code: "cancelled" };
+  }
+}
+async function callAIOnce(prompt, effort, signal) {
   const token = (await currentSession())?.access_token;
   if (!token) throw { code: "not_signed_in" };
   let r;
