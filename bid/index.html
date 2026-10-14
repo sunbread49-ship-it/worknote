@@ -284,7 +284,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v4</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v5</p>
   </form>
 </div>
 
@@ -385,7 +385,7 @@ function vSetup() {
       <li><b>AI 연결 함수 만들기</b><br><span class="hint">Edge Functions → Deploy a new function → Via Editor → 이름을 <code>bid-ai</code>로 하고 아래 코드를 붙여넣은 뒤 Deploy</span>
         <div class="actions" style="margin-top:6px"><button class="btn sm" data-act="copy" data-k="fn">함수 코드 복사</button></div><pre>${esc(setupText.fn || "불러오는 중…")}</pre></li>
       <li><b>비밀값 넣기</b><br><span class="hint">Edge Functions → Secrets 에 두 개 추가</span><br>
-        <code>ANTHROPIC_API_KEY</code> = console.anthropic.com 에서 만든 API 키<br>
+        <code>GEMINI_API_KEY</code> = aistudio.google.com 에서 만든 무료 API 키 (결제 설정은 하지 마세요)<br>
         <code>ALLOWED_EMAILS</code> = 이 사이트를 쓸 이메일 (지금 로그인한 계정: <b>${esc(S.email)}</b>)</li>
     </ol>
     <div class="actions" style="margin-top:16px"><button class="btn primary" data-act="recheck">설정 끝났어요 · 다시 확인</button>${tableOk ? `<button class="btn" data-act="hidesetup">닫기</button>` : ""}</div>
@@ -738,9 +738,9 @@ JSON 하나만 답한다. 형식:
 const AI_ERR = {
   not_signed_in: "로그인이 풀렸어요. 다시 로그인해 주세요.",
   not_allowed: "이 계정은 AI 사용이 허용돼 있지 않아요. Supabase Secrets의 ALLOWED_EMAILS에 이메일을 넣어 주세요.",
-  no_api_key: "Supabase Secrets에 ANTHROPIC_API_KEY가 없어요.",
-  bad_api_key: "Anthropic API 키가 맞지 않아요. Supabase Secrets의 ANTHROPIC_API_KEY를 확인해 주세요.",
-  rate_limited: "AI 사용량 한도에 걸렸어요. 잠시 뒤 다시 눌러 주세요.",
+  no_api_key: "Supabase Secrets에 GEMINI_API_KEY가 없어요. 함수 코드도 최신으로 다시 붙여넣었는지 확인해 주세요.",
+  bad_api_key: "Gemini API 키가 맞지 않아요. Supabase Secrets의 GEMINI_API_KEY를 확인해 주세요.",
+  rate_limited: "Gemini 무료 사용량(분당/하루 한도)에 걸렸어요. 1~2분 뒤 다시 눌러 주세요. 하루 한도면 내일 초기화돼요.",
   refused: "AI가 이 요청을 처리하지 않았어요. 문서 내용을 확인해 주세요.",
   invalid_json: "AI 답을 표로 정리하지 못했어요. 한 번 더 눌러 주세요.",
   timeout: "AI 응답이 너무 오래 걸려 끊겼어요. 문서를 규격 부분 위주로 줄여서 다시 해 주세요.",
@@ -840,11 +840,21 @@ async function doMatch() {
   const results = await runAI("우리 제품과 대조하는 중", `구분 ${c.groups.length}개를 동시에 대조해요 · 보통 1~2분`, async (signal, progress) => {
     let done = 0;
     progress(` · 0/${c.groups.length} 완료`);
-    const settled = await Promise.allSettled(c.groups.map(g => {
-      const req = [{ gid: g.id, category: g.category, label: g.label, qty: g.qty, note: g.note, reqs: g.reqs.map(r => ({ rid: r.id, item: r.item, req: r.req })) }];
-      const prompt = MATCH_PROMPT + "\n[요구 규격]\n" + JSON.stringify(req) + "\n\n[우리 제품 스펙]\n" + models;
-      return callAI(prompt, "medium", signal).finally(() => progress(` · ${++done}/${c.groups.length} 완료`));
-    }));
+    // 무료 등급의 분당 한도를 넘지 않게 동시에 3개까지만 보낸다
+    const settled = new Array(c.groups.length);
+    let next = 0;
+    const worker = async () => {
+      while (next < c.groups.length && !signal.aborted) {
+        const i = next++, g = c.groups[i];
+        const req = [{ gid: g.id, category: g.category, label: g.label, qty: g.qty, note: g.note, reqs: g.reqs.map(r => ({ rid: r.id, item: r.item, req: r.req })) }];
+        const prompt = MATCH_PROMPT + "\n[요구 규격]\n" + JSON.stringify(req) + "\n\n[우리 제품 스펙]\n" + models;
+        try { settled[i] = { status: "fulfilled", value: await callAI(prompt, "medium", signal) }; }
+        catch (reason) { settled[i] = { status: "rejected", reason }; }
+        progress(` · ${++done}/${c.groups.length} 완료`);
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+    for (let i = 0; i < settled.length; i++) settled[i] ||= { status: "rejected", reason: { code: "cancelled" } };
     if (signal.aborted) throw { code: "cancelled" };
     const ok = settled.filter(s => s.status === "fulfilled");
     if (!ok.length) throw settled[0].reason;
