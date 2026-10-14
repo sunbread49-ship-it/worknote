@@ -233,6 +233,7 @@ table.list .sub{color:var(--muted);font-size:12px}
 
 /* auth & setup */
 html,body{margin:0}
+[hidden]{display:none!important}
 .who{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
 .auth{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
 .auth form{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 22px;display:flex;flex-direction:column;gap:12px}
@@ -283,7 +284,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v3</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v4</p>
   </form>
 </div>
 
