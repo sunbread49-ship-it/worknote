@@ -155,6 +155,8 @@ table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:9px 12px;v
 table.cmp tbody tr:last-child td{border-bottom:0}
 table.cmp td.rq,table.cmp th.rq{width:250px;min-width:200px;position:sticky;left:0;background:var(--surface);z-index:1;border-right:1px solid var(--line)}
 .rq b{display:block;font-weight:600;font-size:13px}
+.rq .rowx{float:right;margin:-3px -6px 0 6px;width:24px;height:24px;border:1px solid transparent;border-radius:6px;background:none;color:var(--faint);font-size:16px;line-height:1;cursor:pointer}
+.rq .rowx:hover{color:var(--fail);border-color:var(--fail);background:var(--fail-bg)}
 .rq .v{display:block;font-size:13px}
 .rq small{display:block;color:var(--faint);font-size:11.5px;margin-top:2px}
 .rq small.doubt,.rgroup .doubt{display:block;color:var(--warn);font-weight:600;font-size:11.5px;margin-top:3px}
@@ -286,7 +288,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v8</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v9</p>
   </form>
 </div>
 
@@ -351,11 +353,11 @@ function vNotices() {
 /* ---------- bid view ---------- */
 function vBid() {
   let h = S.busy ? vBusy() : "";
-  if (!S.cur) return h + vUpload();
+  if (!S.cur || S.reupload) return h + vUpload();
   const c = S.cur;
   h += vBidHead();
   if (c.match) {
-    if (c.reqEdited) h += `<div class="notice warn"><div class="grow">요구 규격을 고친 뒤 아직 다시 대조하지 않았어요.</div><button class="btn sm" data-act="match" ${aiOff()}>다시 대조</button></div>`;
+    if (c.reqEdited) h += `<div class="notice warn"><div class="grow">조건을 지우거나 고쳤어요. 판정 개수는 바로 반영됐고, <b>다시 대조</b>를 누르면 남은 조건으로 모델 순위를 새로 매겨요.</div><button class="btn primary sm" data-act="match" ${aiOff()}>다시 대조</button></div>`;
     else if (S.spec && c.match.specAt && c.match.specAt !== S.spec.uploadedAt) h += `<div class="notice info"><div class="grow">이 결과를 낸 뒤 제품 스펙 DB가 바뀌었어요. 최신 스펙으로 다시 대조할 수 있어요.</div><button class="btn sm" data-act="match" ${aiOff()}>최신 스펙으로 다시 대조</button></div>`;
     h += vSummary() + c.groups.map(vGroup).join("") + vBottom();
   } else if (!S.busy) {
@@ -401,7 +403,8 @@ function vUpload() {
   const recent = S.bids.slice(0, 4);
   return `<section class="panel"><div class="intro">
     <div>
-      <h2>새 입찰 대조</h2>
+      ${S.reupload ? `<div class="notice info" style="margin-bottom:14px"><div class="grow"><b>${esc(S.reupload.title)}</b> 문서를 다시 올려요. 처음부터 다시 정리하니까 지운 조건도 다시 나타나요.</div><button class="btn sm" data-act="cancelreupload">취소</button></div>` : ""}
+      <h2>${S.reupload ? "문서 다시 올리기" : "새 입찰 대조"}</h2>
       <p class="lead">입찰공고문·과업지시서·규격서·제안요청서 등 그 입찰의 문서를 모두 올리면 요구 규격을 뽑아서 우리 제품 스펙과 항목별로 맞춰 봐요. 문서끼리 내용이 겹쳐도 괜찮아요.</p>
       <ol class="flow">
         <li><span class="n">1</span><span><b>문서 올리기</b> · HWP, PDF 그대로, 여러 개 한 번에</span></li>
@@ -448,7 +451,8 @@ function vBidHead() {
         ${(c.files || []).length ? `<span>문서 <b>${c.files.map(f => esc(f.name)).join(", ")}</b></span>` : ""}</div>
     </div>
     <div class="actions">
-      ${c.match ? `<button class="btn" data-act="match" ${aiOff()}>다시 대조</button>` : ""}
+      ${c.match ? `<button class="btn" data-act="match" ${aiOff()} title="지우거나 고친 조건으로 모델을 다시 골라요">다시 대조</button>` : ""}
+      <button class="btn" data-act="reupload" ${S.busy ? "disabled" : ""} title="문서를 새로 올려 처음부터 다시 정리해요">다시 업로드</button>
       ${c.match ? `<button class="btn" data-act="export">엑셀로 받기</button>` : ""}
       <button class="btn" data-act="newbid">새 입찰</button>
     </div>
@@ -492,7 +496,7 @@ function vGroup(g) {
       <div class="nm">${esc(info ? info.name : "스펙 DB에 없는 모델")}</div><span class="pill ${gr.v}">${VD[gr.v]}</span>
       <p class="sumline">${esc(c.summary || "")}</p><p class="hint" style="margin-top:2px">${cntText(gr.n)}</p>
       <label class="pick ${pick === c.model ? "on" : ""}"><input type="radio" name="pick-${g.id}" data-act="pick" data-g="${g.id}" data-m="${esc(c.model)}" ${pick === c.model ? "checked" : ""} ${S.canWrite === false ? "disabled" : ""}>이 모델로 제안</label></th>`;
-  }).join("")}</tr></thead><tbody>${g.reqs.map(q => `<tr><td class="rq"><b>${esc(q.item)}</b><span class="v">${esc(q.req)}</span>${q.src ? `<small>${esc(q.src)}</small>` : ""}${q.doubt ? `<small class="doubt">⚠ 오기 의심 · ${esc(q.doubt)}</small>` : ""}</td>${cands.map(c => {
+  }).join("")}</tr></thead><tbody>${g.reqs.map(q => `<tr><td class="rq">${S.canWrite === false ? "" : `<button class="rowx" data-act="rmreq" data-g="${g.id}" data-r="${q.id}" title="이 조건 지우기" aria-label="${esc(q.item)} 조건 지우기">×</button>`}<b>${esc(q.item)}</b><span class="v">${esc(q.req)}</span>${q.src ? `<small>${esc(q.src)}</small>` : ""}${q.doubt ? `<small class="doubt">⚠ 오기 의심 · ${esc(q.doubt)}</small>` : ""}</td>${cands.map(c => {
     const k = c.checks?.[q.id]; const s = k?.s in ST ? k.s : "unknown";
     return `<td class="c s-${s}"><span class="chip ${s}">${k ? ST[s] : "대조 안 됨"}</span>${k?.have ? `<span class="have">${esc(k.have)}</span>` : ""}${k?.note ? `<span class="note">${esc(k.note)}</span>` : ""}</td>`;
   }).join("")}</tr>`).join("")}</tbody></table></div>`;
@@ -844,6 +848,7 @@ async function doExtract() {
     checklist: (Array.isArray(o.checklist) ? o.checklist : []).map(c => ({ item: str(c.item), detail: str(c.detail) })),
     match: null, picks: {}, createdAt: new Date().toISOString(),
   };
+  if (S.reupload) { bid.id = S.reupload.id; bid.createdAt = S.reupload.createdAt; bid.reuploadedAt = new Date().toISOString(); S.reupload = null; }
   S.cur = bid; S.dirty = false; S.files = []; S.pasted = "";
   await saveCur();
   if (cut > 0.02) say("warn", `문서가 길어서 뒷부분 약 ${Math.round(cut * 100)}%는 읽지 못했어요. 빠진 규격이 있으면 아래에서 추가해 주세요.`);
@@ -1007,7 +1012,7 @@ document.addEventListener("click", async ev => {
   else if (act === "extract") doExtract();
   else if (act === "match") doMatch();
   else if (act === "export") doExport();
-  else if (act === "newbid") { if (S.dirty) await saveCur(); S.cur = null; S.msg = null; render(true); window.scrollTo(0, 0); }
+  else if (act === "newbid") { if (S.dirty) await saveCur(); S.cur = null; S.reupload = null; S.msg = null; render(true); window.scrollTo(0, 0); }
   else if (act === "open") { const b = S.bids.find(x => x.id === a.dataset.id); if (b) { S.cur = clone(b); S.dirty = false; S.view = "bid"; S.msg = null; render(true); window.scrollTo(0, 0); } }
   else if (act === "jump") { const el = document.getElementById("grp-" + a.dataset.g); el?.scrollIntoView({ behavior: "smooth", block: "start" }); }
   else if (act === "askdel") { S.confirmDel = a.dataset.id; render(true); }
@@ -1022,7 +1027,14 @@ document.addEventListener("click", async ev => {
   else if (act === "cancelspec") { S.specPreview = null; render(true); }
   else if (act === "savereqs") { await saveCur(); render(true); }
   else if (act === "addreq") { const g = findG(a.dataset.g); g.reqs.push({ id: uid("r"), item: "", req: "", src: "직접 추가" }); edited(); render(true); keepOpen(); }
-  else if (act === "rmreq") { const g = findG(a.dataset.g); g.reqs = g.reqs.filter(r => r.id !== a.dataset.r); edited(); render(true); keepOpen(); }
+  else if (act === "rmreq") {
+    const g = findG(a.dataset.g); const fromEditor = !!a.closest("#reqEditor"); const y = window.scrollY;
+    g.reqs = g.reqs.filter(r => r.id !== a.dataset.r); edited(); render(true);
+    if (fromEditor) keepOpen(); else window.scrollTo(0, y);
+    saveCur();
+  }
+  else if (act === "reupload") { if (S.dirty) await saveCur(); S.reupload = { id: S.cur.id, createdAt: S.cur.createdAt, title: S.cur.title }; S.files = []; S.pasted = ""; S.msg = null; render(true); window.scrollTo(0, 0); }
+  else if (act === "cancelreupload") { S.reupload = null; render(true); }
   else if (act === "addgroup") { S.cur.groups.push({ id: uid("g"), category: "", label: "", qty: "", note: "", reqs: [{ id: uid("r"), item: "", req: "", src: "직접 추가" }] }); edited(); render(true); keepOpen(); }
   else if (act === "rmgroup") { S.cur.groups = S.cur.groups.filter(g => g.id !== a.dataset.g); edited(); render(true); keepOpen(); }
   else if (act === "showsetup") { S.showSetup = true; render(true); window.scrollTo(0, 0); }
