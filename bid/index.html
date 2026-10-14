@@ -756,8 +756,7 @@ function parseJSON(text) {
   throw { code: "invalid_json" };
 }
 async function callAI(prompt, effort, signal) {
-  const { data } = await S.sb.auth.getSession();
-  const token = data?.session?.access_token;
+  const token = (await currentSession())?.access_token;
   if (!token) throw { code: "not_signed_in" };
   let r;
   try {
@@ -1032,14 +1031,20 @@ function showAuth(on) {
   if (on) setTimeout(() => $("#auEmail")?.focus(), 0);
 }
 const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej({ code: "timeout", message: "timeout" }), ms))]);
-async function start() {
-  let data = null;
-  try { ({ data } = await withTimeout(S.sb.auth.getSession(), 10000)); } catch {}
-  const user = data?.session?.user;
-  if (!user) { S.me = null; showAuth(true); return; }
+async function currentSession() {
+  if (S.session?.access_token && (S.session.expires_at || 0) * 1000 > Date.now() + 30000) return S.session;
+  try { const { data } = await withTimeout(S.sb.auth.getSession(), 10000); if (data?.session) S.session = data.session; } catch {}
+  return S.session || null;
+}
+async function start(session) {
+  if (session) S.session = session;
+  const s = await currentSession();
+  const user = s?.user;
+  if (!user) { S.me = null; showAuth(true); return false; }
   S.me = user.id; S.email = user.email || "";
   $("#whoEmail").textContent = S.email;
   showAuth(false);
+  if (S.storageOk === false) S.msg = { type: "warn", text: "브라우저 저장공간이 가득 차서 로그인 상태를 저장하지 못했어요. 지금은 쓸 수 있지만, 페이지를 다시 열면 또 로그인해야 해요." };
   try { await loadAll(); S.setup = S.setup === "table" ? null : S.setup; }
   catch (e) {
     if (e?.code === "42P01" || e?.code === "PGRST205" || /bid_items/.test(e?.message || "")) S.setup = "table";
@@ -1047,14 +1052,15 @@ async function start() {
     S.specLoaded = S.bidsLoaded = true;
   }
   render(true);
+  return true;
 }
 $("#authForm").addEventListener("submit", async ev => {
   ev.preventDefault();
   const err = $("#authErr"), go = $("#authGo");
   err.hidden = true; go.disabled = true; go.textContent = "로그인 중…";
-  let error;
+  let error, data;
   try {
-    ({ error } = await withTimeout(S.sb.auth.signInWithPassword({ email: $("#auEmail").value.trim(), password: $("#auPw").value }), 20000));
+    ({ data, error } = await withTimeout(S.sb.auth.signInWithPassword({ email: $("#auEmail").value.trim(), password: $("#auPw").value }), 20000));
   } catch (e) { error = e; }
   go.disabled = false; go.textContent = "로그인";
   if (error) {
@@ -1065,12 +1071,14 @@ $("#authForm").addEventListener("submit", async ev => {
       : `로그인하지 못했어요. (${m || "알 수 없는 오류"})`;
     err.hidden = false; return;
   }
+  if (!data?.session) { err.textContent = `로그인은 됐는데 세션을 받지 못했어요. (${data?.user ? "사용자 확인됨, 세션 없음" : "응답 비어 있음"}) 이 문구를 캡처해서 알려주세요.`; err.hidden = false; return; }
   $("#auPw").value = "";
-  await start();
+  const ok = await start(data.session);
+  if (!ok) { err.textContent = "로그인 후 화면을 열지 못했어요. 새로고침해 주세요."; err.hidden = false; }
 });
 $("#logout").addEventListener("click", async () => {
-  await S.sb.auth.signOut();
-  Object.assign(S, { me: null, email: "", spec: null, bids: [], cur: null, files: [], pasted: "", specLoaded: false, bidsLoaded: false, setup: null, showSetup: false, msg: null });
+  try { await withTimeout(S.sb.auth.signOut(), 8000); } catch {}
+  Object.assign(S, { session: null, me: null, email: "", spec: null, bids: [], cur: null, files: [], pasted: "", specLoaded: false, bidsLoaded: false, setup: null, showSetup: false, msg: null });
   render(true); showAuth(true);
 });
 
@@ -1080,7 +1088,15 @@ if (!window.supabase?.createClient) {
 } else {
   // 브라우저 탭 간 잠금(navigator.locks)을 쓰지 않는다: 잠든 워크노트 탭이 잠금을 쥐고 있으면 로그인이 끝없이 멈추는 문제 회피
   const noLock = async (_name, _timeout, fn) => fn();
-  S.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, lock: noLock } });
+  // 브라우저 저장공간(localStorage)이 가득 차거나 막혀 있어도 로그인이 유지되게, 실패하면 메모리에 보관
+  const mem = new Map();
+  const safeStorage = {
+    getItem: k => { try { const v = localStorage.getItem(k); if (v != null) return v; } catch {} return mem.has(k) ? mem.get(k) : null; },
+    setItem: (k, v) => { mem.set(k, v); try { localStorage.setItem(k, v); S.storageOk = true; } catch { S.storageOk = false; } },
+    removeItem: k => { mem.delete(k); try { localStorage.removeItem(k); } catch {} },
+  };
+  S.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, lock: noLock, storage: safeStorage } });
+  S.sb.auth.onAuthStateChange((_event, session) => { S.session = session || null; });
   start();
 }
 </script>
