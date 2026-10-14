@@ -288,7 +288,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v9</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v10</p>
   </form>
 </div>
 
@@ -488,7 +488,7 @@ function vGroup(g) {
   const r = mg(g.id); const cands = (r?.candidates || []).slice().sort((a, b) => (a.rank || 9) - (b.rank || 9));
   const pick = S.cur.picks?.[g.id];
   let h = `<section class="grp" id="grp-${g.id}"><header><h3>${gTitle(g)}</h3>${g.qty ? `<span class="qty">${esc(g.qty)}대</span>` : ""}${g.note ? `<p class="gnote">${esc(g.note)}</p>` : ""}</header>`;
-  if (!cands.length && S.cur.match?.failed?.includes(g.id)) return h + `<p class="nocand">이 구분은 대조 중 오류가 났어요. 위의 ‘다시 대조’를 눌러 주세요.</p></section>`;
+  if (!cands.length && S.cur.match?.failed?.includes(g.id)) return h + `<p class="nocand">이 구분은 대조 중 오류가 났어요. (${esc(S.cur.match.failedWhy?.[g.id] || "원인 미확인")}) 조건이 많거나 헷갈리면 실패할 수 있어요. 이상한 조건을 ×로 지운 뒤 ‘다시 대조’를 눌러 주세요.</p></section>`;
   if (!cands.length) return h + `<p class="nocand">스펙 DB에서 이 제품군에 맞는 모델을 찾지 못했어요.${r?.comment ? " " + esc(r.comment) : ""}</p></section>`;
   h += `<div class="tblwrap"><table class="cmp"><thead><tr><th class="rq"><span class="hint">요구 규격 ${g.reqs.length}개</span></th>${cands.map((c, i) => {
     const gr = grade(c, g); const info = modelInfo(c.model);
@@ -874,7 +874,14 @@ async function doMatch() {
         const req = [{ gid: g.id, category: g.category, label: g.label, qty: g.qty, note: g.note, reqs: g.reqs.map(r => ({ rid: r.id, item: r.item, req: r.req, ...(r.doubt ? { doubt: r.doubt } : {}) })) }];
         const prompt = MATCH_PROMPT + "\n[요구 규격]\n" + JSON.stringify(req) + "\n\n[우리 제품 스펙]\n" + models;
         try { settled[i] = { status: "fulfilled", value: await callAI(prompt, "medium", signal) }; }
-        catch (reason) { settled[i] = { status: "rejected", reason }; }
+        catch (reason) {
+          // 생각을 길게 하다 답이 잘리거나 형식이 깨지면, 생각 단계를 줄여 한 번 더
+          if (signal.aborted || ["cancelled", "not_signed_in", "not_allowed", "no_api_key", "bad_api_key"].includes(reason?.code)) settled[i] = { status: "rejected", reason };
+          else {
+            try { settled[i] = { status: "fulfilled", value: await callAI(prompt, "low", signal) }; }
+            catch (reason2) { settled[i] = { status: "rejected", reason: reason2 }; }
+          }
+        }
         progress(` · ${++done}/${c.groups.length} 완료`);
       }
     };
@@ -892,7 +899,7 @@ async function doMatch() {
   const groups = [], missing = new Set(), failed = [];
   results.forEach((s, i) => {
     const gid = c.groups[i].id;
-    if (s.status !== "fulfilled") { failed.push(c.groups[i]); const old = prev.find(x => x.gid === gid); if (old) groups.push(old); return; }
+    if (s.status !== "fulfilled") { failed.push({ ...c.groups[i], why: aiErr(s.reason) }); const old = prev.find(x => x.gid === gid); if (old) groups.push(old); return; }
     const o = s.value || {};
     const g = (Array.isArray(o.groups) ? o.groups : []).find(x => str(x.gid) === gid) || (o.groups || [])[0] || {};
     (Array.isArray(o.missing) ? o.missing : []).map(str).filter(Boolean).forEach(x => missing.add(x));
@@ -905,11 +912,11 @@ async function doMatch() {
       }),
     });
   });
-  c.match = { at: new Date().toISOString(), specAt: S.spec.uploadedAt || "", specFile: S.spec.fileName || "", groups, missing: [...missing].slice(0, 25), failed: failed.map(g => g.id) };
+  c.match = { at: new Date().toISOString(), specAt: S.spec.uploadedAt || "", specFile: S.spec.fileName || "", groups, missing: [...missing].slice(0, 25), failed: failed.map(g => g.id), failedWhy: Object.fromEntries(failed.map(g => [g.id, g.why])) };
   for (const g of c.groups) { const p = c.picks?.[g.id]; if (p && !mg(g.id)?.candidates.some(x => x.model === p)) delete c.picks[g.id]; }
   c.reqEdited = false;
   await saveCur();
-  if (failed.length) say("warn", `${failed.map(g => g.category + (g.label ? " " + g.label : "")).join(", ")} 대조가 실패했어요. ‘다시 대조’를 눌러 주세요.`);
+  if (failed.length) say("warn", `${failed.map(g => g.category + (g.label ? " " + g.label : "")).join(", ")} 대조가 실패했어요(${failed.map(g => g.why).filter((v, i, a) => a.indexOf(v) === i).join(" / ")}). 아래 해당 구분의 안내를 확인해 주세요.`);
   render(true);
 }
 
@@ -1130,8 +1137,6 @@ render(true);
 if (!window.supabase?.createClient) {
   $("#main").innerHTML = `<div class="notice err"><div class="grow">로그인 도구를 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.</div></div>`;
 } else {
-  // 브라우저 탭 간 잠금(navigator.locks)을 쓰지 않는다: 잠든 워크노트 탭이 잠금을 쥐고 있으면 로그인이 끝없이 멈추는 문제 회피
-  const noLock = async (_name, _timeout, fn) => fn();
   // 브라우저 저장공간(localStorage)이 가득 차거나 막혀 있어도 로그인이 유지되게, 실패하면 메모리에 보관
   const mem = new Map();
   const safeStorage = {
@@ -1139,7 +1144,7 @@ if (!window.supabase?.createClient) {
     setItem: (k, v) => { mem.set(k, v); try { localStorage.setItem(k, v); S.storageOk = true; } catch { S.storageOk = false; } },
     removeItem: k => { mem.delete(k); try { localStorage.removeItem(k); } catch {} },
   };
-  S.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, lock: noLock, storage: safeStorage } });
+  S.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storage: safeStorage } });
   S.sb.auth.onAuthStateChange((_event, session) => { S.session = session || null; });
   start();
 }
