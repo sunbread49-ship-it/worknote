@@ -157,6 +157,8 @@ table.cmp td.rq,table.cmp th.rq{width:250px;min-width:200px;position:sticky;left
 .rq b{display:block;font-weight:600;font-size:13px}
 .rq .v{display:block;font-size:13px}
 .rq small{display:block;color:var(--faint);font-size:11.5px;margin-top:2px}
+.rq small.doubt,.rgroup .doubt{display:block;color:var(--warn);font-weight:600;font-size:11.5px;margin-top:3px}
+.rgroup .doubt{padding:0 6px 4px}
 th.cand{min-width:200px;font-weight:400;background:var(--sunk)}
 th.cand.top{background:var(--accent-soft)}
 th.cand .rk{font-size:11.5px;color:var(--muted);font-weight:600}
@@ -284,7 +286,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v7</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v8</p>
   </form>
 </div>
 
@@ -490,7 +492,7 @@ function vGroup(g) {
       <div class="nm">${esc(info ? info.name : "스펙 DB에 없는 모델")}</div><span class="pill ${gr.v}">${VD[gr.v]}</span>
       <p class="sumline">${esc(c.summary || "")}</p><p class="hint" style="margin-top:2px">${cntText(gr.n)}</p>
       <label class="pick ${pick === c.model ? "on" : ""}"><input type="radio" name="pick-${g.id}" data-act="pick" data-g="${g.id}" data-m="${esc(c.model)}" ${pick === c.model ? "checked" : ""} ${S.canWrite === false ? "disabled" : ""}>이 모델로 제안</label></th>`;
-  }).join("")}</tr></thead><tbody>${g.reqs.map(q => `<tr><td class="rq"><b>${esc(q.item)}</b><span class="v">${esc(q.req)}</span>${q.src ? `<small>${esc(q.src)}</small>` : ""}</td>${cands.map(c => {
+  }).join("")}</tr></thead><tbody>${g.reqs.map(q => `<tr><td class="rq"><b>${esc(q.item)}</b><span class="v">${esc(q.req)}</span>${q.src ? `<small>${esc(q.src)}</small>` : ""}${q.doubt ? `<small class="doubt">⚠ 오기 의심 · ${esc(q.doubt)}</small>` : ""}</td>${cands.map(c => {
     const k = c.checks?.[q.id]; const s = k?.s in ST ? k.s : "unknown";
     return `<td class="c s-${s}"><span class="chip ${s}">${k ? ST[s] : "대조 안 됨"}</span>${k?.have ? `<span class="have">${esc(k.have)}</span>` : ""}${k?.note ? `<span class="note">${esc(k.note)}</span>` : ""}</td>`;
   }).join("")}</tr>`).join("")}</tbody></table></div>`;
@@ -519,7 +521,7 @@ function vReqEditor() {
       <div class="wrapx"><table><tbody>${g.reqs.map(q => `<tr>
         <td class="i"><input value="${esc(q.item)}" data-f="r.item" data-g="${g.id}" data-r="${q.id}" aria-label="항목" ${ro}></td>
         <td class="r"><input value="${esc(q.req)}" data-f="r.req" data-g="${g.id}" data-r="${q.id}" aria-label="요구값" ${ro}></td>
-        <td class="s"><input value="${esc(q.src)}" data-f="r.src" data-g="${g.id}" data-r="${q.id}" aria-label="근거" ${ro}></td>
+        <td class="s"><input value="${esc(q.src)}" data-f="r.src" data-g="${g.id}" data-r="${q.id}" aria-label="근거" ${ro}>${q.doubt ? `<span class="doubt">⚠ 오기 의심 · ${esc(q.doubt)}</span>` : ""}</td>
         <td class="x">${ro ? "" : `<button class="btn ghost sm" data-act="rmreq" data-g="${g.id}" data-r="${q.id}" aria-label="항목 삭제">×</button>`}</td></tr>`).join("")}</tbody></table></div>
       ${ro ? "" : `<div class="foot"><button class="btn ghost sm" data-act="addreq" data-g="${g.id}">+ 항목 추가</button></div>`}
     </div>`).join("")}
@@ -709,10 +711,12 @@ const EXTRACT_PROMPT = `너는 렌탈가전(정수기·공기청정기·비데 �
 6. checklist: 제품 규격이 아닌 입찰 체크포인트(참가자격, 지역 제한, 제출 서류, 제출 기한·장소, 설치 기한, 계약 기간, 낙찰 방식, 공동수급 여부, A/S 조건 등) 최대 12개.
 7. 여러 문서에 같은 내용이 겹치면 한 번만 넣는다. 문서끼리 값이 다르면 더 구체적인 문서(과업지시서·규격서) 기준으로 하고 note에 차이를 적는다.
 8. 문서에 없는 내용은 지어내지 않는다.
+9. 표 읽기 주의: 문서의 표는 텍스트로 풀리면서 칸 구분이 사라져 있다. 예를 들어 "크기구분 대형 얼음 일반"처럼 머리글에 구분이 여러 개 나오고 아래 행에 값이 이어지면, 각 값이 어느 칸(구분)에 속하는지 순서로 따진다. 값 개수가 구분 수보다 적으면 병합 셀이다(예: 냉수 "6.0L 이상 4.0L 이상" → 대형 6.0L, 얼음·일반 4.0L). 값이 하나뿐인 행은 그 이름에 맞는 구분에만 넣는다(예: "얼음 3kg 이상"은 얼음 구분에만. 일반·대형 정수기에는 넣지 않는다).
+10. 제품 특성 확인: 각 조건이 그 제품군·구분에 실제로 말이 되는지 확인한다. 얼음 관련 조건은 얼음정수기에만, 노즐·착좌·온좌 같은 조건은 비데에만 해당한다. 원문에 그 제품 표 안에 적혀 있지만 그 제품에 맞지 않는 조건(복사 실수로 보이는 것)은 빼지 말고 doubt에 이유를 적는다(예: "공기청정기 표에 '노즐세척'이 있음 — 비데 항목 오기로 보임, 발주처 확인 필요"). 문제없는 조건은 doubt를 ""로 둔다.
 
 JSON 하나만 답한다. 형식:
 {"meta":{"title":"사업명","org":"발주처","deadline":"서류 제출 마감(원문 그대로)","period":"사업 기간","budget":"예산","place":"설치 장소"},
- "groups":[{"category":"제품군","label":"구분","qty":0,"note":"","reqs":[{"item":"항목","req":"요구값","src":"근거"}]}],
+ "groups":[{"category":"제품군","label":"구분","qty":0,"note":"","reqs":[{"item":"항목","req":"요구값","src":"근거","doubt":""}]}],
  "checklist":[{"item":"항목","detail":"내용"}]}
 
 입찰 문서:`;
@@ -721,6 +725,7 @@ const MATCH_PROMPT = `너는 렌탈가전 공공입찰 규격 검토 담당자�
 
 규칙
 1. 그룹마다 제품군이 맞는 모델 중 후보를 최대 3개 고르고, 제안하기 좋은 순서로 rank 1부터 매긴다. 미달(fail)이 적은 모델, 그다음 협의(warn)가 적은 모델이 앞선다. 맞는 제품군 모델이 없으면 candidates는 [].
+   제품 유형을 먼저 맞춘다: 구분(label)이 "얼음"이면 얼음정수기, 대형·일반·소형처럼 얼음이 아니면 냉온정수기(얼음 없는 모델)를 우선한다. 요구하지 않은 기능이 붙은 다른 유형(예: 일반 구분에 얼음정수기)은 같은 유형 후보가 없거나 크게 부족할 때만 뒤 순위로 넣고 summary에 이유를 쓴다.
 2. 각 후보는 그 그룹의 모든 요구 항목(rid)마다 check를 하나씩 쓴다.
 3. s(상태)는 넷 중 하나:
    "ok" = 우리 스펙에 충족 근거가 있다.
@@ -730,6 +735,7 @@ const MATCH_PROMPT = `너는 렌탈가전 공공입찰 규격 검토 담당자�
 4. have는 비교에 쓴 우리 스펙 값을 짧게(없으면 ""). note는 판단 이유나 협의 포인트를 한 줄로(예: "1㎡ 부족, 발주처 협의 필요"). 충족이 뻔하면 note는 "".
 5. summary는 후보별 한 줄 요약, comment는 그룹별 추천 이유나 대안 한두 문장.
 6. missing: 판단에 필요한데 스펙 DB에 없는 정보를 "모델명: 항목" 형식으로 최대 15개. 여러 모델에 공통이면 묶어 쓴다.
+7. 요구 항목에 doubt(오기 의심)가 적혀 있으면 미달로 판단하지 말고 s는 "unknown", note는 "발주처 확인 필요"로 쓴다.
 
 JSON 하나만 답한다. 형식:
 {"groups":[{"gid":"g1","comment":"","candidates":[{"model":"스펙 DB의 모델명 그대로","rank":1,"summary":"","checks":[{"rid":"r1","s":"ok","have":"","note":""}]}]}],"missing":[""]}
@@ -823,7 +829,7 @@ async function doExtract() {
   if (!docs.length) return;
   const { docs: fit, cut } = fitDocs(docs);
   const prompt = EXTRACT_PROMPT + fit.map(d => `\n\n===== 파일: ${d.name} =====\n${d.text}`).join("");
-  const o = await runAI("문서에서 요구 규격을 뽑는 중", "보통 1~2분 걸려요", signal => callAI(prompt, "low", signal));
+  const o = await runAI("문서에서 요구 규격을 뽑는 중", "보통 1~2분 걸려요", signal => callAI(prompt, "medium", signal));
   if (!o) return;
   if (!Array.isArray(o.groups) || !o.groups.length) { say("err", "요구 규격을 찾지 못했어요. 규격표가 들어 있는 문서인지 확인해 주세요."); return; }
   const meta = o.meta || {};
@@ -833,7 +839,7 @@ async function doExtract() {
     files: docs.map(d => ({ name: d.name, chars: d.text.length })),
     groups: o.groups.map((g, gi) => ({
       id: "g" + (gi + 1), category: str(g.category), label: str(g.label), qty: str(g.qty), note: str(g.note),
-      reqs: (Array.isArray(g.reqs) ? g.reqs : []).map((r, ri) => ({ id: "r" + (ri + 1), item: str(r.item), req: str(r.req), src: str(r.src) })),
+      reqs: (Array.isArray(g.reqs) ? g.reqs : []).map((r, ri) => ({ id: "r" + (ri + 1), item: str(r.item), req: str(r.req), src: str(r.src), doubt: str(r.doubt) })),
     })),
     checklist: (Array.isArray(o.checklist) ? o.checklist : []).map(c => ({ item: str(c.item), detail: str(c.detail) })),
     match: null, picks: {}, createdAt: new Date().toISOString(),
@@ -860,7 +866,7 @@ async function doMatch() {
     const worker = async () => {
       while (next < c.groups.length && !signal.aborted) {
         const i = next++, g = c.groups[i];
-        const req = [{ gid: g.id, category: g.category, label: g.label, qty: g.qty, note: g.note, reqs: g.reqs.map(r => ({ rid: r.id, item: r.item, req: r.req })) }];
+        const req = [{ gid: g.id, category: g.category, label: g.label, qty: g.qty, note: g.note, reqs: g.reqs.map(r => ({ rid: r.id, item: r.item, req: r.req, ...(r.doubt ? { doubt: r.doubt } : {}) })) }];
         const prompt = MATCH_PROMPT + "\n[요구 규격]\n" + JSON.stringify(req) + "\n\n[우리 제품 스펙]\n" + models;
         try { settled[i] = { status: "fulfilled", value: await callAI(prompt, "medium", signal) }; }
         catch (reason) { settled[i] = { status: "rejected", reason }; }
@@ -937,7 +943,7 @@ function doExport() {
   const c = S.cur; if (!c?.match) return;
   const wb = XLSX.utils.book_new();
   const sum = [["제품군", "구분", "수량", "제안 모델", "제품명", "판정", "미달", "협의", "자료 없음", "요약", "검토 의견"]];
-  const det = [["제품군", "구분", "요구 항목", "요구값", "근거"]];
+  const det = [["제품군", "구분", "요구 항목", "요구값", "근거", "오기 의심"]];
   for (let i = 1; i <= 3; i++) det[0].push(`${i}순위 모델`, `${i}순위 판정`, `${i}순위 우리 스펙`, `${i}순위 메모`);
   for (const g of c.groups) {
     const r = mg(g.id); const cands = (r?.candidates || []).slice().sort((a, b) => a.rank - b.rank);
@@ -945,7 +951,7 @@ function doExport() {
     if (cand) { const gr = grade(cand, g); sum.push([g.category, g.label, g.qty, cand.model + (c.picks?.[g.id] ? " (확정)" : ""), modelInfo(cand.model)?.name || "", VD[gr.v], gr.n.fail, gr.n.warn, gr.n.unknown, cand.summary, r?.comment || ""]); }
     else sum.push([g.category, g.label, g.qty, "후보 없음", "", "", "", "", "", "", r?.comment || ""]);
     for (const q of g.reqs) {
-      const row = [g.category, g.label, q.item, q.req, q.src];
+      const row = [g.category, g.label, q.item, q.req, q.src, q.doubt || ""];
       cands.forEach(x => { const k = x.checks[q.id]; row.push(x.model, k ? ST[k.s] : "", k?.have || "", k?.note || ""); });
       det.push(row);
     }
@@ -953,7 +959,7 @@ function doExport() {
   const s1 = XLSX.utils.aoa_to_sheet([[c.title], [`${c.meta?.org || ""}  서류 마감: ${c.meta?.deadline || ""}`], [], ...sum]);
   s1["!cols"] = [10, 12, 6, 16, 18, 10, 6, 6, 8, 40, 50].map(w => ({ wch: w }));
   const s2 = XLSX.utils.aoa_to_sheet(det);
-  s2["!cols"] = [10, 12, 18, 22, 18, ...Array(3).fill([14, 9, 20, 30]).flat()].map(w => ({ wch: w }));
+  s2["!cols"] = [10, 12, 18, 22, 18, 24, ...Array(3).fill([14, 9, 20, 30]).flat()].map(w => ({ wch: w }));
   XLSX.utils.book_append_sheet(wb, s1, "제안 요약");
   XLSX.utils.book_append_sheet(wb, s2, "항목별 대조");
   if (c.checklist?.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([["항목", "내용"], ...c.checklist.map(x => [x.item, x.detail])]), "입찰 체크포인트");
