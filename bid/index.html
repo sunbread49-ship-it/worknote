@@ -237,6 +237,8 @@ table.list .sub{color:var(--muted);font-size:12px}
 .empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
 
 /* catalog */
+.gcomment.excl ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.gcomment.excl{background:color-mix(in srgb,var(--warn-bg) 40%,transparent)}
 .sumhead{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between;margin-bottom:10px}
 .sumhead .sec{margin:0}
 .sumhead select{margin-left:6px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
@@ -308,7 +310,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v13</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v14</p>
   </form>
 </div>
 
@@ -545,6 +547,7 @@ function vGroup(g) {
     const k = c.checks?.[q.id]; const s = k?.s in ST ? k.s : "unknown";
     return `<td class="c s-${s}"><span class="chip ${s}">${k ? ST[s] : "대조 안 됨"}</span>${k?.have ? `<span class="have">${esc(k.have)}</span>` : ""}${k?.note ? `<span class="note">${esc(k.note)}</span>` : ""}</td>`;
   }).join("")}</tr>`).join("")}</tbody></table></div>`;
+  if (r?.excluded?.length) h += `<div class="gcomment excl"><b>후보에서 빠진 우선순위 모델</b><ul>${r.excluded.map(x => { const info = modelInfo(x.model); return `<li><span class="mono">${esc(x.model)}</span>${info?.priority ? ` <span class="prio">우선 ${esc(info.priority)}</span>` : ""} ${esc(info?.name || "")} — ${esc(x.reason)}</li>`; }).join("")}</ul></div>`;
   if (r?.comment) h += `<p class="gcomment"><b>검토 의견</b> ${esc(r.comment)}</p>`;
   return h + `</section>`;
 }
@@ -817,9 +820,10 @@ const MATCH_PROMPT = `너는 렌탈가전 공공입찰 규격 검토 담당자�
 7. 요구 항목에 doubt(오기 의심)가 적혀 있으면 미달로 판단하지 말고 s는 "unknown", note는 "발주처 확인 필요"로 쓴다.
 8. priority가 있는 모델(1이 가장 우선)은 회사가 먼저 제안하려는 모델이다. 충족 정도가 같거나 비슷하면 priority 모델을 앞 순위로 두고, 제품 유형이 맞는 priority 모델은 후보 3개 안에 꼭 넣는다.
 9. [공통 사항]은 그 제품군 모든 모델에 적용되는 우리 회사 공통 스펙이다(예: A/S 처리기한, 전원, 인증). 모델 스펙에 없는 항목은 공통 사항을 근거로 판단하고 have에 그 값을 쓴다.
+10. 제품 유형이 맞는 priority 모델을 후보에 넣지 않았다면 excluded에 모델명과 빠진 이유(미달 항목과 우리 스펙 값)를 한 줄로 쓴다. 없으면 [].
 
 JSON 하나만 답한다. 형식:
-{"groups":[{"gid":"g1","comment":"","candidates":[{"model":"스펙 DB의 모델명 그대로","rank":1,"summary":"","checks":[{"rid":"r1","s":"ok","have":"","note":""}]}]}],"missing":[""]}
+{"groups":[{"gid":"g1","comment":"","candidates":[{"model":"스펙 DB의 모델명 그대로","rank":1,"summary":"","checks":[{"rid":"r1","s":"ok","have":"","note":""}]}],"excluded":[{"model":"","reason":""}]}],"missing":[""]}
 `;
 
 const AI_ERR = {
@@ -987,6 +991,7 @@ async function doMatch() {
     (Array.isArray(o.missing) ? o.missing : []).map(str).filter(Boolean).forEach(x => missing.add(x));
     groups.push({
       gid, comment: str(g.comment),
+      excluded: (Array.isArray(g.excluded) ? g.excluded : []).map(x => ({ model: str(x.model), reason: str(x.reason) })).filter(x => x.model && !(g.candidates || []).some(cd => str(cd.model) === x.model)).slice(0, 6),
       candidates: (Array.isArray(g.candidates) ? g.candidates : []).slice(0, 3).map((x, j) => {
         const checks = {};
         (Array.isArray(x.checks) ? x.checks : []).forEach(k => { const st = str(k.s); checks[str(k.rid)] = { s: st in ST ? st : "unknown", have: str(k.have), note: str(k.note) }; });
