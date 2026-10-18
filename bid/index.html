@@ -236,6 +236,22 @@ table.list .sub{color:var(--muted);font-size:12px}
 .empty{padding:36px 20px;text-align:center;color:var(--muted)}
 .empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
 
+/* catalog */
+.catsum{margin-top:16px;padding:10px 12px;border-radius:8px;background:var(--sunk);font-size:13px}
+.catmodel{margin-top:12px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.catmodel.isnew{border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.cmhead{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:8px 12px;background:var(--sunk);font-size:13px}
+.cmhead .mono{font-size:14px}
+.cmhead .pick{display:flex;gap:6px;align-items:center;cursor:pointer;font-weight:600;color:var(--warn)}
+table.cattbl{width:100%;border-collapse:collapse;min-width:640px;font-size:13px}
+table.cattbl th{font-size:11.5px;color:var(--muted);text-align:left;font-weight:600;padding:6px 10px;border-bottom:1px solid var(--line)}
+table.cattbl td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.cattbl tr:last-child td{border-bottom:0}
+table.cattbl td:first-child{width:28px}
+table.cattbl td.cv{white-space:pre-line;max-width:260px}
+table.cattbl td small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+table.cattbl tr.st-diff td{background:color-mix(in srgb,var(--warn-bg) 50%,transparent)}
+.catapply{position:sticky;bottom:0;background:var(--surface);padding:12px 0 4px;margin-top:12px;border-top:1px solid var(--line)}
 /* auth & setup */
 html,body{margin:0}
 [hidden]{display:none!important}
@@ -289,12 +305,13 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v11</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v12</p>
   </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako_inflate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
@@ -563,8 +580,10 @@ function vSpecs() {
   const ro = !S.me;
   let h = `<section class="panel spechead"><div class="grow"><h2>제품 스펙 DB</h2>
     <p class="hint" style="margin-top:4px">${cur?.models?.length ? `${esc(cur.fileName)} · ${cur.models.length}개 모델 · ${fmtTime(cur.uploadedAt)} 올림` : "아직 올린 스펙 파일이 없어요"}<br>
-    마스터 엑셀 한 파일에 계속 고치고 더해서 다시 올리면 통째로 바뀌어요(바로 전 버전은 따로 보관). ‘모델명’ 칸이 있는 표라면 행·열은 자유롭게 늘려도 돼요.</p></div>
-    ${ro ? "" : `<label class="btn primary" for="specIn" style="display:inline-block">스펙 엑셀 올리기<input type="file" id="specIn" accept=".xlsx,.xls,.xlsm,.csv" hidden></label>`}</section>`;
+    마스터 엑셀 한 파일에 계속 고치고 더해서 다시 올리면 통째로 바뀌어요(바로 전 버전은 따로 보관). ‘모델명’ 칸이 있는 표라면 행·열은 자유롭게 늘려도 돼요.${cur?.catalogAt ? `<br><b>${fmtTime(cur.catalogAt)}에 카탈로그 값을 반영했어요.</b> 엑셀을 고치려면 [스펙 엑셀 받기]로 받은 파일을 원본으로 쓰세요.` : ""}</p></div>
+    <div class="actions">${cur?.models?.length ? `<button class="btn" data-act="exportspec">스펙 엑셀 받기</button>` : ""}
+    ${ro ? "" : `<label class="btn primary" for="specIn" style="display:inline-block">스펙 엑셀 올리기<input type="file" id="specIn" accept=".xlsx,.xls,.xlsm,.csv" hidden></label>`}</div></section>`;
+  if (!p && cur?.models?.length && !ro) h += vCatalog();
   if (p) {
     h += `<div class="notice ${p.models.length ? "info" : "err"}"><div class="grow">${p.models.length
       ? `<b>${esc(p.fileName)}</b>에서 ${p.models.length}개 모델${p.models.some(m => m.priority) ? ` (우선순위 ${p.models.filter(m => m.priority).length}개)` : ""}, 공통사항 ${(p.commons || []).length}줄을 읽었어요. 아래 미리보기를 확인하고 저장해 주세요.`
@@ -589,22 +608,27 @@ const priOf = v => { const s = str(v).toUpperCase(); if (!s) return null; if (/^
 
 // 스펙 엑셀 읽기: '모델명' 칸이 있는 표 = 모델별 스펙, '모델명' 없이 '제품군'(적용 제품군) 칸이 있는 표 = 공통사항
 function parseSpecWorkbook(wb) {
-  const byModel = new Map(), commons = [];
+  const byModel = new Map(), commons = [], sheetMap = new Map(), refs = [];
   const norm = s => str(s).replace(/\s*\n\s*/g, " ").replace(/\s{2,}/g, " ");
   const nk = s => s.replace(/\s/g, "");
   for (const name of wb.SheetNames) {
     const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: null, raw: true, blankrows: true });
-    let head = null;
+    let head = null, used = false;
     for (const row of rows) {
       const cells = (row || []).map(norm);
       const filled = cells.filter(Boolean).length;
       if (!filled) { head = null; continue; }
       const mi = cells.findIndex(c => nk(c) === "모델명" || /^모델(명|코드)?$/.test(nk(c)));
-      if (mi >= 0) { head = { type: "model", cols: cells, mi }; continue; }
+      if (mi >= 0) {
+        head = { type: "model", cols: cells, mi }; used = true;
+        if (!sheetMap.has(name)) sheetMap.set(name, { name, cols: [] });
+        const sh = sheetMap.get(name); cells.forEach(c => { if (c && !sh.cols.includes(c)) sh.cols.push(c); });
+        continue;
+      }
       const si = cells.findIndex(c => /^(적용제품군|적용범위|적용|제품군)$/.test(nk(c)));
       if (si >= 0 && filled >= 2 && (!head || head.type !== "model")) {
         const ii = cells.findIndex(c => nk(c) === "항목"), vi = cells.findIndex(c => nk(c) === "내용");
-        head = { type: "common", cols: cells, si, ii, vi }; continue;
+        head = { type: "common", cols: cells, si, ii, vi }; used = true; continue;
       }
       if (!head) continue;
       if (head.type === "common") {
@@ -616,7 +640,7 @@ function parseSpecWorkbook(wb) {
       const code = cells[head.mi];
       if (!code) continue;
       let m = byModel.get(code);
-      if (!m) { m = { model: code, category: "", name: "", priority: null, specs: {} }; byModel.set(code, m); }
+      if (!m) { m = { model: code, category: "", name: "", priority: null, sheet: name, specs: {} }; byModel.set(code, m); }
       head.cols.forEach((h, j) => {
         const v = cells[j];
         if (!h || !v || j === head.mi) return;
@@ -631,8 +655,10 @@ function parseSpecWorkbook(wb) {
       });
       if (!m.category && !/^(sheet\d*|시트\d*)$/i.test(name)) m.category = name;
     }
+    // 모델·공통사항이 없는 참고용 시트는 엑셀로 받을 때 그대로 돌려주려고 보관
+    if (!used && !/작성\s*규칙/.test(name)) { const keep = rows.filter(r => (r || []).some(v => v != null && v !== "")).slice(0, 200).map(r => r.map(v => v == null ? null : v)); if (keep.length) refs.push({ name, rows: keep }); }
   }
-  return { models: [...byModel.values()], commons };
+  return { models: [...byModel.values()], commons, sheets: [...sheetMap.values()], refs };
 }
 
 /* ---------- document reading ---------- */
@@ -779,6 +805,7 @@ const AI_ERR = {
   invalid_json: "AI 답을 표로 정리하지 못했어요. 한 번 더 눌러 주세요.",
   timeout: "AI 응답이 너무 오래 걸려 끊겼어요. 문서를 규격 부분 위주로 줄여서 다시 해 주세요.",
   network: "AI 서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.",
+  too_large: "한 번에 보내는 카탈로그 페이지가 너무 커요.",
 };
 const aiErr = e => AI_ERR[e?.code] || "AI 응답 중 문제가 생겼어요. 다시 시도해 주세요.";
 
@@ -792,19 +819,19 @@ function parseJSON(text) {
   throw { code: "invalid_json" };
 }
 // 서버가 로그인 만료로 거절하면 한 번 갱신해서 다시 보내고, 그래도 안 되면 로그인 화면을 띄운다
-async function callAI(prompt, effort, signal, retried) {
-  try { return await callAIOnce(prompt, effort, signal); }
+async function callAI(prompt, effort, signal, opts = {}) {
+  try { return await callAIOnce(prompt, effort, signal, opts.images); }
   catch (e) {
     if (e?.code !== "not_signed_in") throw e;
-    if (!retried) {
-      try { const { data } = await withTimeout(S.sb.auth.refreshSession(), 10000); if (data?.session) { S.session = data.session; return await callAI(prompt, effort, signal, true); } } catch {}
+    if (!opts.retried) {
+      try { const { data } = await withTimeout(S.sb.auth.refreshSession(), 10000); if (data?.session) { S.session = data.session; return await callAI(prompt, effort, signal, { ...opts, retried: true }); } } catch {}
     }
     S.session = null; S.me = null; showAuth(true);
     const er = $("#authErr"); er.textContent = "로그인이 만료됐어요. 다시 로그인한 뒤 같은 버튼을 눌러 주세요."; er.hidden = false;
     throw { code: "cancelled" };
   }
 }
-async function callAIOnce(prompt, effort, signal) {
+async function callAIOnce(prompt, effort, signal, images) {
   const token = (await currentSession())?.access_token;
   if (!token) throw { code: "not_signed_in" };
   let r;
@@ -813,7 +840,7 @@ async function callAIOnce(prompt, effort, signal) {
       method: "POST", signal,
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, apikey: SUPABASE_KEY },
       // 3.6-flash가 빠르고 안정적(짧은 질문 2초), 막히면 lite → 3.8 순서. effort는 Gemini의 생각 단계로 옮긴다
-      body: JSON.stringify({ prompt, models: ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"], thinking: effort === "low" ? "low" : "medium" }),
+      body: JSON.stringify({ prompt, models: ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"], thinking: effort === "low" ? "low" : "medium", ...(images?.length ? { images } : {}) }),
     });
   } catch (e) {
     if (e?.name === "AbortError") throw { code: "cancelled" };
@@ -821,6 +848,7 @@ async function callAIOnce(prompt, effort, signal) {
   }
   if (r.status === 404) { S.setup = "fn"; throw { code: "no_function" }; }
   if (r.status === 504 || r.status === 546) throw { code: "timeout" };
+  if (r.status === 413) throw { code: "too_large" };
   let body = {};
   try { body = await r.json(); } catch {}
   if (!r.ok) throw { code: body.error || "upstream_error" };
@@ -1024,12 +1052,12 @@ async function loadSpecFile(file) {
   try {
     const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
     S.specPreview = { fileName: file.name, ...parseSpecWorkbook(wb) };
-  } catch { S.specPreview = { fileName: file.name, models: [], commons: [] }; }
+  } catch { S.specPreview = { fileName: file.name, models: [], commons: [], sheets: [], refs: [] }; }
   render(true);
 }
 async function saveSpec() {
   const p = S.specPreview; if (!p?.models.length || !S.sb) return;
-  const data = { fileName: p.fileName, models: p.models, commons: p.commons || [], uploadedAt: new Date().toISOString() };
+  const data = { fileName: p.fileName, models: p.models, commons: p.commons || [], sheets: p.sheets || [], refs: p.refs || [], uploadedAt: new Date().toISOString() };
   try {
     if (S.spec) await putRow("spec-previous", "spec", S.spec);
     await putRow("spec-current", "spec", data);
@@ -1043,7 +1071,7 @@ document.addEventListener("click", async ev => {
   if (v && !S.busy) { S.view = v.dataset.view; S.msg = null; S.showSetup = false; render(true); window.scrollTo(0, 0); return; }
   const a = ev.target.closest("[data-act]"); if (!a) return;
   const act = a.dataset.act;
-  if (act === "pick") return;
+  if (act === "pick" || act === "catitem" || act === "catmodel") return;
   if (act === "closemsg") { S.msg = null; render(true); }
   else if (act === "stop") S.busy?.ctl.abort();
   else if (act === "rmfile") { S.files = S.files.filter(f => f.id !== a.dataset.id); render(true); }
@@ -1063,6 +1091,12 @@ document.addEventListener("click", async ev => {
   }
   else if (act === "savespec") saveSpec();
   else if (act === "cancelspec") { S.specPreview = null; render(true); }
+  else if (act === "exportspec") exportSpec();
+  else if (act === "catread") readCatalogs();
+  else if (act === "catclear") { S.cat = { files: [], props: null }; render(true); }
+  else if (act === "catrm") { S.cat.files = S.cat.files.filter(f => f.id !== a.dataset.id); S.cat.props = null; render(true); }
+  else if (act === "catapply") applyCatalog();
+  else if (act === "catcancel") { S.cat.props = null; render(true); }
   else if (act === "savereqs") { await saveCur(); render(true); }
   else if (act === "addreq") { const g = findG(a.dataset.g); g.reqs.push({ id: uid("r"), item: "", req: "", src: "직접 추가" }); edited(); render(true); keepOpen(); }
   else if (act === "rmreq") {
@@ -1091,6 +1125,13 @@ document.addEventListener("change", ev => {
   const t = ev.target;
   if (t.id === "fileIn" && t.files?.length) { addFiles([...t.files]); t.value = ""; }
   else if (t.id === "specIn" && t.files?.[0]) { loadSpecFile(t.files[0]); t.value = ""; }
+  else if (t.id === "catIn" && t.files?.length) { addCatalogs([...t.files]); t.value = ""; }
+  else if (t.dataset.act === "catitem" || t.dataset.act === "catmodel") {
+    const r = S.cat.props?.find(x => x.model === t.dataset.m); if (!r) return;
+    if (t.dataset.act === "catmodel") { r.on = t.checked; r.items.forEach(i => { if (i.st === "fill") i.on = t.checked; }); }
+    else { const i = r.items.find(x => x.id === t.dataset.i); if (i) i.on = t.checked; }
+    const y = window.scrollY; render(true); window.scrollTo(0, y);
+  }
   else if (t.dataset.act === "pick" && S.cur) { S.cur.picks = { ...(S.cur.picks || {}), [t.dataset.g]: t.dataset.m }; saveCur(); render(true); }
 });
 document.addEventListener("input", ev => {
@@ -1102,9 +1143,312 @@ document.addEventListener("input", ev => {
   const wasDirty = S.dirty; edited();
   if (!wasDirty) { const b = $('[data-act="savereqs"]'); if (b) b.disabled = false; }
 });
-document.addEventListener("dragover", ev => { const d = ev.target.closest?.("#drop"); if (d) { ev.preventDefault(); d.classList.add("over"); } });
-document.addEventListener("dragleave", ev => { const d = ev.target.closest?.("#drop"); if (d) d.classList.remove("over"); });
-document.addEventListener("drop", ev => { const d = ev.target.closest?.("#drop"); if (!d) return; ev.preventDefault(); d.classList.remove("over"); if (ev.dataTransfer?.files?.length) addFiles([...ev.dataTransfer.files]); });
+document.addEventListener("dragover", ev => { const d = ev.target.closest?.("#drop, #catDrop"); if (d) { ev.preventDefault(); d.classList.add("over"); } });
+document.addEventListener("dragleave", ev => { const d = ev.target.closest?.("#drop, #catDrop"); if (d) d.classList.remove("over"); });
+document.addEventListener("drop", ev => {
+  const d = ev.target.closest?.("#drop, #catDrop"); if (!d) return; ev.preventDefault(); d.classList.remove("over");
+  if (!ev.dataTransfer?.files?.length) return;
+  if (d.id === "catDrop") addCatalogs([...ev.dataTransfer.files]); else addFiles([...ev.dataTransfer.files]);
+});
+
+/* ---------- 카탈로그로 스펙 채우기 · 스펙 엑셀 받기 ---------- */
+const KEY_COL = h => {
+  const k = str(h).replace(/\s/g, "");
+  if (/^(no\.?|번호|순번)$/i.test(k)) return "no";
+  if (/우선순위/.test(k)) return "priority";
+  if (/^(제품군|분류|카테고리)$/.test(k)) return "category";
+  if (/^(제품명|상품명)$/.test(k)) return "name";
+  if (k === "모델명" || /^모델(명|코드)?$/.test(k)) return "model";
+  return null;
+};
+const codeKey = s => str(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
+const findModel = code => { const k = codeKey(code); return k ? S.spec?.models?.find(m => codeKey(m.model) === k) : null; };
+const normVal = s => str(s).toLowerCase().replace(/[\s,]/g, "").replace(/(mm|kg|l|w|㎡|평형|개월|%|db|ppm)$/i, "");
+const sameVal = (a, b) => { const x = normVal(a), y = normVal(b); if (x === y) return true; const p = parseFloat(x), q = parseFloat(y); return /^[\d.]+$/.test(x) && /^[\d.]+$/.test(y) && p === q; };
+
+// 시트 구성: 엑셀을 올릴 때 기록한 시트·머리글, 없으면 제품군별로 만든다
+function sheetsOf(spec) {
+  if (spec?.sheets?.length) return spec.sheets;
+  const map = new Map();
+  for (const m of spec?.models || []) {
+    const n = fam(m.category) || "기타";
+    if (!map.has(n)) map.set(n, { name: n, cols: ["no.", "규격대조 우선순위", "제품군", "제품명", "모델명"] });
+    const s = map.get(n);
+    for (const k of Object.keys(m.specs || {})) if (!s.cols.includes(k)) s.cols.push(k);
+  }
+  return [...map.values()];
+}
+const sheetOfModel = (spec, m) => {
+  const all = sheetsOf(spec);
+  return (m.sheet && all.some(s => s.name === m.sheet) ? m.sheet : null) || all.find(s => fam(s.name) === fam(m.category))?.name || all[0]?.name || "기타";
+};
+
+S.cat = { files: [], props: null };
+
+async function pdfPagesAsImages(file, maxPages = 40) {
+  const lib = window.pdfjsLib;
+  if (!lib) throw new Error("PDF 읽기 도구를 불러오지 못했어요");
+  const base = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+  lib.GlobalWorkerOptions.workerSrc = base + "pdf.worker.min.js";
+  const pdf = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false, cMapUrl: base + "cmaps/", cMapPacked: true, standardFontDataUrl: base + "standard_fonts/" }).promise;
+  const pages = [];
+  for (let p = 1; p <= Math.min(pdf.numPages, maxPages); p++) {
+    const page = await pdf.getPage(p);
+    const w = page.getViewport({ scale: 1 }).width;
+    const vp = page.getViewport({ scale: Math.min(3, 1600 / w) });
+    const cv = document.createElement("canvas");
+    cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+    const ctx = cv.getContext("2d");
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    pages.push({ page: p, mime: "image/jpeg", data: cv.toDataURL("image/jpeg", 0.82).split(",")[1] });
+    cv.width = cv.height = 0;
+  }
+  return { pages, total: pdf.numPages };
+}
+const fileB64 = file => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = () => no(r.error); r.readAsDataURL(file); });
+
+async function addCatalogs(list) {
+  for (const file of list) {
+    const x = { id: uid("c"), name: file.name, status: "reading", pages: [], total: 0, error: "", results: [], errors: [] };
+    S.cat.files.push(x); S.cat.props = null; render();
+    try {
+      if (/\.pdf$/i.test(file.name)) { const r = await pdfPagesAsImages(file); x.pages = r.pages; x.total = r.total; }
+      else if (/^image\/(jpeg|png|webp)$/.test(file.type)) { x.pages = [{ page: 1, mime: file.type, data: await fileB64(file) }]; x.total = 1; }
+      else throw new Error("PDF나 이미지(JPG·PNG) 파일만 읽을 수 있어요");
+      x.status = "ready";
+    } catch (e) { x.status = "error"; x.error = e?.message || "파일을 열지 못했어요"; }
+    render();
+  }
+}
+
+const CATALOG_PROMPT = `너는 렌탈가전(정수기·공기청정기·비데) 제품 스펙을 엑셀로 정리하는 담당자다.
+첨부 이미지는 카탈로그 "{FILE}"의 {PAGES}쪽이다(이미지 순서대로). 이미지에 나온 제품의 스펙을 읽어서 우리 스펙 엑셀의 칸에 맞춰 값을 뽑아라.
+
+[우리 스펙 엑셀 시트와 칸]
+{SHEETS}
+
+[엑셀에 이미 있는 모델]
+{MODELS}
+
+규칙
+1. 카탈로그 제품을 [엑셀에 이미 있는 모델]과 모델명으로 맞춘다. 표기가 조금 달라도(공백·하이픈, "C(H)P-5700R" → "CHP-5700R") 같은 모델이면 엑셀 모델명을 그대로 쓴다. 엑셀에 없으면 is_new를 true로 하고 sheet(넣을 시트 이름), name(제품명), category(제품군: 냉온정수기/얼음정수기/공기청정기/비데 등)를 적는다.
+2. values의 col은 그 시트의 칸 이름을 글자 그대로 쓴다. value는 칸 이름의 단위에 맞춘 값만 쓴다(예: "가로(mm)" 칸에 "320"). "(O/X)" 칸은 O 또는 X. 그 밖의 칸은 카탈로그 표현을 짧게.
+3. 크기 "320 X 490 X 1 260 mm"는 가로 320, 세로 490, 높이 1260으로 나눈다. 관리주기 "1회/2개월 또는 1회/4개월"은 방문 점검주기(개월) 칸에 "2 또는 4". 용량은 냉수·온수·정수·얼음을 각 칸에 나눈다.
+4. 이미지에 분명히 적힌 것만 쓴다. 추측하지 않는다. 값마다 page(쪽 번호)와 quote(근거가 된 카탈로그 원문, 30자 이내)를 쓴다.
+5. "특징·장점" 칸이 있으면 카탈로그의 핵심 기능·장점을 5줄 이내로, 줄 사이는 \\n으로 구분한다.
+6. 엑셀 칸에는 없지만 입찰 규격 대조에 쓸 만한 정보(예: 제품중량(kg), 소비전력, 주요기능, 일일 제빙량(kg), 인증번호)는 new_cols에 넣는다. col에 단위를 포함한다. 최대 8개.
+7. 렌탈 약관·면책 문구·시험 방법 설명은 무시한다.
+
+JSON 하나만 답한다. 형식:
+{"models":[{"model":"","is_new":false,"sheet":"","name":"","category":"","values":[{"col":"","value":"","page":1,"quote":""}],"new_cols":[{"col":"","value":"","page":1,"quote":""}]}]}`;
+
+async function readCatalogs() {
+  if (!S.spec?.models?.length) return say("warn", "먼저 스펙 엑셀을 올려 주세요. 카탈로그 값을 그 칸에 맞춰 채워요.");
+  const files = S.cat.files.filter(f => f.pages.length && f.status !== "reading");
+  if (!files.length) return;
+  const spec = S.spec;
+  const sheets = sheetsOf(spec).map(s => `- ${s.name}: ${s.cols.filter(c => !KEY_COL(c)).join(" | ")}`).join("\n");
+  const models = spec.models.map(m => `${m.model} (${m.name || ""}, 시트: ${sheetOfModel(spec, m)})`).join("\n");
+  const jobs = [];
+  for (const f of files) {
+    f.results = []; f.errors = []; f.status = "ready";
+    for (let i = 0; i < f.pages.length; i += 4) jobs.push({ f, pages: f.pages.slice(i, i + 4) });
+  }
+  const ok = await runAI("카탈로그를 읽는 중", `${files.length}개 파일 · 파일당 30초~1분`, async (signal, progress) => {
+    let next = 0, done = 0;
+    progress(` · 0/${jobs.length}`);
+    const worker = async () => {
+      while (next < jobs.length && !signal.aborted) {
+        const j = jobs[next++];
+        const prompt = CATALOG_PROMPT.replace("{FILE}", j.f.name).replace("{PAGES}", j.pages.map(p => p.page).join(", ")).replace("{SHEETS}", sheets).replace("{MODELS}", models);
+        try {
+          const o = await callAI(prompt, "medium", signal, { images: j.pages.map(p => ({ mime: p.mime, data: p.data })) });
+          (Array.isArray(o?.models) ? o.models : []).forEach(r => j.f.results.push(r));
+        } catch (e) {
+          if (signal.aborted || e?.code === "cancelled") throw e;
+          j.f.errors.push(aiErr(e));
+        }
+        progress(` · ${++done}/${jobs.length}`);
+      }
+    };
+    await Promise.all([worker(), worker()]);
+    if (signal.aborted) throw { code: "cancelled" };
+    return true;
+  });
+  for (const f of files) f.status = f.errors.length && !f.results.length ? "failed" : "done";
+  if (ok) S.cat.props = buildCatalogProposals(files);
+  render(true);
+}
+
+function buildCatalogProposals(files) {
+  const spec = S.spec, byCode = new Map();
+  for (const f of files) {
+    const nModels = new Set(f.results.map(r => codeKey(r.model))).size || 1;
+    for (const r of f.results) {
+      const ex = findModel(r.model), code = ex ? ex.model : str(r.model);
+      if (!code) continue;
+      let e = byCode.get(code);
+      if (!e) {
+        const sh = sheetsOf(spec);
+        const sheet = ex ? sheetOfModel(spec, ex) : (sh.find(s => s.name === str(r.sheet))?.name || sh.find(s => fam(s.name) === fam(r.category))?.name || str(r.sheet) || fam(r.category) || "기타");
+        e = { model: code, isNew: !ex, sheet, name: ex?.name || str(r.name), category: ex?.category || str(r.category), cols: new Map(), files: new Set(), on: false };
+        byCode.set(code, e);
+      }
+      e.files.add(f.name);
+      const add = (v, suggested) => {
+        const col = str(v?.col), val = str(v?.value).replace(/\\n/g, "\n");
+        if (!col || !val || KEY_COL(col)) return;
+        const arr = e.cols.get(col) || [];
+        arr.push({ value: val, file: f.name, page: v.page, quote: str(v.quote), specificity: nModels, suggested });
+        e.cols.set(col, arr);
+      };
+      (Array.isArray(r.values) ? r.values : []).forEach(v => add(v, false));
+      (Array.isArray(r.new_cols) ? r.new_cols : []).forEach(v => add(v, true));
+    }
+  }
+  const rows = [];
+  for (const e of byCode.values()) {
+    const ex = findModel(e.model);
+    const cols = sheetsOf(spec).find(s => s.name === e.sheet)?.cols || [];
+    const items = [];
+    for (const [col, arr] of e.cols) {
+      arr.sort((a, b) => a.specificity - b.specificity); // 모델이 적게 나온(개별) 카탈로그를 우선
+      const best = arr[0], cur = ex ? str(ex.specs?.[col]) : "";
+      const known = cols.includes(col) || (ex && col in (ex.specs || {}));
+      const st = !known ? "newcol" : !cur ? "fill" : sameVal(cur, best.value) ? "same" : "diff";
+      items.push({ id: uid("i"), col, value: best.value, cur, src: best, alts: arr.slice(1).filter(a => !sameVal(a.value, best.value)), st, on: st === "fill" });
+    }
+    const order = c => { const i = cols.indexOf(c); return i < 0 ? 999 : i; };
+    items.sort((a, b) => order(a.col) - order(b.col));
+    rows.push({ ...e, files: [...e.files], items });
+  }
+  rows.sort((a, b) => (a.isNew - b.isNew) || a.model.localeCompare(b.model));
+  return rows;
+}
+
+const ST_CAT = { fill: ["빈칸 채움", "ok"], diff: ["값 다름", "warn"], newcol: ["새 칸 제안", "unknown"], same: ["같음", "unknown"] };
+function vCatalog() {
+  const c = S.cat, props = c.props;
+  const busy = !!S.busy, ready = c.files.some(f => f.pages.length && f.status !== "reading") && !c.files.some(f => f.status === "reading");
+  let h = `<section class="panel" id="catPanel"><div class="spechead"><div class="grow"><h2 style="font-size:17px">카탈로그로 스펙 채우기</h2>
+    <p class="hint" style="margin-top:4px">카탈로그 PDF를 여러 개 한 번에 올리면 AI가 페이지를 보고 엑셀 칸에 맞춰 값을 찾아요. 종합·개별 카탈로그를 함께 올려도 되고, 값이 다르면 개별 카탈로그를 우선해요.<br>
+    미리보기에서 고른 것만 저장하고, 카탈로그 파일 자체는 저장하지 않아요.</p></div></div>
+    <label class="drop" id="catDrop" for="catIn" style="margin-top:12px;padding:18px 16px"><input type="file" id="catIn" multiple accept=".pdf,image/jpeg,image/png,image/webp">
+      <b>카탈로그 파일을 끌어다 놓거나 눌러서 고르기</b><span>PDF · JPG · PNG · 여러 개 한 번에</span></label>`;
+  if (c.files.length) h += `<ul class="files">${c.files.map(f => `<li><span class="ext">${f.pages.length && /\.pdf$/i.test(f.name) ? "PDF" : "IMG"}</span><span class="nm" title="${esc(f.name)}">${esc(f.name)}</span>
+      <span class="st ${f.status === "error" || f.status === "failed" ? "bad" : ""}">${f.status === "reading" ? "페이지 변환 중…" : f.status === "error" ? esc(f.error) : f.status === "failed" ? esc(f.errors[0] || "읽지 못했어요") : f.status === "done" ? `모델 ${new Set(f.results.map(r => codeKey(r.model))).size}개 찾음` : `${f.pages.length}쪽 준비${f.total > f.pages.length ? ` (전체 ${f.total}쪽 중)` : ""}`}</span>
+      <button class="btn ghost sm" data-act="catrm" data-id="${f.id}" aria-label="빼기" ${busy ? "disabled" : ""}>×</button></li>`).join("")}</ul>`;
+  h += `<div class="actions" style="margin-top:12px"><button class="btn primary" data-act="catread" ${ready && !busy && S.spec?.models?.length ? "" : "disabled"}>카탈로그 읽기</button>
+    ${c.files.length ? `<button class="btn" data-act="catclear" ${busy ? "disabled" : ""}>목록 비우기</button>` : ""}
+    <span class="hint">${S.spec?.models?.length ? "파일당 30초~1분 걸려요" : "먼저 위에서 스펙 엑셀을 올려 주세요"}</span></div>`;
+  if (props) {
+    const all = props.flatMap(r => r.items);
+    const cnt = k => all.filter(i => i.st === k).length;
+    const sel = props.reduce((a, r) => a + (r.isNew && !r.on ? 0 : r.items.filter(i => i.on && i.st !== "same").length), 0);
+    h += `<div class="catsum"><b>모델 ${props.length}개</b> · 빈칸 채움 ${cnt("fill")} · 값 다름 ${cnt("diff")} · 새 칸 제안 ${cnt("newcol")} · 새 모델 ${props.filter(r => r.isNew).length} · 이미 같은 값 ${cnt("same")}</div>`;
+    if (!props.length) h += `<p class="nocand">카탈로그에서 모델을 찾지 못했어요.</p>`;
+    h += props.map(r => {
+      const vis = r.items.filter(i => i.st !== "same");
+      return `<div class="catmodel ${r.isNew ? "isnew" : ""}"><div class="cmhead">
+        ${r.isNew ? `<label class="pick ${r.on ? "on" : ""}"><input type="checkbox" data-act="catmodel" data-m="${esc(r.model)}" ${r.on ? "checked" : ""}> 새 모델로 추가</label>` : ""}
+        <b class="mono">${esc(r.model)}</b><span>${esc(r.name || "")}</span><span class="hint">시트: ${esc(r.sheet)}</span>${r.isNew ? `<span class="chip warn">엑셀에 없는 모델</span>` : ""}
+        <span class="hint" style="margin-left:auto">${r.files.map(esc).join(", ")}</span></div>
+        ${vis.length ? `<div class="wrapx"><table class="cattbl"><thead><tr><th></th><th>칸</th><th>지금 값</th><th>카탈로그 값</th><th>근거</th></tr></thead><tbody>${vis.map(i => `<tr class="st-${i.st}">
+          <td><input type="checkbox" data-act="catitem" data-m="${esc(r.model)}" data-i="${i.id}" ${i.on ? "checked" : ""} ${r.isNew && !r.on ? "disabled" : ""} aria-label="${esc(i.col)} 반영"></td>
+          <td><b>${esc(i.col)}</b><br><span class="chip ${ST_CAT[i.st][1]}">${ST_CAT[i.st][0]}</span></td>
+          <td class="cv">${esc(i.cur) || `<span class="hint">비어 있음</span>`}</td>
+          <td class="cv"><b>${esc(i.value)}</b>${i.alts.length ? `<small>다른 카탈로그: ${i.alts.map(a => esc(a.value) + " (" + esc(a.file) + ")").join(", ")}</small>` : ""}</td>
+          <td><small>${esc(i.src.file)}${i.src.page ? ` · ${esc(i.src.page)}쪽` : ""}${i.src.quote ? `<br>“${esc(i.src.quote)}”` : ""}</small></td></tr>`).join("")}</tbody></table></div>` : `<p class="hint" style="padding:8px 12px">바꿀 값이 없어요. 모두 지금 엑셀과 같아요.</p>`}
+      </div>`;
+    }).join("");
+    h += `<div class="actions catapply"><button class="btn primary" data-act="catapply" ${sel ? "" : "disabled"}>선택한 ${sel}개 반영해서 저장</button><button class="btn" data-act="catcancel">미리보기 닫기</button>
+      <span class="hint">빈칸 채움은 기본 선택, 값 다름·새 칸·새 모델은 직접 골라 주세요.</span></div>`;
+  }
+  return h + `</section>`;
+}
+
+async function applyCatalog() {
+  const props = S.cat.props; if (!props?.length || !S.spec) return;
+  const spec = clone(S.spec); spec.sheets = clone(sheetsOf(S.spec));
+  let n = 0, added = 0;
+  for (const r of props) {
+    const picked = r.items.filter(i => i.on && i.st !== "same");
+    if (!picked.length) continue;
+    let m = spec.models.find(x => x.model === r.model);
+    if (!m) {
+      if (!r.on) continue;
+      if (!spec.sheets.some(s => s.name === r.sheet)) spec.sheets.push({ name: r.sheet, cols: ["no.", "규격대조 우선순위", "제품군", "제품명", "모델명"] });
+      m = { model: r.model, category: r.category, name: r.name, priority: null, sheet: r.sheet, specs: {} };
+      spec.models.push(m); added++;
+    }
+    const sh = spec.sheets.find(s => s.name === sheetOfModel(spec, m));
+    for (const i of picked) { m.specs[i.col] = i.value; n++; if (sh && !sh.cols.includes(i.col)) sh.cols.push(i.col); }
+  }
+  if (!n) return say("warn", "선택한 항목이 없어요.");
+  spec.uploadedAt = new Date().toISOString();
+  spec.catalogAt = spec.uploadedAt;
+  try {
+    await putRow("spec-previous", "spec", S.spec);
+    await putRow("spec-current", "spec", spec);
+    S.spec = spec; S.cat.props = null; S.cat.files = [];
+    say("info", `카탈로그 값 ${n}개${added ? `(새 모델 ${added}개 포함)` : ""}를 스펙 DB에 저장했어요. 위의 [스펙 엑셀 받기]로 새 엑셀을 내려받아 앞으로의 원본으로 써 주세요.`);
+  } catch { say("err", "스펙을 저장하지 못했어요. 다시 시도해 주세요."); }
+}
+
+const SPEC_RULES = [
+  "렌탈 제품 스펙정리 — 작성 규칙",
+  "",
+  "1. 제품군마다 시트 하나: 정수기 / 공기청정기 / 비데. 새 제품군이 생기면 시트를 하나 더 만들고 1행 머리글에 '모델명' 칸을 꼭 넣는다.",
+  "2. 1행은 머리글, 2행부터 한 줄 = 모델 하나. 새 모델은 맨 아래 줄에 추가한다.",
+  "3. 한 칸에는 값 하나. 숫자는 숫자만 쓰고 단위는 머리글에 둔다. 예) 냉수(L) 칸에 7.1",
+  "4. 있다/없다는 O 또는 X. 모르면 비워 둔다('기록중' 같은 글자는 쓰지 않는다).",
+  "5. 셀 병합은 쓰지 않는다.",
+  "6. 새 스펙 항목이 필요하면 그 제품군 시트 오른쪽 끝에 열을 추가한다.",
+  "7. 규격대조 우선순위: 같은 조건이면 먼저 추천할 모델에 1 (그다음 2, 3...). 비우면 우선순위 없음. O를 쓰면 1로 본다.",
+  "8. 모든 모델에 똑같은 내용은 '공통사항' 시트에 한 줄씩. 적용 제품군은 전체 / 정수기 / 공기청정기 / 비데.",
+  "9. 다 고친 뒤 이 파일 전체를 규격대조 사이트 '제품 스펙' 탭에 올리면 통째로 반영된다.",
+  "10. 사이트에서 카탈로그로 값을 채웠다면, 사이트의 [스펙 엑셀 받기]로 내려받은 파일을 새 원본으로 쓴다.",
+];
+async function exportSpec() {
+  const spec = S.spec; if (!spec?.models?.length) return;
+  if (!window.ExcelJS) return say("err", "엑셀 만들기 도구를 불러오지 못했어요. 새로고침 후 다시 해 주세요.");
+  const wb = new ExcelJS.Workbook();
+  const guide = wb.addWorksheet("작성 규칙");
+  SPEC_RULES.forEach(l => guide.addRow([l]));
+  guide.getColumn(1).width = 130; guide.getCell("A1").font = { bold: true, size: 14 };
+  const toCell = v => { if (v == null || v === "") return null; const s = String(v); return /^-?\d+(\.\d+)?$/.test(s) ? Number(s) : s; };
+  const thin = { style: "thin", color: { argb: "FFD7E0E1" } };
+  const style = (ws, cols, keyCount) => {
+    const hr = ws.getRow(1); hr.height = 42;
+    hr.eachCell(c => { c.font = { bold: true, color: { argb: "FFFFFFFF" } }; c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF0A6A72" } }; c.alignment = { wrapText: true, vertical: "middle", horizontal: "center" }; c.border = { top: thin, left: thin, bottom: thin, right: thin }; });
+    ws.eachRow((row, r) => { if (r === 1) return; for (let i = 1; i <= cols.length; i++) { const c = row.getCell(i); c.alignment = { wrapText: true, vertical: "top" }; c.border = { top: thin, left: thin, bottom: thin, right: thin }; if (i <= keyCount) c.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFDCEFEE" } }; } });
+    cols.forEach((h, i) => { let w = Math.max(6, Math.min(40, str(h).length * 1.6)); ws.eachRow((row, r) => { if (r > 1) { const v = str(row.getCell(i + 1).value); const l = Math.max(...v.split("\n").map(x => x.length)); w = Math.max(w, Math.min(40, l * 1.3)); } }); ws.getColumn(i + 1).width = Math.round(w); });
+    ws.views = [{ state: "frozen", xSplit: keyCount, ySplit: 1 }];
+  };
+  for (const sh of sheetsOf(spec)) {
+    const ms = spec.models.filter(m => sheetOfModel(spec, m) === sh.name);
+    if (!ms.length) continue;
+    const cols = [...sh.cols];
+    if (!cols.some(c => KEY_COL(c) === "model")) cols.unshift("모델명");
+    ms.forEach(m => Object.keys(m.specs || {}).forEach(k => { if (!cols.includes(k)) cols.push(k); }));
+    const ws = wb.addWorksheet(sh.name.slice(0, 31));
+    ws.addRow(cols);
+    ms.forEach((m, i) => ws.addRow(cols.map(c => { const k = KEY_COL(c); return toCell(k === "no" ? i + 1 : k === "priority" ? m.priority : k === "category" ? m.category : k === "name" ? m.name : k === "model" ? m.model : m.specs?.[c]); })));
+    style(ws, cols, cols.findIndex(c => KEY_COL(c) === "model") + 1);
+  }
+  if (spec.commons?.length) {
+    const ws = wb.addWorksheet("공통사항"), cols = ["no.", "적용 제품군", "항목", "내용"];
+    ws.addRow(cols); spec.commons.forEach((x, i) => ws.addRow([i + 1, x.scope, x.item, x.value]));
+    style(ws, cols, 3);
+  }
+  for (const ref of spec.refs || []) { const ws = wb.addWorksheet(ref.name.slice(0, 31)); ref.rows.forEach(r => ws.addRow(r)); }
+  const buf = await wb.xlsx.writeBuffer();
+  const d = new Date(), name = `렌탈 제품 스펙정리_${d.getFullYear()}${p2(d.getMonth() + 1)}${p2(d.getDate())}.xlsx`;
+  const url = URL.createObjectURL(new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+  const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
 
 /* ---------- auth & boot ---------- */
 function showAuth(on) {

@@ -1,4 +1,4 @@
-// Supabase Edge Function "bid-ai" v2 — 규격대조 페이지가 보낸 프롬프트를 Google Gemini(무료 등급)에 전달하고 답을 돌려준다.
+// Supabase Edge Function "bid-ai" v3 — 규격대조 페이지가 보낸 프롬프트(와 카탈로그 페이지 이미지)를 Google Gemini(무료 등급)에 전달하고 답을 돌려준다.
 // 필요한 Secrets: GEMINI_API_KEY (aistudio.google.com 무료 키), ALLOWED_EMAILS(쉼표로 구분, 이 이메일로 로그인한 사람만 사용 가능)
 import { createClient } from "npm:@supabase/supabase-js@2";
 
@@ -6,6 +6,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const ALLOWED_MODELS = ["gemini-3.6-flash", "gemini-3.8-flash", "gemini-3.5-flash-lite"];
 const DEFAULT_MODELS = ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"];
 const LEVELS = ["minimal", "low", "medium", "high"];
+const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+const MAX_IMAGE_CHARS = 18_000_000; // base64 합계 상한(약 13MB)
 const BUDGET_MS = 140000; // Supabase 무료 플랜 150초 제한 안에서 끝낸다
 
 const cors = {
@@ -16,7 +18,9 @@ const cors = {
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
-async function askGemini(model: string, key: string, prompt: string, level: string | null, ms: number) {
+type Part = { text: string } | { inlineData: { mimeType: string; data: string } };
+
+async function askGemini(model: string, key: string, parts: Part[], level: string | null, ms: number) {
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), ms);
   try {
@@ -26,7 +30,7 @@ async function askGemini(model: string, key: string, prompt: string, level: stri
       method: "POST",
       signal: ctl.signal,
       headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-      body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig }),
+      body: JSON.stringify({ contents: [{ role: "user", parts }], generationConfig }),
     });
     const body = await r.json().catch(() => ({}));
     return { status: r.status, body };
@@ -52,7 +56,7 @@ Deno.serve(async (req) => {
   const key = Deno.env.get("GEMINI_API_KEY");
   if (!key) return json({ error: "no_api_key" }, 500);
 
-  let body: { prompt?: string; models?: string[]; thinking?: string };
+  let body: { prompt?: string; models?: string[]; thinking?: string; images?: { mime?: string; data?: string }[] };
   try { body = await req.json(); } catch { return json({ error: "bad_request" }, 400); }
   const prompt = String(body.prompt || "");
   if (!prompt) return json({ error: "bad_request" }, 400);
@@ -60,16 +64,28 @@ Deno.serve(async (req) => {
   const models = asked.length ? asked : DEFAULT_MODELS;
   const level = LEVELS.includes(String(body.thinking)) ? String(body.thinking) : "low";
 
+  // 카탈로그 페이지 이미지(선택)
+  const parts: Part[] = [];
+  let imageChars = 0;
+  for (const im of Array.isArray(body.images) ? body.images : []) {
+    const mime = String(im?.mime || ""), data = String(im?.data || "");
+    if (!IMAGE_TYPES.includes(mime) || !data) continue;
+    imageChars += data.length;
+    if (imageChars > MAX_IMAGE_CHARS) return json({ error: "too_large" }, 413);
+    parts.push({ inlineData: { mimeType: mime, data } });
+  }
+  parts.push({ text: prompt });
+
   const tried: { model: string; status: number; sec: number; note?: string }[] = [];
   let last = { status: 0, body: {} as any };
   for (const model of models) {
     const left = BUDGET_MS - (Date.now() - t0);
     if (left < 15000) break;
     const t1 = Date.now();
-    last = await askGemini(model, key, prompt, level, left);
+    last = await askGemini(model, key, parts, level, left);
     // 이 모델이 생각 단계 설정을 모르면 설정 없이 한 번 더
     if (last.status === 400 && /thinking/i.test(String(last.body?.error?.message || ""))) {
-      last = await askGemini(model, key, prompt, null, BUDGET_MS - (Date.now() - t0));
+      last = await askGemini(model, key, parts, null, BUDGET_MS - (Date.now() - t0));
     }
     const { status, body: b } = last;
     tried.push({ model, status, sec: Math.round((Date.now() - t1) / 1000), note: String(b?.error?.message || "").slice(0, 120) || undefined });
