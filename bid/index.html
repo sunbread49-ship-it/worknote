@@ -237,6 +237,9 @@ table.list .sub{color:var(--muted);font-size:12px}
 .empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
 
 /* catalog */
+.sumhead{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.sumhead .sec{margin:0}
+.sumhead select{margin-left:6px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
 .catsum{margin-top:16px;padding:10px 12px;border-radius:8px;background:var(--sunk);font-size:13px}
 .catmodel{margin-top:12px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .catmodel.isnew{border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
@@ -305,7 +308,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v12</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v13</p>
   </form>
 </div>
 
@@ -334,7 +337,7 @@ const ST = { ok: "충족", warn: "협의", fail: "미달", unknown: "자료 없�
 const VD = { ok: "적합", warn: "협의 필요", fail: "부적합", unknown: "확인 필요" };
 
 const S = {
-  view: "bid", sb: null, me: null, email: "", canWrite: null, setup: null, aiDown: false,
+  settings: {}, view: "bid", sb: null, me: null, email: "", canWrite: null, setup: null, aiDown: false,
   spec: null, specLoaded: false, bids: [], bidsLoaded: false,
   cur: null, dirty: false, files: [], pasted: "",
   busy: null, msg: null, specPreview: null, confirmDel: null,
@@ -487,30 +490,54 @@ const mg = gid => S.cur.match?.groups?.find(x => x.gid === gid);
 const modelInfo = code => S.spec?.models?.find(m => m.model === code);
 const gTitle = g => esc(g.category) + (g.label ? ` <span>· ${esc(g.label)}</span>` : "");
 
+// 추천 순서: 미달이 적은 모델이 항상 먼저. 그다음은 고른 방식에 따라 우선순위와 협의 개수를 비교한다
+const RANK_MODES = { nofail: "미달만 없으면 우선순위 먼저", gap2: "협의 2개 차이까지는 우선순위 먼저", fit: "적합도 우선 (협의 적은 순)" };
+const rankMode = () => RANK_MODES[S.settings?.rankMode] ? S.settings.rankMode : "nofail";
+function orderedCands(gid) {
+  const g = S.cur?.groups.find(x => x.id === gid), r = mg(gid);
+  const cands = (r?.candidates || []).slice();
+  if (!g) return cands;
+  const mode = rankMode(), pr = m => modelInfo(m)?.priority ?? 99;
+  return cands.sort((a, b) => {
+    const A = grade(a, g).n, B = grade(b, g).n;
+    if (A.fail !== B.fail) return A.fail - B.fail;
+    const prio = pr(a.model) - pr(b.model), warn = A.warn - B.warn, rest = A.unknown - B.unknown || (a.rank || 9) - (b.rank || 9);
+    if (mode === "nofail" && A.fail === 0) return prio || warn || rest;
+    if (mode === "gap2" && Math.abs(warn) <= 2) return prio || warn || rest;
+    return warn || prio || rest;
+  });
+}
+async function setRankMode(mode) {
+  if (!RANK_MODES[mode]) return;
+  S.settings = { ...(S.settings || {}), rankMode: mode };
+  render(true);
+  try { await putRow("settings", "settings", S.settings); } catch { say("err", "추천 순서 설정을 저장하지 못했어요."); }
+}
+
 function vSummary() {
   const c = S.cur;
-  return `<section><p class="sec">제안 요약 · 카드를 누르면 상세로 이동</p><div class="sumgrid">${c.groups.map(g => {
-    const r = mg(g.id); const cands = r?.candidates || [];
+  return `<section><div class="sumhead"><p class="sec">제안 요약 · 카드를 누르면 상세로 이동</p><label class="hint">추천 순서 <select id="rankMode" aria-label="추천 순서">${Object.entries(RANK_MODES).map(([k, v]) => `<option value="${k}" ${rankMode() === k ? "selected" : ""}>${v}</option>`).join("")}</select></label></div><div class="sumgrid">${c.groups.map(g => {
+    const r = mg(g.id); const cands = orderedCands(g.id);
     const pick = c.picks?.[g.id]; const cand = cands.find(x => x.model === pick) || cands[0];
     if (!cand) return `<button class="sumcard" data-act="jump" data-g="${g.id}"><div class="row"><span class="cat">${gTitle(g)}</span><span class="qty">${esc(g.qty)}${g.qty ? "대" : ""}</span></div><span class="cnt">맞는 후보 없음</span></button>`;
     const gr = grade(cand, g);
     return `<button class="sumcard v-${gr.v}" data-act="jump" data-g="${g.id}">
       <div class="row"><span class="cat">${gTitle(g)}</span><span class="qty">${esc(g.qty)}${g.qty ? "대" : ""}</span></div>
       <span class="mdl">${esc(cand.model)}</span>
-      <div class="row"><span class="pill ${gr.v}">${VD[gr.v]}</span>${pick === cand.model ? `<span class="fix">제안 확정</span>` : `<span class="cnt">${cand.rank || 1}순위</span>`}</div>
+      <div class="row"><span class="pill ${gr.v}">${VD[gr.v]}</span>${pick === cand.model ? `<span class="fix">제안 확정</span>` : `<span class="cnt">${cands.indexOf(cand) + 1}순위</span>`}</div>
       <span class="cnt">${cntText(gr.n)}</span></button>`;
   }).join("")}</div></section>`;
 }
 
 function vGroup(g) {
-  const r = mg(g.id); const cands = (r?.candidates || []).slice().sort((a, b) => (a.rank || 9) - (b.rank || 9));
+  const r = mg(g.id); const cands = orderedCands(g.id);
   const pick = S.cur.picks?.[g.id];
   let h = `<section class="grp" id="grp-${g.id}"><header><h3>${gTitle(g)}</h3>${g.qty ? `<span class="qty">${esc(g.qty)}대</span>` : ""}${g.note ? `<p class="gnote">${esc(g.note)}</p>` : ""}</header>`;
   if (!cands.length && S.cur.match?.failed?.includes(g.id)) return h + `<p class="nocand">이 구분은 대조 중 오류가 났어요. (${esc(S.cur.match.failedWhy?.[g.id] || "원인 미확인")}) 조건이 많거나 헷갈리면 실패할 수 있어요. 이상한 조건을 ×로 지운 뒤 ‘다시 대조’를 눌러 주세요.</p></section>`;
   if (!cands.length) return h + `<p class="nocand">스펙 DB에서 이 제품군에 맞는 모델을 찾지 못했어요.${r?.comment ? " " + esc(r.comment) : ""}</p></section>`;
   h += `<div class="tblwrap"><table class="cmp"><thead><tr><th class="rq"><span class="hint">요구 규격 ${g.reqs.length}개</span></th>${cands.map((c, i) => {
     const gr = grade(c, g); const info = modelInfo(c.model);
-    return `<th class="cand ${i === 0 ? "top" : ""}"><div class="rk">${c.rank || i + 1}순위</div><div class="mdl">${esc(c.model)}</div>
+    return `<th class="cand ${i === 0 ? "top" : ""}"><div class="rk">${i + 1}순위</div><div class="mdl">${esc(c.model)}</div>
       <div class="nm">${esc(info ? info.name : "스펙 DB에 없는 모델")}${info?.priority ? ` <span class="prio">우선 ${esc(info.priority)}</span>` : ""}</div><span class="pill ${gr.v}">${VD[gr.v]}</span>
       <p class="sumline">${esc(c.summary || "")}</p><p class="hint" style="margin-top:2px">${cntText(gr.n)}</p>
       <label class="pick ${pick === c.model ? "on" : ""}"><input type="radio" name="pick-${g.id}" data-act="pick" data-g="${g.id}" data-m="${esc(c.model)}" ${pick === c.model ? "checked" : ""} ${S.canWrite === false ? "disabled" : ""}>이 모델로 제안</label></th>`;
@@ -1005,6 +1032,7 @@ async function loadAll() {
     all.push(...data); if (data.length < 1000) break; from += 1000;
   }
   S.spec = all.find(r => r.id === "spec-current")?.data || null;
+  S.settings = all.find(r => r.id === "settings")?.data || {};
   S.bids = all.filter(r => r.kind === "bid").map(r => ({ id: r.id, ...r.data })).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
   S.specLoaded = S.bidsLoaded = true;
 }
@@ -1017,7 +1045,7 @@ function doExport() {
   const det = [["제품군", "구분", "요구 항목", "요구값", "근거", "오기 의심"]];
   for (let i = 1; i <= 3; i++) det[0].push(`${i}순위 모델`, `${i}순위 판정`, `${i}순위 우리 스펙`, `${i}순위 메모`);
   for (const g of c.groups) {
-    const r = mg(g.id); const cands = (r?.candidates || []).slice().sort((a, b) => a.rank - b.rank);
+    const r = mg(g.id); const cands = orderedCands(g.id);
     const cand = cands.find(x => x.model === c.picks?.[g.id]) || cands[0];
     if (cand) { const gr = grade(cand, g); sum.push([g.category, g.label, g.qty, cand.model + (c.picks?.[g.id] ? " (확정)" : ""), modelInfo(cand.model)?.name || "", VD[gr.v], gr.n.fail, gr.n.warn, gr.n.unknown, cand.summary, r?.comment || ""]); }
     else sum.push([g.category, g.label, g.qty, "후보 없음", "", "", "", "", "", "", r?.comment || ""]);
@@ -1124,6 +1152,7 @@ function keepOpen() { const d = $("#reqEditor"); if (d) d.open = true; }
 document.addEventListener("change", ev => {
   const t = ev.target;
   if (t.id === "fileIn" && t.files?.length) { addFiles([...t.files]); t.value = ""; }
+  else if (t.id === "rankMode") setRankMode(t.value);
   else if (t.id === "specIn" && t.files?.[0]) { loadSpecFile(t.files[0]); t.value = ""; }
   else if (t.id === "catIn" && t.files?.length) { addCatalogs([...t.files]); t.value = ""; }
   else if (t.dataset.act === "catitem" || t.dataset.act === "catmodel") {
