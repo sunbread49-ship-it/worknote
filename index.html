@@ -759,6 +759,20 @@ main{overflow-x:hidden}
   .rrow>select{grid-column:1/3}
   .wkd b{font-size:15px}
 }
+/* v11: roomy to-do memo */
+.sheet.todo-sheet{width:min(620px,100%)}
+.memo-box{display:flex;flex-direction:column;min-height:0}
+.memo-h{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.memo-h .lb{margin:0}
+.memo-h .btn{margin-left:auto}
+textarea.memo-ta{min-height:200px;font-size:15.5px;line-height:1.65;resize:vertical;font-weight:500}
+.sheet.todo-sheet.full{width:min(980px,100%);height:calc(100% - 20px);max-height:none}
+.sheet.full .memo-box{flex:1}
+.sheet.full textarea.memo-ta{flex:1;min-height:240px;resize:none}
+@media (max-width:760px){
+  textarea.memo-ta{min-height:34vh}
+  .sheet.todo-sheet.full{height:calc(100% - 8px)}
+}
 </style>
 </head>
 <body>
@@ -1383,8 +1397,16 @@ function todoSheet(t, preset){
     <div class="row"><div><label class="lb" for="stDate">날짜</label><input class="field" type="date" id="stDate" value="${date}"></div>
     <div><label class="lb" for="stTime">시간</label><input class="field" type="time" id="stTime" value="${time}"></div></div>
     <div class="row"><div><label class="lb" for="stTag">종류</label>${tagSelect('stTag', t.tag || '')}</div><div style="display:flex;align-items:flex-end;padding-bottom:10px"><label class="tog"><input type="checkbox" id="stRemind" ${t.remind ? 'checked' : ''}> 시간이 되면 알림</label></div></div>
-    <div><label class="lb" for="stMemo">메모</label><textarea class="field" id="stMemo">${esc(t.memo)}</textarea></div>
+    <div class="memo-box"><div class="memo-h"><label class="lb" for="stMemo">메모</label><button type="button" class="btn ghost sm" id="stBig" aria-pressed="false">⤢ 크게 보기</button></div><textarea class="field memo-ta" id="stMemo" placeholder="통화 내용, 진행 상황, 링크 등 자유롭게 적으세요">${esc(t.memo)}</textarea></div>
     <div class="acts">${isNew ? '' : `<button class="btn danger sp" id="stDel">삭제</button>`}<button class="btn ${isNew ? 'sp' : ''}" data-act="close-sheet">취소</button><button class="btn primary" id="stSave">저장</button></div>`);
+  const sh = $('#sheet .sheet'); sh.classList.add('todo-sheet');
+  const ta = $('#stMemo'), grow = () => { if (sh.classList.contains('full')) { ta.style.height = ''; return; } ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight + 4, innerHeight * 0.55) + 'px'; };
+  ta.addEventListener('input', grow);
+  ta.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $('#stSave').click(); } });
+  const setBig = on => { sh.classList.toggle('full', on); $('#stBig').textContent = on ? '⤡ 작게 보기' : '⤢ 크게 보기'; $('#stBig').setAttribute('aria-pressed', on); try { localStorage.setItem('wn.memoBig', on ? '1' : ''); } catch {} grow(); };
+  $('#stBig').onclick = () => { setBig(!sh.classList.contains('full')); ta.focus(); };
+  let big = false; try { big = localStorage.getItem('wn.memoBig') === '1'; } catch {}
+  if (big) setBig(true); else requestAnimationFrame(grow);
   $('#stTime').addEventListener('change', () => { if ($('#stTime').value) $('#stRemind').checked = true; });
   let tagTouched = !!t.tag; $('#stTag').addEventListener('change', () => tagTouched = true);
   $('#stText').addEventListener('input', () => { if (!tagTouched) $('#stTag').value = autoTag($('#stText').value); });
