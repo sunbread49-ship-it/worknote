@@ -773,6 +773,31 @@ textarea.memo-ta{min-height:200px;font-size:15.5px;line-height:1.65;resize:verti
   textarea.memo-ta{min-height:34vh}
   .sheet.todo-sheet.full{height:calc(100% - 8px)}
 }
+/* v12: important/urgent card above the week schedule */
+.dash-side{display:flex;flex-direction:column;gap:20px;min-width:0;align-self:start}
+.dash-side .card-week{position:static;align-self:stretch}
+:root{--urg:#C8432F;--urg-d:#A93525}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--urg:#B23C2B;--urg-d:#8E2E20}}
+:root[data-theme="dark"]{--urg:#B23C2B;--urg-d:#8E2E20}
+.card-urg{background:var(--urg);color:#fff;border-radius:26px;padding:24px;display:flex;flex-direction:column;min-width:0;box-shadow:0 18px 40px -18px color-mix(in srgb,var(--urg) 80%,transparent)}
+.card-urg .ch-head{margin-bottom:12px}
+.urg-n{margin-left:auto;background:#fff;color:var(--urg);font-weight:800;font-size:13px;border-radius:999px;padding:2px 10px}
+.urg-n:empty{display:none}
+.urg-tq{display:flex;gap:8px;margin-bottom:12px;min-width:0}
+.urg-tq input{flex:1;min-width:0;height:42px;border-radius:12px;border:0;background:rgba(255,255,255,.18);color:#fff;padding:0 12px;font-size:14.5px;font-weight:600;outline:none;font-family:inherit}
+.urg-tq input::placeholder{color:rgba(255,255,255,.72)}
+.urg-tq input:focus{background:rgba(255,255,255,.28)}
+.urg-tq button{flex:none;height:42px;padding:0 14px;border-radius:12px;background:#fff;color:var(--urg);font-weight:800}
+.urg-list{display:flex;flex-direction:column;gap:8px}
+.urg-list .todo{background:#fff;color:#1A1D23;border-radius:14px;padding:11px 12px;border:0;margin:0}
+.urg-list .todo .tx{color:#1A1D23}
+.urg-list .todo .tmemo,.urg-list .todo .meta{color:#5E6470}
+.urg-list .todo .chk{border-color:#C9CDD3;background:#fff}
+.urg-list .todo .star{color:#E0A800}
+.urg-empty{background:rgba(255,255,255,.14);border-radius:14px;padding:16px;font-weight:700;font-size:14px;text-align:center;line-height:1.5}
+.urg-empty b{color:#FFE27A}
+@media (max-width:1020px){ .dash-side{display:contents} .card-urg{order:-1} }
+@media (max-width:760px){ .card-urg{border-radius:22px;padding:18px 16px} .dash-side{gap:16px} }
 </style>
 </head>
 <body>
@@ -837,6 +862,19 @@ textarea.memo-ta{min-height:200px;font-size:15.5px;line-height:1.65;resize:verti
           <div class="hero-hint" id="hTqHint"></div>
           <div class="hero-list" id="hTodos"></div>
         </div>
+        <div class="dash-side">
+        <div class="card-urg">
+          <div class="ch-head">
+            <span class="ico ico-w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17.4v.1"/></svg></span>
+            <h2>중요·긴급</h2>
+            <span class="urg-n" id="hUrgN"></span>
+          </div>
+          <form class="urg-tq" id="hUrgForm" autocomplete="off">
+            <input id="hUrgText" placeholder="급한 일 입력 후 Enter" aria-label="중요 할 일 추가">
+            <button type="submit">추가</button>
+          </form>
+          <div class="urg-list" id="hUrg"></div>
+        </div>
         <div class="card-week">
           <div class="ch-head">
             <span class="ico ico-w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
@@ -846,6 +884,7 @@ textarea.memo-ta{min-height:200px;font-size:15.5px;line-height:1.65;resize:verti
           <div class="wk-sub" id="hWeekRange"></div>
           <div class="wk-list" id="hWeek"></div>
           <button class="wk-add" data-act="week-add-event">+ 일정 추가</button>
+        </div>
         </div>
 
         <div class="panel">
@@ -1218,6 +1257,10 @@ function renderHome(){
   const body = grp('지난 할 일', past, 'late') + grp('오늘', todays) + grp('다가올 할 일', future) + grp('날짜 없음', nodate);
   $('#hTodos').innerHTML = body || '<div class="hero-empty">남은 할 일이 없어요. 위에 입력해서 추가하세요.</div>';
   $('#hDone').innerHTML = doneRecent.length ? doneRecent.slice(0,8).map(todoRow).join('') : '<div class="empty">체크한 할 일이 여기 모여요</div>';
+  // important / urgent: starred open to-dos
+  const urg = open.filter(t => t.star).sort((a,b) => (a.due ? 0 : 1) - (b.due ? 0 : 1) || String(a.due||'').localeCompare(String(b.due||'')) || String(b.createdAt).localeCompare(String(a.createdAt)));
+  $('#hUrgN').textContent = urg.length ? urg.length + '개' : '';
+  $('#hUrg').innerHTML = urg.length ? urg.map(todoRow).join('') : '<div class="urg-empty">할 일 옆 <b>☆</b>을 누르거나 위에 입력하면 여기 모여요.</div>';
   // this week: events (and timed meeting to-dos) from today to +7 days
   const endK = dkey(addDays(d,7));
   $('#hWeekRange').textContent = `${fmtMD(tk)} ~ ${fmtMD(endK)}`;
@@ -1388,7 +1431,7 @@ function hintFor(inputSel, hintSel){
   $(hintSel).innerHTML = `→ ${tagChip(p.tag)} <b>${esc(p.text)}</b> · ${p.due ? esc(dueLabel(p.due)) + (p.remind ? ' · 알림' : '') : '날짜 없음'}`;
 }
 function tqHint(){ hintFor('#tqText', '#tqHint'); }
-function addTodo(obj){ return put('todos', rid(), { text:obj.text, due:obj.due||'', remind:!!obj.remind, memo:obj.memo||'', tag:obj.tag||'', done:false, doneAt:'', createdAt:nowISO() }); }
+function addTodo(obj){ return put('todos', rid(), { text:obj.text, due:obj.due||'', remind:!!obj.remind, memo:obj.memo||'', tag:obj.tag||'', star:!!obj.star, done:false, doneAt:'', createdAt:nowISO() }); }
 function todoSheet(t, preset){
   const isNew = !t; t = t || { text:'', due:preset||'', remind:false, memo:'' };
   const date = t.due ? t.due.slice(0,10) : '', time = hasTime(t.due) ? t.due.slice(11,16) : '';
@@ -2165,6 +2208,11 @@ $('#hTqForm').addEventListener('submit', async e => {
   e.preventDefault(); const v = $('#hTqText').value.trim(); if (!v) return;
   const p = parseQuick(v); $('#hTqText').value = ''; $('#hTqHint').innerHTML = '';
   await addTodo(p); toast(p.remind ? `추가했어요 · ${dueLabel(p.due)}에 알려줄게요` : '추가했어요');
+});
+$('#hUrgForm').addEventListener('submit', async e => {
+  e.preventDefault(); const v = $('#hUrgText').value.trim(); if (!v) return;
+  const p = parseQuick(v); $('#hUrgText').value = '';
+  await addTodo({ ...p, star:true }); toast(p.remind ? `중요 할 일 추가 · ${dueLabel(p.due)}에 알려줄게요` : '중요 할 일로 추가했어요');
 });
 $('#tqForm').addEventListener('submit', async e => {
   e.preventDefault(); const v = $('#tqText').value.trim(); if (!v) return;
