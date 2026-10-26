@@ -310,7 +310,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v15</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v16</p>
   </form>
 </div>
 
@@ -322,7 +322,7 @@ html,body{margin:0}
     var box = document.getElementById("diag");
     if (!box) { box = document.createElement("div"); box.id = "diag"; box.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fbe4e1;color:#14252a;border:1px solid #b0261b;border-radius:10px;padding:12px 14px;font:13px/1.5 'Malgun Gothic',sans-serif;max-height:40vh;overflow:auto;box-shadow:0 4px 16px rgba(0,0,0,.15)"; document.body.appendChild(box); }
     box.innerHTML = "<b>문제가 생겼어요 — 이 상자를 캡처해서 보내 주세요</b><br>" + errs.map(function (e) { return "· " + String(e).replace(/</g, "&lt;"); }).join("<br>") +
-      "<br><small>버전 v15 · " + navigator.userAgent.replace(/</g, "&lt;") + "</small>";
+      "<br><small>버전 v16 · " + navigator.userAgent.replace(/</g, "&lt;") + "</small>";
   }
   window.__diag = function (msg) { errs.push(msg); if (document.body) show(); };
   window.addEventListener("error", function (e) {
@@ -860,7 +860,8 @@ const AI_ERR = {
   refused: "AI가 이 요청을 처리하지 않았어요. 문서 내용을 확인해 주세요.",
   invalid_json: "AI 답을 표로 정리하지 못했어요. 한 번 더 눌러 주세요.",
   timeout: "AI 응답이 너무 오래 걸려 끊겼어요. 문서를 규격 부분 위주로 줄여서 다시 해 주세요.",
-  network: "AI 서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.",
+  network: "AI 서버(Supabase 함수)에 연결하지 못했어요. 인터넷 연결을 확인해 주세요. 회사 네트워크라면 보안 장비가 막았을 수 있어요(화면 아래 빨간 상자 참고).",
+  blocked: "AI 서버 대신 다른 응답이 왔어요. 회사 보안 장비가 막았을 수 있어요(화면 아래 빨간 상자 참고).",
   too_large: "한 번에 보내는 카탈로그 페이지가 너무 커요.",
 };
 const aiErr = e => AI_ERR[e?.code] || "AI 응답 중 문제가 생겼어요. 다시 시도해 주세요.";
@@ -900,13 +901,21 @@ async function callAIOnce(prompt, effort, signal, images) {
     });
   } catch (e) {
     if (e?.name === "AbortError") throw { code: "cancelled" };
-    S.setup = S.setup || "fn"; throw { code: "network" };
+    // 연결 자체가 끊김: 회사 보안 장비가 긴 요청을 막는 경우가 많다. 설정 문제와 구분해서 알린다
+    window.__diag?.("AI 서버(supabase.co/functions) 연결 끊김: " + (e?.message || e));
+    throw { code: "network" };
   }
-  if (r.status === 404) { S.setup = "fn"; throw { code: "no_function" }; }
   if (r.status === 504 || r.status === 546) throw { code: "timeout" };
   if (r.status === 413) throw { code: "too_large" };
-  let body = {};
-  try { body = await r.json(); } catch {}
+  const raw = await r.text().catch(() => "");
+  let body = null;
+  try { body = JSON.parse(raw); } catch {}
+  if (!body) {
+    // JSON이 아닌 응답: 회사 보안 장비의 차단 안내 페이지일 수 있다
+    window.__diag?.(`AI 서버 응답이 이상해요 (상태 ${r.status}): ${raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160)}`);
+    throw { code: r.status === 404 ? "no_function" : "blocked" };
+  }
+  if (r.status === 404) { S.setup = "fn"; throw { code: "no_function" }; }
   if (!r.ok) throw { code: body.error || "upstream_error" };
   if (S.setup === "fn") S.setup = null;
   return parseJSON(body.text);
