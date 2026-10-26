@@ -310,10 +310,35 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v14</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v15</p>
   </form>
 </div>
 
+<script>
+/* 문제 진단: 오래된 브라우저에서도 돌도록 옛 문법으로. 오류·불러오지 못한 도구를 화면 아래에 보여준다 */
+(function () {
+  var errs = [];
+  function show() {
+    var box = document.getElementById("diag");
+    if (!box) { box = document.createElement("div"); box.id = "diag"; box.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fbe4e1;color:#14252a;border:1px solid #b0261b;border-radius:10px;padding:12px 14px;font:13px/1.5 'Malgun Gothic',sans-serif;max-height:40vh;overflow:auto;box-shadow:0 4px 16px rgba(0,0,0,.15)"; document.body.appendChild(box); }
+    box.innerHTML = "<b>문제가 생겼어요 — 이 상자를 캡처해서 보내 주세요</b><br>" + errs.map(function (e) { return "· " + String(e).replace(/</g, "&lt;"); }).join("<br>") +
+      "<br><small>버전 v15 · " + navigator.userAgent.replace(/</g, "&lt;") + "</small>";
+  }
+  window.__diag = function (msg) { errs.push(msg); if (document.body) show(); };
+  window.addEventListener("error", function (e) {
+    if (e.target && e.target !== window && e.target.src) window.__diag("불러오지 못함: " + e.target.src.replace(/^https?:\/\//, "").split("/").slice(0, 3).join("/") + " (회사 방화벽이 막았을 수 있어요)");
+    else window.__diag("오류: " + (e.message || e.error) + (e.lineno ? " (" + e.lineno + "줄)" : ""));
+  }, true);
+  window.addEventListener("unhandledrejection", function (e) { var r = e.reason || {}; window.__diag("오류: " + (r.message || r.code || r)); });
+  window.addEventListener("load", function () {
+    var need = { "로그인 도구(supabase, cdn.jsdelivr.net)": window.supabase, "엑셀 읽기 도구(xlsx, cdnjs)": window.XLSX, "PDF 도구(pdf.js, cdnjs)": window.pdfjsLib, "한글파일 도구(pako, cdnjs)": window.pako, "엑셀 만들기 도구(exceljs, cdnjs)": window.ExcelJS };
+    var miss = []; for (var k in need) if (!need[k]) miss.push(k);
+    if (miss.length) window.__diag("불러오지 못한 도구: " + miss.join(", "));
+    if (typeof window.S === "undefined" && typeof S === "undefined") window.__diag("사이트 코드가 실행되지 않았어요. 브라우저가 너무 오래됐을 수 있어요(크롬·엣지 최신 버전 권장).");
+    if (errs.length) show();
+  });
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js" defer></script>
