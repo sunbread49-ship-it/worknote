@@ -1577,6 +1577,7 @@ async function start(session) {
   if (!user) { S.me = null; showAuth(true); return false; }
   S.me = user.id; S.email = user.email || "";
   if (location.hash === "#setup") S.showSetup = true;
+  if (/[?&]queue=1/.test(location.search)) S.viaQueue = true; // 집에서도 우회 경로를 시험해 볼 수 있게
   $("#whoEmail").textContent = S.email;
   showAuth(false);
   if (S.storageOk === false) S.msg = { type: "warn", text: "브라우저 저장공간이 가득 차서 로그인 상태를 저장하지 못했어요. 지금은 쓸 수 있지만, 페이지를 다시 열면 또 로그인해야 해요." };
