@@ -298,7 +298,7 @@ html,body{margin:0}
     <button data-view="specs">제품 스펙</button>
   </nav>
   <div class="specchip" id="specchip"></div>
-  <div class="who" id="who" hidden><span id="whoEmail"></span><button class="btn ghost sm" id="logout">로그아웃</button></div>
+  <div class="who" id="who" hidden><span id="viaQueue" class="chip unknown" hidden title="회사 네트워크가 AI 주소를 막아서 우회 경로로 처리 중">우회 경로</span><span id="whoEmail"></span><button class="btn ghost sm" id="logout">로그아웃</button></div>
 </div></header>
 <main id="main"></main>
 
@@ -310,7 +310,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v16</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v17</p>
   </form>
 </div>
 
@@ -322,7 +322,7 @@ html,body{margin:0}
     var box = document.getElementById("diag");
     if (!box) { box = document.createElement("div"); box.id = "diag"; box.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fbe4e1;color:#14252a;border:1px solid #b0261b;border-radius:10px;padding:12px 14px;font:13px/1.5 'Malgun Gothic',sans-serif;max-height:40vh;overflow:auto;box-shadow:0 4px 16px rgba(0,0,0,.15)"; document.body.appendChild(box); }
     box.innerHTML = "<b>문제가 생겼어요 — 이 상자를 캡처해서 보내 주세요</b><br>" + errs.map(function (e) { return "· " + String(e).replace(/</g, "&lt;"); }).join("<br>") +
-      "<br><small>버전 v16 · " + navigator.userAgent.replace(/</g, "&lt;") + "</small>";
+      "<br><small>버전 v17 · " + navigator.userAgent.replace(/</g, "&lt;") + "</small>";
   }
   window.__diag = function (msg) { errs.push(msg); if (document.body) show(); };
   window.addEventListener("error", function (e) {
@@ -380,6 +380,7 @@ function render(force) {
   if (!force && typing()) { pending = true; return; }
   pending = false;
   document.querySelectorAll("#tabs button").forEach(b => b.setAttribute("aria-current", String(b.dataset.view === S.view)));
+  const vq = $("#viaQueue"); if (vq) vq.hidden = !S.viaQueue;
   const n = S.spec?.models?.length || 0;
   $("#specchip").innerHTML = S.specLoaded
     ? (n ? `<span class="dot"></span>스펙 DB ${n}개 모델 · ${fmtDate(S.spec.uploadedAt)}` : `<span class="dot off"></span>스펙 DB 비어 있음`)
@@ -418,12 +419,13 @@ function vBid() {
 }
 const aiOff = () => (S.sb && S.me && !S.busy ? "" : "disabled");
 
-let setupText = { sql: "", fn: "" };
+let setupText = { sql: "", fn: "", queue: "" };
 async function loadSetupText() {
   if (setupText.sql) return;
   try {
-    const [a, b] = await Promise.all([fetch("setup.sql").then(r => r.text()), fetch("bid-ai.ts").then(r => r.text())]);
-    setupText = { sql: a, fn: b }; render(true);
+    const get = f => fetch(f + "?t=" + Date.now(), { cache: "no-store" }).then(r => r.text());
+    const [a, b, q] = await Promise.all([get("setup.sql"), get("bid-ai.ts"), get("setup-queue.sql")]);
+    setupText = { sql: a, fn: b, queue: q }; render(true);
   } catch {}
 }
 function vSetup() {
@@ -439,6 +441,8 @@ function vSetup() {
       <li><b>비밀값 넣기</b><br><span class="hint">Edge Functions → Secrets 에 두 개 추가</span><br>
         <code>GEMINI_API_KEY</code> = aistudio.google.com 에서 만든 무료 API 키 (결제 설정은 하지 마세요)<br>
         <code>ALLOWED_EMAILS</code> = 이 사이트를 쓸 이메일 (지금 로그인한 계정: <b>${esc(S.email)}</b>)</li>
+      <li><b>회사 네트워크 우회 (회사에서 AI가 안 될 때)</b><br><span class="hint">SQL Editor → New query → 아래 내용을 붙여넣고 Run. 2번 함수도 v4 이상이어야 해요.</span>
+        <div class="actions" style="margin-top:6px"><button class="btn sm" data-act="copy" data-k="queue">우회 SQL 복사</button></div><pre translate="no">${esc(setupText.queue || "불러오는 중…")}</pre></li>
     </ol>
     <div class="actions" style="margin-top:16px"><button class="btn primary" data-act="recheck">설정 끝났어요 · 다시 확인</button>${tableOk ? `<button class="btn" data-act="hidesetup">닫기</button>` : ""}</div>
   </section>`;
@@ -863,6 +867,8 @@ const AI_ERR = {
   network: "AI 서버(Supabase 함수)에 연결하지 못했어요. 인터넷 연결을 확인해 주세요. 회사 네트워크라면 보안 장비가 막았을 수 있어요(화면 아래 빨간 상자 참고).",
   blocked: "AI 서버 대신 다른 응답이 왔어요. 회사 보안 장비가 막았을 수 있어요(화면 아래 빨간 상자 참고).",
   too_large: "한 번에 보내는 카탈로그 페이지가 너무 커요.",
+  no_queue: "회사 네트워크 우회 설정이 아직 없어요. 처음 설정 화면 4번의 SQL을 실행해 주세요.",
+  queue_stuck: "우회 작업이 시작되지 않아요. 설정 4번 SQL과 bid-ai 함수(v4)가 배포됐는지 확인해 주세요.",
 };
 const aiErr = e => AI_ERR[e?.code] || "AI 응답 중 문제가 생겼어요. 다시 시도해 주세요.";
 
@@ -888,22 +894,27 @@ async function callAI(prompt, effort, signal, opts = {}) {
     throw { code: "cancelled" };
   }
 }
+const AI_MODELS = ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"];
+// 3.6-flash가 빠르고 안정적(짧은 질문 2초), 막히면 lite → 3.8 순서. effort는 Gemini의 생각 단계로 옮긴다
+const aiPayload = (prompt, effort, images) => ({ prompt, models: AI_MODELS, thinking: effort === "low" ? "low" : "medium", ...(images?.length ? { images } : {}) });
+
 async function callAIOnce(prompt, effort, signal, images) {
   const token = (await currentSession())?.access_token;
   if (!token) throw { code: "not_signed_in" };
+  const payload = aiPayload(prompt, effort, images);
+  if (S.viaQueue) return parseJSON((await callViaQueue(payload, signal)).text);
   let r;
   try {
     r = await fetch(FN_URL, {
       method: "POST", signal,
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + token, apikey: SUPABASE_KEY },
-      // 3.6-flash가 빠르고 안정적(짧은 질문 2초), 막히면 lite → 3.8 순서. effort는 Gemini의 생각 단계로 옮긴다
-      body: JSON.stringify({ prompt, models: ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"], thinking: effort === "low" ? "low" : "medium", ...(images?.length ? { images } : {}) }),
+      body: JSON.stringify(payload),
     });
   } catch (e) {
     if (e?.name === "AbortError") throw { code: "cancelled" };
-    // 연결 자체가 끊김: 회사 보안 장비가 긴 요청을 막는 경우가 많다. 설정 문제와 구분해서 알린다
-    window.__diag?.("AI 서버(supabase.co/functions) 연결 끊김: " + (e?.message || e));
-    throw { code: "network" };
+    // 함수 주소로 직접 가는 길이 막힘(회사 보안 장비 등) → 저장 주소를 쓰는 우회 경로로 바꿔서 다시
+    S.viaQueue = true; render(true);
+    return parseJSON((await callViaQueue(payload, signal)).text);
   }
   if (r.status === 504 || r.status === 546) throw { code: "timeout" };
   if (r.status === 413) throw { code: "too_large" };
@@ -911,14 +922,43 @@ async function callAIOnce(prompt, effort, signal, images) {
   let body = null;
   try { body = JSON.parse(raw); } catch {}
   if (!body) {
-    // JSON이 아닌 응답: 회사 보안 장비의 차단 안내 페이지일 수 있다
-    window.__diag?.(`AI 서버 응답이 이상해요 (상태 ${r.status}): ${raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160)}`);
-    throw { code: r.status === 404 ? "no_function" : "blocked" };
+    if (r.status === 404) { S.setup = "fn"; throw { code: "no_function" }; }
+    // JSON이 아닌 응답: 회사 보안 장비의 차단 안내 페이지일 수 있다 → 우회 경로로
+    S.viaQueue = true; render(true);
+    return parseJSON((await callViaQueue(payload, signal)).text);
   }
   if (r.status === 404) { S.setup = "fn"; throw { code: "no_function" }; }
   if (!r.ok) throw { code: body.error || "upstream_error" };
   if (S.setup === "fn") S.setup = null;
   return parseJSON(body.text);
+}
+
+// 회사 네트워크 우회: 작업을 bid_jobs 표에 쓰면 서버 안에서 AI 함수가 돌고, 결과를 같은 표에서 읽는다
+async function callViaQueue(payload, signal) {
+  const { data, error } = await S.sb.from("bid_jobs").insert({ request: payload }).select("id").single();
+  if (error) {
+    const missing = /bid_jobs|PGRST205|42P01/.test(`${error.code} ${error.message}`);
+    window.__diag?.((missing ? "회사망 우회 설정(bid_jobs 표)이 아직 없어요" : "우회 작업을 쓰지 못했어요") + ": " + error.message);
+    throw { code: missing ? "no_queue" : "network" };
+  }
+  const id = data.id, t0 = Date.now();
+  let started = false;
+  try {
+    while (Date.now() - t0 < 175000) {
+      if (signal?.aborted) throw { code: "cancelled" };
+      await new Promise(res => setTimeout(res, 2500));
+      const { data: j, error: e2 } = await S.sb.from("bid_jobs").select("status,result,error").eq("id", id).maybeSingle();
+      if (e2) continue;
+      if (!j) throw { code: "upstream_error" };
+      if (j.status === "done") return j.result || {};
+      if (j.status === "error") throw { code: j.error || "upstream_error" };
+      if (j.status === "running") started = true;
+      if (!started && Date.now() - t0 > 45000) { window.__diag?.("우회 작업이 시작되지 않아요: 설정 4번(DB 트리거)과 bid-ai v4 함수를 확인해 주세요"); throw { code: "queue_stuck" }; }
+    }
+    throw { code: "timeout" };
+  } finally {
+    S.sb.from("bid_jobs").delete().eq("id", id).then(() => {}, () => {});
+  }
 }
 
 let tick = null;
@@ -929,7 +969,7 @@ async function runAI(label, hint, work) {
   try {
     return await work(ctl.signal, t => { const e = $("#busyChars"); if (e) e.textContent = t; });
   } catch (e) {
-    if (e?.code === "no_function") S.showSetup = true;
+    if (e?.code === "no_function" || e?.code === "no_queue") { S.showSetup = true; if (e.code === "no_queue") say("warn", aiErr(e)); }
     else if (e?.code !== "cancelled") say("err", aiErr(e));
     return null;
   } finally {
@@ -1536,6 +1576,7 @@ async function start(session) {
   const user = s?.user;
   if (!user) { S.me = null; showAuth(true); return false; }
   S.me = user.id; S.email = user.email || "";
+  if (location.hash === "#setup") S.showSetup = true;
   $("#whoEmail").textContent = S.email;
   showAuth(false);
   if (S.storageOk === false) S.msg = { type: "warn", text: "브라우저 저장공간이 가득 차서 로그인 상태를 저장하지 못했어요. 지금은 쓸 수 있지만, 페이지를 다시 열면 또 로그인해야 해요." };
