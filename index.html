@@ -1946,11 +1946,11 @@ function dietDoc(k){ return fitDoc('fd-' + k); }
 function dietTotals(k){ const d = dietDoc(k); const m = (d && d.meals) || []; return { p: m.reduce((a,x) => a + (+x.p||0), 0), c: m.reduce((a,x) => a + (+x.c||0), 0), n: m.length }; }
 function fitDietHtml(){
   const d = dietDoc(dietDate), meals = (d && d.meals) || [], t = dietTotals(dietDate);
-  const pOk = t.p >= 110, cOk = t.c > 0 && t.c <= 2000;
+  const kLim = dietDate >= '2026-10-28' ? 1800 : 2000, pOk = t.p >= 110, cOk = t.c > 0 && t.c <= kLim;
   const days = [...Array(7)].map((_, i) => dkey(addDays(fromKey(dietDate), -i))).reverse();
   return `<div class="panel">
       <div class="sec-head in"><h2>식단 기록</h2><span class="sec-sub">1주일만 · 새는 칼로리 찾기용</span><input class="field" type="date" id="dietDate" value="${dietDate}" style="width:auto;margin-left:auto"></div>
-      <div class="dtot"><div class="${pOk ? 'ok' : ''}"><b>${t.p}g</b><span>단백질 · 목표 110~130g</span></div><div class="${t.c > 2000 ? 'over' : cOk ? 'ok' : ''}"><b>${t.c.toLocaleString()}kcal</b><span>칼로리 · 목표 1,900 전후</span></div></div>
+      <div class="dtot"><div class="${pOk ? 'ok' : ''}"><b>${t.p}g</b><span>단백질 · 목표 110~130g</span></div><div class="${t.c > kLim ? 'over' : cOk ? 'ok' : ''}"><b>${t.c.toLocaleString()}kcal</b><span>칼로리 · 목표 ${kLim === 1800 ? '1,800 이하' : '1,900 전후'}</span></div></div>
       <form class="dform" id="dietForm" autocomplete="off">
         <select class="field" id="dMeal" aria-label="끼니">${DIET_MEALS.map(x => `<option>${x}</option>`).join('')}</select>
         <input class="field" id="dName" placeholder="메뉴 (예: 삼겹살 200g)" aria-label="메뉴">
@@ -1964,7 +1964,7 @@ function fitDietHtml(){
       <div class="dlist">${meals.length ? meals.map((m,i) => `<div class="drow"><span class="dm">${esc(m.meal)}</span><span class="dn">${esc(m.name)}</span><span class="dv">${m.p||0}g · ${m.c||0}kcal</span><button class="x-del dstar${dietPresets().some(x => x[0] === m.name) ? ' on' : ''}" data-act="diet-fav" data-i="${i}" aria-label="자주 먹는 것에 저장" title="자주 먹는 것에 저장">${dietPresets().some(x => x[0] === m.name) ? '★' : '☆'}</button><button class="x-del" data-act="diet-del" data-i="${i}" aria-label="삭제">×</button></div>`).join('') : '<div class="empty">이 날 기록이 없어요. 위에서 추가하거나 자주 먹는 걸 눌러서 바로 넣으세요.</div>'}</div>
       <p class="hint">표시된 영양값은 대략치예요. 저녁 고기 종류, 소스, 커피, 주말 식사까지 빠짐없이 적는 게 핵심이에요.</p>
     </div>
-    <div class="panel"><h2 style="margin-bottom:10px">최근 7일</h2><div class="d7">${days.map(k => { const tt = dietTotals(k); return `<button class="d7c${k === dietDate ? ' on' : ''}" data-act="diet-day" data-date="${k}"><span>${fmtMD(k)}</span><b class="${tt.n ? (tt.p >= 110 ? 'g' : 'b') : ''}">${tt.n ? tt.p + 'g' : '—'}</b><em class="${tt.c > 2000 ? 'b' : ''}">${tt.n ? tt.c.toLocaleString() + 'kcal' : ''}</em></button>`; }).join('')}</div></div>`;
+    <div class="panel"><h2 style="margin-bottom:10px">최근 7일</h2><div class="d7">${days.map(k => { const tt = dietTotals(k); return `<button class="d7c${k === dietDate ? ' on' : ''}" data-act="diet-day" data-date="${k}"><span>${fmtMD(k)}</span><b class="${tt.n ? (tt.p >= 110 ? 'g' : 'b') : ''}">${tt.n ? tt.p + 'g' : '—'}</b><em class="${tt.c > (k >= '2026-10-28' ? 1800 : 2000) ? 'b' : ''}">${tt.n ? tt.c.toLocaleString() + 'kcal' : ''}</em></button>`; }).join('')}</div></div>`;
 }
 async function dietAdd(m){ const k = dietDate, d = dietDoc(k); const meals = [...((d && d.meals) || []), m]; await put('fit', 'fd-' + k, { date:k, meals }); }
 /* routine editor */
