@@ -798,6 +798,26 @@ textarea.memo-ta{min-height:200px;font-size:15.5px;line-height:1.65;resize:verti
 .urg-empty b{color:#FFE27A}
 @media (max-width:1020px){ .dash-side{display:contents} .card-urg{order:-1} }
 @media (max-width:760px){ .card-urg{border-radius:22px;padding:18px 16px} .dash-side{gap:16px} }
+/* v13: diet history paging + weekly average */
+.d7-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.d7-t{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;min-width:0}
+.d7-t b{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.d7-now{font-size:12.5px;font-weight:800;color:var(--navy);background:var(--surface-2);border-radius:999px;padding:3px 10px}
+.d7nav{flex:none;width:42px;height:42px;border-radius:12px;background:var(--surface-2);font-size:26px;font-weight:700;line-height:1;display:grid;place-items:center;color:var(--ink)}
+.d7nav:disabled{opacity:.3}
+.d7avg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.d7avg>div{background:var(--surface-2);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column}
+.d7avg span{font-size:12.5px;font-weight:700;color:var(--ink-3)}
+.d7avg b{font-size:21px;font-weight:800}
+.d7avg .ok b{color:var(--green)} .d7avg .bad b{color:var(--danger)}
+.d7avg p{grid-column:1/-1;margin:0;font-size:12px;font-weight:600;color:var(--ink-3)}
+.d7{gap:4px}
+.d7c{padding:8px 0;gap:1px}
+.d7c span{font-size:12px;color:var(--ink-2)}
+.d7c span.wd{font-size:11px;color:var(--ink-3);margin-top:-2px}
+.d7c b{font-size:14px;margin-top:3px;letter-spacing:-.02em}
+.d7c em{font-size:10.5px;letter-spacing:-.03em}
+.top{background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(8px)}
 </style>
 </head>
 <body>
@@ -1834,7 +1854,7 @@ const FIT_DAYS = [['1','월'],['2','화'],['3','수'],['4','목'],['5','금'],['
 const DIET_PRESETS = [['닭가슴살 100g',23,110],['단백질쉐이크',35,150],['계란 1개',6,75],['그릭요거트 100g',10,100],['두부 반 모',15,150],['두유 1팩',8,130],['밥 반 공기',3,150],['바나나 1개',1,100]];
 function dietPresets(){ const d = S.fit.find(x => x.id === 'fit-diet-presets'); return (d && Array.isArray(d.items)) ? d.items : DIET_PRESETS; }
 async function savePresets(items){ await put('fit', 'fit-diet-presets', { items, updatedAt: nowISO() }); }
-let presetEdit = false;
+let presetEdit = false, d7End = null;
 const DIET_MEALS = ['점심','간식','저녁','아침','기타'];
 let fitTab = 'today', fitDate = todayKey(), fitDayOverride = null, fitDraft = null, fitSaveT = null;
 let restEnd = 0, restTimer = null, restLen = 90, routineDraft = null, routineDay = '1', dietDate = todayKey();
@@ -1947,7 +1967,8 @@ function dietTotals(k){ const d = dietDoc(k); const m = (d && d.meals) || []; re
 function fitDietHtml(){
   const d = dietDoc(dietDate), meals = (d && d.meals) || [], t = dietTotals(dietDate);
   const kLim = dietDate >= '2026-10-28' ? 1800 : 2000, pOk = t.p >= 110, cOk = t.c > 0 && t.c <= kLim;
-  const days = [...Array(7)].map((_, i) => dkey(addDays(fromKey(dietDate), -i))).reverse();
+  const tdk = todayKey(), wEnd = d7End || tdk, days = [...Array(7)].map((_, i) => dkey(addDays(fromKey(wEnd), -i))).reverse();
+  const rec = days.filter(k => k !== tdk).map(dietTotals).filter(x => x.n), avgP = rec.length ? Math.round(rec.reduce((a,x) => a + x.p, 0) / rec.length) : 0, avgC = rec.length ? Math.round(rec.reduce((a,x) => a + x.c, 0) / rec.length) : 0, wLim = wEnd >= '2026-10-28' ? 1800 : 2000;
   return `<div class="panel">
       <div class="sec-head in"><h2>식단 기록</h2><span class="sec-sub">1주일만 · 새는 칼로리 찾기용</span><input class="field" type="date" id="dietDate" value="${dietDate}" style="width:auto;margin-left:auto"></div>
       <div class="dtot"><div class="${pOk ? 'ok' : ''}"><b>${t.p}g</b><span>단백질 · 목표 110~130g</span></div><div class="${t.c > kLim ? 'over' : cOk ? 'ok' : ''}"><b>${t.c.toLocaleString()}kcal</b><span>칼로리 · 목표 ${kLim === 1800 ? '1,800 이하' : '1,900 전후'}</span></div></div>
@@ -1964,7 +1985,9 @@ function fitDietHtml(){
       <div class="dlist">${meals.length ? meals.map((m,i) => `<div class="drow"><span class="dm">${esc(m.meal)}</span><span class="dn">${esc(m.name)}</span><span class="dv">${m.p||0}g · ${m.c||0}kcal</span><button class="x-del dstar${dietPresets().some(x => x[0] === m.name) ? ' on' : ''}" data-act="diet-fav" data-i="${i}" aria-label="자주 먹는 것에 저장" title="자주 먹는 것에 저장">${dietPresets().some(x => x[0] === m.name) ? '★' : '☆'}</button><button class="x-del" data-act="diet-del" data-i="${i}" aria-label="삭제">×</button></div>`).join('') : '<div class="empty">이 날 기록이 없어요. 위에서 추가하거나 자주 먹는 걸 눌러서 바로 넣으세요.</div>'}</div>
       <p class="hint">표시된 영양값은 대략치예요. 저녁 고기 종류, 소스, 커피, 주말 식사까지 빠짐없이 적는 게 핵심이에요.</p>
     </div>
-    <div class="panel"><h2 style="margin-bottom:10px">최근 7일</h2><div class="d7">${days.map(k => { const tt = dietTotals(k); return `<button class="d7c${k === dietDate ? ' on' : ''}" data-act="diet-day" data-date="${k}"><span>${fmtMD(k)}</span><b class="${tt.n ? (tt.p >= 110 ? 'g' : 'b') : ''}">${tt.n ? tt.p + 'g' : '—'}</b><em class="${tt.c > (k >= '2026-10-28' ? 1800 : 2000) ? 'b' : ''}">${tt.n ? tt.c.toLocaleString() + 'kcal' : ''}</em></button>`; }).join('')}</div></div>`;
+    <div class="panel"><div class="d7-head"><button class="d7nav" data-act="d7-prev" aria-label="이전 7일">‹</button><div class="d7-t"><b>${wEnd === tdk ? '최근 7일' : fmtMD(days[0]) + ' ~ ' + fmtMD(days[6])}</b>${wEnd !== tdk ? '<button class="d7-now" data-act="d7-now">최근으로</button>' : ''}</div><button class="d7nav" data-act="d7-next" aria-label="다음 7일" ${wEnd >= tdk ? 'disabled' : ''}>›</button></div>
+      <div class="d7avg">${rec.length ? `<div class="${avgP >= 110 ? 'ok' : 'bad'}"><span>평균 단백질</span><b>${avgP}g</b></div><div class="${avgC <= wLim ? 'ok' : 'bad'}"><span>평균 칼로리</span><b>${avgC.toLocaleString()}kcal</b></div><p>기록한 ${rec.length}일 기준 평균${wEnd === tdk ? '(오늘은 하루가 안 끝나서 제외)' : ''} · 목표 단백질 110g↑ · ${wLim.toLocaleString()}kcal 이하</p>` : '<p>이 7일은 기록이 없어요.</p>'}</div>
+      <div class="d7">${days.map(k => { const tt = dietTotals(k), dd = fromKey(k); return `<button class="d7c${k === dietDate ? ' on' : ''}" data-act="diet-day" data-date="${k}"><span>${dd.getMonth()+1}/${dd.getDate()}</span><span class="wd">${WD[dd.getDay()]}</span><b class="${tt.n ? (tt.p >= 110 ? 'g' : 'b') : ''}">${tt.n ? tt.p + 'g' : '—'}</b><em class="${tt.c > (k >= '2026-10-28' ? 1800 : 2000) ? 'b' : ''}">${tt.n ? tt.c.toLocaleString() : ''}</em></button>`; }).join('')}</div></div>`;
 }
 async function dietAdd(m){ const k = dietDate, d = dietDoc(k); const meals = [...((d && d.meals) || []), m]; await put('fit', 'fd-' + k, { date:k, meals }); }
 /* routine editor */
@@ -1997,7 +2020,7 @@ $('#fitBox').addEventListener('change', e => {
   const t = e.target;
   if (t.id === 'fitDaySel') { if (fitSaveT) saveFitDraft(true); fitDayOverride = t.value; fitDraft = null; t.blur(); renderFit(); }
   else if (t.id === 'fitTennis' && fitDraft) { fitDraft.tennis = t.checked; saveFitDraft(true); }
-  else if (t.id === 'dietDate') { dietDate = t.value || todayKey(); t.blur(); renderFit(); }
+  else if (t.id === 'dietDate') { dietDate = t.value || todayKey(); { const e0 = d7End || todayKey(); if (dietDate > e0 || dietDate <= dkey(addDays(fromKey(e0), -7))) d7End = dietDate >= todayKey() ? null : dietDate; } t.blur(); renderFit(); }
   else if (t.dataset.rf === 'u' && routineDraft) { t.blur(); renderFit(); }
 });
 $('#fitBox').addEventListener('submit', async e => {
@@ -2050,6 +2073,9 @@ async function fitAction(act, a){
     case 'diet-pre': { const [n,p,c] = dietPresets()[+a.dataset.i]; await dietAdd({ meal: ($('#dMeal') && $('#dMeal').value) || '점심', name:n, p, c }); return true; }
     case 'diet-del': { if (!armed(a, '삭제?')) return true; const d = dietDoc(dietDate); const meals = [...d.meals]; meals.splice(+a.dataset.i, 1); await put('fit', 'fd-' + dietDate, { date:dietDate, meals }); return true; }
     case 'diet-day': dietDate = a.dataset.date; renderFit(); return true;
+    case 'd7-prev': d7End = dkey(addDays(fromKey(d7End || todayKey()), -7)); renderFit(); return true;
+    case 'd7-next': { const n = dkey(addDays(fromKey(d7End || todayKey()), 7)); d7End = n >= todayKey() ? null : n; renderFit(); return true; }
+    case 'd7-now': d7End = null; renderFit(); return true;
     case 'r-day': routineDay = a.dataset.k; renderFit(); return true;
     case 'r-add': routineDraft[routineDay].ex.push({ n:'', s:3, lo:8, hi:12, u:'kg' }); renderFit(); return true;
     case 'r-del': if (armed(a, '삭제?')) { routineDraft[routineDay].ex.splice(+a.dataset.i, 1); renderFit(); } return true;
