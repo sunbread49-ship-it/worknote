@@ -818,6 +818,10 @@ textarea.memo-ta{min-height:200px;font-size:15.5px;line-height:1.65;resize:verti
 .d7c b{font-size:14px;margin-top:3px;letter-spacing:-.02em}
 .d7c em{font-size:10.5px;letter-spacing:-.03em}
 .top{background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(8px)}
+.tsel{display:flex;gap:6px;min-width:0}
+.tsel select{flex:1;min-width:0;padding-left:10px;padding-right:4px}
+.tsel select+select{flex:1}
+.tsel select:disabled{opacity:.45}
 </style>
 </head>
 <body>
@@ -1458,7 +1462,7 @@ function todoSheet(t, preset){
   openSheet(`<h3>${isNew ? '할 일 추가' : '할 일'}</h3>
     <div><label class="lb" for="stText">내용</label><input class="field" id="stText" value="${esc(t.text)}"></div>
     <div class="row"><div><label class="lb" for="stDate">날짜</label><input class="field" type="date" id="stDate" value="${date}"></div>
-    <div><label class="lb" for="stTime">시간</label><input class="field" type="time" id="stTime" value="${time}"></div></div>
+    <div><label class="lb" for="stH">시간</label><div class="tsel"><select class="field" id="stH" aria-label="시"><option value="">시간 없음</option>${[...Array(24)].map((_, h) => `<option value="${pad(h)}"${time && +time.slice(0,2) === h ? ' selected' : ''}>${pad(h)}시</option>`).join('')}</select><select class="field" id="stM" aria-label="분"${time ? '' : ' disabled'}>${[...new Set(['00','10','20','30','40','50', ...(time ? [time.slice(3,5)] : [])])].sort().map(m => `<option value="${m}"${time && time.slice(3,5) === m ? ' selected' : ''}>${m}분</option>`).join('')}</select></div><input type="hidden" id="stTime" value="${time}"></div></div>
     <div class="row"><div><label class="lb" for="stTag">종류</label>${tagSelect('stTag', t.tag || '')}</div><div style="display:flex;align-items:flex-end;padding-bottom:10px"><label class="tog"><input type="checkbox" id="stRemind" ${t.remind ? 'checked' : ''}> 시간이 되면 알림</label></div></div>
     <div class="memo-box"><div class="memo-h"><label class="lb" for="stMemo">메모</label><button type="button" class="btn ghost sm" id="stBig" aria-pressed="false">⤢ 크게 보기</button></div><textarea class="field memo-ta" id="stMemo" placeholder="통화 내용, 진행 상황, 링크 등 자유롭게 적으세요">${esc(t.memo)}</textarea></div>
     <div class="acts">${isNew ? '' : `<button class="btn danger sp" id="stDel">삭제</button>`}<button class="btn ${isNew ? 'sp' : ''}" data-act="close-sheet">취소</button><button class="btn primary" id="stSave">저장</button></div>`);
@@ -1470,6 +1474,8 @@ function todoSheet(t, preset){
   $('#stBig').onclick = () => { setBig(!sh.classList.contains('full')); ta.focus(); };
   let big = false; try { big = localStorage.getItem('wn.memoBig') === '1'; } catch {}
   if (big) setBig(true); else requestAnimationFrame(grow);
+  const syncTime = () => { const h = $('#stH').value; $('#stM').disabled = !h; $('#stTime').value = h ? h + ':' + $('#stM').value : ''; $('#stTime').dispatchEvent(new Event('change')); };
+  $('#stH').addEventListener('change', syncTime); $('#stM').addEventListener('change', syncTime);
   $('#stTime').addEventListener('change', () => { if ($('#stTime').value) $('#stRemind').checked = true; });
   let tagTouched = !!t.tag; $('#stTag').addEventListener('change', () => tagTouched = true);
   $('#stText').addEventListener('input', () => { if (!tagTouched) $('#stTag').value = autoTag($('#stText').value); });
