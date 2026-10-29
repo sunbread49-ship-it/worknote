@@ -310,7 +310,7 @@ html,body{margin:0}
     <div><label for="auPw">비밀번호</label><input class="field" type="password" id="auPw" autocomplete="current-password" required></div>
     <p class="err" id="authErr" hidden></p>
     <button class="btn primary" type="submit" id="authGo" style="height:42px">로그인</button>
-    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v17</p>
+    <p style="text-align:right;font-size:11px;color:var(--faint)">버전 v18</p>
   </form>
 </div>
 
@@ -322,7 +322,7 @@ html,body{margin:0}
     var box = document.getElementById("diag");
     if (!box) { box = document.createElement("div"); box.id = "diag"; box.style.cssText = "position:fixed;left:12px;right:12px;bottom:12px;z-index:50;background:#fbe4e1;color:#14252a;border:1px solid #b0261b;border-radius:10px;padding:12px 14px;font:13px/1.5 'Malgun Gothic',sans-serif;max-height:40vh;overflow:auto;box-shadow:0 4px 16px rgba(0,0,0,.15)"; document.body.appendChild(box); }
     box.innerHTML = "<b>문제가 생겼어요 — 이 상자를 캡처해서 보내 주세요</b><br>" + errs.map(function (e) { return "· " + String(e).replace(/</g, "&lt;"); }).join("<br>") +
-      "<br><small>버전 v17 · " + navigator.userAgent.replace(/</g, "&lt;") + "</small>";
+      "<br><small>버전 v18 · " + navigator.userAgent.replace(/</g, "&lt;") + "</small>";
   }
   window.__diag = function (msg) { errs.push(msg); if (document.body) show(); };
   window.addEventListener("error", function (e) {
@@ -1558,6 +1558,29 @@ async function exportSpec() {
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
+
+/* ---------- 네트워크 점검: 크기·내용별로 저장이 되는지 시험 (전산팀 문의용) ---------- */
+async function netProbe() {
+  if (!S.sb || !S.me) return say("warn", "로그인한 뒤에 점검할 수 있어요.");
+  const rnd = n => { let s = ""; const c = "abcdefghijklmnopqrstuvwxyz0123456789 "; while (s.length < n) s += c[(Math.random() * c.length) | 0]; return s; };
+  const doc = n => { const base = "국토연구원 비데 정수기 공기청정기 구매 과업지시서 규격 냉수 탱크용량 6.0L 이상 점검주기 2개월 "; let s = ""; while (s.length < n) s += base; return s.slice(0, n); };
+  const tests = [["영문 1KB", rnd(1000)], ["영문 20KB", rnd(20000)], ["영문 100KB", rnd(100000)], ["영문 500KB", rnd(500000)], ["입찰문서 같은 한글 1KB", doc(1000)], ["입찰문서 같은 한글 20KB", doc(20000)], ["입찰문서 같은 한글 100KB", doc(100000)]];
+  const rows = [];
+  S.busy = { label: "네트워크 점검 중", hint: "시험 데이터를 저장했다 지워요", start: Date.now(), ctl: new AbortController() }; render(true);
+  for (const [name, text] of tests) {
+    const id = "probe-" + uid("");
+    let res;
+    try {
+      const { error } = await withTimeout(S.sb.from("bid_items").upsert({ id, kind: "probe", data: { text }, updated_at: new Date().toISOString(), user_id: S.me }, { onConflict: "user_id,id" }), 30000);
+      res = error ? "실패: " + error.message : "성공";
+    } catch (e) { res = "막힘: " + (e?.message || e?.code || e); }
+    S.sb.from("bid_items").delete().eq("id", id).then(() => {}, () => {});
+    rows.push(`${name} → ${res}`);
+  }
+  S.busy = null;
+  rows.forEach(r => window.__diag?.("점검 " + r));
+  say("info", "네트워크 점검이 끝났어요. 화면 아래 상자를 캡처해서 보내 주세요.");
+}
 /* ---------- auth & boot ---------- */
 function showAuth(on) {
   $("#auth").hidden = !on;
@@ -1578,6 +1601,7 @@ async function start(session) {
   S.me = user.id; S.email = user.email || "";
   if (location.hash === "#setup") S.showSetup = true;
   if (/[?&]queue=1/.test(location.search)) S.viaQueue = true; // 집에서도 우회 경로를 시험해 볼 수 있게
+  if (/[?&]probe=1/.test(location.search)) setTimeout(netProbe, 500);
   $("#whoEmail").textContent = S.email;
   showAuth(false);
   if (S.storageOk === false) S.msg = { type: "warn", text: "브라우저 저장공간이 가득 차서 로그인 상태를 저장하지 못했어요. 지금은 쓸 수 있지만, 페이지를 다시 열면 또 로그인해야 해요." };
