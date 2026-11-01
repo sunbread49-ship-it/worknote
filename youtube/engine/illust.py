@@ -47,7 +47,7 @@ def gauge(size, value, labels=("공포", "탐욕")):
     return out
 
 
-def newspaper(size, headline="Buy American. I Am.", masthead="THE NEW YORK TIMES · 2008.10"):
+def newspaper(size, headline="Buy American.\nI Am.", masthead="THE NEW YORK TIMES · 2008.10"):
     w, h = size, int(size * 1.18)
     im, d = G.supersample(w, h, K)
     W2, H2 = w * K, h * K
@@ -56,7 +56,7 @@ def newspaper(size, headline="Buy American. I Am.", masthead="THE NEW YORK TIMES
     pad = 34 * K
     d.rectangle((pad, pad + 70 * K, W2 - 20 * K - pad, pad + 74 * K), fill=(40, 40, 40, 255))
     y = pad + 210 * K
-    for i in range(9):
+    for i in range(7):
         lw = (W2 - 20 * K - pad * 2) * (0.62 if i % 4 == 3 else 1.0)
         d.rounded_rectangle((pad, y, pad + lw, y + 12 * K), radius=6 * K, fill=(170, 165, 150, 255))
         y += 32 * K
