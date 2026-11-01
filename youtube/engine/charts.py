@@ -218,7 +218,7 @@ class LineChart:
         G.blit(frame, self.base, (0, 0), op)
         dspec = self.spec.get("draw", {})
         t0 = sc.line_start(dspec.get("on", 1)) if dspec.get("on", 1) > 1 else 0.3
-        p = G.ease_in_out((t - t0) / dspec.get("dur", 3.0))
+        p = G.ease_in_out((t - t0) / dspec.get("dur", 2.0))
         from .scenes import col
         # 밴드(구간 음영)
         for b in self.spec.get("bands", []):
@@ -330,10 +330,10 @@ class BarChart:
             n = len(g["bars"])
             bw = min(170, gw / (n + 1.2))
             for bi, b in enumerate(g["bars"]):
-                bt0 = t0 + 0.25 + bi * 0.9 + b.get("delay", 0)
+                bt0 = t0 + 0.15 + bi * 0.5 + b.get("delay", 0)
                 if b.get("on"):
                     bt0 = sc.line_start(b["on"])
-                p = G.ease_out((t - bt0) / 1.1)
+                p = G.ease_out((t - bt0) / 0.7)
                 if p <= 0:
                     continue
                 color = self.COLORS.get(b.get("color", "neutral"), S.NEUTRAL)

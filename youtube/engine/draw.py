@@ -22,7 +22,7 @@ def ease_in_out(x):
     return 4 * x ** 3 if x < 0.5 else 1 - (-2 * x + 2) ** 3 / 2
 
 
-def appear(t, t0, dur=0.45):
+def appear(t, t0, dur=0.25):
     """t0 시점부터 dur 동안 0→1"""
     return ease_out((t - t0) / dur) if t >= t0 else 0.0
 
@@ -77,29 +77,30 @@ _EMOJI_RE = __import__("re").compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\uFE0F]
 @lru_cache(maxsize=4096)
 def text_img(text: str, weight: str, size: int, fill=S.FG, max_w: int = 0,
              line_gap: float = 1.32, align: str = "left", highlight: str = "",
-             hl_fill=S.GOLD) -> Image.Image:
+             hl_fill=S.GOLD, stroke: int = 0, stroke_fill=(0, 0, 0)) -> Image.Image:
     """텍스트를 딱 맞는 RGBA 이미지로. highlight 부분 문자열은 hl_fill 색."""
     text = _EMOJI_RE.sub("", text).rstrip()  # 폰트에 없는 이모지는 지움(이모지는 스티커로)
     fnt = S.font(weight, size)
     lines = wrap(text, fnt, max_w) if max_w else text.split("\n")
     lh = int(size * line_gap)
     asc, desc = fnt.getmetrics()
-    w = int(max(fnt.getlength(l) for l in lines)) + 4
-    h = lh * (len(lines) - 1) + asc + desc + 4
+    w = int(max(fnt.getlength(l) for l in lines)) + 4 + stroke * 2
+    h = lh * (len(lines) - 1) + asc + desc + 4 + stroke * 2
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     for i, line in enumerate(lines):
         lw = fnt.getlength(line)
-        x = 2 if align == "left" else (w - lw) / 2 if align == "center" else w - lw - 2
-        y = 2 + i * lh
+        x = 2 + stroke if align == "left" else (w - lw) / 2 if align == "center" else w - lw - 2 - stroke
+        y = 2 + stroke + i * lh
+        sk = {"stroke_width": stroke, "stroke_fill": stroke_fill} if stroke else {}
         if highlight and highlight in line:
             pre, _, post = line.partition(highlight)
-            d.text((x, y), pre, font=fnt, fill=fill)
+            d.text((x, y), pre, font=fnt, fill=fill, **sk)
             x2 = x + fnt.getlength(pre)
-            d.text((x2, y), highlight, font=fnt, fill=hl_fill)
-            d.text((x2 + fnt.getlength(highlight), y), post, font=fnt, fill=fill)
+            d.text((x2, y), highlight, font=fnt, fill=hl_fill, **sk)
+            d.text((x2 + fnt.getlength(highlight), y), post, font=fnt, fill=fill, **sk)
         else:
-            d.text((x, y), line, font=fnt, fill=fill)
+            d.text((x, y), line, font=fnt, fill=fill, **sk)
     return im
 
 

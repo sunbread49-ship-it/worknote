@@ -13,9 +13,9 @@ import re
 import subprocess
 from pathlib import Path
 
-SYL_PER_SEC = 5.3      # 가이드 모드 말하기 속도(초당 음절)
-LINE_GAP = 0.45        # 가이드 모드 문장 사이 쉼
-SCENE_PAD = (0.5, 0.8) # 가이드 모드 장면 앞/뒤 여유
+SYL_PER_SEC = 6.4      # 가이드 모드 말하기 속도(초당 음절) — 빠른 유튜브 내레이션 기준
+LINE_GAP = 0.22        # 가이드 모드 문장 사이 쉼
+SCENE_PAD = (0.3, 0.45) # 가이드 모드 장면 앞/뒤 여유
 AUDIO_EXT = (".wav", ".m4a", ".mp3", ".flac", ".aac", ".ogg")
 
 
@@ -24,7 +24,7 @@ def syllables(text):
 
 
 def est_line(text):
-    return syllables(text) / SYL_PER_SEC + 0.25
+    return syllables(text) / SYL_PER_SEC + 0.15
 
 
 def ffprobe_dur(path):

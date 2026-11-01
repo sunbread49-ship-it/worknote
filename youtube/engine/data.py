@@ -93,6 +93,9 @@ def stat(kind: str, **kw) -> float:
         p = series(kw["series"]).values
         d = kw.get("days", 504)
         return float(max(p[i:i + d + 1].max() / p[i] for i in range(len(p))))
+    if kind == "count_days_below":  # 하루 수익률이 threshold% 미만인 날 수
+        p = series(kw["series"]).loc[str(kw["start"]):str(kw["end"])]
+        return float((p.pct_change() * 100 < kw["threshold"]).sum())
     if kind == "max_dd":
         p = series(kw["series"]).loc[str(kw.get("start", "1900")):str(kw.get("end", "2100"))]
         return float((p / p.cummax() - 1).min() * 100)

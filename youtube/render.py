@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 import yaml
-from PIL import Image
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
@@ -99,10 +99,14 @@ def setup(ep_dir, only=None, log=print):
     return c
 
 
-def frame_at(c, t):
+TRANS_T = 0.38
+TRANS_CYCLE = ["slide", "wipe", "zoom", "up", "slide", "flash"]
+_last = {}
+
+
+def scene_content(c, sc, lt):
+    """장면 그림(로고·자막 제외). 화면 흔들림 반영."""
     bg = G.background()
-    sc = next((s for s in c.scenes if s.start <= t < s.start + s.dur), c.scenes[-1])
-    lt = t - sc.start
     f = bg.copy()
     sc.draw(f, lt)
     dx, dy = sc.shake_at(lt)
@@ -111,12 +115,72 @@ def frame_at(c, t):
         moved.alpha_composite(f.crop((max(0, -dx), max(0, -dy), S.W - max(0, dx), S.H - max(0, dy))),
                               (max(0, dx), max(0, dy)))
         f = moved
-    fade_in, fade_out = 0.3, 0.25
-    if lt < fade_in and sc.idx > 1:
-        f = Image.blend(bg, f, G.ease_out(lt / fade_in))
-    elif sc.dur - lt < fade_out and sc.idx < len(c.scenes):
-        f = Image.blend(bg, f, max(0.0, (sc.dur - lt) / fade_out))
-    SC.chrome(f, sc, t, c.total, c.channel)
+    return f
+
+
+def last_frame(c, sc):
+    if sc.idx not in _last:
+        _last[sc.idx] = scene_content(c, sc, max(0.0, sc.dur - 0.02))
+    return _last[sc.idx]
+
+
+def transition_kind(c, sc):
+    return sc.spec.get("transition") or getattr(sc, "default_transition", None) or \
+        TRANS_CYCLE[(sc.idx - 2) % len(TRANS_CYCLE)]
+
+
+def transition(kind, a, b, p):
+    """a: 이전 장면 마지막 화면, b: 새 장면, p: 0→1"""
+    k = G.ease_in_out(p)
+    if kind == "cut":
+        return b
+    if kind in ("slide", "up"):
+        out = Image.new("RGBA", (S.W, S.H))
+        if kind == "slide":
+            o = int(S.W * k)
+            out.paste(a, (-o, 0))
+            out.paste(b, (S.W - o, 0))
+        else:
+            o = int(S.H * k)
+            out.paste(a, (0, -o))
+            out.paste(b, (0, S.H - o))
+        return out
+    if kind == "zoom":
+        sa = 1 + 0.35 * k
+        za = a.resize((int(S.W * sa), int(S.H * sa)), Image.BILINEAR)
+        za = za.crop(((za.width - S.W) // 2, (za.height - S.H) // 2, (za.width - S.W) // 2 + S.W,
+                      (za.height - S.H) // 2 + S.H))
+        sb = 1.15 - 0.15 * k
+        zb = b.resize((int(S.W * sb), int(S.H * sb)), Image.BILINEAR)
+        zb = zb.crop(((zb.width - S.W) // 2, (zb.height - S.H) // 2, (zb.width - S.W) // 2 + S.W,
+                      (zb.height - S.H) // 2 + S.H))
+        return Image.blend(za, zb, k)
+    if kind == "flash":
+        white = Image.new("RGBA", (S.W, S.H), (255, 255, 255, 255))
+        if p < 0.35:
+            return Image.blend(a, white, p / 0.35)
+        return Image.blend(white, b, min(1.0, (p - 0.35) / 0.65))
+    if kind == "wipe":  # 대각선 금색 띠가 쓸고 지나감
+        x = int((S.W + 700) * k) - 350
+        mask = Image.new("L", (S.W, S.H), 0)
+        ImageDraw.Draw(mask).polygon([(0, 0), (x + 300, 0), (x - 300, S.H), (0, S.H)], fill=255)
+        out = Image.composite(b, a, mask)
+        band = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        ImageDraw.Draw(band).polygon([(x + 300, 0), (x + 380, 0), (x - 220, S.H), (x - 300, S.H)], fill=S.GOLD + (255,))
+        out.alpha_composite(band)
+        return out
+    return Image.blend(a, b, k)
+
+
+def frame_at(c, t):
+    sc = next((s for s in c.scenes if s.start <= t < s.start + s.dur), c.scenes[-1])
+    lt = t - sc.start
+    f = scene_content(c, sc, lt)
+    if sc.idx > 1 and lt < TRANS_T:
+        prev = c.scenes[sc.idx - 2]
+        f = transition(transition_kind(c, sc), last_frame(c, prev), f, lt / TRANS_T)
+    if not sc.spec.get("no_chrome"):
+        SC.chrome(f, sc, t, c.total, c.channel)
     cue = next((x for x in c.cues if x[0] <= t < x[1] + 0.12), None)
     SC.subtitle(f, cue[2] if cue else "")
     return f.convert("RGB")

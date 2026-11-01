@@ -48,7 +48,7 @@ class Scene:
     def draw_common(self, f, t):
         il = self.spec.get("illust")
         if il:
-            o = G.appear(t, self.line_start(il.get("on", 1)), 0.6)
+            o = G.appear(t, self.line_start(il.get("on", 1)), 0.35)
             if il.get("until"):
                 o *= 1 - G.appear(t, self.line_start(il["until"]), 0.4)
             kw = {}
@@ -92,7 +92,7 @@ class Scene:
                 o = 1 - G.appear(t, self.line_start(st["until"]), 0.3)
                 if o <= 0:
                     continue
-            k = (t - t0) / 0.35
+            k = (t - t0) / 0.25
             sc = 0 if k <= 0 else (1.18 * G.ease_out(k / 0.6) if k < 0.6 else 1.18 - 0.18 * G.ease_out((k - 0.6) / 0.4))
             sc = min(sc, 1.18) if k < 1 else 1.0
             bob = math.sin((t - t0) * 2.4 + st["pos"][0]) * 6 if st.get("float", True) else 0
@@ -461,8 +461,8 @@ class BigNum(Scene):
         if sp.get("label"):
             G.blit(f, G.text_img(sp["label"], "ExtraBold", 54, S.FG, max_w=1600, align="center",
                                  highlight=sp.get("highlight", "")), (S.W / 2, sp.get("y", 250)), o, "mt")
-        t0 = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.4)
-        dur = sp.get("dur", 1.6)
+        t0 = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.2)
+        dur = sp.get("dur", 1.0)
         k = G.clamp((t - t0) / dur)
         if t >= t0:
             e = 1 - (1 - k) ** 4
@@ -488,9 +488,9 @@ class BigNum(Scene):
 
     def extra_sfx(self):
         sp = self.spec
-        t0 = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.4)
+        t0 = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.2)
         ev = [(t0 - 0.1, "riser", 0.5)] if sp.get("riser", True) else []
-        return ev + [(t0 + sp.get("dur", 1.6), sp.get("sfx_end", "ding"), 1.0)]
+        return ev + [(t0 + sp.get("dur", 1.0), sp.get("sfx_end", "ding"), 1.0)]
 
 
 class Versus(Scene):
@@ -546,7 +546,9 @@ TYPES = {"reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "
 
 
 def make(spec, idx, channel):
-    return TYPES[spec["type"]](spec, idx, channel)
+    from . import cutaways
+    types = {**TYPES, **cutaways.TYPES}
+    return types[spec["type"]](spec, idx, channel)
 
 
 # ── 화면 위에 항상 붙는 것들(로고·챕터·자막·진행바·면책) ─────────────
