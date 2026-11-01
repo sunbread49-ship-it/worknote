@@ -8,6 +8,8 @@
   note:     화면 하단 작은 각주
 시간 지정 `on: N` = 내레이션 N번째 줄(1부터)이 시작될 때 등장.
 """
+import math
+
 from PIL import Image, ImageDraw
 
 from . import charts as C
@@ -21,7 +23,9 @@ COLORS = {"gold": S.GOLD, "up": S.UP, "down": S.DOWN, "fg": S.FG, "muted": S.MUT
 def col(c, default=S.FG):
     if c is None:
         return default
-    return COLORS.get(c, tuple(c) if isinstance(c, (list, tuple)) else default)
+    if isinstance(c, (list, tuple)):
+        return tuple(c)
+    return COLORS.get(c, default)
 
 
 class Scene:
@@ -69,9 +73,91 @@ class Scene:
                        (c["pos"][0], c["pos"][1] + (1 - o) * 24), o, c.get("anchor", "lt"))
         if self.spec.get("note"):
             G.blit(f, G.text_img(self.spec["note"], "Regular", 22, S.MUTED), (S.W - S.SAFE_X, 898), 1, "rt")
+        self.draw_fun(f, t)
 
     def draw(self, f, t):
         raise NotImplementedError
+
+    # ── 재미 요소 ──────────────────────────────────────────────
+    def _t_of(self, item, key="on"):
+        return self.line_start(item.get(key, 1)) + item.get("offset", 0.0)
+
+    def draw_fun(self, f, t):
+        for st in self.spec.get("stickers", []):
+            t0 = self._t_of(st)
+            if t < t0:
+                continue
+            o = 1.0
+            if st.get("until"):
+                o = 1 - G.appear(t, self.line_start(st["until"]), 0.3)
+                if o <= 0:
+                    continue
+            k = (t - t0) / 0.35
+            sc = 0 if k <= 0 else (1.18 * G.ease_out(k / 0.6) if k < 0.6 else 1.18 - 0.18 * G.ease_out((k - 0.6) / 0.4))
+            sc = min(sc, 1.18) if k < 1 else 1.0
+            bob = math.sin((t - t0) * 2.4 + st["pos"][0]) * 6 if st.get("float", True) else 0
+            size = max(4, int(st.get("size", 180) * sc))
+            im = I.emoji(st["e"], size)
+            if st.get("rot"):
+                im = im.rotate(st["rot"], resample=Image.BICUBIC, expand=True)
+            G.blit(f, im, (st["pos"][0], st["pos"][1] + bob), o, "mm")
+        m = self.spec.get("mascot")
+        if m:
+            t0 = self._t_of(m)
+            o = G.appear(t, t0, 0.35)
+            if m.get("until"):
+                o *= 1 - G.appear(t, self.line_start(m["until"]), 0.3)
+            if o > 0:
+                size = m.get("size", 170)
+                x, y = m.get("pos", [S.W - S.SAFE_X - size // 2, 760])
+                hop = -abs(math.sin((t - t0) * 9)) * 10 * max(0, 1 - (t - t0) / 0.8)
+                G.blit(f, _mascot(size), (x, y + hop + (1 - o) * 40), o, "mm")
+                if m.get("say"):
+                    ob = G.appear(t, t0 + 0.25, 0.3)
+                    b = _bubble(m["say"], m.get("side", "left"))
+                    bx = x - size / 2 - 10 if m.get("side", "left") == "left" else x + size / 2 + 10
+                    G.blit(f, b, (bx, y - size / 2 + 10), o * ob, "rb" if m.get("side", "left") == "left" else "lb")
+        stp = self.spec.get("stamp")
+        if stp:
+            t0 = self._t_of(stp)
+            if t >= t0:
+                k = G.clamp((t - t0) / 0.22)
+                sc = 2.2 - 1.2 * G.ease_out(k)
+                im = _stamp(stp["text"], col(stp.get("color"), S.UP), stp.get("size", 64))
+                im = im.resize((max(2, int(im.width * sc)), max(2, int(im.height * sc))), Image.BICUBIC)
+                im = im.rotate(stp.get("rot", -8), resample=Image.BICUBIC, expand=True)
+                G.blit(f, im, stp.get("pos", [S.W / 2, S.H / 2]), min(1, k * 1.5), "mm")
+
+    def shake_at(self, t):
+        for sh in self.spec.get("shake", []):
+            t0 = self._t_of(sh)
+            d = sh.get("dur", 0.45)
+            if t0 <= t < t0 + d:
+                a = sh.get("amp", 14) * (1 - (t - t0) / d)
+                return int(a * math.sin(t * 93)), int(a * math.cos(t * 71))
+        return 0, 0
+
+    def sfx_events(self):
+        """[(장면 기준 시간, 효과음 이름, 볼륨)]"""
+        ev = []
+        for st in self.spec.get("stickers", []):
+            if st.get("sfx", "pop") != "none":
+                ev.append((self._t_of(st), st.get("sfx", "pop"), st.get("vol", 0.8)))
+        m = self.spec.get("mascot")
+        if m and m.get("say"):
+            ev.append((self._t_of(m) + 0.25, m.get("sfx", "bubble"), 0.7))
+        stp = self.spec.get("stamp")
+        if stp:
+            ev.append((self._t_of(stp) + 0.15, stp.get("sfx", "boom"), 0.9))
+        for x in self.spec.get("sfx", []):
+            ev.append((self._t_of(x), x["name"], x.get("vol", 1.0)))
+        for sh in self.spec.get("shake", []):
+            if sh.get("sfx"):
+                ev.append((self._t_of(sh), sh["sfx"], 1.0))
+        return ev + self.extra_sfx()
+
+    def extra_sfx(self):
+        return []
 
 
 _ill = {}
@@ -87,6 +173,44 @@ def _illust_cached(name, size, kw):
 
 
 _co = {}
+_cache2 = {}
+
+
+def _mascot(size):
+    k = ("m", size)
+    if k not in _cache2:
+        _cache2[k] = I.mascot(size)
+    return _cache2[k]
+
+
+def _bubble(text, side="left"):
+    k = ("b", text, side)
+    if k not in _cache2:
+        tx = G.text_img(text, "ExtraBold", 34, (20, 22, 30), max_w=520)
+        w, h = tx.width + 48, tx.height + 30
+        im, d = G.supersample(w + 30, h + 26, 2)
+        d.rounded_rectangle((0, 0, w * 2, h * 2), radius=36, fill=(255, 255, 255, 255))
+        if side == "left":  # 꼬리: 오른쪽 아래(마스코트 쪽)
+            d.polygon([(w * 2 - 70, h * 2 - 6), (w * 2 + 50, h * 2 + 46), (w * 2 - 10, h * 2 - 30)], fill=(255, 255, 255, 255))
+        else:
+            d.polygon([(70, h * 2 - 6), (-0, h * 2 + 46), (10, h * 2 - 30)], fill=(255, 255, 255, 255))
+        out = G.finish(im)
+        out.alpha_composite(tx, (24, 15))
+        _cache2[k] = out
+    return _cache2[k]
+
+
+def _stamp(text, color, size):
+    k = ("s", text, color, size)
+    if k not in _cache2:
+        tx = G.text_img(text, "Black", size, color)
+        w, h = tx.width + 60, tx.height + 30
+        im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        d = ImageDraw.Draw(im)
+        d.rounded_rectangle((3, 3, w - 4, h - 4), radius=14, outline=color + (255,), width=8, fill=(10, 12, 20, 200))
+        im.alpha_composite(tx, (30, 14))
+        _cache2[k] = im
+    return _cache2[k]
 
 
 def _callout(label, value, sub, color, width):
@@ -119,9 +243,13 @@ class Title(Scene):
 
     def draw(self, f, t):
         sp = self.spec
+        if sp.get("skyline"):
+            if not hasattr(self, "_sky"):
+                self._sky = I.skyline()
+            G.blit(f, self._sky, (0, S.H - self._sky.height + 170 - 20 * G.clamp(t / 8)), 0.75)
         if self.chart:
             G.blit(f, self.chart.line, (0, 0), 0.22)
-        y = 300
+        y = sp.get("y", 300)
         if sp.get("kicker"):
             o = G.appear(t, 0.1)
             k = G.pill(sp["kicker"], "Bold", 32, (16, 20, 32), S.GOLD, pad=(26, 10))
@@ -241,7 +369,180 @@ class Outro(Scene):
         self.draw_common(f, t)
 
 
-TYPES = {"title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
+class Reddit(Scene):
+    """커뮤니티 글 카드 (실제 글 캡처가 아니라 '자주 보이는 글 유형'을 재구성).
+    posts: [{title, en, up, comments, flair, on, color}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        o = G.appear(t, 0.1)
+        hdr = _sub_header(sp.get("community", "r/wallstreetbets"), sp.get("community_sub", "미국 최대 주식 커뮤니티"))
+        G.blit(f, hdr, (S.SAFE_X + 20, 140), o)
+        G.blit(f, G.text_img(sp.get("disclaimer", "※ 자주 보이는 글 유형을 재구성한 예시 (실제 게시글·작성자 아님)"),
+                             "Regular", 22, S.MUTED), (S.SAFE_X + 20 + sp.get("width", 1080), 168), o, "rt")
+        y = 140 + hdr.height + 30
+        for i, p in enumerate(sp["posts"]):
+            t0 = self.line_start(p.get("on", 1)) + p.get("offset", 0)
+            k = (t - t0) / 0.3
+            if k <= 0:
+                continue
+            card = _post_card(p, sp.get("width", 1080))
+            x = S.SAFE_X + 20 + (1 - G.ease_out(k)) * -60
+            G.blit(f, card, (x, y), G.ease_out(k))
+            y += card.height + 22
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(p.get("on", 1)) + p.get("offset", 0), "pop", 0.6) for p in self.spec["posts"]]
+
+
+def _sub_header(name, sub):
+    k = ("hdr", name, sub)
+    if k not in _cache2:
+        a = G.text_img(name, "Black", 46, S.FG)
+        b = G.text_img(sub, "SemiBold", 28, S.MUTED)
+        icon, d = G.supersample(72, 72, 3)
+        d.ellipse((0, 0, 215, 215), fill=(255, 88, 30, 255))
+        icon = G.finish(icon, 3)
+        r = G.text_img("r/", "Black", 34, (255, 255, 255))
+        icon.alpha_composite(r, ((72 - r.width) // 2, (72 - r.height) // 2 - 2))
+        im = Image.new("RGBA", (72 + 20 + max(a.width, b.width), 80), (0, 0, 0, 0))
+        im.alpha_composite(icon, (0, 4))
+        im.alpha_composite(a, (92, -4))
+        im.alpha_composite(b, (92 + a.width + 18, 12))
+        _cache2[k] = im
+    return _cache2[k]
+
+
+FLAIR = {"Gain": (64, 190, 120), "Loss": (240, 84, 84), "YOLO": (255, 160, 40), "DD": (90, 150, 255),
+         "Meme": (180, 120, 255), "Discussion": (130, 140, 160)}
+
+
+def _post_card(p, width):
+    k = ("post", p["title"], p.get("en", ""), width)
+    if k not in _cache2:
+        x = 150
+        title = G.text_img(p["title"], "Bold", 36, S.FG, max_w=width - x - 40)
+        en = G.text_img(p["en"], "Medium", 22, S.MUTED, max_w=width - x - 40) if p.get("en") else None
+        meta = G.text_img("u/●●●●●  ·  " + p.get("ago", "3시간 전") + "  ·  댓글 " + p.get("comments", ""),
+                          "Medium", 22, S.MUTED)
+        fl = p.get("flair")
+        pill = G.pill(fl, "ExtraBold", 22, (16, 20, 32), FLAIR.get(fl, S.GOLD), pad=(12, 4)) if fl else None
+        h = 22 + meta.height + 8 + (pill.height + 8 if pill else 0) + title.height + (en.height + 4 if en else 0) + 22
+        h = max(h, 170)
+        im = G.panel(width, h, (26, 30, 44), 22, outline=(60, 66, 90, 255), alpha=245)
+        cy = h // 2
+        up = G.text_img("▲", "Black", 32, (255, 110, 60))
+        im.alpha_composite(up, (60 - up.width // 2, cy - 62))
+        cnt = G.text_img(p.get("up", ""), "ExtraBold", 28, S.FG)
+        im.alpha_composite(cnt, (60 - cnt.width // 2, cy - 20))
+        dn = G.text_img("▼", "Black", 32, (110, 130, 200))
+        im.alpha_composite(dn, (60 - dn.width // 2, cy + 22))
+        y = 22
+        im.alpha_composite(meta, (x, y))
+        y += meta.height + 8
+        if pill:
+            im.alpha_composite(pill, (x, y))
+            y += pill.height + 8
+        im.alpha_composite(title, (x, y))
+        y += title.height + 4
+        if en:
+            im.alpha_composite(en, (x, y))
+        _cache2[k] = im
+    return _cache2[k]
+
+
+class BigNum(Scene):
+    """숫자 카운트업 공개.  label / from / to / fmt("×{:.0f}") / on / dur / sub / color / sub_on"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        o = G.appear(t, 0.1)
+        if sp.get("label"):
+            G.blit(f, G.text_img(sp["label"], "ExtraBold", 54, S.FG, max_w=1600, align="center",
+                                 highlight=sp.get("highlight", "")), (S.W / 2, sp.get("y", 250)), o, "mt")
+        t0 = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.4)
+        dur = sp.get("dur", 1.6)
+        k = G.clamp((t - t0) / dur)
+        if t >= t0:
+            e = 1 - (1 - k) ** 4
+            if sp.get("log_count"):
+                a, b = math.log10(abs(sp["from"]) + 1e-9), math.log10(abs(sp["to"]) + 1e-9)
+                v = math.copysign(10 ** (a + (b - a) * e), sp["to"])
+            else:
+                v = sp["from"] + (sp["to"] - sp["from"]) * e
+            txt = sp.get("fmt", "{:,.0f}").format(v)
+            if k >= 1 and sp.get("final"):
+                txt = sp["final"]
+            c = col(sp.get("color"), S.GOLD)
+            num = G.text_img(txt, "Black", sp.get("size", 200), c)
+            pop = 1 + 0.08 * math.sin(G.clamp((t - t0 - dur) / 0.25) * math.pi) if k >= 1 else 1
+            if pop != 1:
+                num = num.resize((int(num.width * pop), int(num.height * pop)), Image.BICUBIC)
+            G.blit(f, num, (S.W / 2, sp.get("num_y", 520)), 1, "mm")
+        if sp.get("sub"):
+            so = G.appear(t, self.line_start(sp.get("sub_on", 1)) + (0 if sp.get("sub_on") else t0 + dur))
+            G.blit(f, G.text_img(sp["sub"], "SemiBold", 40, S.MUTED, max_w=1500, align="center"),
+                   (S.W / 2, sp.get("sub_y", 690)), so, "mt")
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        sp = self.spec
+        t0 = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.4)
+        ev = [(t0 - 0.1, "riser", 0.5)] if sp.get("riser", True) else []
+        return ev + [(t0 + sp.get("dur", 1.6), sp.get("sfx_end", "ding"), 1.0)]
+
+
+class Versus(Scene):
+    """좌우 비교 카드. left/right: {title, value, sub, color, on, emoji}"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        if sp.get("heading"):
+            G.blit(f, G.text_img(sp["heading"], "ExtraBold", 54, S.FG, max_w=1600, align="center",
+                                 highlight=sp.get("highlight", "")), (S.W / 2, 150), G.appear(t, 0.1), "mt")
+        for i, side in enumerate(("left", "right")):
+            c = sp[side]
+            o = G.appear(t, self.line_start(c.get("on", 1)))
+            if o <= 0:
+                continue
+            card = _vs_card(c)
+            x = S.W / 2 + (-1 if i == 0 else 1) * (card.width / 2 + 95)
+            G.blit(f, card, (x, 300 + (1 - o) * 40), o, "mt")
+        ov = G.appear(t, self.line_start(sp["right"].get("on", 1)))
+        if ov > 0:
+            G.blit(f, G.text_img("VS", "Black", 80, S.GOLD), (S.W / 2, 520), ov, "mm")
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec[s].get("on", 1)), "pop", 0.7) for s in ("left", "right")]
+
+
+def _vs_card(c):
+    k = ("vs", str(c))
+    if k not in _cache2:
+        color = col(c.get("color"), S.GOLD)
+        w, h = 660, 480
+        im = G.panel(w, h, S.PANEL, 30, outline=color + (160,))
+        ImageDraw.Draw(im).rounded_rectangle((0, 0, w - 1, 12), radius=6, fill=color + (255,))
+        y = 40
+        if c.get("emoji"):
+            e = I.emoji(c["emoji"], 110)
+            im.alpha_composite(e, (w - 150, 34))
+        tt = G.text_img(c["title"], "ExtraBold", 46, S.FG, max_w=w - 200)
+        im.alpha_composite(tt, (44, y + 10))
+        y += tt.height + 70
+        v = G.text_img(c["value"], "Black", 110, color)
+        im.alpha_composite(v, (44, y))
+        y += v.height + 16
+        if c.get("sub"):
+            st = G.text_img(c["sub"], "SemiBold", 32, S.MUTED, max_w=w - 88)
+            im.alpha_composite(st, (44, y))
+        _cache2[k] = im
+    return _cache2[k]
+
+
+TYPES = {"reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
 
 
 def make(spec, idx, channel):

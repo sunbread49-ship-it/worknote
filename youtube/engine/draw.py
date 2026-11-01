@@ -71,11 +71,15 @@ def wrap(text: str, fnt, max_w: int):
     return lines
 
 
+_EMOJI_RE = __import__("re").compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\uFE0F]")
+
+
 @lru_cache(maxsize=4096)
 def text_img(text: str, weight: str, size: int, fill=S.FG, max_w: int = 0,
              line_gap: float = 1.32, align: str = "left", highlight: str = "",
              hl_fill=S.GOLD) -> Image.Image:
     """텍스트를 딱 맞는 RGBA 이미지로. highlight 부분 문자열은 hl_fill 색."""
+    text = _EMOJI_RE.sub("", text).rstrip()  # 폰트에 없는 이모지는 지움(이모지는 스티커로)
     fnt = S.font(weight, size)
     lines = wrap(text, fnt, max_w) if max_w else text.split("\n")
     lh = int(size * line_gap)

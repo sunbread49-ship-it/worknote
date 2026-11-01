@@ -99,3 +99,54 @@ def check(size=56, color=S.GOLD):
 
 def get(name, size, **kw):
     return {"gauge": gauge, "newspaper": newspaper, "warning": warning}[name](size, **kw)
+
+
+def skyline(w=1920, h=520, seed=3):
+    """코드로 그린 뉴욕풍 야경 실루엣 (특정 건물·상표 없음)"""
+    import random
+    rnd = random.Random(seed)
+    im, d = G.supersample(w, h, 1)
+    layers = [((28, 36, 64), 0.55, 0.95, 70), ((20, 26, 48), 0.35, 0.8, 55), ((12, 16, 30), 0.15, 0.6, 40)]
+    for color, hmin, hmax, bw in layers:
+        x = -20
+        while x < w:
+            bwid = rnd.randint(int(bw * 0.6), int(bw * 1.6))
+            bh = int(h * rnd.uniform(hmin * 0.6, hmax))
+            top = h - bh
+            d.rectangle((x, top, x + bwid, h), fill=color + (255,))
+            if rnd.random() < 0.25:  # 첨탑
+                cx = x + bwid // 2
+                d.polygon([(cx - bwid // 4, top), (cx + bwid // 4, top), (cx, top - rnd.randint(30, 90))], fill=color + (255,))
+            for wy in range(top + 12, h - 10, 18):
+                for wx in range(x + 6, x + bwid - 8, 14):
+                    if rnd.random() < 0.18:
+                        c = (255, 214, 120, rnd.randint(90, 200)) if rnd.random() < 0.8 else (180, 210, 255, 150)
+                        d.rectangle((wx, wy, wx + 5, wy + 8), fill=c)
+            x += bwid + rnd.randint(0, 8)
+    return im
+
+
+def mascot(size=200, ring=S.GOLD):
+    """채널 마스코트: 금색 원 안의 개미 (Fluent 3D 이모지)"""
+    im, d = G.supersample(size, size, K)
+    s = size * K
+    d.ellipse((0, 0, s - 1, s - 1), fill=ring + (255,))
+    d.ellipse((s * 0.05, s * 0.05, s * 0.95, s * 0.95), fill=(255, 246, 222, 255))
+    out = G.finish(im, K)
+    ant = emoji("ant", int(size * 0.78))
+    out.alpha_composite(ant, ((size - ant.width) // 2, (size - ant.height) // 2 + int(size * 0.03)))
+    return out
+
+
+_emo = {}
+
+
+def emoji(name, size):
+    key = (name, size)
+    if key not in _emo:
+        from PIL import Image
+        p = S.ROOT / "assets" / "emoji" / f"{name}.png"
+        if not p.exists():
+            raise SystemExit(f"이모지 없음: {name} (tools/fetch_assets.py 확인)")
+        _emo[key] = Image.open(p).convert("RGBA").resize((size, size), Image.LANCZOS)
+    return _emo[key]

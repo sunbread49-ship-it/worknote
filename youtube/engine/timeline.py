@@ -1,10 +1,12 @@
 """내레이션 타이밍: 녹음 파일(무음 구간 감지) 또는 글자 수 추정으로 장면·문장 시간을 잡는다.
 
-녹음 방법(둘 중 하나, episodes/<ep>/audio/ 에 넣기):
-  A) 한 번에 통녹음: full.wav (또는 .m4a/.mp3)
-     - 문장 사이: 자연스럽게 0.3초 이상 쉬기
-     - 장면 사이: 2초 정도 쉬기  ← 이걸로 장면을 자동으로 나눔
-  B) 장면별 파일: 01.wav, 02.wav, ... (장면 번호와 같게)
+녹음 방법 (episodes/<ep>/audio/ 에 넣기):
+  - 파일 1개든 여러 개든 OK. 여러 개면 '파일 이름 순서'대로 이어 붙인다.
+    (갤럭시 음성녹음 기본 이름 '음성 001.m4a, 음성 002.m4a…' 그대로 두면 순서가 맞음)
+  - 버벅인 부분은 잘라내고, 끊긴 곳부터 새 파일로 이어서 녹음하면 됨
+  - 문장 사이: 자연스럽게 0.3초 이상 쉬기
+  - 장면 사이(대본의 ─── 표시): 2초 쉬기  ← 이걸로 장면을 자동으로 나눔
+    (파일이 장면 경계에서 끝났다면 파일 사이에 자동으로 쉼을 넣지 않으니, 끝에 2초 쉬고 멈추기)
 녹음이 없으면 '가이드 모드'로 글자 수 기준 길이를 추정해 무음 영상을 만든다.
 """
 import re
@@ -77,47 +79,50 @@ def _split_lines(seg_start, seg_end, sil, n_lines, texts):
     return out
 
 
+def _natural_key(p):
+    return [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", p.name.lower())]
+
+
+def merge_parts(files, out, gap=0.5):
+    """여러 녹음 파일을 순서대로 이어 붙인다(사이에 gap초 무음)."""
+    inputs, fl = [], []
+    for i, p in enumerate(files):
+        inputs += ["-i", str(p)]
+        fl.append(f"[{i}:a]aresample=48000,aformat=channel_layouts=mono,apad=pad_dur={gap}[a{i}]")
+    fl.append("".join(f"[a{i}]" for i in range(len(files))) + f"concat=n={len(files)}:v=0:a=1[out]")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(fl),
+                    "-map", "[out]", str(out)], check=True)
+    return out
+
+
 def plan(scenes, audio_dir: Path, log=print):
-    """각 scene에 dur/lines를 채우고 (narration_path or None, mode) 반환"""
+    """각 scene에 start/dur/lines를 채우고 (narration_path or None, mode) 반환"""
     audio_dir = Path(audio_dir)
-    full = next((audio_dir / f"full{e}" for e in AUDIO_EXT if (audio_dir / f"full{e}").exists()), None)
-    per = {}
-    for sc in scenes:
-        for e in AUDIO_EXT:
-            p = audio_dir / f"{sc.idx:02d}{e}"
-            if p.exists():
-                per[sc.idx] = p
+    files = sorted([p for p in audio_dir.glob("*") if p.suffix.lower() in AUDIO_EXT and not p.name.startswith("_")],
+                   key=_natural_key) if audio_dir.exists() else []
+    full = None
+    if len(files) == 1:
+        full = files[0]
+    elif len(files) > 1:
+        log(f"  녹음 파일 {len(files)}개를 순서대로 이어 붙임: " + ", ".join(p.name for p in files))
+        full = merge_parts(files, audio_dir / "_merged.wav")
 
     if full:
         total = ffprobe_dur(full)
         sil = silences(full)
         n = len(scenes)
-        long_sil = sorted([s for s in sil if s[1] - s[0] >= 1.0 and 0.5 < s[0] and s[1] < total - 0.5],
+        long_sil = sorted([s for s in sil if s[1] - s[0] >= 1.2 and 0.5 < s[0] and s[1] < total - 0.5],
                           key=lambda s: s[1] - s[0], reverse=True)
         if len(long_sil) < n - 1:
-            raise SystemExit(f"[녹음] 장면 사이 1초 이상 쉼이 {len(long_sil)}곳뿐인데 장면은 {n}개입니다. "
-                             f"장면 사이를 2초 정도 쉬어 다시 녹음하거나, 장면별 파일(01.wav…)로 넣어주세요.")
+            raise SystemExit(f"[녹음] 장면 사이 쉼(1.2초 이상)이 {len(long_sil)}곳뿐인데 장면은 {n}개입니다. "
+                             f"대본의 ─── 표시마다 2초씩 쉬었는지 확인해 주세요.")
         cuts = sorted(long_sil[:n - 1])
         bounds = [0.0] + [(a + b) / 2 for a, b in cuts] + [total]
         for sc, s0, s1 in zip(scenes, bounds, bounds[1:]):
             sc.start, sc.dur = s0, s1 - s0
             sc.lines = _split_lines(s0, s1, sil, len(sc.narration), sc.narration)
         _check(scenes, log)
-        return full, "통녹음(full)"
-
-    if per:
-        missing = [sc.idx for sc in scenes if sc.idx not in per]
-        if missing:
-            raise SystemExit(f"[녹음] 장면별 파일이 빠졌습니다: {missing}")
-        t = 0.0
-        for sc in scenes:
-            p = per[sc.idx]
-            d = ffprobe_dur(p) + 0.35
-            sc.start, sc.dur = t, d
-            sc.lines = _split_lines(0, d - 0.35, silences(p), len(sc.narration), sc.narration)
-            t += d
-        _check(scenes, log)
-        return [per[sc.idx] for sc in scenes], "장면별 파일"
+        return full, f"녹음({len(files)}개 파일)"
 
     # 가이드 모드
     t = 0.0

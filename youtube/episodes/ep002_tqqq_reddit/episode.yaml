@@ -1,0 +1,436 @@
+# EP002 · 레딧 썰 팩트체크 ① TQQQ / SQQQ
+# 코너: "레딧 썰 팩트체크" — 미국 커뮤니티에서 도는 썰을 실제 데이터로 확인
+# narration 한 줄 = 녹음 한 문장. ' | ' = 자막 끊는 위치(녹음 대본에선 지워짐)
+# 숫자는 render 때 출력되는 numbers.txt(실제 데이터 계산값)와 반드시 대조할 것.
+title: "레딧 썰 팩트체크: 'TQQQ 2년 만에 30배' 진짜일까? 그리고 SQQQ의 무서운 진실"
+
+youtube:
+  title: "\"TQQQ 2년 만에 30배\" 레딧 썰, 데이터로 까봤습니다 (인버스 SQQQ는 1억이 450원)"
+  description: |
+    미국 최대 주식 커뮤니티 레딧(r/wallstreetbets)에서 자주 보이는 "TQQQ 몰빵 썰", 정말일까요?
+    3배 레버리지 TQQQ와 3배 인버스 SQQQ를 2010년 상장 이후 실제 데이터로 팩트체크했습니다.
+
+    00:00 레딧에서 도는 썰
+    (챕터는 업로드 시 자동 생성 예정)
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
+    ※ 레버리지·인버스 ETF는 원금 대부분을 잃을 수 있는 고위험 상품입니다.
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 투자 판단과 책임은 본인에게 있습니다.
+    ※ 커뮤니티 글 화면은 실제 게시글이 아닌, 자주 보이는 글 유형을 재구성한 예시입니다.
+
+    [자료] Yahoo Finance 일간 수정주가(배당·분할 반영) 공개 미러 · 나스닥100 지수(1985~)
+    '가상 TQQQ'는 나스닥100 일간 수익률 x3 - 연 0.95% 보수로 계산(차입비용 미반영 → 실제보다 유리)
+  tags: [TQQQ, SQQQ, 레버리지ETF, 인버스ETF, 나스닥, 레딧, 월스트리트베츠, 미국주식, 주식공부, 팩트체크]
+  privacy: private
+
+thumbnail:
+  lines: ["TQQQ 2년에", "30배?"]
+  highlight: "30배?"
+  size: 150
+  sub: "레딧 썰 팩트체크"
+  chart:
+    series: tqqq
+    log: true
+    start: "2019-06-01"
+    end: "2023-06-30"
+    color: [240, 84, 84]
+    marks:
+      - {date: "2021-11-19", label: "+898%", color: up, dy: -70, dx: -40}
+      - {date: "2022-12-28", label: "-82%", color: down, dy: 70, dx: 0}
+
+checks:
+  - {name: "TQQQ 2010.2→2026.10 배수", kind: mult, series: tqqq}
+  - {name: "QQQ 같은 기간 배수", kind: mult, series: qqq, start: "2010-02-11"}
+  - {name: "TQQQ 아무 날 매수→2년 내 최고 배수", kind: best_window_mult, series: tqqq, days: 504}
+  - {name: "TQQQ 2020.3.20→2021.11.19 (%)", kind: ret, series: tqqq, start: "2020-03-20", end: "2021-11-19"}
+  - {name: "TQQQ 2021.11.19→2022.12.28 (%)", kind: ret, series: tqqq, start: "2021-11-19", end: "2022-12-28"}
+  - {name: "TQQQ 2022년 (%)", kind: ret, series: tqqq, start: "2021-12-31", end: "2022-12-30"}
+  - {name: "QQQ 2022년 (%)", kind: ret, series: qqq, start: "2021-12-31", end: "2022-12-30"}
+  - {name: "QQQ 2022.5.5→2023.5.5 (%)", kind: ret, series: qqq, start: "2022-05-05", end: "2023-05-05"}
+  - {name: "TQQQ 2022.5.5→2023.5.5 (%)", kind: ret, series: tqqq, start: "2022-05-05", end: "2023-05-05"}
+  - {name: "가상TQQQ 2000.3.27→2002.10.7 (%)", kind: ret, series: sim3x_ndx, start: "2000-03-27", end: "2002-10-07"}
+  - {name: "나스닥100 같은 기간 (%)", kind: ret, series: ndx, start: "2000-03-27", end: "2002-10-07"}
+  - {name: "가상TQQQ 2000.3.27→2026.10.30 (%)", kind: ret, series: sim3x_ndx, start: "2000-03-27"}
+  - {name: "가상TQQQ 1997.1→2026.10 배수", kind: mult, series: sim3x_ndx, start: "1997-01-02"}
+  - {name: "나스닥100 1997.1→2026.10 배수", kind: mult, series: ndx, start: "1997-01-02"}
+  - {name: "SQQQ 2010.2→2026.10 (%)", kind: ret, series: sqqq}
+  - {name: "SQQQ 2020.2.19→3.16 (%)", kind: ret, series: sqqq, start: "2020-02-19", end: "2020-03-16"}
+  - {name: "SQQQ 2020.3.16→12.31 (%)", kind: ret, series: sqqq, start: "2020-03-16", end: "2020-12-31"}
+  - {name: "SQQQ 2022년 (%)", kind: ret, series: sqqq, start: "2021-12-31", end: "2022-12-30"}
+  - {name: "SQQQ 2022.12.28→현재 (%)", kind: ret, series: sqqq, start: "2022-12-28"}
+  - {name: "TQQQ 2025 최대낙폭 (%)", kind: max_dd, series: tqqq, start: "2024-12-01", end: "2025-12-31"}
+
+scenes:
+  # 01 ── 훅: 레딧 썰
+  - type: reddit
+    chapter: "레딧 썰"
+    posts:
+      - {flair: "Gain", title: "TQQQ 몰빵 2년, 계좌 30배 찍었습니다 🚀", en: "\"30x in 2 years. TQQQ and chill.\"", up: "24.1k", comments: "3,812", on: 2}
+      - {flair: "Discussion", title: "레버리지 ETF 장기 보유하면 녹는다는 거, 다 미신 아님?", en: "\"Leverage decay is a myth. Change my mind.\"", up: "8.7k", comments: "2,940", on: 3}
+      - {flair: "Loss", title: "SQQQ로 하락장 대비하다가… 계좌가 녹았습니다", en: "\"SQQQ is a casino and I'm the house's favorite customer.\"", up: "15.3k", comments: "1,207", on: 4}
+    stickers:
+      - {e: rocket, pos: [1560, 330], size: 200, on: 2, offset: 0.6, rot: -15}
+      - {e: thinking, pos: [1560, 590], size: 170, on: 3, offset: 0.6}
+      - {e: melting, pos: [1560, 820], size: 170, on: 4, offset: 0.8}
+    mascot: {on: 5, pos: [1700, 210], size: 150, say: "이거… 진짜야?", side: left}
+    narration:
+      - "미국 최대 주식 커뮤니티, 레딧의 월스트리트베츠."
+      - "여기엔 이런 글이 정말 자주 올라옵니다. | TQQQ에 몰빵했더니 2년 만에 30배가 됐다."
+      - "레버리지 ETF가 오래 들고 있으면 녹는다는 건 | 다 미신이다."
+      - "그리고 반대편엔, 인버스 SQQQ로 하락장에 대비하다가 | 계좌가 녹았다는 글도 있죠."
+      - "과연 이 썰들, 진짜일까요?"
+
+  # 02 ── 타이틀
+  - type: title
+    skyline: true
+    y: 250
+    kicker: "레딧 썰 팩트체크 ①"
+    title: "TQQQ 2년 만에 30배?\n그리고 SQQQ의 진실"
+    highlight: "30배?"
+    subtitle: "2010년 상장 이후 실제 데이터로 끝까지 확인해봤습니다"
+    stickers:
+      - {e: magnifier, pos: [330, 330], size: 190, on: 1, offset: 0.5, rot: 10}
+    narration:
+      - "그래서 준비했습니다. 레딧 썰 팩트체크."
+      - "오늘은 2010년 상장 이후 16년치 실제 데이터로, | TQQQ와 SQQQ를 끝까지 파헤쳐 보겠습니다."
+      - "참고로 특정 상품을 사라는 영상이 절대 아닙니다. | 오히려 그 반대에 가깝습니다."
+
+  # 03 ── TQQQ / SQQQ 가 뭔지
+  - type: versus
+    chapter: "기초"
+    heading: "나스닥100 하루 움직임의 3배"
+    highlight: "3배"
+    left: {title: "TQQQ (3배 레버리지)", value: "+3%", sub: "나스닥100이 하루 +1%면", color: up, emoji: rocket, on: 2}
+    right: {title: "SQQQ (3배 인버스)", value: "+3%", sub: "나스닥100이 하루 -1%면", color: down, emoji: bear, on: 3}
+    mascot: {on: 5, pos: [1720, 920], size: 140, say: "포인트는 '하루'!", side: left}
+    narration:
+      - "먼저 간단히 짚고 가죠."
+      - "TQQQ는 나스닥100 지수가 하루에 1% 오르면, 3% 오르도록 설계된 ETF입니다."
+      - "SQQQ는 그 반대로, 지수가 하루 1% 떨어지면 3% 오르는 인버스 상품이고요."
+      - "애플, 마이크로소프트, 엔비디아 같은 미국 대형 기술주 100개를 | 3배로 타는 셈입니다."
+      - "여기서 꼭 기억할 단어가 하나 있습니다. | 바로 '하루'. 이게 오늘 이야기의 핵심입니다."
+
+  # 04 ── TQQQ vs QQQ 2010~
+  - type: chart
+    chapter: "썰 ① 대박"
+    chart:
+      lines:
+        - {series: tqqq, color: up, label: "TQQQ"}
+        - {series: qqq, color: neutral, label: "QQQ", fill: false}
+      start: "2010-02-11"
+      end: "2026-10-30"
+      base: 1000
+      unit: won
+      log: true
+      end_labels: true
+      rect: [210, 200, 1420, 620]
+      title: "2010년 2월에 1,000만 원 넣었다면 (로그 스케일)"
+      draw: {on: 2, dur: 5}
+      source: "자료: Yahoo Finance 수정주가(배당 재투자) · 2010.2.11~2026.10.30"
+    stickers:
+      - {e: moneybag, pos: [1800, 650], size: 140, on: 4, offset: 0.3}
+      - {e: explode, pos: [700, 360], size: 170, on: 5, offset: 0.2}
+    sfx:
+      - {name: cash, on: 4, offset: 0.2}
+    narration:
+      - "그럼 첫 번째 썰부터 확인해 보겠습니다."
+      - "2010년 2월, TQQQ가 처음 상장한 날 1,000만 원을 넣었다고 해 볼게요."
+      - "회색 선은 레버리지 없는 나스닥100, QQQ입니다. | 이것도 16년간 약 18배, 1억 8천만 원이 됐습니다."
+      - "그런데 빨간 선, TQQQ는요."
+      - "무려 302배. 1,000만 원이 30억 원이 됐습니다."
+      - "네, 잘못 보신 거 아닙니다. 30억입니다."
+
+  # 05 ── 2년에 30배? 팩트체크
+  - type: bignum
+    chapter: "썰 ① 대박"
+    label: "\"2년 만에 30배\"… 실제 최고 기록은?"
+    highlight: "30배"
+    from: 1
+    to: 9.98
+    fmt: "{:.1f}배"
+    final: "약 10배"
+    on: 3
+    dur: 1.8
+    sub: "2020.3.20 코로나 바닥 → 2021.11.19 고점 (20개월)"
+    color: up
+    stamp: {text: "썰 판정: 과장 (3배 뻥튀기)", color: gold, on: 5, pos: [960, 860], rot: -6, size: 52}
+    stickers:
+      - {e: eyes, pos: [300, 520], size: 160, on: 2, offset: 0.4}
+    narration:
+      - "그럼 '2년 만에 30배'는 어떨까요?"
+      - "16년 동안 어떤 날에 샀든, | 2년 안에 도달할 수 있었던 최고 기록을 전부 계산해 봤습니다."
+      - "결과는 약 10배."
+      - "2020년 3월 코로나 바닥에서 사서, | 2021년 11월 고점에 팔았을 때입니다. 이것도 엄청나죠."
+      - "하지만 30배는 없었습니다. | 썰 판정, 과장입니다."
+
+  # 06 ── 그 다음 13개월: -82%
+  - type: chart
+    chapter: "썰 ① 반전"
+    chart:
+      series: tqqq
+      start: "2019-06-01"
+      end: "2024-12-31"
+      color: [240, 84, 84]
+      ymin: -9
+      title: "TQQQ 주가 (수정주가, 달러)"
+      draw: {on: 1, dur: 4}
+      marks:
+        - {date: "2020-03-20", label: "코로나 바닥", on: 2, dy: 40, dx: 60, color: gold}
+        - {date: "2021-11-19", label: "고점 (+898%)", on: 2, dy: -60, dx: 0, color: up}
+        - {date: "2022-12-28", label: "-82%", on: 3, dy: 40, dx: 110, color: down, size: 40}
+        - {date: "2024-12-04", label: "본전 회복", sub: "3년 뒤", on: 5, dy: -60, dx: -60, color: gold}
+      source: "자료: Yahoo Finance 수정주가"
+    shake: [{on: 3, offset: 0.3, dur: 0.6, amp: 18, sfx: boom}]
+    stickers:
+      - {e: scream, pos: [620, 360], size: 170, on: 3, offset: 0.5, sfx: none}
+      - {e: hourglass, pos: [1700, 520], size: 130, on: 5, offset: 0.4}
+    narration:
+      - "그런데 이 그래프, 조금만 더 보시죠."
+      - "10배 오른 바로 그 고점에서,"
+      - "다음 13개월 동안 TQQQ는 82%가 빠집니다."
+      - "10억이 1억 8천만 원이 되는 속도입니다. | 2년 동안 번 걸, 1년 만에 거의 다 토해낸 거죠."
+      - "그리고 그 고점을 다시 회복하기까지, 3년이 걸렸습니다."
+
+  # 07 ── 2022 지수 vs TQQQ
+  - type: versus
+    chapter: "썰 ① 반전"
+    heading: "2022년 한 해, 같은 지수 다른 결과"
+    left: {title: "QQQ (나스닥100)", value: "-33%", sub: "아프지만 버틸 만한 하락", color: neutral, emoji: sweat, on: 2}
+    right: {title: "TQQQ (3배)", value: "-79%", sub: "1억 → 2,100만 원", color: down, emoji: skull, on: 3}
+    mascot: {on: 4, pos: [1720, 920], size: 140, say: "3배면 -99% 아냐?", side: left}
+    narration:
+      - "2022년 한 해만 놓고 보면 더 극명합니다."
+      - "나스닥100은 33% 떨어졌습니다. 아프죠. 그래도 버틸 만합니다."
+      - "그런데 TQQQ는 79% 하락. 1억이 2,100만 원이 됐습니다."
+      - "여기서 눈치 빠른 분들은 이상한 점을 느끼셨을 거예요. | 33의 3배면 99%인데, 왜 79%일까요?"
+      - "바로 아까 말씀드린 그 단어, '하루' 때문입니다."
+
+  # 08 ── 변동성 끌림(decay) 원리
+  - type: card
+    chapter: "핵심 원리"
+    heading: "오르락내리락만 해도 녹는다"
+    highlight: "녹는다"
+    width: 1150
+    size: 46
+    gap: 34
+    icon: dash
+    bullets:
+      - {text: "지수: 100 → +10% → 110 → -10% → 99", sub: "제자리 같은데 -1%", on: 2}
+      - {text: "3배: 100 → +30% → 130 → -30% → 91", sub: "똑같이 오르내렸는데 -9%", on: 3, highlight: "-9%", hl_color: down}
+      - {text: "매일 3배를 '다시 맞추기' 때문에 생기는 손실", on: 5}
+      - {text: "흔들림이 클수록, 오래 들고 있을수록 커진다", on: 6, highlight: "오래 들고 있을수록", hl_color: down}
+    stickers:
+      - {e: rollercoaster, pos: [1620, 470], size: 260, on: 1, offset: 0.3}
+      - {e: melting, pos: [1620, 760], size: 150, on: 3, offset: 0.6}
+    narration:
+      - "레버리지 ETF는 매일매일 3배를 다시 맞춥니다. | 그래서 이런 일이 벌어집니다."
+      - "지수가 100에서 하루 10% 올라 110, 다음 날 10% 빠지면 99. 1% 손해죠."
+      - "3배짜리는 100에서 30% 올라 130, 다음 날 30% 빠지면 91. | 9% 손해입니다."
+      - "똑같이 한 번 오르고 한 번 내렸는데, 손실은 9배가 된 거죠."
+      - "이걸 변동성 끌림, 영어로는 볼러틸리티 디케이라고 부릅니다."
+      - "시장이 크게 흔들릴수록, 그리고 오래 들고 있을수록 커집니다. | 레딧에서 말하는 '녹는다'가 바로 이겁니다."
+
+  # 09 ── 실제 사례: 지수는 올랐는데 TQQQ는 손실
+  - type: chart
+    chapter: "핵심 원리"
+    chart:
+      lines:
+        - {series: tqqq, color: up, label: "TQQQ"}
+        - {series: qqq, color: neutral, label: "QQQ", fill: false}
+      start: "2022-05-05"
+      end: "2023-05-05"
+      base: 1000
+      unit: won
+      end_labels: true
+      rect: [210, 200, 1420, 620]
+      title: "2022.5.5 ~ 2023.5.5 · 1,000만 원 넣었다면"
+      draw: {on: 2, dur: 4}
+      source: "자료: Yahoo Finance 수정주가"
+    stamp: {text: "지수 +4%, 3배는 -20%", color: down, on: 4, pos: [1130, 800], rot: -5, size: 50}
+    stickers:
+      - {e: clown, pos: [1720, 820], size: 150, on: 5, offset: 0.3}
+    sfx:
+      - {name: scratch, on: 4, offset: 0}
+    narration:
+      - "실제 데이터에서도 이게 그대로 보입니다."
+      - "2022년 5월부터 1년 동안, | 나스닥100은 크게 오르고 내리기를 반복했는데요."
+      - "1년 뒤 결과, 나스닥100은 오히려 4% 올랐습니다."
+      - "그런데 TQQQ는요? | 3배인 12% 수익이 아니라, 20% 손실입니다."
+      - "지수는 올랐는데 3배 상품은 돈을 잃은 거죠. | 이게 레버리지의 진짜 얼굴입니다."
+
+  # 10 ── 닷컴버블에 TQQQ가 있었다면
+  - type: chart
+    chapter: "만약에"
+    chart:
+      lines:
+        - {series: sim3x_ndx, color: up, label: "가상 TQQQ", label_dy: 34}
+        - {series: ndx, color: neutral, label: "나스닥100", fill: false, label_dy: -34}
+      start: "1997-01-02"
+      end: "2026-10-30"
+      base: 1000
+      unit: won
+      log: true
+      end_labels: true
+      rect: [210, 200, 1420, 620]
+      ymin: 15
+      title: "TQQQ가 1997년에도 있었다면? (1,000만 원, 로그 스케일)"
+      draw: {on: 2, dur: 5}
+      marks:
+        - {date: "2000-03-27", label: "닷컴 고점", on: 3, dy: 0, dx: 190, color: gold}
+        - {date: "2002-10-07", label: "-99.94%", sub: "1억 → 6만 원", on: 4, dy: 50, dx: 120, color: down, size: 36}
+      source: "가상 TQQQ = 나스닥100 일간수익률 x3 - 연 0.95% 보수 (차입비용 미반영 → 실제보다 유리하게 계산)"
+    shake: [{on: 4, offset: 0.2, dur: 0.7, amp: 20, sfx: boom}]
+    stickers:
+      - {e: coffin, pos: [700, 780], size: 140, on: 4, offset: 0.8, sfx: none}
+    stamp: {text: "26년째 본전 못 찾음", color: down, on: 6, pos: [1150, 270], rot: -6, size: 46}
+    narration:
+      - "그럼 이런 상상을 해 봤습니다."
+      - "TQQQ가 만약 1997년에도 있었다면? | 나스닥100 일간 데이터로 가상의 TQQQ를 만들어 봤습니다."
+      - "닷컴 버블 때까지는 지수보다 훨씬 빠르게 올라갑니다. | 레딧에 글 올리기 딱 좋은 그래프죠."
+      - "그런데 2000년 3월 버블이 터지고 2년 반 뒤, | 가상 TQQQ는 고점 대비 99.94% 하락. 1억이 6만 원이 됩니다."
+      - "나스닥100 자체도 83% 빠졌지만, 2015년에 결국 고점을 회복했습니다."
+      - "가상 TQQQ는요? 26년이 지난 지금도 2000년 고점보다 48% 아래에 있습니다."
+      - "더 놀라운 건 끝 숫자입니다. | 1997년부터 29년을 버텼다면, 3배짜리가 34.4배, 그냥 지수가 34.8배."
+      - "3배 레버리지를 29년 들고 버텼는데, | 결과는 레버리지 없는 지수보다 오히려 조금 못했습니다."
+
+  # 11 ── 레딧 썰 ②: 인버스
+  - type: reddit
+    chapter: "썰 ② 인버스"
+    posts:
+      - {flair: "YOLO", title: "곧 폭락 온다. SQQQ 풀매수하고 기다리는 중 🐻", en: "\"Crash is coming. All in SQQQ.\"", up: "6.2k", comments: "1,644", on: 2}
+      - {flair: "Loss", title: "SQQQ 2년 들고 있었는데 -90%… 하락장은 언제 오냐", en: "\"Held SQQQ for 2 years. Down 90%. Where is the crash?\"", up: "19.8k", comments: "4,107", on: 3}
+    stickers:
+      - {e: bear, pos: [1560, 380], size: 190, on: 2, offset: 0.5}
+      - {e: cry, pos: [1560, 640], size: 170, on: 3, offset: 0.6}
+    mascot: {on: 4, pos: [1700, 870], size: 140, say: "인버스는 안전하지?", side: left}
+    narration:
+      - "이번엔 반대편, 인버스 썰입니다."
+      - "곧 폭락이 온다며 SQQQ에 풀매수하는 글."
+      - "그리고 몇 달 뒤, 아니 몇 년 뒤 올라오는 후기."
+      - "하락장에 대비하는 거니까, 인버스는 오히려 안전한 거 아닐까요?"
+
+  # 12 ── SQQQ 2010~: 1억 → 450원
+  - type: chart
+    chapter: "썰 ② 인버스"
+    chart:
+      series: sqqq
+      start: "2010-02-11"
+      end: "2026-10-30"
+      color: [74, 144, 255]
+      base: 10000
+      unit: won
+      log: true
+      live_value: true
+      rect: [260, 200, 1500, 620]
+      title: "2010년 2월 SQQQ에 1억 원 넣었다면 (로그 스케일)"
+      draw: {on: 2, dur: 6}
+      source: "자료: Yahoo Finance 수정주가 (액면병합 반영)"
+    shake: [{on: 4, offset: 0.3, dur: 0.5, amp: 14}]
+    stamp: {text: "1억 → 약 450원", color: down, on: 4, pos: [1250, 330], rot: -6, size: 70}
+    stickers:
+      - {e: ghost, pos: [1680, 700], size: 150, on: 5, offset: 0.3}
+    sfx:
+      - {name: fail, on: 4, offset: 0.6}
+    narration:
+      - "결론부터 보시죠."
+      - "SQQQ가 상장한 2010년 2월에 1억 원을 넣었다면,"
+      - "숫자가 계속 줄어듭니다. 천만 원, 백만 원, 만 원…"
+      - "2026년 10월 현재, 약 450원입니다."
+      - "오타 아닙니다. 1억이 450원. | 99.9995% 손실입니다."
+
+  # 13 ── 인버스가 돈 벌 때도 있다 (근데)
+  - type: versus
+    chapter: "썰 ② 인버스"
+    heading: "인버스가 대박 날 때도 있다. 단, 아주 짧게"
+    highlight: "아주 짧게"
+    left: {title: "코로나 폭락 한 달", value: "+92%", sub: "2020.2.19 → 3.16", color: up, emoji: party, on: 2}
+    right: {title: "그 뒤 9개월", value: "-90%", sub: "2020.3.16 → 12.31", color: down, emoji: skull, on: 3}
+    mascot: {on: 5, pos: [1720, 920], size: 140, say: "타이밍 맞힐 자신…?", side: left}
+    narration:
+      - "물론 인버스로 큰돈을 버는 순간도 있습니다."
+      - "2020년 코로나 폭락 때, SQQQ는 한 달도 안 돼서 92% 올랐습니다."
+      - "그런데 바로 그 고점부터 연말까지 9개월 동안은, 90%가 빠졌습니다."
+      - "2022년 하락장 때도 82% 올랐지만, | 그 뒤로는 다시 96% 하락했고요."
+      - "인버스로 돈을 벌려면, 하락의 시작과 끝을 둘 다 맞혀야 한다는 뜻입니다."
+
+  # 14 ── 왜 인버스는 장기적으로 녹나
+  - type: card
+    chapter: "핵심 원리"
+    heading: "인버스가 길게 들수록 지는 이유"
+    highlight: "지는 이유"
+    width: 1150
+    numbered: true
+    gap: 40
+    bullets:
+      - {text: "시장은 길게 보면 대체로 올랐다", sub: "인버스는 이 큰 흐름과 반대로 베팅", on: 2}
+      - {text: "변동성 끌림은 인버스에도 똑같이", sub: "흔들릴수록 녹는다", on: 3}
+      - {text: "하락장은 짧고, 상승장은 길었다", sub: "기다리는 시간 자체가 비용", on: 4}
+    stickers:
+      - {e: snail, pos: [1620, 700], size: 200, on: 4, offset: 0.4}
+    narration:
+      - "인버스가 길게 들수록 불리한 이유는 세 가지입니다."
+      - "첫째, 미국 시장은 길게 보면 대체로 올랐습니다. | 인버스는 그 큰 흐름에 정반대로 베팅하는 거죠."
+      - "둘째, 아까 본 변동성 끌림은 인버스에도 똑같이 적용됩니다."
+      - "셋째, 하락장은 짧고 상승장은 길었습니다. | 폭락을 기다리는 시간 자체가 손실이 됩니다."
+
+  # 15 ── 2025년 4월: 롤러코스터
+  - type: chart
+    chapter: "최근 사례"
+    chart:
+      series: tqqq
+      start: "2024-10-01"
+      end: "2025-10-31"
+      color: [240, 84, 84]
+      ymin: 8
+      title: "TQQQ · 2024.10 ~ 2025.10 (달러)"
+      draw: {on: 1, dur: 3.5}
+      marks:
+        - {date: "2024-12-16", label: "고점", on: 2, dy: -50, color: up}
+        - {date: "2025-04-08", label: "-58%", on: 2, dy: 30, dx: -130, color: down, size: 36}
+        - {date: "2025-04-09", label: "하루 +35%", on: 3, dy: -90, dx: 160, color: gold, size: 36}
+      source: "자료: Yahoo Finance 수정주가"
+    stickers:
+      - {e: rollercoaster, pos: [1680, 760], size: 190, on: 3, offset: 0.3}
+      - {e: zap, pos: [1120, 420], size: 120, on: 3, offset: 0.1}
+    shake: [{on: 2, offset: 0.4, dur: 0.4, amp: 12}]
+    narration:
+      - "최근에도 이런 장면이 있었습니다."
+      - "2025년 봄, 관세 충격으로 TQQQ는 고점 대비 58%까지 빠졌는데요."
+      - "그러다 4월 9일, 관세 유예 발표가 나오자 | 단 하루 만에 35%가 올랐습니다."
+      - "하루에 35%. 이 정도면 투자라기보다 롤러코스터에 가깝죠."
+
+  # 16 ── 정리
+  - type: card
+    chapter: "정리"
+    heading: "레딧 썰 팩트체크 결과"
+    highlight: "결과"
+    width: 1250
+    gap: 34
+    size: 44
+    bullets:
+      - {text: "TQQQ 16년 302배: 사실 (단, 결과만 보면)", on: 2, highlight: "사실", hl_color: up}
+      - {text: "2년 만에 30배: 과장 (최고 약 10배)", on: 3, highlight: "과장", hl_color: gold}
+      - {text: "레버리지는 녹는다: 사실 (변동성 끌림)", on: 4, highlight: "사실", hl_color: up}
+      - {text: "인버스로 하락장 대비: 길게 들면 위험", sub: "1억 → 450원", on: 5, highlight: "위험", hl_color: down}
+    stickers:
+      - {e: "100", pos: [1680, 560], size: 170, on: 6, offset: 0.2}
+    narration:
+      - "자, 오늘 팩트체크를 정리해 보겠습니다."
+      - "TQQQ 16년 302배, 사실입니다. 다만 결과만 봤을 때의 이야기죠."
+      - "2년 만에 30배는 과장입니다. 최고 기록은 약 10배였고, | 그 직후 82%가 빠졌습니다."
+      - "레버리지는 오래 들면 녹는다, 이건 사실입니다. | 지수가 올라도 손실이 날 수 있습니다."
+      - "그리고 인버스로 하락장에 대비한다? | 길게 들고 있으면 1억이 450원이 될 수도 있습니다."
+      - "레딧의 대박 후기는 살아남은 사람의 이야기라는 것, 꼭 기억해 주세요."
+
+  # 17 ── 아웃트로
+  - type: outro
+    heading: "3배의 수익엔\n3배 이상의 대가가 있다"
+    highlight: "3배 이상의 대가"
+    sub: "다음 레딧 썰 팩트체크도 기대해 주세요"
+    disclaimer: "본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.\n레버리지·인버스 ETF는 원금 대부분을 잃을 수 있는 고위험 상품입니다. 투자 판단과 책임은 본인에게 있습니다."
+    subscribe_on: 3
+    mascot: {on: 3, pos: [1680, 300], size: 150, say: "구독 눌러주면 존버 가능", side: left}
+    narration:
+      - "3배의 수익 뒤엔, 3배 이상의 대가가 숨어 있습니다."
+      - "다음 영상에서도 레딧에서 핫한 썰을 하나 골라서, 데이터로 끝까지 확인해 보겠습니다."
+      - "궁금한 썰 있으면 댓글로 남겨 주세요. 구독과 좋아요도 부탁드립니다."

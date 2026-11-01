@@ -38,10 +38,11 @@ python render.py episodes/ep001_buffett_fear --scenes 5-7
 
 ### 녹음 규칙 (자동 싱크용)
 
-- **통녹음 1개**(`audio/full.wav`, m4a·mp3도 가능)를 권장
+- 폰 음성녹음 앱으로 대본을 읽고, 파일을 `episodes/<ep>/audio/` 에 넣기 (m4a·mp3·wav 모두 가능)
+- **파일이 여러 개여도 OK** → 파일 이름 순서대로 자동으로 이어 붙임
+  (버벅이면 그 부분 잘라내고, 끊긴 문장부터 새 파일로 이어서 녹음)
 - 문장 사이: 자연스럽게 0.3초 이상 쉬기 → 자막이 문장 단위로 맞음
-- **장면 사이: 2초 쉬기** → 무음 구간을 찾아 장면을 자동으로 나눔
-- 장면별로 나눠 녹음하고 싶으면 `audio/01.wav`, `audio/02.wav` … (장면 번호와 동일)
+- **장면 사이(대본의 ─── 표시): 2초 쉬기** → 무음 구간을 찾아 장면을 자동으로 나눔
 - 녹음이 없으면 **가이드 모드**: 글자 수로 길이를 추정해 BGM만 깔린 영상을 만든다(화면 검수용)
 - 렌더 시 장면별 실제 길이와 예상 길이를 비교해, 크게 어긋나면 `← 확인 필요`로 알려준다
 
@@ -59,9 +60,12 @@ engine/
   data.py    실제 시세 로더 + 대본 숫자 검증 통계
   charts.py  애니메이션 선 차트(로그/낙폭/기준선/마커/구간) · 막대 차트
   illust.py  코드로 그린 일러스트 (공포-탐욕 게이지, 신문, 경고 등)
-  scenes.py  장면 타입: title · quote · card · chart · bars · outro
+  scenes.py  장면 타입: title · quote · card · chart · bars · versus · bignum · reddit · outro
+             + 공통 재미 요소: stickers(3D 이모지 팝업) · mascot(개미 + 말풍선) · stamp(판정 도장)
+               · shake(화면 흔들림) · sfx(효과음)
   timeline.py 녹음 무음 감지 → 장면·문장 타이밍, 자막(SRT)
   bgm.py     코드로 합성한 배경음 (저작권 문제 없음)
+  sfx.py     코드로 합성한 효과음 (뽁·슉·띵·쿵·빠밤빠·끼익 등 12종)
 tools/fetch_assets.py     폰트·데이터 다운로드
 ```
 
@@ -100,6 +104,11 @@ scenes:
 |---|---|---|
 | `sp500` | S&P500 월평균 지수 1871~ (1957 이전은 전신 지수) | Robert Shiller, [datasets/s-and-p-500](https://github.com/datasets/s-and-p-500) |
 | `vix` | VIX 일간 종가 1990~ | CBOE, [datasets/finance-vix](https://github.com/datasets/finance-vix) |
+| `tqqq` `sqqq` `qqq` | ETF 일간 수정주가 (배당·분할 반영) | Yahoo Finance 일간 시세 공개 미러 (2개 저장소 대조, 오차 <0.001%) |
+| `ndx` | 나스닥100 일간 1985~ | 〃 |
+| `sim3x_ndx` | 나스닥100 x3 - 연 0.95% (가상 TQQQ, 차입비용 미반영) | 위 데이터로 계산 |
+
+이미지: [Microsoft Fluent UI Emoji 3D](https://github.com/microsoft/fluentui-emoji) (MIT, 상업적 사용 가능)
 
 > 현재 작업 환경에서는 Yahoo/FRED/KRX 등이 막혀 있어 GitHub 공개 데이터셋을 쓴다.
 > 2단계에서 개별 지수·국내 시장 데이터가 필요하면 집 PC/서버에서 `yfinance`·`pykrx` 로더를 추가.
@@ -107,6 +116,7 @@ scenes:
 ## 로드맵
 
 - [x] **1단계**: 첫 주제 대본 + 샘플 영상 (EP001 버핏 '공포에 사라' 검증)
+- [x] EP002 레딧 썰 팩트체크 ① TQQQ/SQQQ (8분+, 스티커·마스코트·효과음 연출)
 - [ ] **2단계**: 전체 자동화
   - 주제 목록 → 대본 초안 자동 생성(LLM) → 내가 검토
   - 녹음 업로드 감지 → 자동 렌더

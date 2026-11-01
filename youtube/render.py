@@ -22,7 +22,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from engine import bgm, charts, timeline  # noqa: E402
+from engine import bgm, charts, sfx, timeline  # noqa: E402
 from engine import draw as G  # noqa: E402
 from engine import scenes as SC  # noqa: E402
 from engine import style as S  # noqa: E402
@@ -105,6 +105,12 @@ def frame_at(c, t):
     lt = t - sc.start
     f = bg.copy()
     sc.draw(f, lt)
+    dx, dy = sc.shake_at(lt)
+    if dx or dy:
+        moved = bg.copy()
+        moved.alpha_composite(f.crop((max(0, -dx), max(0, -dy), S.W - max(0, dx), S.H - max(0, dy))),
+                              (max(0, dx), max(0, dy)))
+        f = moved
     fade_in, fade_out = 0.3, 0.25
     if lt < fade_in and sc.idx > 1:
         f = Image.blend(bg, f, G.ease_out(lt / fade_in))
@@ -159,37 +165,42 @@ def render_video(c, ep_dir, out, only, workers):
     voice = None
     if c.narr:
         voice = tmp / "voice.wav"
-        if isinstance(c.narr, list):  # 장면별 파일 → 장면 길이만큼 이어붙이기
-            inputs, fl = [], []
-            for i, (sc, p) in enumerate(zip(c.scenes, c.narr)):
-                inputs += ["-i", str(p)]
-                fl.append(f"[{i}:a]aresample=48000,aformat=channel_layouts=mono,apad=whole_dur={sc.dur:.3f}[a{i}]")
-            fl.append("".join(f"[a{i}]" for i in range(len(c.narr))) + f"concat=n={len(c.narr)}:v=0:a=1[out]")
-            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(fl),
-                            "-map", "[out]", str(tmp / "voice_raw.wav")], check=True)
-            src = tmp / "voice_raw.wav"
-        else:
-            src = c.narr
+        src = c.narr
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{c.t0:.3f}", "-t", f"{dur:.3f}", "-i", str(src),
                         "-af", "highpass=f=80,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,"
                                "loudnorm=I=-16:TP=-1.5:LRA=9,aresample=48000",
                         "-ac", "1", str(voice)], check=True)
     final = out / ("video.mp4" if not only else f"preview_{only[0]:02d}-{only[1]:02d}.mp4")
+    events = [(t - c.t0, n, v) for t, n, v in sfx_events(c) if c.t0 <= t < c.t1]
+    fx = sfx.build_track(events, dur + 0.5, tmp / "sfx.wav")
     if voice:
         fc = ("[1:a]aresample=48000,volume=0.20,aformat=channel_layouts=stereo[m];"
               "[2:a]aformat=channel_layouts=stereo,asplit=2[v1][v2];"
               "[m][v1]sidechaincompress=threshold=0.02:ratio=8:attack=30:release=600[md];"
-              "[md][v2]amix=inputs=2:normalize=0,alimiter=limit=0.95[a]")
+              "[3:a]aresample=48000,volume=0.55[fx];"
+              "[md][v2][fx]amix=inputs=3:normalize=0,alimiter=limit=0.95[a]")
         cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", str(silent), "-i", str(music), "-i", str(voice),
-               "-filter_complex", fc]
+               "-i", str(fx), "-filter_complex", fc]
     else:
-        fc = "[1:a]aresample=48000,volume=0.30[a]"
-        cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", str(silent), "-i", str(music), "-filter_complex", fc]
+        fc = ("[1:a]aresample=48000,volume=0.30[m];[2:a]aresample=48000,volume=0.6[fx];"
+              "[m][fx]amix=inputs=2:normalize=0,alimiter=limit=0.95[a]")
+        cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", str(silent), "-i", str(music), "-i", str(fx),
+               "-filter_complex", fc]
     cmd += ["-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest",
             "-movflags", "+faststart", str(final)]
     subprocess.run(cmd, check=True)
     shutil.rmtree(tmp)
     return final
+
+
+def sfx_events(c):
+    """전체 영상 기준 효과음 이벤트: 장면 전환 '슉' + 장면별 요소"""
+    ev = []
+    for sc in c.scenes:
+        if sc.idx > 1 and sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "whoosh")):
+            ev.append((sc.start - 0.18, sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "whoosh")), 0.5))
+        ev += [(sc.start + t, n, v) for t, n, v in sc.sfx_events()]
+    return ev
 
 
 # ── 썸네일 ──────────────────────────────────────────────────────
