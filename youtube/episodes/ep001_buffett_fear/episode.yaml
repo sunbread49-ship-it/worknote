@@ -1,0 +1,289 @@
+# EP001 · 버핏의 '공포에 사라' — 데이터 검증
+# narration 한 줄 = 녹음 한 문장. 자막은 자동으로 나뉘며, ' | '로 끊을 위치를 직접 지정할 수 있음. 숫자는 render 때 출력되는 '대조용 숫자'와 꼭 맞춰볼 것.
+title: "버핏의 '공포에 사라', 150년 데이터로 검증해봤습니다"
+
+youtube:
+  title: "버핏의 '공포에 사라'는 정말 통했을까? S&P500 150년 데이터로 검증"
+  description: |
+    "남들이 두려워할 때 욕심을 내라." 워런 버핏의 이 원칙, 숫자로도 맞을까요?
+    S&P500 150년치 실제 데이터와 공포지수(VIX)로 직접 검증해 봤습니다.
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목의 매수·매도 추천이 아닙니다.
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 투자 판단과 책임은 본인에게 있습니다.
+
+    [자료]
+    - S&P500 월평균 지수: Robert Shiller 데이터 (datasets/s-and-p-500), 배당 제외
+    - VIX 일간 종가: CBOE (datasets/finance-vix)
+    - Warren Buffett, 1986 Berkshire Hathaway Shareholder Letter
+    - Warren Buffett, "Buy American. I Am." The New York Times, 2008.10
+  tags: [워런버핏, 버핏, 투자원칙, 공포에사라, S&P500, VIX, 공포지수, 주식공부, 투자공부, 장기투자]
+  privacy: private
+
+thumbnail:
+  lines: ["공포에 샀다면", "정말 벌었을까?"]
+  highlight: "공포에"
+  size: 128
+  sub: "버핏 원칙 × 150년 데이터"
+  chart:
+    series: sp500
+    start: "2007-01"
+    end: "2014-12"
+    color: [255, 194, 70]
+    marks:
+      - {date: "2009-03-01", label: "공포", color: down, dy: 80, dx: 0}
+      - {date: "2013-10-01", label: "+78%", color: up, dy: -70, dx: -40}
+
+# 대본 숫자 검증용 (render 때 실제 데이터로 다시 계산해 출력)
+checks:
+  - {name: "VIX>40 인 달 수(1990~)", kind: count_vix, level: 40}
+  - {name: "VIX>40 → 1년 뒤 평균(%)", kind: fwd_mean_vix, level: 40}
+  - {name: "VIX>40 → 1년 뒤 플러스 확률(%)", kind: fwd_winrate_vix, level: 40}
+  - {name: "1990~ 아무 달 → 1년 뒤 평균(%)", kind: fwd_mean_all, since: 1990}
+  - {name: "2008.10 → 2009.3 변화(%)", kind: change, start: "2008-10-01", end: "2009-03-01"}
+  - {name: "2008.10 → 2013.10 변화(%)", kind: change, start: "2008-10-01", end: "2013-10-01"}
+
+scenes:
+  # 01 ── 훅
+  - type: chart
+    chapter: "2020년 3월"
+    chart:
+      series: vix
+      start: "2019-07-01"
+      end: "2020-12-31"
+      color: [240, 84, 84]
+      ymax: 100
+      title: "CBOE VIX 공포지수 (일간 종가)"
+      draw: {on: 1, dur: 3.5}
+      marks:
+        - {date: "2020-03-16", label: "82.69", sub: "2020.3.16", on: 2, dy: -60, dx: 160}
+      source: "자료: CBOE VIX"
+    narration:
+      - "2020년 3월 16일, | 미국 증시의 공포지수 VIX가 82까지 치솟았습니다."
+      - "1990년 이후, 종가 기준으로 가장 높은 숫자였죠."
+      - "모두가 팔고 싶어 하던 그 순간, 워런 버핏의 유명한 말이 다시 떠올랐습니다."
+      - "남들이 두려워할 때 욕심을 내라."
+      - "그런데 이 말, 정말 숫자로도 맞을까요?"
+
+  # 02 ── 타이틀
+  - type: title
+    kicker: "대가의 원칙 × 데이터 검증"
+    title: "버핏의 '공포에 사라'\n정말 통했을까?"
+    highlight: "공포에 사라"
+    subtitle: "S&P500 150년 실제 데이터로 확인합니다"
+    bgchart: {series: sp500, log: true, start: "1871-01", end: "2026-09"}
+    narration:
+      - "오늘은 미국 S&P500 지수 150년치 실제 데이터로, 이 원칙을 직접 검증해 보겠습니다."
+      - "특정 종목 추천이 아니라, 대가의 원칙을 숫자로 뜯어보는 시간입니다."
+
+  # 03 ── 원문
+  - type: quote
+    chapter: "원칙"
+    original: "We simply attempt to be fearful when others are greedy and to be greedy only when others are fearful."
+    text: "우리는 그저, 남들이 탐욕스러울 때 두려워하고 남들이 두려워할 때만 탐욕스러워지려 할 뿐입니다."
+    highlight: "남들이 두려워할 때만"
+    source: "워런 버핏, 1986년 버크셔 해서웨이 주주서한"
+    text_on: 1
+    source_on: 1
+    narration:
+      - "이 말은 1986년, | 버핏이 버크셔 해서웨이 주주들에게 보낸 편지에 나옵니다."
+      - "핵심은 '언제 오를지 맞히라'가 아닙니다."
+      - "좋은 자산이 공포 때문에 싸게 팔릴 때, 그걸 알아보라는 겁니다."
+
+  # 04 ── 개념 (게이지 일러스트)
+  - type: card
+    chapter: "원칙"
+    x: 1000
+    y: 260
+    width: 800
+    heading: "가격과 가치는\n다르다"
+    highlight: "다르다"
+    heading_size: 76
+    bullets:
+      - {text: "탐욕 → 가격 > 가치", on: 2, color: up, highlight: "탐욕", hl_color: up}
+      - {text: "공포 → 가격 < 가치", on: 3, color: down, highlight: "공포", hl_color: down}
+      - {text: "그 차이가 버핏의 기회", on: 4}
+    illust:
+      name: gauge
+      size: 700
+      pos: [520, 540]
+      needle: [[1, 0.05], [2, 0.8], [3, -0.85]]
+    narration:
+      - "시장에는 늘 두 가지 감정이 오갑니다. 공포와 탐욕이죠."
+      - "탐욕이 커지면 가격은 가치보다 비싸지고,"
+      - "공포가 커지면 가격은 가치보다 싸집니다."
+      - "버핏은 바로 이 차이를 기회로 봤습니다. 정말 그랬는지, 데이터를 보겠습니다."
+
+  # 05 ── S&P500 150년
+  - type: chart
+    chapter: "데이터"
+    chart:
+      series: sp500
+      log: true
+      start: "1871-01"
+      end: "2026-09"
+      title: "S&P500 지수 · 1871~2026 (로그 스케일)"
+      draw: {on: 1, dur: 5}
+      marks:
+        - {date: "2026-09-01", label: "7,669", sub: "2026.9", on: 2, dy: 60, dx: -170}
+      source: "자료: Robert Shiller · 월평균 · 배당 제외 · 1957년 이전은 전신 지수"
+    narration:
+      - "이건 1871년부터 2026년 9월까지 S&P500 지수의 흐름입니다."
+      - "세로축은 로그 스케일이라, 같은 높이는 같은 비율의 변화를 뜻합니다."
+      - "길게 보면 꾸준히 올랐지만, 중간중간 큰 폭락이 숨어 있습니다."
+
+  # 06 ── 낙폭(드로다운)
+  - type: chart
+    chapter: "데이터"
+    note: "* 월평균 기준이라 일간 낙폭보다 작게 보입니다 (예: 2020년 3월 일간 -34%, 월평균 -19%)"
+    chart:
+      series: sp500_drawdown
+      start: "1871-01"
+      end: "2026-09"
+      ymin: -100
+      title: "S&P500 고점 대비 하락률"
+      draw: {on: 1, dur: 4}
+      marks:
+        - {date: "1932-06-01", label: "대공황 -85%", on: 2, dx: 190, dy: 0, color: [74, 144, 255]}
+        - {date: "1974-12-01", label: "오일쇼크 -43%", on: 3, dy: 70, dx: -60, color: [74, 144, 255]}
+        - {date: "2003-02-01", label: "닷컴 -44%", on: 3, dy: 150, dx: -90, color: [74, 144, 255]}
+        - {date: "2009-03-01", label: "금융위기 -51%", on: 3, dy: 60, dx: 140, color: [74, 144, 255]}
+      source: "자료: Robert Shiller · 월평균"
+    narration:
+      - "이번엔 지수가 고점 대비 | 얼마나 빠져 있었는지를 그려봤습니다."
+      - "대공황 때는 무려 85% 가까이 떨어졌고,"
+      - "1974년 오일쇼크, 2000년대 초 닷컴 버블, | 2008년 금융위기 때도 40에서 50% 넘게 빠졌습니다."
+      - "바로 이런 구간이, 모두가 두려워하던 때입니다."
+
+  # 07 ── 검증 ① 하락장 매수
+  - type: bars
+    chapter: "검증 ①"
+    heading: "1950년 이후, 언제 샀느냐에 따른 '1년 뒤' 성과"
+    subheading: "S&P500 · 매달 샀다고 가정 · 배당 제외"
+    subheading_on: 2
+    bars:
+      unit: "%"
+      rect: [200, 340, 1520, 430]
+      source: "자료: Robert Shiller · 1950.1~2025.9 매수 기준"
+      groups:
+        - label: "1년 뒤 평균 수익률"
+          on: 3
+          bars:
+            - {label: "아무 달에나", color: neutral, stat: {kind: fwd_mean_all, since: 1950}}
+            - {label: "고점 대비 -20% 이하일 때", color: up, stat: {kind: fwd_mean_dd, since: 1950, threshold: -20}}
+        - label: "1년 뒤 올라 있었던 확률"
+          on: 4
+          bars:
+            - {label: "아무 달에나", color: neutral, stat: {kind: fwd_winrate_all, since: 1950}}
+            - {label: "고점 대비 -20% 이하일 때", color: up, stat: {kind: fwd_winrate_dd, since: 1950, threshold: -20}}
+    narration:
+      - "그럼 이런 공포 구간에 샀다면 어땠을까요?"
+      - "1950년 이후, 지수가 고점보다 20% 이상 빠져 있던 달에 샀다고 가정해 보겠습니다."
+      - "1년 뒤 평균 수익률은 13.0%. 아무 달에나 샀을 때의 9.4%보다 높았습니다."
+      - "1년 뒤 지수가 올라 있었던 확률도 88%로, 평소의 75%보다 높았죠."
+      - "숫자로 보면, 버핏의 말은 꽤 잘 맞았습니다."
+
+  # 08 ── 검증 ② VIX
+  - type: chart
+    chapter: "검증 ②"
+    chart:
+      series: vix
+      start: "1990-01-01"
+      end: "2026-09-30"
+      color: [240, 84, 84]
+      rect: [200, 200, 1080, 620]
+      title: "VIX 공포지수 · 1990~2026"
+      draw: {on: 1, dur: 4}
+      hlines:
+        - {y: 40, label: "VIX 40", color: [255, 194, 70]}
+      marks:
+        - {date: "2008-11-20", label: "2008", on: 2, dy: -40, dx: -70}
+        - {date: "2020-03-16", label: "2020", on: 2, dy: -40, dx: -70}
+      source: "자료: CBOE · 일간 종가"
+    callouts:
+      - {on: 3, pos: [1370, 200], width: 440, color: up, label: "VIX 40 넘은 달에 샀다면", value: "+23.0%", sub: "1년 뒤 평균 · 27번 중 25번 플러스"}
+      - {on: 4, pos: [1370, 520], width: 440, color: neutral, label: "아무 달에나 샀다면", value: "+10.2%", sub: "1년 뒤 평균 · 1990년 이후"}
+    narration:
+      - "이번엔 공포지수로 확인해 보겠습니다."
+      - "1990년 이후, VIX가 한 번이라도 | 40을 넘었던 달은 모두 27번입니다."
+      - "그 달에 샀다면 1년 뒤 평균 수익률은 23%. | 27번 중 25번이 플러스였습니다."
+      - "같은 기간 아무 때나 샀을 때의 평균 10%와 비교하면, | 두 배가 넘습니다."
+
+  # 09 ── 사례: 2008 버핏 기고
+  - type: chart
+    chapter: "사례"
+    chart:
+      series: sp500
+      start: "2007-01"
+      end: "2014-12"
+      rect: [200, 200, 1080, 620]
+      title: "S&P500 · 2007~2014 (월평균)"
+      draw: {on: 1, dur: 3.5}
+      marks:
+        - {date: "2008-10-01", label: "버핏 기고", sub: "2008.10", on: 2, dy: -150, dx: 40, color: [255, 194, 70]}
+        - {date: "2009-03-01", label: "바닥", sub: "2009.3", on: 4, dy: -20, dx: 150, color: [74, 144, 255]}
+        - {date: "2013-10-01", label: "5년 뒤", sub: "2013.10", on: 6, dy: 60, dx: 60, color: [240, 84, 84]}
+      source: "자료: Robert Shiller · 월평균 · 배당 제외"
+    illust: {name: newspaper, size: 400, pos: [1590, 520], on: 2, until: 4}
+    callouts:
+      - {on: 4, pos: [1370, 200], width: 440, color: down, label: "기고 이후 추가 하락", value: "-21.8%", sub: "2008.10 → 2009.3"}
+      - {on: 6, pos: [1370, 520], width: 440, color: up, label: "기고 시점 대비 5년 뒤", value: "+77.5%", sub: "2008.10 → 2013.10"}
+    narration:
+      - "실제 사례도 하나 보죠."
+      - "2008년 10월, 금융위기 한복판에서 | 버핏은 뉴욕타임스에 | '미국을 사라, 나는 사고 있다'라는 글을 기고합니다."
+      - "개인 계좌로 미국 주식을 사고 있다고 밝힌 거죠."
+      - "그런데 시장은 그 뒤로도 | 다섯 달 동안 22%나 더 떨어졌습니다."
+      - "버핏조차 바닥은 맞히지 못한 겁니다."
+      - "하지만 5년 뒤, | 지수는 그 시점보다 78% 올라 있었습니다."
+
+  # 10 ── 함정
+  - type: card
+    chapter: "주의"
+    heading: "하지만, 꼭 알아야 할 함정"
+    highlight: "함정"
+    width: 1250
+    size: 42
+    gap: 30
+    icon: dash
+    bullets:
+      - {text: "대공황: 고점 대비 -30%에 샀어도, 거기서 77% 더 하락", on: 2, highlight: "77% 더 하락", hl_color: down}
+      - {text: "일본 닛케이: 1989년 고점 회복까지 34년", on: 3, highlight: "34년", hl_color: down}
+      - {text: "미국 시장 · 월평균 · 배당 제외 데이터의 한계", on: 4}
+      - {text: "공포 구간은 몰려서 와서, 사례 수가 적다", on: 5}
+      - {text: "과거가 미래를 보장하지 않는다", on: 6, highlight: "보장하지 않는다"}
+    illust: {name: warning, size: 300, pos: [1620, 560], on: 1}
+    narration:
+      - "물론 함정도 있습니다."
+      - "대공황 때는 고점보다 30% 넘게 빠졌을 때 샀어도, 지수는 거기서 77%가 더 빠졌습니다."
+      - "일본 닛케이 지수는 1989년 고점을 되찾는 데 34년이 넘게 걸렸고요."
+      - "그리고 오늘 본 숫자는 미국 시장, 월평균 가격, 배당 제외 기준이라는 한계가 있습니다."
+      - "공포 구간은 몰려서 나타나기 때문에, 독립적인 사례 수도 생각보다 적습니다."
+      - "과거 데이터가 미래를 보장하지는 않습니다."
+
+  # 11 ── 정리
+  - type: card
+    chapter: "정리"
+    heading: "버핏 원칙에서 배울 3가지"
+    highlight: "3가지"
+    numbered: true
+    gap: 50
+    bullets:
+      - {text: "공포는 가격과 가치를 벌려 놓는다", sub: "그 틈이 기회가 될 수 있다", on: 2}
+      - {text: "바닥은 버핏도 못 맞힌다", sub: "한 번에 다 하기보다, 나눠서 접근", on: 3}
+      - {text: "기회는 준비된 사람의 것", sub: "미리 정한 원칙 · 여유 자금 · 버틸 마음", on: 4}
+    narration:
+      - "오늘 내용을 세 가지로 정리해 보겠습니다."
+      - "첫째, 공포는 가격과 가치 사이를 벌려 놓습니다. 그 틈이 기회가 될 수 있습니다."
+      - "둘째, 바닥은 버핏도 못 맞힙니다. 한 번에 다 하기보다 나눠서 접근하는 이유죠."
+      - "셋째, 공포는 미리 준비한 사람에게만 기회입니다. 원칙과 여유 자금, 그리고 버틸 마음이요."
+
+  # 12 ── 아웃트로
+  - type: outro
+    heading: "남들이 두려워할 때\n욕심을 내라"
+    highlight: "두려워할 때"
+    sub: "말은 쉽지만, 그 순간을 견디는 건 정말 어렵습니다"
+    disclaimer: "본 영상은 투자 교육 목적이며, 특정 종목의 매수·매도 추천이 아닙니다.\n과거 데이터는 미래 수익을 보장하지 않으며, 투자 판단과 책임은 본인에게 있습니다."
+    subscribe_on: 3
+    narration:
+      - "남들이 두려워할 때 욕심을 내라. 말은 쉽지만, 그 순간을 견디는 건 정말 어렵습니다."
+      - "다음 영상에서는 | 또 다른 대가의 원칙을 데이터로 검증해 보겠습니다."
+      - "도움이 되셨다면 구독과 좋아요 부탁드립니다."

@@ -1,0 +1,6 @@
+assets/
+out/
+__pycache__/
+*.pyc
+# 녹음 원본은 용량이 커서 커밋하지 않음
+episodes/*/audio/
