@@ -1,6 +1,8 @@
 """AI 음성(TTS) 생성. 문장마다 따로 만들어 캐시하고, 장면·문장 타이밍을 정확히 맞춘다.
 
-  provider: google  (환경 변수 GOOGLE_TTS_API_KEY 필요)
+  provider: google
+  인증: 클라우드 환경의 Network secrets 에 texttospeech.googleapis.com / 헤더 X-Goog-Api-Key 로 키 등록
+        (요청에 키가 자동으로 붙음). 로컬 PC에서는 환경 변수 GOOGLE_TTS_API_KEY 로도 가능.
   voice 예: ko-KR-Chirp3-HD-Charon (남), ko-KR-Chirp3-HD-Kore (여), ko-KR-Neural2-C (남), ko-KR-Neural2-A (여)
   목소리 목록·샘플: python tools/tts_voices.py
 """
@@ -20,26 +22,33 @@ SR = 48000
 API = "https://texttospeech.googleapis.com/v1"
 
 
-def _key():
+def _headers():
+    h = {"Content-Type": "application/json"}
     k = os.environ.get("GOOGLE_TTS_API_KEY")
-    if not k:
-        raise SystemExit("GOOGLE_TTS_API_KEY 환경 변수가 없습니다. (클라우드 환경 설정 → 비밀값/환경 변수에 추가)")
-    return k
+    if k:  # 로컬 실행용. 클라우드에서는 Network secrets 가 헤더를 자동으로 붙임
+        h["X-Goog-Api-Key"] = k
+    return h
+
+
+def _call(url, body=None, timeout=60):
+    req = urllib.request.Request(url, data=json.dumps(body).encode() if body is not None else None, headers=_headers())
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        msg = e.read().decode()[:300]
+        if e.code in (401, 403):
+            raise SystemExit(f"Google TTS 인증 실패({e.code}). Network secrets 설정(허용 웹사이트 "
+                             f"texttospeech.googleapis.com, 헤더 X-Goog-Api-Key)과 API 사용 설정을 확인하세요.\n{msg}")
+        raise RuntimeError(f"Google TTS 오류 {e.code}: {msg}")
 
 
 def _post(path, body):
-    req = urllib.request.Request(f"{API}/{path}?key={_key()}", data=json.dumps(body).encode(),
-                                 headers={"Content-Type": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            return json.loads(r.read())
-    except urllib.error.HTTPError as e:
-        raise RuntimeError(f"Google TTS 오류 {e.code}: {e.read().decode()[:300]}")
+    return _call(f"{API}/{path}", body)
 
 
 def list_voices(lang="ko-KR"):
-    with urllib.request.urlopen(f"{API}/voices?languageCode={lang}&key={_key()}", timeout=30) as r:
-        return json.loads(r.read()).get("voices", [])
+    return _call(f"{API}/voices?languageCode={lang}", timeout=30).get("voices", [])
 
 
 def synth(text, voice, rate=1.0, pitch=0.0, cache_dir=Path("."), lang="ko-KR"):
