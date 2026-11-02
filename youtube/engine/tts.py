@@ -54,7 +54,7 @@ def list_voices(lang="ko-KR"):
 def synth(text, voice, rate=1.0, pitch=0.0, cache_dir=Path("."), lang="ko-KR"):
     """문장 하나 → mp3 파일 경로 (같은 문장·목소리면 캐시 재사용 → 다시 만들어도 무료 사용량 안 씀)"""
     cache_dir.mkdir(parents=True, exist_ok=True)
-    h = hashlib.sha1(json.dumps([text, voice, rate, pitch]).encode()).hexdigest()[:16]
+    h = hashlib.sha1(json.dumps([text, voice, rate, pitch, "markup-v1"]).encode()).hexdigest()[:16]
     out = cache_dir / f"{h}.mp3"
     if out.exists():
         return out
@@ -63,7 +63,13 @@ def synth(text, voice, rate=1.0, pitch=0.0, cache_dir=Path("."), lang="ko-KR"):
         cfg["speakingRate"] = rate
     if pitch and "Chirp" not in voice:
         cfg["pitch"] = pitch
-    body = {"input": {"text": text}, "voice": {"languageCode": lang, "name": voice}, "audioConfig": cfg}
+    if "Chirp3" in voice:  # Chirp3는 쉼표에서 거의 안 쉼 → 쉼 표시(markup)로 실제 쉼을 넣음
+        import re
+        mk = re.sub(r",\s+", ", [pause short] ", text)
+        inp = {"markup": mk}
+    else:
+        inp = {"text": text}
+    body = {"input": inp, "voice": {"languageCode": lang, "name": voice}, "audioConfig": cfg}
     try:
         res = _post("text:synthesize", body)
     except RuntimeError as e:
