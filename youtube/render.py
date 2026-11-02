@@ -273,6 +273,21 @@ def render_video(c, ep_dir, out, only, workers):
     return final
 
 
+def chapters(c):
+    """장면의 chapter 값이 바뀌는 지점으로 유튜브 챕터(타임스탬프) 생성"""
+    rows, last = [], None
+    for sc in c.scenes:
+        ch = sc.spec.get("chapter") or ("인트로" if sc.idx == 1 else None)
+        if ch and ch != last:
+            t = 0 if not rows else sc.start
+            if rows and t - rows[-1][0] < 12:  # 너무 짧은 챕터는 합침
+                rows[-1] = (rows[-1][0], ch)
+            else:
+                rows.append((t, ch))
+            last = ch
+    return "\n".join(f"{int(t // 60):02d}:{int(t % 60):02d} {n}" for t, n in rows) if len(rows) >= 3 else ""
+
+
 def write_review(c, out):
     """검수표: 문장 번호 · 시작 시간 · 장면 → '12번 어색' 처럼 번호로 피드백"""
     rows, n = [], 0
@@ -367,7 +382,13 @@ def main():
     stats_report(c, out)
     timeline.write_srt(c.cues, out / "captions.srt")
     write_review(c, out)
-    yt = c.ep.get("youtube", {})
+    yt = dict(c.ep.get("youtube", {}))
+    chap = chapters(c)
+    if chap and "description" in yt:
+        yt["description"] = yt["description"].replace("00:00 레딧에서 도는 썰\n(챕터는 업로드 시 자동 생성 예정)\n", "")
+        yt["description"] = __import__("re").sub(r"\n{3,}", "\n\n", yt["description"]).rstrip() + "\n\n[챕터]\n" + chap
+    (out / "설명란.txt").write_text(yt.get("title", "") + "\n\n" + yt.get("description", "") + "\n\n"
+                                  + " ".join("#" + x for x in yt.get("tags", [])[:3]), encoding="utf-8")
     (out / "youtube.json").write_text(json.dumps(yt, ensure_ascii=False, indent=2), encoding="utf-8")
     thumbnail(c, out)
     if a.stills:

@@ -10,7 +10,7 @@ tts:
   rate: 1.12
 
 youtube:
-  title: "\"TQQQ 2년 만에 30배\" 레딧 썰, 데이터로 까봤습니다 (인버스 SQQQ는 1억이 450원)"
+  title: "1억이 450원 됐습니다… 레딧에서 난리 난 3배 ETF의 진실 (TQQQ·SQQQ)"
   description: |
     미국 최대 주식 커뮤니티 레딧(r/wallstreetbets)에서 자주 보이는 "TQQQ 몰빵 썰", 정말일까요?
     3배 레버리지 TQQQ와 3배 인버스 SQQQ를 2010년 상장 이후 실제 데이터로 팩트체크했습니다.
@@ -42,6 +42,21 @@ thumbnail:
     marks:
       - {date: "2021-11-19", label: "+898%", color: up, dy: -70, dx: -40}
       - {date: "2022-12-28", label: "-82%", color: down, dy: 70, dx: 0}
+
+# 조회수형 썸네일 (tools/make_thumbnail.py)
+thumbnail_v2:
+  badge: "레딧 썰 팩트체크"
+  lines:
+    - {text: "1억이", size: 190}
+    - {text: "450원", size: 280, color: up}
+  sub: "3배 ETF의 진짜 결말"
+  arrow_color: up
+  chart:
+    series: sqqq
+    start: "2010-02-11"
+    end: "2026-10-30"
+    log: true
+    color: [90, 160, 255]
 
 checks:
   - {name: "TQQQ 2010.2→2026.10 배수", kind: mult, series: tqqq}
