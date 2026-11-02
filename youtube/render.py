@@ -80,12 +80,22 @@ class Ctx:
     pass
 
 
+TTS_OVERRIDE = None  # --tts 옵션
+
+
 def setup(ep_dir, only=None, log=print):
     ep, channel = load(ep_dir)
     scenes = build_scenes(ep, channel)
     for sc in scenes:
         sc.prepare()
-    narr, mode = timeline.plan(scenes, ep_dir / "audio", log=log)
+    tts_cfg = ep.get("tts") if TTS_OVERRIDE is None else {**(ep.get("tts") or {}), **TTS_OVERRIDE}
+    if tts_cfg and tts_cfg.get("enabled", True) and not any((ep_dir / "audio").glob("*.*")):
+        from engine import tts
+        work = ROOT / "out" / ep_dir.name
+        work.mkdir(parents=True, exist_ok=True)
+        narr, mode = tts.plan(scenes, tts_cfg, work, log=log)
+    else:
+        narr, mode = timeline.plan(scenes, ep_dir / "audio", log=log)
     c = Ctx()
     c.ep, c.channel, c.scenes, c.narr, c.mode = ep, channel, scenes, narr, mode
     c.total = scenes[-1].start + scenes[-1].dur
@@ -324,7 +334,12 @@ def main():
     ap.add_argument("--stills", action="store_true")
     ap.add_argument("--scenes", help="예: 5-7")
     ap.add_argument("--workers", type=int, default=mp.cpu_count())
+    ap.add_argument("--tts", help="AI 음성 사용. 예: --tts ko-KR-Chirp3-HD-Charon (녹음 파일이 있으면 녹음 우선)")
+    ap.add_argument("--rate", type=float, help="AI 음성 속도 (기본 1.0)")
     a = ap.parse_args()
+    global TTS_OVERRIDE
+    if a.tts or a.rate:
+        TTS_OVERRIDE = {k: v for k, v in (("voice", a.tts), ("rate", a.rate)) if v}
     ep_dir = Path(a.episode).resolve()
     out = ROOT / "out" / ep_dir.name
     out.mkdir(parents=True, exist_ok=True)
