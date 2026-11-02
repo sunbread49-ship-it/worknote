@@ -273,6 +273,18 @@ def render_video(c, ep_dir, out, only, workers):
     return final
 
 
+def write_review(c, out):
+    """검수표: 문장 번호 · 시작 시간 · 장면 → '12번 어색' 처럼 번호로 피드백"""
+    rows, n = [], 0
+    for sc in c.scenes:
+        for (a, _), text in zip(sc.lines, sc.narration):
+            n += 1
+            t = sc.start + a
+            rows.append(f"{n:3d}번  {int(t // 60)}:{int(t % 60):02d}  [장면 {sc.idx:02d}]  {text.replace(' | ', ' ')}")
+    (out / "검수표.txt").write_text("문장 번호 · 영상 시간 · 장면 · 문장\n(어색한 곳은 '12번, 37번'처럼 번호나 시간으로 알려주세요)\n\n"
+                                   + "\n".join(rows), encoding="utf-8")
+
+
 def sfx_events(c):
     """전체 영상 기준 효과음 이벤트: 장면 전환 '슉' + 장면별 요소"""
     ev = []
@@ -354,6 +366,7 @@ def main():
     print(f"모드: {c.mode} · 총 길이 {c.total / 60:.1f}분 · 장면 {len(c.scenes)}개")
     stats_report(c, out)
     timeline.write_srt(c.cues, out / "captions.srt")
+    write_review(c, out)
     yt = c.ep.get("youtube", {})
     (out / "youtube.json").write_text(json.dumps(yt, ensure_ascii=False, indent=2), encoding="utf-8")
     thumbnail(c, out)

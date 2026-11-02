@@ -76,6 +76,29 @@ def synth(text, voice, rate=1.0, pitch=0.0, cache_dir=Path("."), lang="ko-KR"):
     return out
 
 
+# 음성용 발음 사전 (자막 글자는 그대로, 읽는 소리만 바뀜). 에피소드 tts.say 로 추가 가능
+SAY = {
+    "TQQQ": "티큐큐큐", "SQQQ": "에스큐큐큐", "QQQ": "큐큐큐", "ETF": "이티에프", "S&P500": "에스앤피 오백",
+    "VIX": "빅스", "AI": "에이아이",
+}
+
+
+def speakable(text, extra=None):
+    """TTS가 어색하게 읽는 표현을 소리 내기 좋은 형태로 바꾼다."""
+    import re
+    t = text.replace(" | ", " ").replace("|", "")
+    for k, v in sorted({**SAY, **(extra or {})}.items(), key=lambda kv: -len(kv[0])):
+        t = t.replace(k, v)
+    t = re.sub(r"(?<![\w.])-(\d)", r"마이너스 \1", t)      # -80% → 마이너스 80%
+    t = re.sub(r"(?<![\w.])\+(\d)", r"플러스 \1", t)      # +4% → 플러스 4%
+    t = t.replace("…", ",").replace("...", ",")
+    t = re.sub(r"(\S)\?\s", r"\1? ", t)
+    # 조사 바로 뒤 극적인 쉼표("1억이, 450원")는 소리로는 어색 → 제거
+    t = re.sub(r"([가-힣])(이|가|은|는|을|를|도),\s(?=[\d가-힣])", r"\1\2 ", t)
+    t = re.sub(r",\s*,", ",", t).strip(" ,")
+    return t
+
+
 def _pcm(path):
     raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(path), "-ac", "1", "-ar", str(SR),
                           "-f", "s16le", "-"], capture_output=True, check=True).stdout
@@ -94,7 +117,7 @@ def plan(scenes, cfg, work_dir: Path, log=print):
         sc.start = t
         cur, lines = lead, []
         for text in sc.narration:
-            clean = text.replace(" | ", " ").replace("|", "")
+            clean = speakable(text, cfg.get("say"))
             pcm = _pcm(synth(clean, voice, rate, cfg.get("pitch", 0.0), cache))
             # 앞뒤 무음 다듬기
             nz = np.where(np.abs(pcm) > 0.01)[0]
