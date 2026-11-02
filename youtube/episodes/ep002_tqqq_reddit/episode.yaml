@@ -58,6 +58,17 @@ thumbnail_v2:
     log: true
     color: [90, 160, 255]
 
+# 대비형 썸네일 후보 (A/B 테스트용)
+thumbnails_vs:
+  - headline: "같은 날 1억, 결과는?"
+    highlight: "같은 날"
+    left: {label: "TQQQ", value: "302억", sub: "3배 레버리지", color: up, chart: {series: tqqq, start: "2010-02-11", log: true, color: [240, 84, 84]}}
+    right: {label: "SQQQ", value: "450원", sub: "3배 인버스", color: down, chart: {series: sqqq, start: "2010-02-11", log: true, color: [74, 144, 255]}}
+  - headline: "같은 TQQQ, 산 날짜만 달랐다"
+    highlight: "산 날짜"
+    left: {label: "2020년 3월에 샀다면", value: "10배", sub: "20개월 만에", color: up, chart: {series: tqqq, start: "2020-03-20", end: "2021-11-19", color: [240, 84, 84]}}
+    right: {label: "2021년 11월에 샀다면", value: "-82%", sub: "13개월 만에", color: down, chart: {series: tqqq, start: "2021-11-19", end: "2022-12-28", color: [74, 144, 255]}}
+
 checks:
   - {name: "TQQQ 2010.2→2026.10 배수", kind: mult, series: tqqq}
   - {name: "QQQ 같은 기간 배수", kind: mult, series: qqq, start: "2010-02-11"}
@@ -82,6 +93,7 @@ checks:
   - {name: "SQQQ 2022.12.28→현재 (%)", kind: ret, series: sqqq, start: "2022-12-28"}
   - {name: "TQQQ 2025 최대낙폭 (%)", kind: max_dd, series: tqqq, start: "2024-12-01", end: "2025-12-31"}
 
+# 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
 # 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
 # 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
 # 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
@@ -723,15 +735,11 @@ scenes:
 
     3배 이상의 대가가 있다'
   highlight: 3배 이상의 대가
-  sub: 다음 레딧 썰 팩트체크도 기대해 주세요
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
   disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
 
     레버리지·인버스 ETF는 원금 대부분을 잃을 수 있는 고위험 상품입니다. 투자 판단과 책임은 본인에게 있습니다.'
-  subscribe_on: 4
-  mascot:
-    on: 4
-    pos: [1680, 300]
-    size: 150
-    say: 구독 눌러주면 존버 가능
-    side: left
-  narration: ['3배의 수익 뒤에는요, 3배 이상의 대가가 숨어 있습니다.', '다음 영상에서도 레딧에서 핫한 썰 하나 골라서, | 데이터로 끝까지 까 보겠습니다.', '여러분은 레버리지, 어떻게 생각하세요? | 궁금한 썰 있으면 댓글로 남겨 주세요.', '구독이랑 좋아요는요, 제 계좌 대신 채널이라도 우상향하게 도와주시는 겁니다.']
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['3배의 수익 뒤에는요, 3배 이상의 대가가 숨어 있습니다.', '여러분은 레버리지, 어떻게 생각하세요? | 궁금했던 주제, 종목, 매매법, 뭐든 댓글로 남겨 주세요. 다음 영상에서 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']

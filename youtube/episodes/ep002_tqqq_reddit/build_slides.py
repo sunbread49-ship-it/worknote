@@ -27,6 +27,8 @@ def VS(lines, heading, L, R, hl="", ch=None, extra=None):
     return d
 
 SRC="자료: Yahoo Finance 수정주가"
+import yaml as _y
+CH=_y.safe_load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','..','channel.yaml'),encoding='utf-8'))
 S=[]
 # ── 1. 훅
 S.append({'type':'reddit','chapter':'레딧 썰','posts':[
@@ -196,11 +198,12 @@ for txt,st,c,line in [("TQQQ 16년 302배","사실","up","TQQQ 16년 302배. 사
                       ("인버스로 하락장 대비","길게 들면 위험","down","그리고 인버스로 하락장 대비한다? | 길게 들고 있으면, 1억이 450원이 될 수도 있습니다.")]:
     S.append(K([line],txt,size=110,ch="정리",stamp={'text':st,'color':c,'on':1,'offset':0.6,'pos':[960,700],'rot':-5,'size':80}))
 S.append(K(["레딧의 대박 후기는, 살아남은 사람 얘기라는 거. 이거 하나만 꼭 기억해 주세요."],"대박 후기 = 살아남은 사람의 이야기",hl="살아남은 사람",size=96,ch="정리"))
-S.append({'type':'outro','heading':'3배의 수익엔\n3배 이상의 대가가 있다','highlight':'3배 이상의 대가','sub':'다음 레딧 썰 팩트체크도 기대해 주세요',
+S.append({'type':'outro','heading':'3배의 수익엔\n3배 이상의 대가가 있다','highlight':'3배 이상의 대가','sub':'궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요',
   'disclaimer':'본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.\n레버리지·인버스 ETF는 원금 대부분을 잃을 수 있는 고위험 상품입니다. 투자 판단과 책임은 본인에게 있습니다.',
-  'subscribe_on':4,'mascot':{'on':4,'pos':[1680,300],'size':150,'say':'구독 눌러주면 존버 가능','side':'left'},
-  'narration':["3배의 수익 뒤에는요, 3배 이상의 대가가 숨어 있습니다.","다음 영상에서도 레딧에서 핫한 썰 하나 골라서, | 데이터로 끝까지 까 보겠습니다.",
-               "여러분은 레버리지, 어떻게 생각하세요? | 궁금한 썰 있으면 댓글로 남겨 주세요.","구독이랑 좋아요는요, 제 계좌 대신 채널이라도 우상향하게 도와주시는 겁니다."]})
+  'subscribe_on':3,'signature':CH['signature'],'signature_on':4,
+  'narration':["3배의 수익 뒤에는요, 3배 이상의 대가가 숨어 있습니다.",
+               "여러분은 레버리지, 어떻게 생각하세요? | 궁금했던 주제, 종목, 매매법, 뭐든 댓글로 남겨 주세요. 다음 영상에서 데이터로 끝까지 파헤쳐 드리겠습니다.",
+               CH['outro_fixed'], CH['signature']]})
 
 body=yaml.safe_dump({'scenes':S}, allow_unicode=True, sort_keys=False, width=200, default_flow_style=None)
 body=body.replace("'on':","on:")

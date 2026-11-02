@@ -33,9 +33,57 @@ def arrow(w, h, color, width=70):
     return im
 
 
+def vs_thumb(th, out):
+    """좌우 대비형: headline + left/right {label, value, sub, color, series?}"""
+    W, H = S.W, S.H
+    f = Image.new("RGBA", (W, H), (8, 10, 20, 255))
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glow)
+    lc = scenes.col(th["left"].get("color"), S.UP)
+    rc = scenes.col(th["right"].get("color"), S.DOWN)
+    gd.ellipse((-300, 200, 1100, 1400), fill=lc + (110,))
+    gd.ellipse((820, 200, 2220, 1400), fill=rc + (110,))
+    f.alpha_composite(glow.filter(ImageFilter.GaussianBlur(170)))
+    # 각 패널 뒤 미니 차트
+    for side, x0 in (("left", 60), ("right", 1000)):
+        c = th[side]
+        if c.get("chart"):
+            cs = dict(c["chart"])
+            spec = {"lines": [{"series": cs.pop("series"), "color": cs.pop("color", None), "fill": False}], **cs,
+                    "draw": {"on": 1, "dur": 0.01}}
+            ch = charts.LineChart(spec, rect=(x0, 430, 860, 520))
+            f.alpha_composite(G.with_opacity(ch.line, 0.55))
+    # 헤드라인
+    hl = G.text_img(th["headline"], "Black", th.get("headline_size", 96), (255, 255, 255), stroke=7, stroke_fill=(0, 0, 0),
+                    highlight=th.get("highlight", ""), hl_fill=S.GOLD)
+    G.blit(f, hl, (W / 2, 50), 1, "mt")
+    for side, cx in (("left", W * 0.26), ("right", W * 0.74)):
+        c = th[side]
+        col = scenes.col(c.get("color"), S.UP)
+        lab = G.pill(c["label"], "Black", 54, (16, 18, 28), col, pad=(28, 10), radius=14)
+        G.blit(f, lab, (cx, 300), 1, "mt")
+        size = c.get("size", 230)
+        v = G.text_img(c["value"], "Black", size, col, stroke=10, stroke_fill=(0, 0, 0))
+        while v.width > W * 0.46 and size > 100:
+            size -= 10
+            v = G.text_img(c["value"], "Black", size, col, stroke=10, stroke_fill=(0, 0, 0))
+        G.blit(f, v, (cx, 650), 1, "mm")
+        if c.get("sub"):
+            G.blit(f, G.text_img(c["sub"], "ExtraBold", 50, (255, 255, 255), stroke=5, stroke_fill=(0, 0, 0)), (cx, 860), 1, "mt")
+    vs = G.text_img("VS", "Black", 150, S.GOLD, stroke=10, stroke_fill=(0, 0, 0))
+    G.blit(f, vs, (W / 2, 640), 1, "mm")
+    if th.get("badge"):
+        b = G.pill(th["badge"], "Black", 44, (16, 18, 28), S.GOLD, pad=(24, 10), radius=12)
+        G.blit(f, b, (40, 40))
+    f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(out)
+    print("썸네일 →", out)
+
+
 def main(ep_dir):
     ep_dir = Path(ep_dir).resolve()
     ep, channel = render.load(ep_dir)
+    for i, v in enumerate(ep.get("thumbnails_vs", []), 1):
+        vs_thumb(v, ROOT / "out" / ep_dir.name / f"thumbnail_vs{i}.png")
     th = ep["thumbnail_v2"]
     W, H = S.W, S.H
     f = Image.new("RGBA", (W, H), (8, 10, 20, 255))

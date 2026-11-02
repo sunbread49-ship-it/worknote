@@ -446,9 +446,13 @@ class Outro(Scene):
         o = G.appear(t, self.line_start(sp.get("subscribe_on", len(self.narration))))
         p = G.pill("구독  ·  좋아요  ·  알림 설정", "ExtraBold", 40, (16, 20, 32), S.GOLD, pad=(44, 18))
         G.blit(f, p, (S.W / 2, y + 20), o, "mt")
+        if sp.get("signature"):
+            so = G.appear(t, self.line_start(sp.get("signature_on", len(self.narration))), 0.5)
+            G.blit(f, G.text_img(sp["signature"], "Black", 52, S.GOLD, max_w=1500, align="center"),
+                   (S.W / 2, y + 140 + (1 - so) * 20), so, "mt")
         if sp.get("disclaimer"):
-            G.blit(f, G.text_img(sp["disclaimer"], "Medium", 26, S.MUTED, max_w=1400, align="center"),
-                   (S.W / 2, 840), G.appear(t, 0.8), "mt")
+            G.blit(f, G.text_img(sp["disclaimer"], "Medium", 24, S.MUTED, max_w=1400, align="center"),
+                   (S.W / 2, 870), G.appear(t, 0.8), "mt")
         self.draw_common(f, t)
 
 
