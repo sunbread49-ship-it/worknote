@@ -93,6 +93,11 @@ class Cutaway(Scene):
 
     def draw_bg(self, f, t, colors=None):
         sp = self.spec
+        if sp.get("bg", "dark") == "dark" and colors is None:  # 차분한 기본 배경 + 스포트라이트
+            glow = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+            ImageDraw.Draw(glow).ellipse((S.W * 0.05, S.H * -0.2, S.W * 0.7, S.H * 1.1), fill=(70, 90, 140, 60))
+            f.alpha_composite(glow.filter(ImageFilter.GaussianBlur(120)))
+            return
         colors = colors or _bg_colors(sp.get("bg", "yellow"))
         if sp.get("bg_style", "burst") == "burst":
             f.alpha_composite(burst(colors, t, *sp.get("burst_center", (S.W / 2, S.H / 2))))
@@ -214,7 +219,8 @@ class Phone(Cutaway):
         G.blit(f, phone, (px, py + rise), 1, "mt")
         if sp.get("side_text"):
             s = punch(t, self.line_start(sp.get("side_on", 1)) + 0.1, 0.25, 1.12)
-            im = scaled(meme_text(sp["side_text"], sp.get("side_size", 92), max_w=900), s)
+            im = scaled(G.text_img(sp["side_text"], "Black", sp.get("side_size", 92), S.FG, max_w=900, align="center",
+                                   highlight=sp.get("side_highlight", ""), hl_fill=col(sp.get("side_hl_color"), S.GOLD)), s)
             if im:
                 G.blit(f, im, (1300, sp.get("side_y", 330)), 1, "mm")
         self.emoji_layer(f, t)
@@ -334,24 +340,24 @@ class News(Cutaway):
 
     def draw(self, f, t):
         sp = self.spec
-        f.alpha_composite(burst(((30, 34, 52), (22, 26, 40)), t * 0.3, S.W * 0.75, S.H * 0.3, rays=30))
+        self.draw_bg(f, t)
         k = G.ease_out(t / 0.3)
         bar = Image.new("RGBA", (S.W, 300), (200, 24, 40, 255))
-        G.blit(f, bar, (int(-S.W * (1 - k)), 520))
+        G.blit(f, bar, (int(-S.W * (1 - k)), 470))
         tag = G.pill(sp.get("tag", "속보"), "Black", 60, (200, 24, 40), (255, 255, 255), pad=(36, 12), radius=10)
-        G.blit(f, tag, (140, 470), 1, "lb")
+        G.blit(f, tag, (140, 420), 1, "lb")
         if t > 0.2:
-            G.blit(f, G.text_img(sp["headline"], "Black", sp.get("size", 84), (255, 255, 255), max_w=1640), (140, 560))
+            G.blit(f, G.text_img(sp["headline"], "Black", sp.get("size", 84), (255, 255, 255), max_w=1640), (140, 510))
         if sp.get("sub"):
-            G.blit(f, G.text_img(sp["sub"], "SemiBold", 40, (255, 220, 220), max_w=1640), (140, 720), G.appear(t, 0.5))
+            G.blit(f, G.text_img(sp["sub"], "SemiBold", 40, (255, 220, 220), max_w=1640), (140, 670), G.appear(t, 0.5))
         # 하단 티커
         tk = G.text_img("   ·   ".join(sp.get("ticker", [])) + "   ·   ", "Bold", 34, (255, 255, 255))
         strip = Image.new("RGBA", (S.W, 70), (12, 14, 22, 255))
         off = int((t * 260) % max(1, tk.width))
         for x in range(-off, S.W, tk.width):
             strip.alpha_composite(tk, (x, 14))
-        G.blit(f, strip, (0, 860))
-        G.blit(f, G.text_img("※ 연출 화면 (실제 방송 아님)", "Medium", 22, (170, 175, 190)), (S.W - 120, 440), 1, "rb")
+        G.blit(f, strip, (0, 790))
+        G.blit(f, G.text_img("※ 연출 화면 (실제 방송 아님)", "Medium", 22, (170, 175, 190)), (S.W - 120, 390), 1, "rb")
         self.emoji_layer(f, t)
         self.draw_fun(f, t)
 

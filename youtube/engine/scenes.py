@@ -128,6 +128,49 @@ class Scene:
                 im = im.rotate(stp.get("rot", -8), resample=Image.BICUBIC, expand=True)
                 G.blit(f, im, stp.get("pos", [S.W / 2, S.H / 2]), min(1, k * 1.5), "mm")
 
+    # ── 카메라: 문장마다 줌/팬 → 정지 화면 없애기 ─────────────────
+    def camera_keys(self):
+        """[(시각, cx, cy, zoom)] — spec.camera 로 직접 지정하거나 자동 생성"""
+        if hasattr(self, "_cam"):
+            return self._cam
+        sp = self.spec
+        cam = sp.get("camera", "auto")
+        keys = [(0.0, S.W / 2, S.H / 2, 1.0)]
+        if cam == "off":
+            keys = []
+        elif isinstance(cam, list):
+            for c in cam:
+                keys.append((self.line_start(c.get("on", 1)) + c.get("offset", 0), c.get("x", S.W / 2),
+                             c.get("y", S.H / 2), c.get("zoom", 1.0)))
+        else:
+            keys += self.auto_camera()
+        self._cam = sorted(keys)
+        return self._cam
+
+    def auto_camera(self):
+        """기본: 문장이 바뀔 때마다 살짝 다른 구도로 밀고 당기기"""
+        out = []
+        n = len(self.lines)
+        pattern = [(1.07, -60, -20), (1.0, 0, 0), (1.1, 70, 10), (1.03, -30, 20)]
+        for i in range(1, n):
+            z, dx, dy = pattern[(i - 1 + self.idx) % len(pattern)]
+            out.append((self.lines[i][0], S.W / 2 + dx, S.H / 2 + dy, z))
+        return out
+
+    def camera_at(self, t):
+        keys = self.camera_keys()
+        if not keys:
+            return S.W / 2, S.H / 2, 1.0
+        prev = keys[0]
+        cur = keys[0]
+        for k in keys:
+            if k[0] <= t:
+                prev, cur = cur, k
+        if cur is keys[0]:
+            return cur[1:]
+        e = G.ease_in_out((t - cur[0]) / self.spec.get("cam_dur", 0.8))
+        return tuple(prev[i] + (cur[i] - prev[i]) * e for i in (1, 2, 3))
+
     def shake_at(self, t):
         for sh in self.spec.get("shake", []):
             t0 = self._t_of(sh)
@@ -327,6 +370,29 @@ class Card(Scene):
 class Chart(Scene):
     def prepare(self):
         self.chart = C.LineChart(self.spec["chart"])
+
+    def auto_camera(self):
+        marks = self.spec["chart"].get("marks", [])
+        if not marks:
+            return super().auto_camera()
+        out = []
+        used = set()
+        rx, ry, rw, rh = self.chart.rect
+        for i, m in enumerate(marks):
+            on = m.get("on", 1)
+            if on in used:  # 같은 줄에 여러 마커면 첫 번째로만
+                continue
+            used.add(on)
+            (mx, my), _ = self.chart.point_at(m["date"], m.get("line", 0))
+            z = m.get("zoom", self.spec.get("mark_zoom", 1.45))
+            t0 = self.line_start(on) + 0.15
+            out.append((t0, mx + m.get("dx", 0) * 0.5, my + m.get("dy", 0) * 0.5, z))
+            # 다음 줄에서 한 발 물러나기
+            nxt = on + 1
+            if nxt <= len(self.lines) and not any(mm.get("on", 1) == nxt for mm in marks):
+                out.append((self.line_start(nxt) + 0.1, S.W / 2, S.H / 2, 1.04))
+        # 그려지는 동안은 선 끝을 따라 천천히
+        return out
 
     def draw(self, f, t):
         self.chart.render(f, t, self)
@@ -542,7 +608,64 @@ def _vs_card(c):
     return _cache2[k]
 
 
-TYPES = {"reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
+class Kinetic(Scene):
+    """핵심 문장을 크게 한 줄씩 (키네틱 타이포그래피). 화면 전환용.
+    items: [{text, on, size, color, highlight, hl_color, sub}], bg_word: 배경 워터마크, stack: 이전 줄 유지"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        if sp.get("bg_word"):
+            wm = G.text_img(sp["bg_word"], "Black", sp.get("bg_size", 420), col(sp.get("bg_color"), S.GOLD))
+            G.blit(f, wm, (S.W / 2 + 40 - t * 12, S.H / 2 - 40), 0.07, "mm")
+        items = sp["items"]
+        starts = [self.line_start(it.get("on", 1)) + it.get("offset", 0) for it in items]
+        cur = max([i for i, st in enumerate(starts) if t >= st] or [-1])
+        if cur < 0:
+            return self.draw_common(f, t)
+        stack = sp.get("stack", False)
+        shown = list(range(cur + 1)) if stack else [cur]
+        total_h = 0
+        imgs = []
+        for i in shown:
+            it = items[i]
+            im = G.text_img(it["text"], "Black", it.get("size", 110), col(it.get("color"), S.FG), max_w=1640,
+                            align="center", highlight=it.get("highlight", ""), hl_fill=col(it.get("hl_color"), S.GOLD),
+                            line_gap=1.15)
+            sub = G.text_img(it["sub"], "SemiBold", 40, S.MUTED, max_w=1500, align="center") if it.get("sub") else None
+            imgs.append((i, im, sub))
+            total_h += im.height + (sub.height + 18 if sub else 0) + 40
+        y = S.H / 2 - total_h / 2 - 30
+        for i, im, sub in imgs:
+            k = G.ease_out((t - starts[i]) / 0.3)
+            op = 1.0 if (i == cur or not stack) else 0.35
+            sc_ = 1.08 - 0.08 * k
+            im2 = im.resize((max(1, int(im.width * sc_)), max(1, int(im.height * sc_))), Image.BILINEAR) if k < 1 else im
+            G.blit(f, im2, (S.W / 2, y + (1 - k) * 50), op * k, "mt")
+            # 밑줄 강조 바
+            if i == cur:
+                bw = int(min(im.width, 900) * G.ease_out((t - starts[i] - 0.15) / 0.4))
+                if bw > 2:
+                    bar = Image.new("RGBA", (bw, 8), col(items[i].get("hl_color"), S.GOLD) + (255,))
+                    G.blit(f, bar, (S.W / 2, y + im.height + 10), op, "mt")
+            y += im.height + 40
+            if sub:
+                G.blit(f, sub, (S.W / 2, y), op * G.ease_out((t - starts[i] - 0.2) / 0.3), "mt")
+                y += sub.height + 18
+        self.draw_common(f, t)
+
+    def auto_camera(self):
+        out = []
+        for i, it in enumerate(self.spec["items"]):
+            z = 1.0 if i % 2 == 0 else 1.05
+            out.append((self.line_start(it.get("on", 1)) + it.get("offset", 0), S.W / 2, S.H / 2, z))
+        return out
+
+    def extra_sfx(self):
+        return [(self.line_start(it.get("on", 1)) + it.get("offset", 0), it.get("sfx", "whoosh"), 0.35)
+                for it in self.spec["items"] if it.get("sfx", "whoosh") != "none"]
+
+
+TYPES = {"kinetic": Kinetic, "reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
 
 
 def make(spec, idx, channel):

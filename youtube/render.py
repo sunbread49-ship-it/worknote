@@ -109,6 +109,12 @@ def scene_content(c, sc, lt):
     bg = G.background()
     f = bg.copy()
     sc.draw(f, lt)
+    cx, cy, z = sc.camera_at(lt)
+    if z > 1.001:
+        w, h = S.W / z, S.H / z
+        x0 = min(max(cx - w / 2, 0), S.W - w)
+        y0 = min(max(cy - h / 2, 0), S.H - h)
+        f = f.resize((S.W, S.H), Image.BILINEAR, box=(x0, y0, x0 + w, y0 + h))
     dx, dy = sc.shake_at(lt)
     if dx or dy:
         moved = bg.copy()

@@ -72,8 +72,6 @@ scenes:
       - {flair: "Loss", title: "SQQQ로 하락장 대비하다가… 계좌가 녹았습니다", en: "\"SQQQ is a casino and I'm the house's favorite customer.\"", up: "15.3k", comments: "1,207", on: 4}
     stickers:
       - {e: rocket, pos: [1560, 330], size: 200, on: 2, offset: 0.6, rot: -15}
-      - {e: thinking, pos: [1560, 590], size: 170, on: 3, offset: 0.6}
-      - {e: melting, pos: [1560, 820], size: 170, on: 4, offset: 0.8}
     mascot: {on: 5, pos: [1700, 210], size: 150, say: "이거… 진짜야?", side: left}
     narration:
       - "미국 최대 주식 커뮤니티, 레딧의 월스트리트베츠."
@@ -81,16 +79,12 @@ scenes:
       - "레버리지 ETF가 오래 들고 있으면 녹는다는 건 | 다 미신이다."
       - "그리고 반대편엔, 인버스 SQQQ로 하락장에 대비하다가 | 계좌가 녹았다는 글도 있죠."
       - "과연 이 썰들, 진짜일까요?"
-  # 02 ── 컷: 레딧 형님들 기대감
-  - type: meme
-    bg: yellow
-    top: "2년 만에 30배?!"
-    bottom: "이거 완전 인생역전 아니냐"
-    bottom_on: 2
-    emojis:
-      - {e: rocket, pos: [960, 500], size: 560, on: 1, rot: -20, sfx: whoosh}
-      - {e: moneybag, pos: [430, 620], size: 260, on: 2, offset: 0.1, rot: -10}
-      - {e: moneybag, pos: [1490, 620], size: 260, on: 2, offset: 0.25, rot: 10}
+  # 02 ── 썰 요약
+  - type: kinetic
+    bg_word: "30x"
+    items:
+      - {text: "2년 만에 30배?", on: 1, size: 130, highlight: "30배?", sub: "레딧에서 자주 보이는 썰"}
+      - {text: "1,000만 원 → 3억", on: 2, size: 130, highlight: "3억"}
     narration:
       - "솔직히 이런 글 보면 손가락이 근질근질하죠."
       - "2년에 30배면, 천만 원이 3억입니다. | 이거 완전 인생역전 아닙니까?"
@@ -102,8 +96,6 @@ scenes:
     title: "TQQQ 2년 만에 30배?\n그리고 SQQQ의 진실"
     highlight: "30배?"
     subtitle: "2010년 상장 이후 실제 데이터로 끝까지 확인해봤습니다"
-    stickers:
-      - {e: magnifier, pos: [330, 330], size: 190, on: 1, offset: 0.5, rot: 10}
     narration:
       - "그래서 준비했습니다. 레딧 썰 팩트체크."
       - "오늘은 2010년 상장 이후 16년치 실제 데이터로, | TQQQ와 SQQQ를 끝까지 파헤쳐 보겠습니다."
@@ -113,9 +105,8 @@ scenes:
     chapter: "기초"
     heading: "나스닥100 하루 움직임의 3배"
     highlight: "3배"
-    left: {title: "TQQQ (3배 레버리지)", value: "+3%", sub: "나스닥100이 하루 +1%면", color: up, emoji: rocket, on: 2}
-    right: {title: "SQQQ (3배 인버스)", value: "+3%", sub: "나스닥100이 하루 -1%면", color: down, emoji: bear, on: 3}
-    mascot: {on: 5, pos: [1720, 920], size: 140, say: "포인트는 '하루'!", side: left}
+    left: {title: "TQQQ (3배 레버리지)", value: "+3%", sub: "나스닥100이 하루 +1%면", color: up, on: 2}
+    right: {title: "SQQQ (3배 인버스)", value: "+3%", sub: "나스닥100이 하루 -1%면", color: down, on: 3}
     narration:
       - "먼저 간단히 짚고 가죠."
       - "TQQQ는 나스닥100 지수가 하루에 1% 오르면, 3% 오르도록 설계된 ETF입니다."
@@ -139,9 +130,10 @@ scenes:
       title: "2010년 2월에 1,000만 원 넣었다면 (로그 스케일)"
       draw: {on: 2, dur: 2.6}
       source: "자료: Yahoo Finance 수정주가(배당 재투자) · 2010.2.11~2026.10.30"
-    stickers:
-      - {e: moneybag, pos: [1800, 650], size: 140, on: 4, offset: 0.3}
-      - {e: explode, pos: [700, 360], size: 170, on: 5, offset: 0.2}
+    camera:
+      - {on: 3, x: 1450, y: 520, zoom: 1.4}
+      - {on: 4, x: 1450, y: 400, zoom: 1.4}
+      - {on: 6, x: 960, y: 540, zoom: 1.0}
     sfx:
       - {name: cash, on: 4, offset: 0.2}
     narration:
@@ -154,7 +146,7 @@ scenes:
   # 06 ── 컷: 단톡방
   - type: phone
     mode: chat
-    bg: mint
+    bg: dark
     room: "주식하는 친구들 (4)"
     side_text: "그때 넣을걸…"
     side_on: 3
@@ -164,8 +156,6 @@ scenes:
       - {who: other, name: "지훈", avatar: cry, text: "아 2010년의 나 뭐 했냐", on: 3}
       - {who: other, name: "민수", avatar: cool, text: "지금이라도 몰빵 ㄱㄱ?", on: 4}
       - {who: me, text: "잠깐, 근데 레딧 썰이 그렇게 단순하진 않대", on: 4, offset: 1.4}
-    emojis:
-      - {e: eyes, pos: [1300, 640], size: 260, on: 4, offset: 1.4}
     narration:
       - "이런 숫자가 돌면 단톡방은 바로 이렇게 됩니다."
       - "천만 원 넣었으면 30억이라고?"
@@ -185,8 +175,6 @@ scenes:
     sub: "2020.3.20 코로나 바닥 → 2021.11.19 고점 (20개월)"
     color: up
     stamp: {text: "썰 판정: 과장 (3배 뻥튀기)", color: gold, on: 5, pos: [960, 860], rot: -6, size: 52}
-    stickers:
-      - {e: eyes, pos: [300, 520], size: 160, on: 2, offset: 0.4}
     narration:
       - "그럼 '2년 만에 30배'는 어떨까요?"
       - "16년 동안 어떤 날에 샀든, | 2년 안에 도달할 수 있었던 최고 기록을 전부 계산해 봤습니다."
@@ -212,7 +200,6 @@ scenes:
       source: "자료: Yahoo Finance 수정주가"
     shake: [{on: 3, offset: 0.3, dur: 0.6, amp: 18, sfx: boom}]
     stickers:
-      - {e: scream, pos: [620, 360], size: 170, on: 3, offset: 0.5, sfx: none}
       - {e: hourglass, pos: [1700, 520], size: 130, on: 5, offset: 0.4}
     narration:
       - "그런데 이 그래프, 조금만 더 보시죠."
@@ -223,7 +210,7 @@ scenes:
   # 09 ── 컷: 계좌가 녹는 화면
   - type: phone
     mode: account
-    bg: red
+    bg: dark
     app: "내 주식 계좌"
     from: 1000000000
     to: 183400000
@@ -235,8 +222,8 @@ scenes:
       - {text: "TQQQ 오늘 -16.5% (2022.9.13)", on: 3}
     side_text: "10억 → 1.8억"
     side_on: 3
-    emojis:
-      - {e: melting, pos: [1300, 640], size: 300, on: 3, offset: 0.6}
+    side_highlight: "1.8억"
+    side_hl_color: down
     narration:
       - "만약 그 고점에서 계좌에 10억이 있었다면, 어떻게 됐을까요?"
       - "숫자가 녹는 걸 실시간으로 보시죠."
@@ -246,8 +233,8 @@ scenes:
   - type: versus
     chapter: "썰 ① 반전"
     heading: "2022년 한 해, 같은 지수 다른 결과"
-    left: {title: "QQQ (나스닥100)", value: "-33%", sub: "아프지만 버틸 만한 하락", color: neutral, emoji: sweat, on: 2}
-    right: {title: "TQQQ (3배)", value: "-79%", sub: "1억 → 2,100만 원", color: down, emoji: skull, on: 3}
+    left: {title: "QQQ (나스닥100)", value: "-33%", sub: "아프지만 버틸 만한 하락", color: neutral, on: 2}
+    right: {title: "TQQQ (3배)", value: "-79%", sub: "1억 → 2,100만 원", color: down, on: 3}
     mascot: {on: 4, pos: [1720, 920], size: 140, say: "3배면 -99% 아냐?", side: left}
     narration:
       - "2022년 한 해만 놓고 보면 더 극명합니다."
@@ -255,10 +242,12 @@ scenes:
       - "그런데 TQQQ는 79% 하락. 1억이 2,100만 원이 됐습니다."
       - "여기서 눈치 빠른 분들은 이상한 점을 느끼셨을 거예요. | 33의 3배면 99%인데, 왜 79%일까요?"
       - "바로 아까 말씀드린 그 단어, '하루' 때문입니다."
-  # 11 ── 컷: 기대 vs 현실
-  - type: twopanel
-    left: {label: "내 머릿속", e: rocket, caption: "지수 3% 오르면 나는 9%!", bg: mint, on: 1}
-    right: {label: "현실", e: melting, caption: "오르락내리락만 해도 녹음", bg: red, on: 2}
+  # 11 ── 기대 vs 현실
+  - type: kinetic
+    stack: true
+    items:
+      - {text: "지수 +3%면, 나는 +9%?", on: 1, size: 110, highlight: "+9%?", hl_color: up}
+      - {text: "현실: 오르락내리락만 해도 녹는다", on: 2, size: 96, highlight: "녹는다", hl_color: down}
     narration:
       - "레버리지를 처음 사는 사람의 머릿속은 이렇습니다. | 지수가 3% 오르면 나는 9%."
       - "그런데 현실은 다릅니다. | 시장이 오르락내리락만 해도 계좌가 녹습니다. 왜 그럴까요?"
@@ -278,7 +267,6 @@ scenes:
       - {text: "흔들림이 클수록, 오래 들고 있을수록 커진다", on: 6, highlight: "오래 들고 있을수록", hl_color: down}
     stickers:
       - {e: rollercoaster, pos: [1620, 470], size: 260, on: 1, offset: 0.3}
-      - {e: melting, pos: [1620, 760], size: 150, on: 3, offset: 0.6}
     narration:
       - "레버리지 ETF는 매일매일 3배를 다시 맞춥니다. | 그래서 이런 일이 벌어집니다."
       - "지수가 100에서 하루 10% 올라 110, 다음 날 10% 빠지면 99. 1% 손해죠."
@@ -303,8 +291,6 @@ scenes:
       draw: {on: 2, dur: 2.6}
       source: "자료: Yahoo Finance 수정주가"
     stamp: {text: "지수 +4%, 3배는 -20%", color: down, on: 4, pos: [1130, 800], rot: -5, size: 50}
-    stickers:
-      - {e: clown, pos: [1720, 820], size: 150, on: 5, offset: 0.3}
     sfx:
       - {name: scratch, on: 4, offset: 0}
     narration:
@@ -313,19 +299,7 @@ scenes:
       - "1년 뒤 결과, 나스닥100은 오히려 4% 올랐습니다."
       - "그런데 TQQQ는요? | 3배인 12% 수익이 아니라, 20% 손실입니다."
       - "지수는 올랐는데 3배 상품은 돈을 잃은 거죠. | 이게 레버리지의 진짜 얼굴입니다."
-  # 14 ── 컷: 광대 밈
-  - type: meme
-    bg: purple
-    top: "지수: +4%"
-    bottom: "3배 레버리지: -20%"
-    bottom_on: 2
-    bottom_color: [255, 120, 120]
-    emojis:
-      - {e: clown, pos: [960, 520], size: 520, on: 1, sfx: scratch}
-    narration:
-      - "지수는 4% 올랐습니다."
-      - "그런데 3배짜리는 20% 손실. | 이 정도면 그냥 광대 됐다고 봐야죠."
-  # 15 ── 닷컴버블에 TQQQ가 있었다면
+  # 14 ── 닷컴버블에 TQQQ가 있었다면
   - type: chart
     chapter: "만약에"
     chart:
@@ -357,7 +331,16 @@ scenes:
       - "그런데 2000년 3월 버블이 터지고 2년 반 뒤, | 가상 TQQQ는 고점 대비 99.94% 하락. 1억이 6만 원이 됩니다."
       - "나스닥100 자체도 83% 빠졌지만, 2015년에 결국 고점을 회복했습니다."
       - "가상 TQQQ는요? 26년이 지난 지금도 2000년 고점보다 48% 아래에 있습니다."
-      - "더 놀라운 건 끝 숫자입니다. | 1997년부터 29년을 버텼다면, 3배짜리가 34.4배, 그냥 지수가 34.8배."
+  # 15 ── 29년 결과
+  - type: kinetic
+    stack: true
+    bg_word: "29년"
+    items:
+      - {text: "3배 레버리지: 34.4배", on: 2, size: 110, highlight: "34.4배", hl_color: up, sub: "가상 TQQQ · 1997.1 → 2026.10"}
+      - {text: "그냥 지수: 34.8배", on: 2, offset: 2.2, size: 110, highlight: "34.8배", sub: "나스닥100 · 같은 기간"}
+    narration:
+      - "더 놀라운 건 끝 숫자입니다."
+      - "1997년부터 29년을 버텼다면, | 3배짜리가 34.4배, 그냥 지수가 34.8배."
       - "3배 레버리지를 29년 들고 버텼는데, | 결과는 레버리지 없는 지수보다 오히려 조금 못했습니다."
   # 16 ── 컷: 가상 속보
   - type: news
@@ -365,8 +348,6 @@ scenes:
     headline: "가상 TQQQ, 닷컴 붕괴로 -99.94%"
     sub: "1억 원 → 6만 원… 2026년 현재까지 2000년 고점 회복 못 해"
     ticker: ["나스닥100 -83%", "가상 TQQQ -99.94%", "나스닥100 2015년 고점 회복", "가상 TQQQ 26년째 미회복", "※ 나스닥100 x3 가상 계산"]
-    emojis:
-      - {e: coffin, pos: [1640, 280], size: 240, on: 2, offset: 0.2}
     narration:
       - "그 시절에 TQQQ가 있었다면, 아마 뉴스는 이랬을 겁니다."
       - "1억이 6만 원. 그리고 26년이 지난 지금도 본전은 아직입니다."
@@ -378,8 +359,6 @@ scenes:
       - {flair: "Loss", title: "SQQQ 2년 들고 있었는데 -90%… 하락장은 언제 오냐", en: "\"Held SQQQ for 2 years. Down 90%. Where is the crash?\"", up: "19.8k", comments: "4,107", on: 3}
     stickers:
       - {e: bear, pos: [1560, 380], size: 190, on: 2, offset: 0.5}
-      - {e: cry, pos: [1560, 640], size: 170, on: 3, offset: 0.6}
-    mascot: {on: 4, pos: [1700, 870], size: 140, say: "인버스는 안전하지?", side: left}
     narration:
       - "이번엔 반대편, 인버스 썰입니다."
       - "곧 폭락이 온다며 SQQQ에 풀매수하는 글."
@@ -401,10 +380,11 @@ scenes:
       title: "2010년 2월 SQQQ에 1억 원 넣었다면 (로그 스케일)"
       draw: {on: 2, dur: 2.6}
       source: "자료: Yahoo Finance 수정주가 (액면병합 반영)"
+    camera:
+      - {on: 4, x: 1650, y: 780, zoom: 1.7}
+      - {on: 6, x: 960, y: 540, zoom: 1.0}
     shake: [{on: 4, offset: 0.3, dur: 0.5, amp: 14}]
     stamp: {text: "1억 → 약 450원", color: down, on: 4, pos: [1250, 330], rot: -6, size: 70}
-    stickers:
-      - {e: ghost, pos: [1680, 700], size: 150, on: 5, offset: 0.3}
     sfx:
       - {name: fail, on: 4, offset: 0.6}
     narration:
@@ -414,15 +394,12 @@ scenes:
       - "2026년 10월 현재, 약 450원입니다."
       - "오타 아닙니다. 1억이 450원. | 99.9995% 손실입니다."
       - "주가가 너무 낮아져서, 그동안 여러 번 주식을 합치는 액면병합까지 했을 정도입니다."
-  # 19 ── 컷: 1억 → 450원
-  - type: meme
-    bg: blue
-    top: "1억 → 450원"
-    bottom: "삼각김밥도 못 삼"
-    bottom_on: 2
-    emojis:
-      - {e: ghost, pos: [700, 520], size: 420, on: 1, rot: -8, sfx: fail}
-      - {e: money_wings, pos: [1260, 500], size: 380, on: 2, offset: 0.1, rot: 12}
+  # 19 ── 1억 → 450원
+  - type: kinetic
+    bg_word: "450"
+    bg_color: down
+    items:
+      - {text: "1억 → 450원", on: 1, size: 150, highlight: "450원", hl_color: down, sub: "SQQQ · 2010.2 → 2026.10"}
     narration:
       - "다시 한번 말씀드리지만, 1억이 450원입니다."
       - "편의점 삼각김밥 하나도 못 삽니다."
@@ -431,9 +408,8 @@ scenes:
     chapter: "썰 ② 인버스"
     heading: "인버스가 대박 날 때도 있다. 단, 아주 짧게"
     highlight: "아주 짧게"
-    left: {title: "코로나 폭락 한 달", value: "+92%", sub: "2020.2.19 → 3.16", color: up, emoji: party, on: 2}
-    right: {title: "그 뒤 9개월", value: "-90%", sub: "2020.3.16 → 12.31", color: down, emoji: skull, on: 3}
-    mascot: {on: 5, pos: [1720, 920], size: 140, say: "타이밍 맞힐 자신…?", side: left}
+    left: {title: "코로나 폭락 한 달", value: "+92%", sub: "2020.2.19 → 3.16", color: up, on: 2}
+    right: {title: "그 뒤 9개월", value: "-90%", sub: "2020.3.16 → 12.31", color: down, on: 3}
     narration:
       - "물론 인버스로 큰돈을 버는 순간도 있습니다."
       - "2020년 코로나 폭락 때, SQQQ는 한 달도 안 돼서 92% 올랐습니다."
@@ -475,9 +451,6 @@ scenes:
         - {date: "2025-04-08", label: "-58%", on: 2, dy: 30, dx: -130, color: down, size: 36}
         - {date: "2025-04-09", label: "하루 +35%", on: 3, dy: -90, dx: 160, color: gold, size: 36}
       source: "자료: Yahoo Finance 수정주가"
-    stickers:
-      - {e: rollercoaster, pos: [1680, 760], size: 190, on: 3, offset: 0.3}
-      - {e: zap, pos: [1120, 420], size: 120, on: 3, offset: 0.1}
     shake: [{on: 2, offset: 0.4, dur: 0.4, amp: 12}]
     narration:
       - "최근에도 이런 장면이 있었습니다."
@@ -485,10 +458,12 @@ scenes:
       - "그러다 4월 9일, 관세 유예 발표가 나오자 | 단 하루 만에 35%가 올랐습니다."
       - "하루에 35%. 이 정도면 투자라기보다 롤러코스터에 가깝죠."
       - "물론 이 하루를 맛보려면, 그 전에 58% 하락을 먼저 버텨야 했습니다."
-  # 23 ── 컷: 생존자 편향
-  - type: twopanel
-    left: {label: "레딧에 보이는 글", e: party, caption: "30배 인증!", bg: yellow, on: 1}
-    right: {label: "안 보이는 글", e: ghost, caption: "조용히 사라진 사람들", bg: blue, on: 2}
+  # 23 ── 생존자 편향
+  - type: kinetic
+    stack: true
+    items:
+      - {text: "보이는 글: 30배 인증", on: 1, size: 100, highlight: "30배 인증", hl_color: up}
+      - {text: "안 보이는 글: 조용히 떠난 사람들", on: 2, size: 90, highlight: "조용히 떠난 사람들", hl_color: down}
     narration:
       - "그리고 하나 더. 레딧에 올라오는 건 대부분 대박 인증입니다."
       - "반대로 -80%를 맞고 조용히 떠난 사람들은 글을 잘 안 씁니다. | 우리가 보는 건 살아남은 사람의 이야기일 뿐이죠."
@@ -505,8 +480,6 @@ scenes:
       - {text: "2년 만에 30배: 과장 (최고 약 10배)", on: 3, highlight: "과장", hl_color: gold}
       - {text: "레버리지는 녹는다: 사실 (변동성 끌림)", on: 4, highlight: "사실", hl_color: up}
       - {text: "인버스로 하락장 대비: 길게 들면 위험", sub: "1억 → 450원", on: 5, highlight: "위험", hl_color: down}
-    stickers:
-      - {e: "100", pos: [1680, 560], size: 170, on: 6, offset: 0.2}
     narration:
       - "자, 오늘 팩트체크를 정리해 보겠습니다."
       - "TQQQ 16년 302배, 사실입니다. 다만 결과만 봤을 때의 이야기죠."
