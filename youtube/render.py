@@ -99,8 +99,8 @@ def setup(ep_dir, only=None, log=print):
     return c
 
 
-TRANS_T = 0.38
-TRANS_CYCLE = ["slide", "wipe", "zoom", "up", "slide", "flash"]
+TRANS_T = 0.3
+TRANS_CYCLE = ["slide", "up", "wipe", "slide", "cut", "up"]
 _last = {}
 
 

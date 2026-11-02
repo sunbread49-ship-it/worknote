@@ -134,7 +134,7 @@ class Scene:
         if hasattr(self, "_cam"):
             return self._cam
         sp = self.spec
-        cam = sp.get("camera", "auto")
+        cam = sp.get("camera", "off")
         keys = [(0.0, S.W / 2, S.H / 2, 1.0)]
         if cam == "off":
             keys = []
@@ -330,22 +330,42 @@ class Quote(Scene):
 
 
 class Card(Scene):
-    """heading + bullets. split 레이아웃이면 왼쪽에 일러스트(illust.pos 사용)."""
+    """heading + bullets. 항목이 2개 이하면 자동으로 화면 가운데에 크게 배치."""
+
+    def _items(self):
+        sp = self.spec
+        out = []
+        for i, b in enumerate(sp.get("bullets", [])):
+            out.append({"text": b} if isinstance(b, str) else b)
+        return out
 
     def draw(self, f, t):
         sp = self.spec
+        items = self._items()
+        few = len(items) <= 2 and not sp.get("illust") and sp.get("center", True)
+        size = sp.get("size", 46) if not few else max(sp.get("size", 46), 58)
+        hsize = sp.get("heading_size", 72) if not few else max(sp.get("heading_size", 72), 84)
         x = sp.get("x", S.SAFE_X + 20)
-        y = sp.get("y", 190)
         maxw = sp.get("width", S.W - x - S.SAFE_X)
+        h = G.text_img(sp["heading"], "Black", hsize, S.FG, max_w=maxw, highlight=sp.get("highlight", ""))
+        rows = []
+        for i, b in enumerate(items):
+            tx = G.text_img(b["text"], "Bold", size, S.FG, max_w=maxw - 110,
+                            highlight=b.get("highlight", ""), hl_fill=col(b.get("hl_color"), S.GOLD))
+            st = G.text_img(b["sub"], "Medium", int(size * 0.68), S.MUTED, max_w=maxw - 110) if b.get("sub") else None
+            rows.append((b, tx, st))
+        gap = sp.get("gap", 44)
+        block = h.height + 60 + sum(tx.height + (st.height + 10 if st else 0) + gap for _, tx, st in rows)
+        if few:
+            x = S.W / 2 - max([h.width] + [tx.width + 92 for _, tx, _ in rows]) / 2
+            y = (S.H - block) / 2 - 40
+        else:
+            y = sp.get("y", 190)
         o = G.appear(t, self.line_start(sp.get("heading_on", 1)))
-        h = G.text_img(sp["heading"], "Black", sp.get("heading_size", 72), S.FG, max_w=maxw,
-                       highlight=sp.get("highlight", ""))
         G.blit(f, h, (x, y + (1 - o) * 24), o)
         y += h.height + 60
-        for i, b in enumerate(sp.get("bullets", [])):
-            if isinstance(b, str):
-                b = {"text": b}
-            o = G.appear(t, self.line_start(b.get("on", 1)))
+        for i, (b, tx, st) in enumerate(rows):
+            o = G.appear(t, self.line_start(b.get("on", 1)) + b.get("offset", 0))
             if sp.get("numbered"):
                 icon = I.number_badge(i + 1, 64)
             elif sp.get("icon") == "dash":
@@ -353,17 +373,14 @@ class Card(Scene):
                 ImageDraw.Draw(icon).rounded_rectangle((8, 28, 40, 36), radius=4, fill=S.GOLD + (255,))
             else:
                 icon = I.check(56, col(b.get("color"), S.GOLD))
-            tx = G.text_img(b["text"], "Bold", sp.get("size", 46), S.FG, max_w=maxw - 100,
-                            highlight=b.get("highlight", ""), hl_fill=col(b.get("hl_color"), S.GOLD))
             dy = (1 - o) * 24
-            G.blit(f, icon, (x, y + dy + 2), o)
+            G.blit(f, icon, (x, y + dy + 2 + max(0, (tx.height - 64) // 2 if few else 0)), o)
             G.blit(f, tx, (x + 92, y + dy + 4), o)
             yy = y + tx.height + 4
-            if b.get("sub"):
-                st = G.text_img(b["sub"], "Medium", 30, S.MUTED, max_w=maxw - 100)
+            if st:
                 G.blit(f, st, (x + 92, yy + 6 + dy), o)
                 yy += st.height + 6
-            y = yy + sp.get("gap", 44)
+            y = yy + gap
         self.draw_common(f, t)
 
 
@@ -574,10 +591,10 @@ class Versus(Scene):
                 continue
             card = _vs_card(c)
             x = S.W / 2 + (-1 if i == 0 else 1) * (card.width / 2 + 95)
-            G.blit(f, card, (x, 300 + (1 - o) * 40), o, "mt")
+            G.blit(f, card, (x, 330 + (1 - o) * 40), o, "mt")
         ov = G.appear(t, self.line_start(sp["right"].get("on", 1)))
         if ov > 0:
-            G.blit(f, G.text_img("VS", "Black", 80, S.GOLD), (S.W / 2, 520), ov, "mm")
+            G.blit(f, G.text_img("VS", "Black", 80, S.GOLD), (S.W / 2, 570), ov, "mm")
         self.draw_common(f, t)
 
     def extra_sfx(self):
@@ -598,7 +615,11 @@ def _vs_card(c):
         tt = G.text_img(c["title"], "ExtraBold", 46, S.FG, max_w=w - 200)
         im.alpha_composite(tt, (44, y + 10))
         y += tt.height + 70
-        v = G.text_img(c["value"], "Black", 110, color)
+        vs = 110
+        v = G.text_img(c["value"], "Black", vs, color)
+        while v.width > w - 88 and vs > 50:
+            vs -= 8
+            v = G.text_img(c["value"], "Black", vs, color)
         im.alpha_composite(v, (44, y))
         y += v.height + 16
         if c.get("sub"):
@@ -609,6 +630,7 @@ def _vs_card(c):
 
 
 class Kinetic(Scene):
+    default_transition = "up"
     """핵심 문장을 크게 한 줄씩 (키네틱 타이포그래피). 화면 전환용.
     items: [{text, on, size, color, highlight, hl_color, sub}], bg_word: 배경 워터마크, stack: 이전 줄 유지"""
 
