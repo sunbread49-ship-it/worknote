@@ -32,6 +32,7 @@ EMOJI = {
     "ant": "Ant", "bear": "Bear", "ox": "Ox", "banknote": "Dollar banknote", "magnifier": "Magnifying glass tilted left",
     "point_up": "Index pointing up*", "thumbsup": "Thumbs up*", "megaphone": "Megaphone", "receipt": "Receipt",
     "cityscape": "Cityscape", "bulb": "Light bulb", "seedling": "Seedling", "turtle": "Turtle", "chart": "Bar chart",
+    "coin": "Coin", "abacus": "Abacus", "sparkles": "Sparkles",
 }
 
 
