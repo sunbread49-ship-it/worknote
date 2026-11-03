@@ -64,7 +64,19 @@ def calculator(w, h, display="×3 = ?"):
 
 
 def ant_with_money(size):
-    """돈주머니를 든 개미 (Fluent 3D 이모지 조합)"""
+    """채널 캐릭터: 돈주머니를 든 안경 개미 (engine/character.py)"""
+    from engine.character import ant_character
+    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    canvas.alpha_composite(ant_character(size, "moneybag"))
+    sp = I.emoji("sparkles", int(size * 0.16))
+    canvas.alpha_composite(sp, (int(size * 0.78), int(size * 0.12)))
+    coin = I.emoji("coin", int(size * 0.16)).rotate(-15, resample=Image.BICUBIC, expand=True)
+    canvas.alpha_composite(coin, (int(size * 0.04), int(size * 0.56)))
+    return canvas
+
+
+def _old_ant_with_money(size):
+    """(이전) Fluent 3D 이모지 조합"""
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     ant = I.emoji("ant", int(size * 0.86)).rotate(-8, resample=Image.BICUBIC, expand=True)
     canvas.alpha_composite(ant, (int(size * 0.0), int(size * 0.06)))
@@ -79,16 +91,14 @@ def ant_with_money(size):
 
 def profile(ch):
     N = 800
-    bg = radial((N, N), (255, 214, 90), (245, 168, 40))
+    bg = radial((N, N), (255, 220, 110), (250, 178, 50))
     d = ImageDraw.Draw(bg)
-    d.ellipse((24, 24, N - 24, N - 24), outline=NAVY + (255,), width=18)
-    a = ant_with_money(560)
-    bg.alpha_composite(shadow(a), (110 - 40, 140 - 40))
-    bg.alpha_composite(a, (110, 140))
-    # 작은 계산기
-    c = calculator(150, 210, "×3")
-    c = c.rotate(10, resample=Image.BICUBIC, expand=True)
-    bg.alpha_composite(c, (90, 470))
+    d.ellipse((22, 22, N - 22, N - 22), outline=NAVY + (255,), width=20)
+    a = ant_with_money(640)
+    bg.alpha_composite(shadow(a, 14, 90, (6, 12)), (80 - 40, 110 - 40))
+    bg.alpha_composite(a, (80, 110))
+    c = calculator(140, 196, "×3").rotate(-12, resample=Image.BICUBIC, expand=True)
+    bg.alpha_composite(c, (575, 420))
     bg.convert("RGB").save(OUT / "profile.png")
     # 원형 미리보기
     m = Image.new("L", (N, N), 0)
