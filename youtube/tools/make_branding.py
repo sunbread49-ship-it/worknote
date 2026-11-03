@@ -65,13 +65,9 @@ def calculator(w, h, display="×3 = ?"):
 
 def ant_with_money(size):
     """채널 캐릭터: 돈주머니를 든 안경 개미 (engine/character.py)"""
-    from engine.character import ant_character
+    from engine.character import ant_side
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    canvas.alpha_composite(ant_character(size, "moneybag"))
-    sp = I.emoji("sparkles", int(size * 0.16))
-    canvas.alpha_composite(sp, (int(size * 0.78), int(size * 0.12)))
-    coin = I.emoji("coin", int(size * 0.16)).rotate(-15, resample=Image.BICUBIC, expand=True)
-    canvas.alpha_composite(coin, (int(size * 0.04), int(size * 0.56)))
+    canvas.alpha_composite(ant_side(size, "money"))
     return canvas
 
 
@@ -94,11 +90,9 @@ def profile(ch):
     bg = radial((N, N), (255, 220, 110), (250, 178, 50))
     d = ImageDraw.Draw(bg)
     d.ellipse((22, 22, N - 22, N - 22), outline=NAVY + (255,), width=20)
-    a = ant_with_money(640)
-    bg.alpha_composite(shadow(a, 14, 90, (6, 12)), (80 - 40, 110 - 40))
-    bg.alpha_composite(a, (80, 110))
-    c = calculator(140, 196, "×3").rotate(-12, resample=Image.BICUBIC, expand=True)
-    bg.alpha_composite(c, (575, 420))
+    a = ant_with_money(700)
+    bg.alpha_composite(shadow(a, 14, 80, (6, 12)), (40 - 40, 60 - 40))
+    bg.alpha_composite(a, (40, 60))
     bg.convert("RGB").save(OUT / "profile.png")
     # 원형 미리보기
     m = Image.new("L", (N, N), 0)
@@ -132,12 +126,12 @@ def banner(ch):
     bg.alpha_composite(g)
     # 안전 영역(모든 기기에서 보이는 곳): 가운데 1546x423 → x 507~2053, y 508~931
     sx0, sy0, sx1, sy1 = 507, 508, 2053, 931
-    a = ant_with_money(400)
+    a = ant_with_money(420)
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))  # 어두운 개미가 묻히지 않게 뒤에 금색 원
     ImageDraw.Draw(glow).ellipse((sx0 + 10, sy0 + 20, sx0 + 390, sy0 + 400), fill=S.GOLD + (255,))
     bg.alpha_composite(glow.filter(ImageFilter.GaussianBlur(4)))
-    bg.alpha_composite(shadow(a), (sx0 - 10 - 40, sy0 + 10 - 40))
-    bg.alpha_composite(a, (sx0 - 10, sy0 + 10))
+    bg.alpha_composite(shadow(a), (sx0 - 20 - 40, sy0 - 10 - 40))
+    bg.alpha_composite(a, (sx0 - 20, sy0 - 10))
     calc = calculator(150, 210, "×3").rotate(-8, resample=Image.BICUBIC, expand=True)
     bg.alpha_composite(calc, (sx1 - 190, sy0 + 120))
     name = G.text_img(ch["name"], "Black", 150, (255, 255, 255), stroke=0)
