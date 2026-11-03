@@ -223,3 +223,21 @@ def ant_side(size=800, carry="money", glasses=True, mood="smile"):
         d.line(pts, fill=SIDE_LINE + (255,), width=int(26 * u), joint="curve")
         d.line(pts, fill=SIDE_BODY + (255,), width=int(12 * u), joint="curve")
     return c.reduce(K)
+
+
+def logo_badge(size=200, ring=(14, 20, 38)):
+    """채널 로고: 금색 원 + 남색 테두리 + 지폐 진 옆모습 개미"""
+    k = 3
+    S = size * k
+    im = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.ellipse((0, 0, S - 1, S - 1), fill=ring + (255,))
+    d.ellipse((S * 0.05, S * 0.05, S * 0.95, S * 0.95), fill=(252, 196, 70, 255))
+    a = ant_side(int(size * 0.98), "money").resize((int(S * 0.98), int(S * 0.98)), Image.LANCZOS)
+    m = Image.new("L", (S, S), 0)
+    ImageDraw.Draw(m).ellipse((S * 0.05, S * 0.05, S * 0.95, S * 0.95), fill=255)
+    lay = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    lay.alpha_composite(a, (int(S * -0.02), int(S * 0.02)))
+    lay.putalpha(ImageChops.multiply(lay.getchannel("A"), m))
+    im.alpha_composite(lay)
+    return im.reduce(k)

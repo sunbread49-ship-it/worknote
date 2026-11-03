@@ -219,6 +219,20 @@ _co = {}
 _cache2 = {}
 
 
+def _logo(name):
+    """모든 슬라이드 왼쪽 위 채널 로고(개미 배지 + 채널명) — 재업로드·도용 방지용 각인"""
+    k = ("logo", name)
+    if k not in _cache2:
+        from .character import logo_badge
+        b = logo_badge(110)
+        t = G.text_img(name, "Black", 24, (255, 255, 255), stroke=3, stroke_fill=(10, 12, 20))
+        im = Image.new("RGBA", (max(b.width, t.width) + 4, b.height + t.height + 4), (0, 0, 0, 0))
+        im.alpha_composite(b, ((im.width - b.width) // 2, 0))
+        im.alpha_composite(t, ((im.width - t.width) // 2, b.height + 2))
+        _cache2[k] = im
+    return _cache2[k]
+
+
 def _mascot(size):
     k = ("m", size)
     if k not in _cache2:
@@ -702,7 +716,7 @@ def make(spec, idx, channel):
 
 # ── 화면 위에 항상 붙는 것들(로고·챕터·자막·진행바·면책) ─────────────
 def chrome(f, scene, t_global, total, channel):
-    G.blit(f, G.text_img(channel.get("name", "채널명"), "ExtraBold", 28, S.GOLD), (S.SAFE_X - 40, 48), 0.9)
+    G.blit(f, _logo(channel.get("name", "채널명")), (34, 26), 0.95)
     ch = scene.spec.get("chapter")
     if ch:
         G.blit(f, G.pill(ch, "Bold", 26, S.FG, S.PANEL, pad=(22, 9)), (S.W - S.SAFE_X + 40, 44), 0.95, "rt")

@@ -127,15 +127,9 @@ def skyline(w=1920, h=520, seed=3):
 
 
 def mascot(size=200, ring=S.GOLD):
-    """채널 마스코트: 금색 원 안의 개미 (Fluent 3D 이모지)"""
-    im, d = G.supersample(size, size, K)
-    s = size * K
-    d.ellipse((0, 0, s - 1, s - 1), fill=ring + (255,))
-    d.ellipse((s * 0.05, s * 0.05, s * 0.95, s * 0.95), fill=(255, 246, 222, 255))
-    out = G.finish(im, K)
-    ant = emoji("ant", int(size * 0.78))
-    out.alpha_composite(ant, ((size - ant.width) // 2, (size - ant.height) // 2 + int(size * 0.03)))
-    return out
+    """채널 마스코트: 지폐 진 옆모습 개미 배지 (engine/character.py)"""
+    from .character import logo_badge
+    return logo_badge(size)
 
 
 _emo = {}
