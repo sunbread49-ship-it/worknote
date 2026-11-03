@@ -1,8 +1,8 @@
-# EP002 · 레딧 썰 팩트체크 ① TQQQ / SQQQ
-# 코너: "레딧 썰 팩트체크" — 미국 커뮤니티에서 도는 썰을 실제 데이터로 확인
-# narration 한 줄 = 녹음 한 문장. ' | ' = 자막 끊는 위치(녹음 대본에선 지워짐)
-# 숫자는 render 때 출력되는 numbers.txt(실제 데이터 계산값)와 반드시 대조할 것.
-title: "레딧 썰 팩트체크: 'TQQQ 2년 만에 30배' 진짜일까? 그리고 SQQQ의 무서운 진실"
+# EP002 · 주식 궁금증, 숫자로 풀기 ① TQQQ (+SQQQ)
+# 코너 A "주식 궁금증, 숫자로 풀기": 화제·궁금한 종목/ETF를 실제 데이터로 백테스트해 인사이트를 얻는 시간
+# (레딧·유튜브의 성공담/실패담은 '대중 여론' 정도로만 가볍게 언급)
+# narration 한 줄 = 한 문장. ' | ' = 자막 끊는 위치. 대본 작성 규칙: youtube/SCRIPT_STYLE.md
+title: "TQQQ 16년 백테스트: 언제 샀느냐에 따라 10배 vs -82%"
 
 # AI 음성 (녹음 파일을 audio/ 에 넣으면 녹음이 우선)
 tts:
@@ -10,10 +10,11 @@ tts:
   rate: 1.12
 
 youtube:
-  title: "1억이 450원 됐습니다… 레딧에서 난리 난 3배 ETF의 진실 (TQQQ·SQQQ)"
+  title: "같은 TQQQ, 산 날짜만 달랐는데… 10배 vs -82% | 16년 백테스트로 본 3배 ETF의 진짜 결말"
   description: |
-    미국 최대 주식 커뮤니티 레딧(r/wallstreetbets)에서 자주 보이는 "TQQQ 몰빵 썰", 정말일까요?
-    3배 레버리지 TQQQ와 3배 인버스 SQQQ를 2010년 상장 이후 실제 데이터로 팩트체크했습니다.
+    "TQQQ로 2년 만에 30배", "SOXL로 100배"… 한 번쯤 들어보셨죠?
+    3배 레버리지 TQQQ(그리고 인버스 SQQQ)를 2010년 상장 이후 16년 실제 데이터로 직접 백테스트했습니다.
+    언제 샀느냐에 따라 10배와 -82%로 갈린 이유, 지수가 올라도 손실이 나는 '변동성 끌림'까지 숫자로 풀어봅니다.
 
     00:00 레딧에서 도는 썰
     (챕터는 업로드 시 자동 생성 예정)
@@ -25,7 +26,7 @@ youtube:
 
     [자료] Yahoo Finance 일간 수정주가(배당·분할 반영) 공개 미러 · 나스닥100 지수(1985~)
     '가상 TQQQ'는 나스닥100 일간 수익률 x3 - 연 0.95% 보수로 계산(차입비용 미반영 → 실제보다 유리)
-  tags: [TQQQ, SQQQ, 레버리지ETF, 인버스ETF, 나스닥, 레딧, 월스트리트베츠, 미국주식, 주식공부, 팩트체크]
+  tags: [TQQQ, 레버리지ETF, 백테스트, SQQQ, 인버스ETF, 나스닥, 미국주식, 주식공부, SOXL, 3배ETF]
   privacy: private
 
 thumbnail:
@@ -57,6 +58,9 @@ thumbnail_v2:
     end: "2026-10-30"
     log: true
     color: [90, 160, 255]
+
+# 업로드용 대표 썸네일: thumbnails_vs 의 2번(B)
+thumbnail_pick: 2
 
 # 대비형 썸네일 후보 (A/B 테스트용)
 thumbnails_vs:
@@ -97,53 +101,38 @@ checks:
 # 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
 # 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
 # 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
+# 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
+# 슬라이드 구성: 1~3문장마다 화면이 바뀌도록 쪼갬. 'kinetic' = 가운데 큰 글씨로 빠르게 넘기는 슬라이드
 scenes:
-- type: reddit
-  chapter: 레딧 썰
-  posts:
-  - {flair: Gain, title: 'TQQQ 몰빵 2년, 계좌 30배 찍었습니다', en: '"30x in 2 years. TQQQ and chill."', up: 24.1k, comments: '3,812', on: 2}
-  stickers:
-  - e: rocket
-    pos: [1500, 330]
-    size: 200
-    on: 2
-    offset: 0.5
-    rot: -15
-  narration: ['자, 미국 최대 주식 커뮤니티죠. 레딧의 월스트리트베츠.', '여기 들어가 보면요, 이런 글이 진짜 자주 올라옵니다. | TQQQ에 몰빵했더니 2년 만에 30배가 됐다.']
-- type: reddit
-  chapter: 레딧 썰
-  posts:
-  - {flair: Discussion, title: '레버리지 ETF 장기 보유하면 녹는다는 거, 다 미신 아님?', en: '"Leverage decay is a myth. Change my mind."', up: 8.7k, comments: '2,940', on: 1}
-  - {flair: Loss, title: SQQQ로 하락장 대비하다가… 계좌가 녹았습니다, en: '"SQQQ is a casino and I''m the house''s favorite customer."', up: 15.3k, comments: '1,207', on: 2}
-  mascot:
-    on: 2
-    pos: [1700, 820]
-    size: 150
-    say: 이거… 진짜야?
-    side: left
-    offset: 1.5
-  narration: ['레버리지 ETF 오래 들고 있으면 녹는다? | 그거 다 미신이다.', '근데 반대편엔요, 인버스 SQQQ로 하락장 대비하다가 | 계좌가 녹았다는 글도 있습니다.']
 - type: kinetic
-  items:
-  - {text: '이 썰들, 진짜일까?', on: 1, size: 130, highlight: '진짜일까?'}
-  narration: ['과연 이 썰들, 진짜일까요?']
-- type: kinetic
+  chapter: 인트로
   stack: true
-  bg_word: 30x
+  bg_word: 100x
   items:
-  - {text: '2년 만에 30배?', on: 1, size: 130, highlight: '30배?'}
-  - {text: '1,000만 원 → 3억', on: 2, size: 130, highlight: 3억}
-  narration: [솔직히요. 이런 글 보면 손가락 근질근질하죠., '2년에 30배면, 천만 원이 3억이에요. | 아 진짜, 이거 인생역전 아닙니까?']
+  - {text: TQQQ로 2년 만에 30배, on: 1, size: 120, highlight: 30배}
+  - {text: SOXL로 100배, on: 1, offset: 2.2, size: 120, highlight: 100배}
+  narration: [TQQQ로 2년 만에 30배 벌었다. | SOXL로 100배 벌었다., '이런 얘기, 한 번쯤은 들어보셨죠?']
+- type: reddit
+  chapter: 인트로
+  community_sub: 미국 최대 주식 커뮤니티
+  posts:
+  - {flair: Gain, title: 'TQQQ 몰빵 2년, 계좌 30배 찍었습니다', en: '"30x in 2 years. TQQQ and chill."', up: 24.1k, comments: '3,812', on: 1}
+  - {flair: Loss, title: SQQQ로 하락장 대비하다가… 계좌가 녹았습니다, en: '"SQQQ is a casino and I''m the house''s favorite customer."', up: 15.3k, comments: '1,207', on: 2}
+  narration: ['미국 최대 주식 커뮤니티, 레딧에도 이런 성공담이 와글와글합니다.', '근데 반대로요, 레버리지 오래 들면 녹는다, | 인버스 하다가 계좌 녹았다는 글도 넘쳐나요.']
+- type: kinetic
+  items:
+  - {text: '그래서 진짜는?', on: 1, size: 140, highlight: '진짜는?', sub: 직접 숫자로 확인해 봤습니다}
+  narration: ['그래서 오늘은요, 직접 숫자로 확인해 보겠습니다.']
 - type: title
   skyline: true
   y: 250
-  kicker: 레딧 썰 팩트체크 ①
-  title: 'TQQQ 2년 만에 30배?
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: 'TQQQ 16년 백테스트
 
-    그리고 SQQQ의 진실'
-  highlight: 30배?
-  subtitle: 2010년 상장 이후 실제 데이터로 끝까지 확인해봤습니다
-  narration: ['그래서 준비했습니다. 레딧 썰, 팩트체크.', '오늘은 2010년 상장 이후 16년 치 실제 데이터로, | TQQQ랑 SQQQ를 끝까지 한번 파헤쳐 보겠습니다.']
+    대박일까, 쪽박일까?'
+  highlight: 대박일까, 쪽박일까?
+  subtitle: 2010년 상장 이후 실제 데이터로 끝까지 확인했습니다
+  narration: ['주식 궁금증, 숫자로 풀어보는 시간입니다.', '오늘의 주인공은 TQQQ. | 2010년 상장 이후 16년 치 실제 데이터로, 직접 백테스트해 볼게요.']
 - type: kinetic
   items:
   - {text: 매수 추천 영상 아닙니다, on: 1, size: 110, highlight: 아닙니다, hl_color: down, sub: 오히려 그 반대에 가깝습니다}
@@ -177,7 +166,7 @@ scenes:
   narration: [근데 여기서 딱 하나만 기억해 주세요. | '하루'. 이게 오늘 얘기의 핵심입니다.]
   bg_word: 1 DAY
 - type: chart
-  chapter: 썰 ① 대박
+  chapter: 16년 백테스트
   chart:
     lines:
     - {series: tqqq, color: up, label: TQQQ}
@@ -198,9 +187,9 @@ scenes:
   left: {title: QQQ (1배), value: 1.8억, sub: 약 18배, color: neutral, on: 1}
   right: {title: TQQQ (3배), value: '?', sub: 과연…, color: up, on: 2}
   narration: ['회색 선은 레버리지 없는 나스닥100, QQQ예요. | 이것도 16년 동안 약 18배. 1억 8천만 원이 됐습니다.', '근데요, 빨간 선. TQQQ는요.']
-  chapter: 썰 ① 대박
+  chapter: 16년 백테스트
 - type: bignum
-  chapter: 썰 ① 대박
+  chapter: 16년 백테스트
   label: TQQQ 16년 수익
   from: 1
   to: 302
@@ -234,9 +223,9 @@ scenes:
   items:
   - {text: '2년 안에 낼 수 있었던 최고 기록은?', on: 1, size: 100, highlight: 최고 기록}
   narration: ['그럼 ''2년 만에 30배''는요? 이건 진짜일까요?', '16년 동안 아무 날에나 샀다고 치고, | 2년 안에 찍을 수 있었던 최고 기록을 전부 계산해 봤어요.']
-  chapter: 썰 ① 팩트체크
+  chapter: 2년에 30배?
 - type: bignum
-  chapter: 썰 ① 팩트체크
+  chapter: 2년에 30배?
   label: TQQQ, 2년 안에 낸 최고 배수
   from: 1
   to: 9.98
@@ -251,8 +240,8 @@ scenes:
 - type: kinetic
   items:
   - {text: '"2년 만에 30배"', on: 1, size: 120}
-  narration: ['근데 30배는, 없었습니다. | 썰 판정. 과장입니다.']
-  chapter: 썰 ① 팩트체크
+  narration: ['근데 30배는, 없었습니다. | 판정. 과장입니다.']
+  chapter: 2년에 30배?
   stamp:
     text: '판정: 과장'
     color: gold
@@ -262,7 +251,7 @@ scenes:
     rot: -6
     size: 90
 - type: chart
-  chapter: 썰 ① 반전
+  chapter: 그 다음 이야기
   chart:
     series: tqqq
     start: '2019-06-01'
@@ -277,7 +266,7 @@ scenes:
     source: '자료: Yahoo Finance 수정주가'
   narration: ['자, 근데 이 그래프. 조금만 더 보시죠.', '10배 오른 바로 그 고점에서,']
 - type: chart
-  chapter: 썰 ① 반전
+  chapter: 그 다음 이야기
   chart:
     series: tqqq
     start: '2021-11-19'
@@ -293,7 +282,7 @@ scenes:
   - {on: 1, offset: 2.0, dur: 0.5, amp: 16, sfx: boom}
   narration: ['다음 13개월 동안, TQQQ는 82%가 빠집니다.', '10억이 1억 8천이 되는 속도예요. | 2년 동안 번 걸, 1년 만에 거의 다 토해낸 거죠.']
 - type: chart
-  chapter: 썰 ① 반전
+  chapter: 그 다음 이야기
   chart:
     series: tqqq
     start: '2021-11-01'
@@ -339,7 +328,7 @@ scenes:
   left: {title: QQQ (나스닥100), value: -33%, sub: 아프지만 버틸 만한 하락, color: neutral, on: 2}
   right: {title: TQQQ (3배), value: -79%, sub: '1억 → 2,100만 원', color: down, on: 3}
   narration: ['2022년 한 해만 딱 떼서 보면, 더 극명해요.', 나스닥100은 33% 빠졌습니다. 아프죠. 근데 버틸 만은 해요., 'TQQQ는요? 79% 하락. 1억이 2,100만 원이 됐습니다.']
-  chapter: 썰 ① 반전
+  chapter: 그 다음 이야기
 - type: kinetic
   items:
   - {text: '-33% × 3 = -99%?', on: 1, size: 130, highlight: '-99%?', hl_color: down, sub: 그런데 왜 -79%일까}
@@ -460,7 +449,7 @@ scenes:
     title: 가상 TQQQ · 1997 ~ 2000.3 (1,000만 원, 로그 스케일)
     draw: {on: 2, dur: 2.6}
     source: 가상 TQQQ = 나스닥100 일간수익률 x3 - 연 0.95% 보수 (차입비용 미반영 → 실제보다 유리하게 계산)
-  narration: ['TQQQ가 1997년에도 있었다면? | 나스닥100 일간 데이터로, 가상의 TQQQ를 만들어 봤습니다.', '닷컴 버블 때까지는, 지수보다 훨씬 빠르게 올라갑니다. | 레딧에 인증글 올리기 딱 좋은 그래프죠.']
+  narration: ['TQQQ가 1997년에도 있었다면? | 나스닥100 일간 데이터로, 가상의 TQQQ를 만들어 봤습니다.', '닷컴 버블 때까지는, 지수보다 훨씬 빠르게 올라갑니다. | 인증글 올리기 딱 좋은 그래프죠.']
 - type: chart
   chapter: 만약에
   chart:
@@ -517,7 +506,7 @@ scenes:
   ticker: [나스닥100 -83%, 가상 TQQQ -99.94%, 나스닥100 2015년 고점 회복, 가상 TQQQ 26년째 미회복, ※ 나스닥100 x3 가상 계산]
   narration: ['그 시절에 TQQQ가 있었다면, 아마 뉴스는 이랬을 거예요.', '1억이 6만 원. 그리고 26년이 지난 지금도, 본전은 아직입니다.']
 - type: reddit
-  chapter: 썰 ② 인버스
+  chapter: 인버스 SQQQ
   posts:
   - {flair: YOLO, title: 곧 폭락 온다. SQQQ 풀매수하고 기다리는 중, en: '"Crash is coming. All in SQQQ."', up: 6.2k, comments: '1,644', on: 2}
   - {flair: Loss, title: SQQQ 2년 들고 있었는데 -90%… 하락장은 언제 오냐, en: '"Held SQQQ for 2 years. Down 90%. Where is the crash?"', up: 19.8k, comments: '4,107', on: 3}
@@ -527,14 +516,14 @@ scenes:
     size: 190
     on: 2
     offset: 0.5
-  narration: ['자, 이번엔 반대편. 인버스 썰입니다.', '곧 폭락 온다면서, SQQQ에 풀매수하는 글.', '그리고 몇 달 뒤… 아니, 몇 년 뒤에 올라오는 후기.']
+  narration: ['자, 이번엔 반대편. 인버스 SQQQ입니다.', '곧 폭락 온다면서, SQQQ에 풀매수하는 글.', '그리고 몇 달 뒤… 아니, 몇 년 뒤에 올라오는 후기.']
 - type: kinetic
   items:
   - {text: '인버스는 안전하다?', on: 1, size: 140, highlight: '안전하다?'}
   narration: ['하락장 대비하는 거니까, 인버스는 오히려 안전한 거 아니냐고요?']
-  chapter: 썰 ② 인버스
+  chapter: 인버스 SQQQ
 - type: chart
-  chapter: 썰 ② 인버스
+  chapter: 인버스 SQQQ
   chart:
     series: sqqq
     start: '2010-02-11'
@@ -550,7 +539,7 @@ scenes:
     source: '자료: Yahoo Finance 수정주가 (액면병합 반영)'
   narration: [결론부터 보시죠., 'SQQQ가 상장한 2010년 2월에, 1억을 넣었다면,', '숫자가 계속 줄어요. 천만 원, 백만 원, 만 원…']
 - type: bignum
-  chapter: 썰 ② 인버스
+  chapter: 인버스 SQQQ
   label: SQQQ 1억 원, 16년 뒤
   from: 100000000
   to: 452
@@ -574,19 +563,19 @@ scenes:
   items:
   - {text: 인버스가 대박 날 때도 있다, on: 1, size: 110, highlight: 대박, hl_color: up}
   narration: [물론요. 인버스로 큰돈 버는 순간도 있습니다.]
-  chapter: 썰 ② 인버스
+  chapter: 인버스 SQQQ
 - type: versus
   heading: 2020년 SQQQ
   left: {title: 코로나 폭락 한 달, value: +92%, sub: 2020.2.19 → 3.16, color: up, on: 1}
   right: {title: 그 뒤 9개월, value: -90%, sub: 2020.3.16 → 12.31, color: down, on: 2}
   narration: ['2020년 코로나 폭락 때, SQQQ는 한 달도 안 돼서 92% 올랐어요.', '근데 바로 그 고점부터 연말까지 9개월 동안은? 90%가 빠졌습니다.']
-  chapter: 썰 ② 인버스
+  chapter: 인버스 SQQQ
 - type: versus
   heading: 2022년 SQQQ
   left: {title: 2022년 하락장, value: +82%, sub: 2022년 한 해, color: up, on: 1}
   right: {title: 그 뒤, value: -96%, sub: 2022.12.28 → 2026.10, color: down, on: 1, offset: 1.5}
   narration: [2022년 하락장 때도 82% 올랐죠. | 근데 그 뒤로는 다시 96% 하락했습니다.]
-  chapter: 썰 ② 인버스
+  chapter: 인버스 SQQQ
 - type: kinetic
   items:
   - {text: '시작과 끝,
@@ -663,21 +652,21 @@ scenes:
   - {text: '그 하루 전에, -58%', on: 1, size: 130, highlight: -58%, hl_color: down, sub: 먼저 버텨야 했던 하락}
   narration: ['물론 이 하루를 맛보려면, | 그 전에 58% 하락부터 버텨야 했습니다.']
 - type: versus
-  heading: 레딧에서 보이는 것과 안 보이는 것
+  heading: 온라인에서 보이는 것과 안 보이는 것
   left: {title: 보이는 글, value: 30배 인증, sub: 살아남은 소수의 후기, color: up, on: 1}
   right: {title: 안 보이는 글, value: 조용히 퇴장, sub: -80% 맞고 떠난 다수, color: down, on: 2}
-  narration: ['그리고 하나 더요. 레딧에 올라오는 건, 대부분 대박 인증이에요.', '반대로 -80% 맞고 조용히 떠난 사람들은, 글을 잘 안 씁니다. | 우리가 보는 건 살아남은 사람 얘기일 뿐이죠.']
+  narration: ['그리고 하나 더요. 레딧이든 유튜브든, 올라오는 건 대부분 대박 인증이에요.', '반대로 -80% 맞고 조용히 떠난 사람들은, 글을 잘 안 씁니다. | 우리가 보는 건 살아남은 사람 얘기일 뿐이죠.']
 - type: kinetic
   items:
-  - {text: 오늘의 팩트체크, on: 1, size: 140}
-  narration: ['자, 오늘 팩트체크 정리해 볼게요.']
+  - {text: 오늘의 결론, on: 1, size: 140}
+  narration: ['자, 오늘 확인한 거 정리해 볼게요.']
   bg_word: CHECK
-  chapter: 정리
+  chapter: 오늘의 결론
 - type: kinetic
   items:
   - {text: TQQQ 16년 302배, on: 1, size: 110}
   narration: ['TQQQ 16년 302배. 사실입니다. 다만, 결과만 봤을 때 얘기죠.']
-  chapter: 정리
+  chapter: 오늘의 결론
   stamp:
     text: 사실
     color: up
@@ -690,7 +679,7 @@ scenes:
   items:
   - {text: 2년 만에 30배, on: 1, size: 110}
   narration: ['2년 만에 30배. 이건 과장이에요. 최고 기록은 약 10배였고, | 그 직후 82%가 빠졌습니다.']
-  chapter: 정리
+  chapter: 오늘의 결론
   stamp:
     text: 과장 (최고 약 10배)
     color: gold
@@ -703,7 +692,7 @@ scenes:
   items:
   - {text: 레버리지는 오래 들면 녹는다, on: 1, size: 110}
   narration: [레버리지는 오래 들면 녹는다. 사실입니다. | 지수가 올라도 손실이 날 수 있어요.]
-  chapter: 정리
+  chapter: 오늘의 결론
   stamp:
     text: 사실
     color: up
@@ -716,7 +705,7 @@ scenes:
   items:
   - {text: 인버스로 하락장 대비, on: 1, size: 110}
   narration: ['그리고 인버스로 하락장 대비한다? | 길게 들고 있으면, 1억이 450원이 될 수도 있습니다.']
-  chapter: 정리
+  chapter: 오늘의 결론
   stamp:
     text: 길게 들면 위험
     color: down
@@ -728,8 +717,8 @@ scenes:
 - type: kinetic
   items:
   - {text: 대박 후기 = 살아남은 사람의 이야기, on: 1, size: 96, highlight: 살아남은 사람}
-  narration: ['레딧의 대박 후기는, 살아남은 사람 얘기라는 거. 이거 하나만 꼭 기억해 주세요.']
-  chapter: 정리
+  narration: ['온라인의 대박 후기는, 살아남은 사람 얘기라는 거. 이거 하나만 꼭 기억해 주세요.']
+  chapter: 오늘의 결론
 - type: outro
   heading: '3배의 수익엔
 

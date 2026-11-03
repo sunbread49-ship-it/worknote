@@ -465,8 +465,6 @@ class Reddit(Scene):
         o = G.appear(t, 0.1)
         hdr = _sub_header(sp.get("community", "r/wallstreetbets"), sp.get("community_sub", "미국 최대 주식 커뮤니티"))
         G.blit(f, hdr, (S.SAFE_X + 20, 140), o)
-        G.blit(f, G.text_img(sp.get("disclaimer", "※ 자주 보이는 글 유형을 재구성한 예시 (실제 게시글·작성자 아님)"),
-                             "Regular", 22, S.MUTED), (S.SAFE_X + 20 + sp.get("width", 1080), 168), o, "rt")
         y = 140 + hdr.height + 30
         for i, p in enumerate(sp["posts"]):
             t0 = self.line_start(p.get("on", 1)) + p.get("offset", 0)
@@ -477,6 +475,8 @@ class Reddit(Scene):
             x = S.SAFE_X + 20 + (1 - G.ease_out(k)) * -60
             G.blit(f, card, (x, y), G.ease_out(k))
             y += card.height + 22
+        G.blit(f, G.text_img(sp.get("disclaimer", "※ 자주 보이는 글 유형을 재구성한 예시 (실제 게시글·작성자 아님)"),
+                             "Regular", 22, S.MUTED), (S.SAFE_X + 20, y), o)
         self.draw_common(f, t)
 
     def extra_sfx(self):
@@ -493,7 +493,7 @@ def _sub_header(name, sub):
         icon = G.finish(icon, 3)
         r = G.text_img("r/", "Black", 34, (255, 255, 255))
         icon.alpha_composite(r, ((72 - r.width) // 2, (72 - r.height) // 2 - 2))
-        im = Image.new("RGBA", (72 + 20 + max(a.width, b.width), 80), (0, 0, 0, 0))
+        im = Image.new("RGBA", (72 + 20 + a.width + 18 + b.width + 4, 80), (0, 0, 0, 0))
         im.alpha_composite(icon, (0, 4))
         im.alpha_composite(a, (92, -4))
         im.alpha_composite(b, (92 + a.width + 18, 12))

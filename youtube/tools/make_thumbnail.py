@@ -130,7 +130,13 @@ def main(ep_dir):
         s_ = G.text_img(th["sub"], "ExtraBold", 64, (255, 255, 255), stroke=5, stroke_fill=(0, 0, 0))
         G.blit(f, s_, (86, y + 24))
     out = ROOT / "out" / ep_dir.name / "thumbnail.png"
-    f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(out)
+    pick = ep.get("thumbnail_pick")
+    if pick:  # 대비형 후보 중 하나를 대표 썸네일로
+        import shutil
+        f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(out.with_name("thumbnail_big.png"))
+        shutil.copy(ROOT / "out" / ep_dir.name / f"thumbnail_vs{pick}.png", out)
+    else:
+        f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(out)
     print("썸네일 →", out)
 
 

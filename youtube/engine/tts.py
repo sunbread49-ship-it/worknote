@@ -85,8 +85,43 @@ def synth(text, voice, rate=1.0, pitch=0.0, cache_dir=Path("."), lang="ko-KR"):
 # 음성용 발음 사전 (자막 글자는 그대로, 읽는 소리만 바뀜). 에피소드 tts.say 로 추가 가능
 SAY = {
     "TQQQ": "티큐큐큐", "SQQQ": "에스큐큐큐", "QQQ": "큐큐큐", "ETF": "이티에프", "S&P500": "에스앤피 오백",
-    "VIX": "빅스", "AI": "에이아이",
+    "VIX": "빅스", "AI": "에이아이", "SOXL": "속슬",
+    "무려, 302배": "무려, 삼백, 이 배", "302배": "삼백 이 배",
 }
+
+
+_DIG = "영일이삼사오육칠팔구"
+
+
+def hangul_num(n):
+    """정수 → 한자어 수 읽기 (1억 8천 → 일억 팔천에 쓰임). 1 앞의 '일'은 십·백·천에서 생략."""
+    if n == 0:
+        return "영"
+    out = ""
+    for big, name in ((10 ** 8, "억"), (10 ** 4, "만"), (1, "")):
+        part, n = divmod(n, big)
+        if not part:
+            continue
+        s = ""
+        for unit, un in ((1000, "천"), (100, "백"), (10, "십"), (1, "")):
+            d, part = divmod(part, unit)
+            if d:
+                s += ("" if (d == 1 and un) else _DIG[d]) + un
+        out += s + name
+    return out
+
+
+def _money_words(t):
+    """'1억 8천만 원', '1,000만 원', '30억' 같은 금액을 붙여 읽는 한글로 ('일억팔천만 원')"""
+    import re
+    unit = r"(억|천만|백만|만|천)"
+
+    def one(m):
+        n = int(m.group(1).replace(",", ""))
+        return hangul_num(n) + m.group(2)
+    t = re.sub(r"(?<![\d.])(\d[\d,]*)" + unit + r"(?=[\s원이을은가도의에만,.?!]|$)", one, t)
+    t = re.sub(r"억\s+(?=[일이삼사오육칠팔구십백천]+(천만|천|만))", "억", t)  # 일억 팔천 → 일억팔천
+    return t
 
 
 def speakable(text, extra=None):
@@ -98,6 +133,8 @@ def speakable(text, extra=None):
     t = re.sub(r"(?<![\w.])-(\d)", r"마이너스 \1", t)      # -80% → 마이너스 80%
     t = re.sub(r"(?<![\w.])\+(\d)", r"플러스 \1", t)      # +4% → 플러스 4%
     t = t.replace("…", ",").replace("...", ",")
+    t = re.sub(r"[\'\"‘’“”]", "", t)                      # 따옴표는 소리로 쉼을 만들어 어색 → 제거
+    t = _money_words(t)
     t = re.sub(r"(\S)\?\s", r"\1? ", t)
     # 조사 바로 뒤 극적인 쉼표("1억이, 450원")는 소리로는 어색 → 제거
     t = re.sub(r"([가-힣])(이|가|은|는|을|를|도),\s(?=[\d가-힣])", r"\1\2 ", t)
