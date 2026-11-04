@@ -188,17 +188,18 @@ def transition(kind, a, b, p):
     return Image.blend(a, b, k)
 
 
-def frame_at(c, t):
+def frame_at(c, t, subs=True, chrome=True):
     sc = next((s for s in c.scenes if s.start <= t < s.start + s.dur), c.scenes[-1])
     lt = t - sc.start
     f = scene_content(c, sc, lt)
     if sc.idx > 1 and lt < TRANS_T:
         prev = c.scenes[sc.idx - 2]
         f = transition(transition_kind(c, sc), last_frame(c, prev), f, lt / TRANS_T)
-    if not sc.spec.get("no_chrome"):
+    if chrome and not sc.spec.get("no_chrome"):
         SC.chrome(f, sc, t, c.total, c.channel)
-    cue = next((x for x in c.cues if x[0] <= t < x[1] + 0.12), None)
-    SC.subtitle(f, cue[2] if cue else "")
+    if subs:
+        cue = next((x for x in c.cues if x[0] <= t < x[1] + 0.12), None)
+        SC.subtitle(f, cue[2] if cue else "")
     return f.convert("RGB")
 
 

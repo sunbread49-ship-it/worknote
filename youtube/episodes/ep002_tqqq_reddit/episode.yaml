@@ -79,6 +79,21 @@ thumbnails_vs:
     left: {label: "2020년 3월에 샀다면", value: "10배", sub: "20개월 만에", color: up, chart: {series: tqqq, start: "2020-03-20", end: "2021-11-19", color: [240, 84, 84]}}
     right: {label: "2021년 11월에 샀다면", value: "-82%", sub: "13개월 만에", color: down, chart: {series: tqqq, start: "2021-11-19", end: "2022-12-28", color: [74, 144, 255]}}
 
+# 쇼츠 (롱폼 구간 잘라 쓰기) — 시간은 검수표 기준
+shorts:
+  - title: "같은 TQQQ인데\n산 날짜만 달랐다"
+    highlight: "산 날짜"
+    start: "1:43.6"
+    end: "2:27.0"
+  - title: "지수는 올랐는데\n3배 ETF는 손실?"
+    highlight: "손실?"
+    start: "3:40.6"
+    end: "4:20.0"
+  - title: "인버스에 1억 넣었더니\n450원 됐다"
+    highlight: "450원"
+    start: "5:31.6"
+    end: "6:06.0"
+
 checks:
   - {name: "TQQQ 2010.2→2026.10 배수", kind: mult, series: tqqq}
   - {name: "QQQ 같은 기간 배수", kind: mult, series: qqq, start: "2010-02-11"}
