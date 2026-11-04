@@ -3,7 +3,8 @@
   python tools/make_shorts.py episodes/ep002_tqqq_reddit
 episode.yaml 의 shorts: [{title, highlight, start: "1:44", end: "2:27"}] 를 읽는다.
 먼저 롱폼(render.py)을 렌더해 둬야 한다(소리는 롱폼에서 잘라 씀).
-구성: 위 = 후킹 제목 / 가운데 = 원본 화면 / 아래 = 큰 자막 / 맨 아래 = 채널 안내
+구성: 가운데 = 원본 화면(로고 포함) / 그 위 = 자막 / 아래 가운데 = 채널 프로필 + "전체 영상은 ... 채널에서 확인하세요."
+  python tools/make_shorts.py episodes/ep002_tqqq_reddit 3   # 3번 쇼츠만
 """
 import multiprocessing as mp
 import subprocess
@@ -39,28 +40,46 @@ def vbg():
     return im
 
 
-def compose(c, sh, t, bg, head):
+VID_Y = (VH - 608) // 2 - 40   # 가운데 영상 위치
+
+
+def compose(c, sh, t, bg):
     f = bg.copy()
-    f.alpha_composite(head, ((VW - head.width) // 2, 230))
-    fr = render.frame_at(c, t, subs=False, chrome=False).resize((VW, 608), Image.LANCZOS)
-    f.paste(fr, (0, 640))
+    fr = render.frame_at(c, t, subs=False, chrome=False).convert("RGBA")  # 롱폼 진행바는 빼고
+    fr.alpha_composite(SC._logo(c.channel.get("name", "")), (34, 26))      # 로고만 넣기
+    fr = fr.resize((VW, 608), Image.LANCZOS)
+    f.paste(fr, (0, VID_Y))
     cue = next((x for x in c.cues if x[0] <= t < x[1] + 0.12), None)
-    if cue:
-        tx = G.text_img(cue[2], "Black", 62, (255, 255, 255), max_w=960, align="center", stroke=5, stroke_fill=(0, 0, 0))
-        f.alpha_composite(tx, ((VW - tx.width) // 2, 1320))
+    if cue:  # 자막: 영상 바로 위
+        tx = G.text_img(cue[2], "Black", 64, (255, 255, 255), max_w=980, align="center", stroke=5, stroke_fill=(0, 0, 0))
+        f.alpha_composite(tx, ((VW - tx.width) // 2, VID_Y - 40 - tx.height))
     return f
+
+
+def cta(channel):
+    """하단 가운데: 채널 프로필 + '전체 영상은 ... 채널에서 확인하세요.'"""
+    from engine.character import logo_badge
+    b = logo_badge(120)
+    name = channel.get("name", "")
+    t1 = G.text_img("전체 영상은", "Bold", 44, S.FG)
+    t2 = G.text_img(f"'{name}' 채널에서 확인하세요.", "Bold", 44, S.FG, highlight=f"'{name}'")
+    tw = max(t1.width, t2.width)
+    w = b.width + 28 + tw
+    h = max(b.height, t1.height + t2.height + 8)
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    im.alpha_composite(b, (0, (h - b.height) // 2))
+    y = (h - (t1.height + t2.height + 8)) // 2
+    im.alpha_composite(t1, (b.width + 28, y))
+    im.alpha_composite(t2, (b.width + 28, y + t1.height + 8))
+    return im
 
 
 def job(args):
     ep_dir, i, sh, out = args
     c = render.setup(ep_dir, log=lambda *a: None)
     bg = vbg()
-    logo = SC._logo(c.channel.get("name", ""))
-    bg.alpha_composite(logo, ((VW - logo.width) // 2, 70))
-    foot = G.text_img(f"전체 영상은 채널에서  ·  {c.channel.get('handle', '')}", "Bold", 34, S.MUTED)
-    bg.alpha_composite(foot, ((VW - foot.width) // 2, 1700))
-    head = G.text_img(sh["title"], "Black", sh.get("size", 82), S.FG, max_w=980, align="center",
-                      highlight=sh.get("highlight", ""), line_gap=1.18)
+    cb = cta(c.channel)
+    bg.alpha_composite(cb, ((VW - cb.width) // 2, VID_Y + 608 + 90))
     t0, t1 = ts(sh["start"]), ts(sh["end"])
     silent = out.with_suffix(".silent.mp4")
     p = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{VW}x{VH}",
@@ -68,7 +87,7 @@ def job(args):
                           "-pix_fmt", "yuv420p", str(silent)], stdin=subprocess.PIPE)
     n = int((t1 - t0) * FPS)
     for k in range(n):
-        p.stdin.write(compose(c, sh, t0 + k / FPS, bg, head).convert("RGB").tobytes())
+        p.stdin.write(compose(c, sh, t0 + k / FPS, bg).convert("RGB").tobytes())
     p.stdin.close()
     p.wait()
     full = ROOT / "out" / ep_dir.name / "video.mp4"
@@ -85,7 +104,8 @@ def main(ep_dir):
     ep, _ = render.load(ep_dir)
     od = ROOT / "out" / ep_dir.name / "shorts"
     od.mkdir(parents=True, exist_ok=True)
-    jobs = [(ep_dir, i, sh, od / f"short{i}.mp4") for i, sh in enumerate(ep["shorts"], 1)]
+    only = [int(x) for x in sys.argv[2].split(",")] if len(sys.argv) > 2 else None
+    jobs = [(ep_dir, i, sh, od / f"short{i}.mp4") for i, sh in enumerate(ep["shorts"], 1) if not only or i in only]
     with mp.get_context("fork").Pool(min(len(jobs), mp.cpu_count())) as pool:
         for o in pool.map(job, jobs):
             print("쇼츠 →", o)
