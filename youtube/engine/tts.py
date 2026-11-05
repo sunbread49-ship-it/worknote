@@ -148,6 +148,8 @@ def _numbers_ko(t):
     t = re.sub(r"(?<![\d.,])(\d{1,4})년", lambda m: hangul_num(int(m.group(1))) + "년", t)
     # 쉼표 숫자: 7,568 → 칠천오백육십팔
     t = re.sub(r"(?<![\d.])(\d{1,3}(?:,\d{3})+)(?![\d.])", lambda m: hangul_num(int(m.group(1).replace(",", ""))), t)
+    # "-30%에 사도" → 에와 사를 붙여 자연스럽게
+    t = re.sub(r"%에 (사|팔)", r"%에\1", t)
     # 띄어 읽기 → 붙여 읽기
     for a, b in (("년 치", "년치"), ("다음 해", "다음해"), ("전 해", "전해"), ("1등", "일뜽")):
         t = t.replace(a, b)
@@ -168,7 +170,7 @@ def speakable(text, extra=None):
     t = _numbers_ko(t)
     t = re.sub(r"(\S)\?\s", r"\1? ", t)
     # 조사 바로 뒤 극적인 쉼표("1억이, 450원")는 소리로는 어색 → 제거
-    t = re.sub(r"([가-힣])(이|가|은|는|을|를|도),\s(?=[\d가-힣])", r"\1\2 ", t)
+    t = re.sub(r"([가-힣])(이|가|은|는|을|를),\s(?=[\d가-힣])", r"\1\2 ", t)
     t = re.sub(r",\s*,", ",", t).strip(" ,")
     return t
 

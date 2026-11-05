@@ -483,7 +483,7 @@ def t_vs_numbers(sp):
     for side, x in (("left", W * 0.25), ("right", W * 0.75)):
         c = sp[side]
         shadowed(f, fit(c["label"], 64, 860, color="white"), (x, 230), "mt")
-        shadowed(f, fit(c["value"], 260, 880, color=c.get("color", "red")), (x, 560), "mm")
+        shadowed(f, fit(c["value"], 230, 720, color=c.get("color", "red")), (x, 560), "mm")
         if c.get("sub"):
             shadowed(f, fit(c["sub"], 64, 860), (x, 760), "mt")
     shadowed(f, T("VS", 150, "yellow"), (W / 2, 560), "mm")

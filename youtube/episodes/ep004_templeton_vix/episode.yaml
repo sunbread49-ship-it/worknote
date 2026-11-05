@@ -86,6 +86,26 @@ thumbs:
     b: {label: "코로나 때 샀다면", value: "+132%", color: teal, chart: {series: tqqq, start: "2020-02-28", end: "2021-02-26", color: [170, 255, 240]}}
     center: "같은 공포, 같은 3배"
     bottom: "1년 뒤 결과는?"
+  - template: question
+    lines:
+      - {text: "공포지수 40에", size: 110}
+      - {text: "TQQQ 사면", size: 110}
+      - {text: "1년 뒤 +117%", size: 150, color: up}
+      - {text: "였다는데", size: 110}
+      - {text: "진짜일까?", size: 190, color: yellow}
+  - template: big_number
+    glow: [150, 20, 40]
+    lines:
+      - {text: "공포에 3배로", size: 150}
+      - {text: "+117%", size: 270, color: up}
+      - {text: "그 뒤에 숨은 -80%", size: 110, color: yellow, hl: "-80%", hl_color: down}
+    props:
+      - {kind: chart, series: vix, start: "2019-06-01", end: "2021-06-30", color: [255, 90, 90], w: 820, h: 620, pos: [1460, 500]}
+  - template: vs_numbers
+    top: "VIX 40 넘을 때 TQQQ 샀다면?"
+    top_hl: "TQQQ 샀다면?"
+    left: {label: "평균 (11번)", value: "+117%", sub: "1년 뒤", color: up}
+    right: {label: "최악", value: "-80%", sub: "1년 안에", color: down}
 
 checks:
   - {name: "템플턴 기간 S&P500 1939.9→1943.9(%)", kind: ret, series: spx, start: "1939-09-01", end: "1943-09-01"}
