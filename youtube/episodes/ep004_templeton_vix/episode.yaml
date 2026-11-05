@@ -107,6 +107,44 @@ thumbs:
     left: {label: "평균 (11번)", value: "+117%", sub: "1년 뒤", color: up}
     right: {label: "최악", value: "-80%", sub: "1년 안에", color: down}
 
+shorts:
+  - title: "템플턴 1939"
+    start: "0:46.8"
+    end: "1:25.8"
+    yt_title: "전쟁 공포에 돈 빌려서 폭락주 104개 산 남자, 4년 뒤 결과 #존템플턴 #역발상투자 #shorts"
+    yt_desc: "1939년 2차대전 발발, 모두가 팔 때 1만 달러를 빌려 1달러 이하 주식 104개를 산 존 템플턴. 4년 뒤 결과는? 전체 영상은 @개미의계산기 채널에서.\n※ 템플턴 사례는 널리 알려진 일화 기준. 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "모두 팔 때\n돈 빌려서 산 남자"
+      top_highlight: "돈 빌려서"
+      big: [{text: "1939년", color: fg, size: 150}, {text: "4년 뒤 4배", color: gold, size: 190}]
+      bottom: "같은 기간 S&P500은 +4.8%"
+      glow: gold
+      chart: {series: spx, start: "1939-06-01", end: "1946-06-30", color: [255, 194, 70]}
+  - title: "VIX 40 TQQQ"
+    start: "4:19.8"
+    end: "5:07.0"
+    yt_title: "공포지수 40 넘을 때 TQQQ 샀더니… 평균 +117%, 그런데 최악은? #TQQQ #VIX #shorts"
+    yt_desc: "VIX 40을 처음 넘은 날 3배 레버리지를 샀다면, 1998년 이후 11번의 결과. 평균 뒤에 숨은 -80%까지. 전체 영상은 @개미의계산기 채널에서.\n※ 레버리지 ETF는 원금 대부분을 잃을 수 있습니다. 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "공포지수 40에\nTQQQ 샀다면"
+      top_highlight: "TQQQ"
+      big: [{text: "+117%", color: up, size: 230}, {text: "최악 -80%", color: down, size: 170}]
+      bottom: "1년 버틸 수 있나요?"
+      glow: up
+      chart: {series: vix, start: "2019-06-01", end: "2021-06-30", color: [240, 84, 84]}
+  - title: "-30% 매수의 함정"
+    start: "2:23.0"
+    end: "3:01.0"
+    yt_title: "주가 -30%일 때 사면 바닥일까? 100년 데이터가 말하는 함정 #하락장 #S&P500 #shorts"
+    yt_desc: "S&P500이 고점 대비 30% 빠진 날 샀다면? 1929년엔 거기서 78%가 더 빠졌습니다. 산 다음 평균 -26.6% 추가 하락. 전체 영상은 @개미의계산기 채널에서.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "-30%에 샀는데\n바닥이 아니었다"
+      top_highlight: "바닥이 아니었다"
+      big: [{text: "거기서", color: fg, size: 140}, {text: "-78% 더", color: down, size: 230}]
+      bottom: "1929년 대공황"
+      glow: down
+      chart: {series: spx, start: "1929-06-01", end: "1934-12-31", color: [74, 144, 255]}
+
 checks:
   - {name: "템플턴 기간 S&P500 1939.9→1943.9(%)", kind: ret, series: spx, start: "1939-09-01", end: "1943-09-01"}
   - {name: "1939.9→1942.4 저점(%)", kind: ret, series: spx, start: "1939-09-01", end: "1942-04-28"}
