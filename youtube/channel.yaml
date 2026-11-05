@@ -1,6 +1,6 @@
 # 채널 공통 설정 (채널명 정해지면 여기만 바꾸면 됨)
 name: "개미의 계산기"
-handle: "@antcalc"
+handle: "@개미의계산기"
 tagline: "감 말고, 숫자로 투자하는 개미"
 banner_sub: "주식 궁금증, 숫자로 풀기  ·  매매법 해부"
 disclaimer_corner: "투자 교육 콘텐츠 · 종목 추천 아님"
