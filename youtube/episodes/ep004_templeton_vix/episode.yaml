@@ -47,6 +47,48 @@ thumbnails_vs:
     left: {label: "평균 (11번)", value: "+117%", size: 190, sub: "1년 뒤", color: up, chart: {series: tqqq, start: "2020-02-28", end: "2021-02-26", color: [240, 84, 84]}}
     right: {label: "최악", value: "-80%", size: 190, sub: "1년 안에", color: down, chart: {series: sim3x_ndx, start: "2001-09-17", end: "2002-10-09", color: [74, 144, 255]}}
 
+# 클릭 유도형 썸네일 (tools/thumbs.py) — 참고 레퍼런스 4종 컨셉
+thumbs:
+  - template: quote_bottom
+    quote: "공포지수 40 넘으면"
+    quote_hl: "40"
+    glow: [150, 40, 20]
+    props:
+      - {kind: rising, w: 900, h: 460, pos: [1200, 380]}
+      - {kind: money, stacks: 3, w: 340, h: 240, pos: [1600, 400]}
+      - {kind: order, sub: "TQQQ · 풀매수", pos: [930, 360], rot: -4, scale: 0.85}
+      - {kind: ant, size: 500, pos: [330, 390]}
+    bottom:
+      - {text: "TQQQ", size: 170}
+      - {text: "'이때' 3배로 사라?", size: 200, color: red, hl: "'이때'", hl_color: white}
+  - template: transform
+    top: "공포지수 하나로 매수 타이밍 끝?"
+    top_hl: "매수 타이밍"
+    left: {kind: emoji, name: scream, size: 380}
+    left_bg: [40, 44, 66]
+    left_label: "VIX 40"
+    right: {kind: emoji, name: rocket, size: 380}
+    right_bg: white
+    right_label: "TQQQ 3배"
+    bottom:
+      - {text: "공포에 3배 질렀더니…!", size: 130}
+      - {text: "1년 뒤 +117% 실화?", size: 175, color: yellow}
+  - template: minimal
+    lines:
+      - {text: "1939년, 돈 빌려서", size: 170, color: yellow}
+      - {text: "폭락주 104개 산 남자", size: 130}
+    props:
+      - {kind: money, stacks: 3, w: 560, h: 380, pos: [960, 760]}
+  - template: split_vs
+    left_color: [170, 30, 30]
+    right_color: [20, 130, 120]
+    left: {label: "9·11 때 샀다면", value: "-80%", value_color: red, props: [{kind: chart, series: sim3x_ndx, start: "2001-09-17", end: "2002-09-17", color: [255, 90, 90], w: 760, h: 300, pos: [480, 560]}]}
+    right: {label: "코로나 때 샀다면", value: "+132%", value_color: teal, props: [{kind: chart, series: tqqq, start: "2020-02-28", end: "2021-02-26", color: [70, 230, 210], w: 760, h: 300, pos: [1440, 560]}]}
+    bottom_y: 760
+    bottom:
+      - {text: "똑같은 공포, 똑같이 3배", size: 100}
+      - {text: "1년 뒤 결과", size: 160, color: yellow}
+
 checks:
   - {name: "템플턴 기간 S&P500 1939.9→1943.9(%)", kind: ret, series: spx, start: "1939-09-01", end: "1943-09-01"}
   - {name: "1939.9→1942.4 저점(%)", kind: ret, series: spx, start: "1939-09-01", end: "1942-04-28"}
