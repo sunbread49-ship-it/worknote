@@ -3,14 +3,15 @@
   python tools/thumbs.py episodes/ep004_templeton_vix          # episode.yaml 의 thumbs: 목록 전부
   python tools/thumbs.py --gallery                              # 템플릿 견본 한 장씩 (out/thumb_gallery/)
 
-템플릿 (template: 이름)
-  quote_bottom  위 "따옴표 인용" + 가운데 소품(주문 화면·돈다발·상승 화살표) + 아래 초대형 2줄 문구   (예: 월 200씩 받으려면 / 매달 '이만큼' 사두세요)
-  transform     강렬한 집중선 배경 + 아이콘 A → 큰 화살표 → 아이콘 B + 아래 흰/노랑 2줄           (예: 클로드 MCP 미쳤다…! / 쇼핑쇼츠 100% 자동화)
-  minimal       검정 배경 + 노란 헤드라인 + 흰 서브 + 가운데 오브젝트 하나                         (예: 바이브 코딩 1인 창업 / 3시간 통합본)
-  split_vs      좌우 반반 색 + 위 라벨 + 가운데 VS + 아래 흰/노랑 결론 문구                        (예: 무겁게 8번 VS 가볍게 25번 / 석 달 뒤 팔 굵기)
-  question      "~였다는데" + 초대형 "진짜일까?" + 큰 물음표                                       (호기심형)
-  big_number    큰 숫자 + 강조 문구 + 차트                                                           (기존 대표형)
-  vs_numbers    큰 숫자 대비 (기존 thumbnails_vs)
+템플릿 (template: 이름) — 모두 채널 고유 디자인(남색 모눈 배경·금색·개미 캐릭터·계산기 모티프)
+  calc        기울어진 계산기 LCD 화면에 결과 숫자 + 오른쪽 헤드라인 + 개미
+  receipt     '백테스트 영수증'에 항목별 결과 + 왼쪽 헤드라인
+  clipping    오래된 가상 신문 스크랩 + 큰 원형 도장 + 오른쪽 헤드라인
+  diagonal    대각선 분할(왼쪽 위 vs 오른쪽 아래) 두 숫자 + 가운데 개미
+  question    "~였다는데" + 초대형 "진짜일까?" + 큰 물음표
+  big_number  큰 숫자 + 강조 문구 + 차트
+  vs_numbers  숫자 대비
+※ 다른 채널 썸네일의 구도·배색·소품 배치를 그대로 옮기지 않는다(레퍼런스는 '문구 공식'만 참고).
 
 문구 공식: "~해라!", "~였다는데 진짜일까?", "~ 다 알려준다", "~ 따라만 해라", "~ 미쳤다…!"
 단, 채널 원칙상 매수 권유로 읽히면 안 되므로 '해라' 계열은 따옴표·물음표로 '남들이 하는 말'임을 드러낸다.
@@ -255,66 +256,207 @@ def place_props(f, props):
 
 
 # ── 템플릿 ───────────────────────────────────────────────────────
-def t_quote_bottom(sp):
-    f = bg_dark(sp.get("glow", (120, 40, 20)), (0.5, 0.35))
-    place_props(f, sp.get("props"))
-    if sp.get("quote"):
-        q = fit(f"\"{sp['quote']}\"", sp.get("quote_size", 120), 1700, color=sp.get("quote_color", "white"),
-                hl=sp.get("quote_hl", ""), hl_color=sp.get("quote_hl_color", "yellow"))
-        shadowed(f, q, (W / 2, 22), "mt")
-    y = H - 30
-    ims = []
-    for ln in reversed(sp["bottom"]):
-        im = fit(ln["text"], ln.get("size", 190), 1860, color=ln.get("color", "white"), hl=ln.get("hl", ""),
-                 hl_color=ln.get("hl_color", "red"))
-        ims.append((im, y))
-        y -= im.height - 20
-    for im, yy in ims:
-        shadowed(f, im, (W / 2, yy), "mb")
-    return f
+
+# ── 채널 고유 템플릿 (계산기 · 영수증 · 신문 스크랩 · 대각선 분할) ─────────────
+NAVY = (14, 20, 38)
+CREAM = (250, 244, 226)
+LCD_BG = (38, 52, 34)
+LCD_FG = (170, 255, 140)
 
 
-def t_transform(sp):
-    f = bg_burst(C(sp.get("c1"), (255, 70, 50)), C(sp.get("c2"), (210, 10, 30)))
-    a = icon_box(prop(sp["left"]) if isinstance(sp["left"], dict) else sp["left"], 440, sp.get("left_bg", (232, 120, 80)),
-                 label=sp.get("left_label"))
-    b = icon_box(prop(sp["right"]) if isinstance(sp["right"], dict) else sp["right"], 440, sp.get("right_bg", "white"),
-                 label=sp.get("right_label"))
-    shadowed(f, a, (330, 400), "mm", blur=24, alpha=0.5)
-    shadowed(f, b, (W - 330, 400), "mm", blur=24, alpha=0.5)
-    G.blit(f, big_arrow(520, 360), (W / 2, 400), 1, "mm")
-    if sp.get("top"):
-        t = fit(sp["top"], 64, 1500, color="white", hl=sp.get("top_hl", ""), hl_color="yellow")
-        shadowed(f, t, (W / 2, 40), "mt")
-    lines_block(f, sp["bottom"], sp.get("bottom_y", 660), maxw=1860)
-    return f
-
-
-def t_minimal(sp):
-    f = Image.new("RGBA", (W, H), (6, 6, 8, 255))
+def bg_brand(glow=S.GOLD, pos=(0.3, 0.4)):
+    f = Image.new("RGBA", (W, H), NAVY + (255,))
+    d = ImageDraw.Draw(f)
+    for x in range(0, W, 60):   # 모눈종이 패턴 (계산 노트 느낌)
+        d.line((x, 0, x, H), fill=(255, 255, 255, 10))
+    for y in range(0, H, 60):
+        d.line((0, y, W, y), fill=(255, 255, 255, 10))
     g = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    ImageDraw.Draw(g).ellipse((W / 2 - 500, 520, W / 2 + 500, 1200), fill=(255, 255, 255, 28))
-    f.alpha_composite(g.filter(ImageFilter.GaussianBlur(120)))
-    place_props(f, sp.get("props"))
-    lines_block(f, sp["lines"], 70, maxw=1800, gap=10)
+    cx, cy = W * pos[0], H * pos[1]
+    ImageDraw.Draw(g).ellipse((cx - 650, cy - 450, cx + 650, cy + 450), fill=C(glow) + (70,))
+    f.alpha_composite(g.filter(ImageFilter.GaussianBlur(180)))
     return f
 
 
-def t_split_vs(sp):
-    f = bg_split(C(sp.get("left_color"), (150, 30, 30)), C(sp.get("right_color"), (20, 110, 110)))
-    for side, x in (("left", W * 0.25), ("right", W * 0.75)):
+def tag(text, color=S.GOLD, fg=NAVY, size=44):
+    return G.pill(text, "Black", size, fg, C(color), pad=(26, 10), radius=12)
+
+
+def t_calc(sp):
+    """계산기 LCD에 결과 숫자. 오른쪽에 헤드라인 + 개미"""
+    f = bg_brand(sp.get("glow", S.GOLD), (0.25, 0.5))
+    k = 2
+    bw, bh = 1040, 1180
+    body = Image.new("RGBA", (bw * k, bh * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(body)
+    d.rounded_rectangle((0, 0, bw * k - 1, bh * k - 1), radius=90 * k, fill=(34, 38, 52, 255))
+    d.rounded_rectangle((18 * k, 18 * k, bw * k - 18 * k, bh * k - 18 * k), radius=76 * k, fill=(52, 58, 80, 255))
+    d.rounded_rectangle((70 * k, 80 * k, bw * k - 70 * k, 420 * k), radius=30 * k, fill=LCD_BG + (255,))
+    cols = [(220, 224, 236)] * 3 + [S.GOLD]
+    for r in range(4):
+        for c in range(4):
+            x0, y0 = (80 + c * 225) * k, (490 + r * 170) * k
+            d.rounded_rectangle((x0, y0, x0 + 190 * k, y0 + 135 * k), radius=26 * k,
+                                fill=(S.UP if (r == 3 and c == 3) else cols[c]) + (255,))
+    body = body.reduce(k)
+    ghost = G.text_img("8888", "Black", 250, (60, 80, 56))
+    body.alpha_composite(ghost, (bw - 90 - ghost.width, 120))
+    val = fit(sp["value"], 260, bw - 180, color=sp.get("value_color", LCD_FG), stroke=0)
+    glow = val.filter(ImageFilter.GaussianBlur(12))
+    body.alpha_composite(glow, (bw - 95 - val.width, 250 - val.height // 2))
+    body.alpha_composite(val, (bw - 95 - val.width, 250 - val.height // 2))
+    if sp.get("lcd_label"):
+        body.alpha_composite(G.text_img(sp["lcd_label"], "Bold", 40, LCD_FG), (100, 100))
+    body = body.rotate(sp.get("rot", 7), resample=Image.BICUBIC, expand=True)
+    shadowed(f, body, (40, 150), "lt", blur=30, off=(20, 30), alpha=0.7)
+    y = 110
+    if sp.get("tag"):
+        tg = tag(sp["tag"])
+        G.blit(f, tg, (1120, y))
+        y += tg.height + 30
+    lines_block(f, sp["lines"], y, x=1110, maxw=780, gap=0)
+    if sp.get("ant", True):
+        from engine.character import ant_side
+        a = ant_side(380, sp.get("carry", "money"), mood=sp.get("mood", "smile"))
+        shadowed(f, a, (W - 40, H + 30), "rb", blur=16, alpha=0.5)
+    return f
+
+
+def _zigzag(im, top=True, bottom=True, tooth=26):
+    w, h = im.size
+    m = Image.new("L", (w, h), 255)
+    d = ImageDraw.Draw(m)
+    for x in range(0, w + tooth, tooth):
+        if top:
+            d.polygon([(x, 0), (x + tooth / 2, tooth * 0.6), (x + tooth, 0)], fill=0)
+        if bottom:
+            d.polygon([(x, h), (x + tooth / 2, h - tooth * 0.6), (x + tooth, h)], fill=0)
+    a = im.getchannel("A")
+    im.putalpha(Image.fromarray(__import__("numpy").minimum(__import__("numpy").array(a), __import__("numpy").array(m))))
+    return im
+
+
+def t_receipt(sp):
+    """영수증에 매매 결과를 항목별로. 왼쪽 헤드라인"""
+    f = bg_brand(sp.get("glow", S.UP), (0.75, 0.5))
+    rw = 820
+    rows = sp["rows"]
+    rh = 210 + len(rows) * 104 + 170
+    r = Image.new("RGBA", (rw, rh), CREAM + (255,))
+    d = ImageDraw.Draw(r)
+    ttl = G.text_img(sp.get("receipt_title", "개미의 계산기"), "Black", 52, (30, 30, 30))
+    r.alpha_composite(ttl, ((rw - ttl.width) // 2, 50))
+    sub = G.text_img(sp.get("receipt_sub", "백테스트 영수증"), "SemiBold", 32, (110, 110, 110))
+    r.alpha_composite(sub, ((rw - sub.width) // 2, 120))
+    for x in range(40, rw - 40, 22):
+        d.line((x, 185, x + 12, 185), fill=(120, 120, 120, 255), width=3)
+    y = 215
+    for row in rows:
+        c = C(row.get("color"), (30, 30, 30))
+        a = G.text_img(row["k"], "Bold", 48, (50, 50, 50))
+        b = G.text_img(row["v"], "Black", row.get("size", 64), c)
+        r.alpha_composite(a, (50, y + (b.height - a.height) // 2))
+        r.alpha_composite(b, (rw - 50 - b.width, y))
+        y += 104
+    for x in range(40, rw - 40, 22):
+        d.line((x, y + 10, x + 12, y + 10), fill=(120, 120, 120, 255), width=3)
+    tot = G.text_img(sp.get("total", ""), "Black", 54, C(sp.get("total_color"), S.UP))
+    r.alpha_composite(tot, ((rw - tot.width) // 2, y + 40))
+    r = _zigzag(r)
+    r = r.rotate(sp.get("rot", -6), resample=Image.BICUBIC, expand=True)
+    shadowed(f, r, (W - 120, H / 2 + 10), "rm", blur=26, off=(18, 26), alpha=0.6)
+    y = 120
+    if sp.get("tag"):
+        tg = tag(sp["tag"])
+        G.blit(f, tg, (90, y))
+        y += tg.height + 30
+    lines_block(f, sp["lines"], y, x=80, maxw=1000, gap=0)
+    return f
+
+
+def t_clipping(sp):
+    """오래된 신문 스크랩 + 큰 도장. 오른쪽 헤드라인 (가상 신문, 실제 매체 아님)"""
+    f = bg_brand(sp.get("glow", S.GOLD), (0.3, 0.5))
+    pw, ph = 860, 900
+    pap = Image.new("RGBA", (pw, ph), (236, 226, 196, 255))
+    d = ImageDraw.Draw(pap)
+    mast = G.text_img(sp.get("masthead", "THE DAILY MARKET"), "Black", 64, (40, 34, 26))
+    pap.alpha_composite(mast, ((pw - mast.width) // 2, 40))
+    d.line((40, 130, pw - 40, 130), fill=(40, 34, 26, 255), width=5)
+    d.line((40, 140, pw - 40, 140), fill=(40, 34, 26, 255), width=2)
+    dt = G.text_img(sp.get("date", ""), "Bold", 30, (90, 80, 60))
+    pap.alpha_composite(dt, (40, 152))
+    hl = G.text_img(sp["headline"], "Black", 84, (30, 26, 20), max_w=pw - 80, line_gap=1.05)
+    pap.alpha_composite(hl, (40, 210))
+    yy = 210 + hl.height + 40
+    import random
+    rnd = random.Random(3)
+    while yy < ph - 60:
+        for col in (0, 1):
+            x0 = 40 + col * (pw - 80) // 2
+            ww = (pw - 120) // 2 * (0.6 if rnd.random() < 0.15 else 1.0)
+            d.rounded_rectangle((x0, yy, x0 + ww, yy + 14), radius=7, fill=(160, 148, 120, 255))
+        yy += 34
+    import numpy as np  # 오래된 종이 얼룩
+    noise = Image.fromarray((np.random.default_rng(1).normal(0, 12, (ph, pw)) + 128).clip(0, 255).astype("uint8"), "L")
+    pap = Image.composite(pap, Image.new("RGBA", (pw, ph), (200, 186, 150, 255)), noise.point(lambda v: 255 if v > 100 else 210))
+    pap = pap.rotate(sp.get("rot", 5), resample=Image.BICUBIC, expand=True)
+    shadowed(f, pap, (60, H / 2), "lm", blur=26, off=(18, 26), alpha=0.6)
+    st = sp.get("stamp")
+    if st:
+        s_ = 500
+        k = 3
+        stamp = Image.new("RGBA", (s_ * k, s_ * k), (0, 0, 0, 0))
+        sd = ImageDraw.Draw(stamp)
+        col = C(st.get("color"), (220, 40, 40))
+        sd.ellipse((10, 10, s_ * k - 10, s_ * k - 10), outline=col + (235,), width=24 * k // 2)
+        sd.ellipse((60, 60, s_ * k - 60, s_ * k - 60), outline=col + (235,), width=8 * k // 2)
+        stamp = stamp.reduce(k)
+        t = G.text_img(st["text"], "Black", st.get("size", 120), col)
+        stamp.alpha_composite(t, ((s_ - t.width) // 2, (s_ - t.height) // 2 - 6))
+        if st.get("sub"):
+            u = G.text_img(st["sub"], "Black", 56, col)
+            stamp.alpha_composite(u, ((s_ - u.width) // 2, s_ - 140))
+        stamp = stamp.rotate(-14, resample=Image.BICUBIC, expand=True)
+        G.blit(f, stamp, tuple(st.get("pos", (760, 760))), 0.95, "mm")
+    y = 120
+    if sp.get("tag"):
+        tg = tag(sp["tag"])
+        G.blit(f, tg, (1060, y))
+        y += tg.height + 30
+    lines_block(f, sp["lines"], y, x=1050, maxw=830, gap=0)
+    return f
+
+
+def t_diagonal(sp):
+    """대각선 분할: 왼쪽 위 vs 오른쪽 아래, 가운데 개미"""
+    a, b = C(sp.get("a_color"), (120, 20, 30)), C(sp.get("b_color"), (16, 110, 100))
+    f = Image.new("RGBA", (W, H), b + (255,))
+    top = Image.new("RGBA", (W, H), a + (255,))
+    m = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(m).polygon([(0, 0), (W * 0.72, 0), (W * 0.28, H), (0, H)], fill=255)
+    f = Image.composite(top, f, m)
+    for side in ("a", "b"):
         c = sp[side]
-        for p in c.get("props", []):
-            p = dict(p)
-            p.setdefault("pos", (x, 520))
-            place_props(f, [p])
-        lab = fit(c["label"], c.get("size", 96), 900, color="white", hl=c.get("hl", ""), hl_color=c.get("hl_color", "red"))
-        shadowed(f, lab, (x, 50), "mt")
-        if c.get("value"):
-            shadowed(f, fit(c["value"], c.get("value_size", 200), 880, color=c.get("value_color", "white")), (x, 60 + lab.height + 10), "mt")
-    vs = T("VS", 200, "white")
-    shadowed(f, vs, (W / 2, 500), "mm")
-    lines_block(f, sp["bottom"], sp.get("bottom_y", 770), maxw=1860)
+        if c.get("chart"):
+            ch = dict(c["chart"])
+            im = chart_line(ch.pop("series"), ch.get("start"), ch.get("end"), C(ch.get("color"), WHITE), 820, 360)
+            G.blit(f, G.with_opacity(im, 0.55), (40, 560) if side == "a" else (W - 40, 100), 1, "lt" if side == "a" else "rt")
+    d = ImageDraw.Draw(f)
+    d.line([(W * 0.72, 0), (W * 0.28, H)], fill=(255, 255, 255, 255), width=14)
+    A, B = sp["a"], sp["b"]
+    shadowed(f, fit(A["label"], 70, 820), (80, 70), "lt")
+    shadowed(f, fit(A["value"], 260, 880, color=A.get("color", "red")), (70, 160), "lt")
+    shadowed(f, fit(B["label"], 70, 820), (W - 80, H - 400), "rt")
+    shadowed(f, fit(B["value"], 260, 880, color=B.get("color", "teal")), (W - 70, H - 60), "rb")
+    if sp.get("ant", True):
+        from engine.character import ant_side
+        an = ant_side(420, None, mood="wow")
+        shadowed(f, an, (W / 2 + 30, H / 2 + 30), "mm", blur=16, alpha=0.5)
+    if sp.get("center"):
+        shadowed(f, fit(sp["center"], 80, 700, color="yellow"), (W - 80, 60), "rt")
+    if sp.get("bottom"):
+        shadowed(f, fit(sp["bottom"], 80, 760, color="white"), (80, H - 60), "lb")
     return f
 
 
@@ -348,8 +490,9 @@ def t_vs_numbers(sp):
     return f
 
 
-TEMPLATES = {"quote_bottom": t_quote_bottom, "transform": t_transform, "minimal": t_minimal, "split_vs": t_split_vs,
+TEMPLATES = {"calc": t_calc, "receipt": t_receipt, "clipping": t_clipping, "diagonal": t_diagonal,
              "question": t_question, "big_number": t_big_number, "vs_numbers": t_vs_numbers}
+
 
 
 def render(sp, out):

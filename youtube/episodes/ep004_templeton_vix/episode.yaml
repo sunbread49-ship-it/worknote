@@ -47,47 +47,45 @@ thumbnails_vs:
     left: {label: "평균 (11번)", value: "+117%", size: 190, sub: "1년 뒤", color: up, chart: {series: tqqq, start: "2020-02-28", end: "2021-02-26", color: [240, 84, 84]}}
     right: {label: "최악", value: "-80%", size: 190, sub: "1년 안에", color: down, chart: {series: sim3x_ndx, start: "2001-09-17", end: "2002-10-09", color: [74, 144, 255]}}
 
-# 클릭 유도형 썸네일 (tools/thumbs.py) — 참고 레퍼런스 4종 컨셉
+# 클릭 유도형 썸네일 (tools/thumbs.py) — 채널 고유 템플릿
 thumbs:
-  - template: quote_bottom
-    quote: "공포지수 40 넘으면"
-    quote_hl: "40"
-    glow: [150, 40, 20]
-    props:
-      - {kind: rising, w: 900, h: 460, pos: [1200, 380]}
-      - {kind: money, stacks: 3, w: 340, h: 240, pos: [1600, 400]}
-      - {kind: order, sub: "TQQQ · 풀매수", pos: [930, 360], rot: -4, scale: 0.85}
-      - {kind: ant, size: 500, pos: [330, 390]}
-    bottom:
-      - {text: "TQQQ", size: 170}
-      - {text: "'이때' 3배로 사라?", size: 200, color: red, hl: "'이때'", hl_color: white}
-  - template: transform
-    top: "공포지수 하나로 매수 타이밍 끝?"
-    top_hl: "매수 타이밍"
-    left: {kind: emoji, name: scream, size: 380}
-    left_bg: [40, 44, 66]
-    left_label: "VIX 40"
-    right: {kind: emoji, name: rocket, size: 380}
-    right_bg: white
-    right_label: "TQQQ 3배"
-    bottom:
-      - {text: "공포에 3배 질렀더니…!", size: 130}
-      - {text: "1년 뒤 +117% 실화?", size: 175, color: yellow}
-  - template: minimal
+  - template: calc
+    tag: "VIX 40 + TQQQ 3배"
+    lcd_label: "1년 뒤 평균"
+    value: "+117%"
     lines:
-      - {text: "1939년, 돈 빌려서", size: 170, color: yellow}
-      - {text: "폭락주 104개 산 남자", size: 130}
-    props:
-      - {kind: money, stacks: 3, w: 560, h: 380, pos: [960, 760]}
-  - template: split_vs
-    left_color: [170, 30, 30]
-    right_color: [20, 130, 120]
-    left: {label: "9·11 때 샀다면", value: "-80%", value_color: red, props: [{kind: chart, series: sim3x_ndx, start: "2001-09-17", end: "2002-09-17", color: [255, 90, 90], w: 760, h: 300, pos: [480, 560]}]}
-    right: {label: "코로나 때 샀다면", value: "+132%", value_color: teal, props: [{kind: chart, series: tqqq, start: "2020-02-28", end: "2021-02-26", color: [70, 230, 210], w: 760, h: 300, pos: [1440, 560]}]}
-    bottom_y: 760
-    bottom:
-      - {text: "똑같은 공포, 똑같이 3배", size: 100}
-      - {text: "1년 뒤 결과", size: 160, color: yellow}
+      - {text: "공포에", size: 170}
+      - {text: "3배 질렀더니", size: 150, color: yellow}
+      - {text: "진짜일까?", size: 130}
+  - template: receipt
+    tag: "11번의 공포, 결과 공개"
+    lines:
+      - {text: "공포지수 40에", size: 120}
+      - {text: "TQQQ 산 사람", size: 120}
+      - {text: "영수증", size: 170, color: yellow}
+    receipt_sub: "VIX 40 + 3배 · 1년 보유"
+    rows:
+      - {k: "매수 횟수", v: "11번"}
+      - {k: "플러스", v: "9번", color: up}
+      - {k: "평균 수익", v: "+117%", color: up}
+      - {k: "최악", v: "-80%", color: down}
+    total: "버틸 수 있나요?"
+    total_color: [30, 30, 30]
+  - template: clipping
+    tag: "1939년 실화"
+    masthead: "THE DAILY MARKET"
+    date: "1939년 9월 · 전쟁 발발"
+    headline: "전쟁 공포에 주가 폭락, 투매 이어져"
+    stamp: {text: "4배", sub: "4년 뒤", size: 190, color: [220, 40, 40], pos: [760, 720]}
+    lines:
+      - {text: "모두 팔 때", size: 150}
+      - {text: "돈 빌려서 산", size: 150, color: yellow}
+      - {text: "남자의 결말", size: 150}
+  - template: diagonal
+    a: {label: "9·11 직후 샀다면", value: "-80%", color: red, chart: {series: sim3x_ndx, start: "2001-09-17", end: "2002-09-17", color: [255, 140, 140]}}
+    b: {label: "코로나 때 샀다면", value: "+132%", color: teal, chart: {series: tqqq, start: "2020-02-28", end: "2021-02-26", color: [170, 255, 240]}}
+    center: "같은 공포, 같은 3배"
+    bottom: "1년 뒤 결과는?"
 
 checks:
   - {name: "템플턴 기간 S&P500 1939.9→1943.9(%)", kind: ret, series: spx, start: "1939-09-01", end: "1943-09-01"}
