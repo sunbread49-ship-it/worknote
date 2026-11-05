@@ -438,10 +438,10 @@ class Bars(Scene):
         sp = self.spec
         if sp.get("heading"):
             o = G.appear(t, 0.1)
-            G.blit(f, G.text_img(sp["heading"], "ExtraBold", 50, S.FG, max_w=1600), (S.SAFE_X + 20, 150), o)
+            G.blit(f, G.text_img(sp["heading"], "ExtraBold", 50, S.FG, max_w=1500), (200, 150), o)
         if sp.get("subheading"):
             o = G.appear(t, self.line_start(sp.get("subheading_on", 1)))
-            G.blit(f, G.text_img(sp["subheading"], "Medium", 32, S.MUTED, max_w=1600), (S.SAFE_X + 20, 222), o)
+            G.blit(f, G.text_img(sp["subheading"], "Medium", 32, S.MUTED, max_w=1500), (200, 222), o)
         self.chart.render(f, t, self)
         self.draw_common(f, t)
 
@@ -705,7 +705,67 @@ class Kinetic(Scene):
                 for it in self.spec["items"] if it.get("sfx", "whoosh") != "none"]
 
 
-TYPES = {"kinetic": Kinetic, "reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
+class YearBars(Scene):
+    """연도별 막대 (예: 중간선거일 → 1년 뒤 수익률). spec: which(midterm|pres), heading, on, mark: {연도: 라벨}"""
+
+    def prepare(self):
+        from . import data as D
+        sp = self.spec
+        w = sp.get("which", "midterm")
+        if w.startswith("cycle"):
+            self.items = D.cycle_years_list(int(w[-1]))
+        else:
+            self.items = D.elec_fwd(w, sp.get("y0", 1950), sp.get("y1", 2022))
+
+    def draw(self, f, t):
+        sp = self.spec
+        if sp.get("heading"):
+            G.blit(f, G.text_img(sp["heading"], "ExtraBold", 50, S.FG, max_w=1500, highlight=sp.get("highlight", "")),
+                   (200, 150), G.appear(t, 0.1))
+        if sp.get("sub"):
+            G.blit(f, G.text_img(sp["sub"], "Medium", 30, S.MUTED), (200, 222), G.appear(t, 0.2))
+        x0, base, w, hmax = 200, 820, 1560, 470
+        n = len(self.items)
+        slot = w / n
+        vmax = max(abs(v) for _, v in self.items) * 1.15
+        zero = Image.new("RGBA", (w + 40, 3), S.MUTED + (200,))
+        G.blit(f, zero, (x0 - 20, base))
+        t0 = self.line_start(sp.get("on", 1))
+        step = sp.get("step", 0.12)
+        for i, (y, v) in enumerate(self.items):
+            k = G.ease_out((t - t0 - i * step) / 0.35)
+            if k <= 0:
+                continue
+            c = S.UP if v >= 0 else S.DOWN
+            if str(y) in {str(m) for m in sp.get("mark", {})}:
+                c = S.GOLD
+            bh = max(3, abs(v) / vmax * hmax * k)
+            bw = int(slot * 0.62)
+            cx = x0 + slot * (i + 0.5)
+            bar = Image.new("RGBA", (bw, int(bh)), c + (255,))
+            G.blit(f, bar, (cx, base) if v < 0 else (cx, base - bh), 1, "mt" if v < 0 else "mt")
+            G.blit(f, G.text_img(f"{v:+.0f}", "Bold", 22, c), (cx, base - bh - 8 if v >= 0 else base + bh + 8),
+                   min(1, k * 2), "mb" if v >= 0 else "mt")
+            G.blit(f, G.text_img(str(y)[2:] if n > 14 else str(y), "Medium", 22, S.MUTED), (cx, base + 14), min(1, k * 2), "mt")
+        for y, lab in sp.get("mark", {}).items():
+            idx = next((i for i, (yy, _) in enumerate(self.items) if yy == int(y)), None)
+            if idx is None:
+                continue
+            o = G.appear(t, self.line_start(sp.get("mark_on", 1)))
+            cx = x0 + slot * (idx + 0.5)
+            v = self.items[idx][1]
+            G.blit(f, G.pill(lab, "Bold", 26, (16, 20, 32), S.GOLD, pad=(14, 6)),
+                   (cx, base - abs(v) / vmax * hmax - 50), o, "mb")
+        G.blit(f, G.text_img(sp.get("source", "자료: S&P500 지수(배당 제외) · 선거일 종가 → 1년 뒤"), "Regular", 20, S.MUTED),
+               (x0 + w, base + 60), 1, "rt")
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        t0 = self.line_start(self.spec.get("on", 1))
+        return [(t0 + i * self.spec.get("step", 0.12), "tick", 0.5) for i in range(len(self.items))]
+
+
+TYPES = {"yearbars": YearBars, "kinetic": Kinetic, "reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
 
 
 def make(spec, idx, channel):

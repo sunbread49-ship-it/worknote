@@ -11,6 +11,7 @@
 """
 from functools import lru_cache
 
+import numpy as np
 import pandas as pd
 
 from .style import ROOT
@@ -34,7 +35,7 @@ def _vix() -> pd.Series:
 def _daily(name: str) -> pd.Series:
     df = pd.read_csv(DATA / f"{name}_daily.csv")
     df.columns = [c.lower().replace(" ", "_") for c in df.columns]
-    col = "adj_close" if name != "ndx" else "close"
+    col = "adj_close" if name not in ("ndx", "spx") else "close"
     s = df.assign(date=pd.to_datetime(df["date"])).set_index("date")[col].astype(float)
     return s[s > 0].dropna()
 
@@ -42,6 +43,63 @@ def _daily(name: str) -> pd.Series:
 def _sim3x(fee=0.0095):
     r = _daily("ndx").pct_change().dropna()
     return (1 + 3 * r - fee / 252).cumprod()
+
+
+# ── 미국 선거 사이클 ──────────────────────────────────────────────
+def election_day(y):
+    """11월 첫 월요일 다음 화요일"""
+    import datetime as dt
+    x = dt.date(y, 11, 1)
+    while x.weekday() != 0:
+        x += dt.timedelta(1)
+    return pd.Timestamp(x + dt.timedelta(1))
+
+
+def _on(p, t):   # t 이후 첫 거래일 종가
+    return p.loc[t:].iloc[0]
+
+
+def _by(p, t):   # t 이전 마지막 거래일 종가
+    return p.loc[:t].iloc[-1]
+
+
+def elec_fwd(kind="midterm", y0=1950, y1=2022):
+    """선거일 종가 → 1년 뒤 수익률(%) 목록 [(연도, %)]"""
+    p = _daily("spx")
+    start = y0 if kind == "midterm" else y0 + 2
+    out = []
+    for y in range(start, y1 + 1, 4):
+        e = election_day(y)
+        if e + pd.Timedelta(days=365) > p.index[-1]:
+            continue
+        out.append((y, (_by(p, e + pd.Timedelta(days=365)) / _on(p, e) - 1) * 100))
+    return out
+
+
+def cycle_years_list(k, y0=1950, y1=2025):
+    yr = _daily("spx").resample("YE").last().pct_change().dropna() * 100
+    yr = yr[(yr.index.year >= y0) & (yr.index.year <= y1)]
+    return [(y, v) for y, v in zip(yr.index.year, yr.values) if (y - 2) % 4 == (k - 2) % 4]
+
+
+def cycle_years(k, y0=1950, y1=2025):
+    """임기 k년차 연간 수익률(%) 목록. k: 1=대선 다음 해, 2=중간선거 해, 3=대선 전 해, 4=대선 해"""
+    yr = _daily("spx").resample("YE").last().pct_change().dropna() * 100
+    yr = yr[(yr.index.year >= y0) & (yr.index.year <= y1)]
+    return [v for y, v in zip(yr.index.year, yr.values) if (y - 2) % 4 == (k - 2) % 4]
+
+
+def _cycle_strategy(name):
+    """중간선거일→대선일만 보유(strat_mid2pres) 또는 대선일→중간선거일만 보유(strat_pres2mid), 나머지는 현금"""
+    p = _daily("spx").loc["1950-11-01":]
+    r = p.pct_change().fillna(0)
+    inmk = pd.Series(False, index=p.index)
+    for y in range(1950, p.index[-1].year + 1, 4):
+        m, pr, nm = election_day(y), election_day(y + 2), election_day(y + 4)
+        a, b = (m, pr) if name == "strat_mid2pres" else (pr, nm)
+        inmk[(p.index > a) & (p.index <= b)] = True
+    eq = (1 + r.where(inmk, 0)).cumprod()
+    return eq.loc[str(election_day(1950).date()):]
 
 
 def series(name: str, start=None, end=None) -> pd.Series:
@@ -52,7 +110,9 @@ def series(name: str, start=None, end=None) -> pd.Series:
         s = (p / p.cummax() - 1) * 100
     elif name == "vix":
         s = _vix()
-    elif name in ("tqqq", "sqqq", "qqq", "ndx"):
+    elif name in ("strat_mid2pres", "strat_pres2mid"):
+        s = _cycle_strategy(name)
+    elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx"):
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()
@@ -93,6 +153,42 @@ def stat(kind: str, **kw) -> float:
         p = series(kw["series"]).values
         d = kw.get("days", 504)
         return float(max(p[i:i + d + 1].max() / p[i] for i in range(len(p))))
+    if kind in ("anyyear_mean", "anyyear_win"):  # 매년 11월 선거일 무렵 → 1년 뒤 (1950~2024)
+        p = _daily("spx")
+        v = [(_by(p, election_day(y) + pd.Timedelta(days=365)) / _on(p, election_day(y)) - 1) * 100 for y in range(1950, 2025)]
+        return float(np.mean(v) if kind == "anyyear_mean" else np.mean(np.array(v) > 0) * 100)
+    if kind == "elec_compound":  # 선거일→1년만 보유를 이어 붙인 배수
+        v = [x for _, x in elec_fwd(kw.get("which", "midterm"), kw.get("y0", 1950), kw.get("y1", 2022))]
+        return float(np.prod([1 + x / 100 for x in v]))
+    if kind in ("elec_mean", "elec_win", "elec_min", "elec_max", "elec_n", "elec_up"):
+        v = [x for _, x in elec_fwd(kw.get("which", "midterm"), kw.get("y0", 1950), kw.get("y1", 2022))]
+        return float({"elec_mean": np.mean(v), "elec_win": np.mean(np.array(v) > 0) * 100, "elec_min": min(v),
+                      "elec_max": max(v), "elec_n": len(v), "elec_up": sum(x > 0 for x in v)}[kind])
+    if kind in ("cycle_mean", "cycle_win", "cycle_up", "cycle_n"):
+        v = cycle_years(kw["k"])
+        return float({"cycle_mean": np.mean(v), "cycle_win": np.mean(np.array(v) > 0) * 100,
+                      "cycle_up": sum(x > 0 for x in v), "cycle_n": len(v)}[kind])
+    if kind == "cycle_dd":  # 임기 k년차의 연중 최대 낙폭 평균(%)
+        p = _daily("spx")
+        v = [((p[str(y)] / p[str(y)].cummax() - 1).min()) * 100 for y in range(1950, 2026) if (y - 2) % 4 == (kw["k"] - 2) % 4]
+        return float(np.mean(v))
+    if kind == "midlow_fwd":  # 중간선거 해 최저점 → 1년 뒤 평균(%)
+        p = _daily("spx")
+        v = []
+        for y in range(1950, 2023, 4):
+            s_ = p[str(y)]
+            t = s_.idxmin()
+            v.append((_by(p, t + pd.Timedelta(days=365)) / s_.min() - 1) * 100)
+        return float(np.mean(v))
+    if kind in ("half_mean", "half_win", "half_up"):  # 2년 구간 수익률
+        p = _daily("spx")
+        v = []
+        for y in range(1950, 2026, 4):
+            m, pr, nm = election_day(y), election_day(y + 2), election_day(y + 4)
+            a, b = (m, pr) if kw["half"] == "mid2pres" else (pr, nm)
+            if b <= p.index[-1]:
+                v.append((_by(p, b) / _on(p, a) - 1) * 100)
+        return float({"half_mean": np.mean(v), "half_win": np.mean(np.array(v) > 0) * 100, "half_up": sum(x > 0 for x in v)}[kind])
     if kind == "count_days_below":  # 하루 수익률이 threshold% 미만인 날 수
         p = series(kw["series"]).loc[str(kw["start"]):str(kw["end"])]
         return float((p.pct_change() * 100 < kw["threshold"]).sum())

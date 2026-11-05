@@ -173,7 +173,7 @@ class LineChart:
                 lx = rx + 12 if h.get("label_side", "left") == "left" else rx + rw - t.width
                 base.alpha_composite(t, (int(lx), int(y - t.height - 10)))
         if self.spec.get("title"):
-            base.alpha_composite(G.text_img(self.spec["title"], "Bold", 34, S.FG), (int(rx - 70), int(ry - 70)))
+            base.alpha_composite(G.text_img(self.spec["title"], "Bold", 34, S.FG), (int(max(rx - 70, 200)), int(ry - 70)))  # 왼쪽 위 로고 피하기
         if self.spec.get("source"):
             t = G.text_img(self.spec["source"], "Regular", 20, S.MUTED)
             base.alpha_composite(t, (int(rx + rw - t.width), int(ry + rh + 50)))

@@ -55,6 +55,7 @@ DATA = {
     "data/sqqq_daily.csv": DAILY.format("SQQQ"),
     "data/qqq_daily.csv": DAILY.format("QQQ"),
     "data/ndx_daily.csv": DAILY.format("%5ENDX"),
+    "data/spx_daily.csv": DAILY.format("%5EGSPC"),
     # S&P500 월평균 지수 1871~ (Robert Shiller 데이터 기반, 매월 갱신)
     "data/sp500_monthly.csv": "https://raw.githubusercontent.com/datasets/s-and-p-500/main/data/data.csv",
     # CBOE VIX 일간 1990~
