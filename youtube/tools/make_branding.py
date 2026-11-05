@@ -64,10 +64,13 @@ def calculator(w, h, display="×3 = ?"):
 
 
 def ant_with_money(size):
-    """채널 캐릭터: 돈주머니를 든 안경 개미 (engine/character.py)"""
-    from engine.character import ant_side
+    """채널 캐릭터: 악어 주둥이 위에서 지폐를 든 악어새 (engine/character.py)"""
+    from engine.character import bird_side, croc_head
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    canvas.alpha_composite(ant_side(size, "money"))
+    cr = croc_head(int(size * 1.05), int(size * 0.46)).transpose(Image.FLIP_LEFT_RIGHT)  # 왼쪽을 보는 악어, 새는 주둥이 위
+    canvas.alpha_composite(cr, (int(size * 0.24), int(size * 0.6)))
+    b = bird_side(int(size * 0.78), "money")
+    canvas.alpha_composite(b, (int(size * 0.06), int(size * 0.05)))
     return canvas
 
 
@@ -128,7 +131,7 @@ def banner(ch):
     sx0, sy0, sx1, sy1 = 507, 508, 2053, 931
     a = ant_with_money(420)
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))  # 어두운 개미가 묻히지 않게 뒤에 금색 원
-    ImageDraw.Draw(glow).ellipse((sx0 + 10, sy0 + 20, sx0 + 390, sy0 + 400), fill=S.GOLD + (255,))
+    ImageDraw.Draw(glow).ellipse((sx0 - 10, sy0 - 10, sx0 + 410, sy0 + 410), fill=S.GOLD + (255,))
     bg.alpha_composite(glow.filter(ImageFilter.GaussianBlur(4)))
     bg.alpha_composite(shadow(a), (sx0 - 20 - 40, sy0 - 10 - 40))
     bg.alpha_composite(a, (sx0 - 20, sy0 - 10))

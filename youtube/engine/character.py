@@ -241,3 +241,133 @@ def logo_badge(size=200, ring=(14, 20, 38)):
     lay.putalpha(ImageChops.multiply(lay.getchannel("A"), m))
     im.alpha_composite(lay)
     return im.reduce(k)
+
+
+# ── 주식 악어새 (채널 캐릭터) ─────────────────────────────────────
+BIRD_BACK = (92, 118, 150)      # 푸른 회색 등
+BIRD_BACK_D = (62, 84, 112)
+BIRD_BELLY = (250, 240, 214)    # 크림색 배
+BIRD_BELLY_D = (226, 206, 168)
+BIRD_CAP = (30, 32, 42)         # 검은 머리 깃
+BIRD_LINE = (24, 26, 36)
+BEAK = (40, 40, 48)
+LEG = (110, 120, 132)
+CROC = (86, 150, 82)
+CROC_D = (56, 110, 58)
+CROC_L = (150, 200, 120)
+
+
+def bird_side(size=800, holding="money", glasses=True, mood="smile"):
+    """옆모습(오른쪽을 봄) 악어새. 둥근 몸·큰 눈·검은 머리깃과 흰 눈썹줄, 금테 안경, 날개로 지폐 다발을 듦"""
+    S_ = size * K
+    c = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    u = S_ / 1000
+    lw = int(9 * u)
+
+    def P(x, y):
+        return (x * u, y * u)
+
+    def E(x0, y0, x1, y1):
+        return (x0 * u, y0 * u, x1 * u, y1 * u)
+
+    d = ImageDraw.Draw(c)
+    # 다리 (가늘고 긴 다리 2개)
+    for x0, x1 in ((430, 400), (520, 540)):
+        d.line([P(x0, 760), P(x1, 900)], fill=BIRD_LINE + (255,), width=int(26 * u))
+        d.line([P(x0, 760), P(x1, 900)], fill=LEG + (255,), width=int(13 * u))
+        for dx in (-50, 0, 46):
+            d.line([P(x1, 900), P(x1 + dx, 930)], fill=BIRD_LINE + (255,), width=int(14 * u))
+    # 꼬리깃
+    d.polygon([P(250, 560), P(120, 520), P(140, 600), P(260, 640)], fill=BIRD_LINE + (255,))
+    d.polygon([P(255, 575), P(150, 545), P(165, 595), P(262, 625)], fill=BIRD_BACK_D + (255,))
+    # 몸통 (등은 푸른 회색, 배는 크림색)
+    _ell(c, E(220, 400, 700, 800), BIRD_BACK, BIRD_BACK_D, lw, hl_rel=(0.2, 0.06, 0.62, 0.3))
+    belly = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    _ell(belly, E(330, 520, 700, 800), BIRD_BELLY, BIRD_BELLY_D, lw, hl_rel=(0.25, 0.1, 0.7, 0.4))
+    c.alpha_composite(belly)
+    # 머리
+    _ell(c, E(470, 200, 800, 520), BIRD_BELLY, BIRD_BELLY_D, lw, hl_rel=(0.2, 0.08, 0.6, 0.35), shadow=0.12)
+    d = ImageDraw.Draw(c)
+    # 검은 머리깃(정수리~뒷머리) + 흰 눈썹줄
+    d.pieslice(E(470, 200, 800, 520), 180, 340, fill=BIRD_CAP + (255,))
+    d.arc(E(470, 200, 800, 520), 180, 340, fill=BIRD_LINE + (255,), width=lw)
+    d.arc(E(520, 250, 790, 470), 200, 330, fill=(255, 255, 255, 255), width=int(22 * u))
+    # 부리 (짧고 뾰족)
+    d.polygon([P(775, 360), P(900, 392), P(775, 410)], fill=BEAK + (255,), outline=BIRD_LINE + (255,))
+    # 눈
+    d.ellipse(E(625, 320, 725, 420), fill=(255, 255, 255, 255), outline=BIRD_LINE + (255,), width=int(6 * u))
+    d.ellipse(E(660, 338, 720, 408), fill=(18, 18, 26, 255))
+    d.ellipse(E(674, 348, 694, 368), fill=(255, 255, 255, 255))
+    d.ellipse(E(700, 388, 708, 396), fill=(255, 255, 255, 220))
+    if glasses:  # 금테 안경 (모노클)
+        d.ellipse(E(608, 302, 742, 436), outline=(240, 196, 70, 255), width=int(10 * u))
+        d.line([P(610, 360), P(545, 340)], fill=(240, 196, 70, 255), width=int(8 * u))
+    # 볼
+    ch = Image.new("RGBA", (int(120 * u), int(80 * u)), (0, 0, 0, 0))
+    ImageDraw.Draw(ch).ellipse((20 * u, 20 * u, 100 * u, 60 * u), fill=(255, 130, 140, 130))
+    c.alpha_composite(ch.filter(ImageFilter.GaussianBlur(8 * u)), (int(640 * u), int(410 * u)))
+    if mood == "wow":
+        d.ellipse(E(790, 400, 816, 426), fill=(150, 40, 50, 255))
+    # 들고 있는 지폐 다발 (날개 앞)
+    if holding == "money":
+        st = money_stack(int(330 * u), int(240 * u), k=K).rotate(-10, resample=Image.BICUBIC, expand=True)
+        c.alpha_composite(st, (int(470 * u), int(520 * u)))
+    # 날개 (지폐를 감싸 쥠)
+    wing = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    wd = ImageDraw.Draw(wing)
+    pts = [P(300, 500), P(470, 470), P(600, 560), P(620, 650), P(520, 640), P(400, 610)]
+    wd.polygon(pts, fill=BIRD_BACK_D + (255,), outline=BIRD_LINE + (255,))
+    wd.line(pts + [pts[0]], fill=BIRD_LINE + (255,), width=lw, joint="curve")
+    for i in range(3):
+        wd.line([P(380 + i * 60, 520 + i * 10), P(500 + i * 40, 600 + i * 12)], fill=BIRD_BACK + (255,), width=int(8 * u))
+    c.alpha_composite(wing)
+    return c.reduce(K)
+
+
+def croc_head(w=900, h=420):
+    """옆모습 악어 머리(왼쪽을 봄 아님: 오른쪽으로 길게). 미소 짓는 입, 이빨, 눈"""
+    k = 3
+    im = Image.new("RGBA", (w * k, h * k), (0, 0, 0, 0))
+    W_, H_ = w * k, h * k
+    d = ImageDraw.Draw(im)
+    lw = 7 * k
+    top = [(0, H_ * 0.35), (W_ * 0.25, H_ * 0.18), (W_ * 0.55, H_ * 0.28), (W_ * 0.98, H_ * 0.42), (W_ * 0.98, H_ * 0.55), (0, H_ * 0.62)]
+    jaw = [(0, H_ * 0.62), (W_ * 0.96, H_ * 0.58), (W_ * 0.9, H_ * 0.72), (W_ * 0.4, H_ * 0.82), (0, H_ * 0.9)]
+    for poly, col in ((jaw, CROC_D), (top, CROC)):
+        d.polygon(poly, fill=col + (255,))
+        d.line(poly + [poly[0]], fill=BIRD_LINE + (255,), width=lw, joint="curve")
+    # 이빨
+    for i in range(9):
+        x = W_ * (0.32 + i * 0.07)
+        d.polygon([(x, H_ * 0.6), (x + W_ * 0.025, H_ * 0.6), (x + W_ * 0.012, H_ * 0.69)], fill=(255, 255, 250, 255))
+    # 등 비늘 돌기
+    for i in range(6):
+        x = W_ * (0.06 + i * 0.07)
+        d.polygon([(x, H_ * 0.3), (x + W_ * 0.04, H_ * 0.12), (x + W_ * 0.08, H_ * 0.27)], fill=CROC_D + (255,), outline=BIRD_LINE + (255,))
+    # 눈 (빼꼼 올라온 눈두덩)
+    d.ellipse((W_ * 0.42, H_ * 0.05, W_ * 0.58, H_ * 0.3), fill=CROC + (255,), outline=BIRD_LINE + (255,), width=lw)
+    d.ellipse((W_ * 0.46, H_ * 0.1, W_ * 0.55, H_ * 0.24), fill=(255, 230, 90, 255))
+    d.ellipse((W_ * 0.495, H_ * 0.11, W_ * 0.515, H_ * 0.23), fill=(20, 20, 26, 255))
+    # 콧구멍·무늬
+    d.ellipse((W_ * 0.9, H_ * 0.4, W_ * 0.93, H_ * 0.44), fill=BIRD_LINE + (255,))
+    for i in range(5):
+        d.ellipse((W_ * (0.12 + i * 0.12), H_ * 0.38, W_ * (0.16 + i * 0.12), H_ * 0.44), fill=CROC_L + (255,))
+    return im.reduce(k)
+
+
+def bird_badge(size=200, ring=(14, 20, 38)):
+    """채널 로고: 금색 원 + 남색 테두리 + 악어새"""
+    k = 3
+    S_ = size * k
+    im = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.ellipse((0, 0, S_ - 1, S_ - 1), fill=ring + (255,))
+    d.ellipse((S_ * 0.05, S_ * 0.05, S_ * 0.95, S_ * 0.95), fill=(252, 196, 70, 255))
+    b = bird_side(size, "money").resize((int(S_ * 0.96), int(S_ * 0.96)), Image.LANCZOS)
+    m = Image.new("L", (S_, S_), 0)
+    ImageDraw.Draw(m).ellipse((S_ * 0.05, S_ * 0.05, S_ * 0.95, S_ * 0.95), fill=255)
+    lay = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    lay.alpha_composite(b, (int(S_ * -0.02), int(S_ * 0.0)))
+    lay.putalpha(ImageChops.multiply(lay.getchannel("A"), m))
+    im.alpha_composite(lay)
+    return im.reduce(k)
