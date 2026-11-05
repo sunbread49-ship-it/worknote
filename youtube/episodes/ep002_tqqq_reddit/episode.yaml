@@ -85,14 +85,38 @@ shorts:
     highlight: "산 날짜"
     start: "1:43.6"
     end: "2:27.0"
+    yt_title: "같은 TQQQ인데 산 날짜만 달랐다… 10배 vs -82% #TQQQ #미국주식 #shorts"
+    yt_desc: "2020년 3월에 산 사람은 10배, 2021년 11월에 산 사람은 -82%. 16년 백테스트 전체 영상은 @antcalc 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "같은 TQQQ\n산 날짜만 달랐다"
+      top_highlight: "산 날짜"
+      big: [{text: "10배", color: up, size: 260}, {text: "VS", color: gold, size: 120}, {text: "-82%", color: down, size: 260}]
+      glow: up
   - title: "지수는 올랐는데\n3배 ETF는 손실?"
     highlight: "손실?"
     start: "3:40.6"
     end: "4:20.0"
+    yt_title: "지수는 +4%인데 3배 ETF는 -20%? 레버리지가 녹는 이유 #레버리지 #TQQQ #shorts"
+    yt_desc: "똑같이 오르고 내렸을 뿐인데 3배 레버리지는 손실이 9배. 변동성 끌림을 실제 데이터로 확인했습니다. 전체 영상은 @antcalc 채널에서.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "지수는 올랐는데\n3배 ETF는?"
+      top_highlight: "3배 ETF는?"
+      big: [{text: "지수 +4%", color: up, size: 200}, {text: "3배 -20%", color: down, size: 200}]
+      bottom: "레버리지가 녹는 이유"
+      glow: down
   - title: "인버스에 1억 넣었더니\n450원 됐다"
     highlight: "450원"
     start: "5:31.6"
     end: "6:06.0"
+    yt_title: "인버스 SQQQ에 1억 넣었더니 450원 됐다 #SQQQ #인버스 #shorts"
+    yt_desc: "하락장 대비용 인버스 ETF, 길게 들고 있으면 어떻게 될까? 2010년 SQQQ에 넣은 1억은 지금 약 450원. 전체 영상은 @antcalc 채널에서.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "인버스에\n1억 넣었더니"
+      top_highlight: "인버스"
+      big: [{text: "450원", color: down, size: 300}]
+      bottom: "SQQQ 2010 → 2026"
+      glow: down
+      chart: {series: sqqq, start: "2010-02-11", log: true, color: [74, 144, 255]}
 
 checks:
   - {name: "TQQQ 2010.2→2026.10 배수", kind: mult, series: tqqq}

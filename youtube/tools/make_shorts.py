@@ -52,7 +52,7 @@ def compose(c, sh, t, bg):
     cue = next((x for x in c.cues if x[0] <= t < x[1] + 0.12), None)
     if cue:  # 자막: 영상 바로 위
         tx = G.text_img(cue[2], "Black", 64, (255, 255, 255), max_w=980, align="center", stroke=5, stroke_fill=(0, 0, 0))
-        f.alpha_composite(tx, ((VW - tx.width) // 2, VID_Y - 40 - tx.height))
+        f.alpha_composite(tx, ((VW - tx.width) // 2, VID_Y - 90 - tx.height))
     return f
 
 
@@ -74,6 +74,44 @@ def cta(channel):
     return im
 
 
+def cover(c, sh, path):
+    """쇼츠 썸네일(1080x1920): 위 질문 / 가운데 큰 숫자 대비 / 아래 채널"""
+    from engine import charts
+    cv = sh["cover"]
+    f = vbg()
+    glow = Image.new("RGBA", (VW, VH), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(glow)
+    gd.ellipse((-300, 500, 900, 1500), fill=SC.col(cv.get("glow"), S.UP) + (90,))
+    from PIL import ImageFilter
+    f.alpha_composite(glow.filter(ImageFilter.GaussianBlur(160)))
+    if cv.get("chart"):
+        ch = cv["chart"]
+        spec = {"lines": [{"series": ch["series"], "color": ch.get("color"), "fill": False}],
+                **{k: v for k, v in ch.items() if k not in ("series", "color")}, "draw": {"on": 1, "dur": 0.01}}
+        lc = charts.LineChart(spec, rect=(60, 200, 960, 420))
+        part = G.with_opacity(lc.line, 0.7).crop((0, 150, VW, 680))
+        f.alpha_composite(part, (0, 1180))
+    logo = SC._logo(c.channel.get("name", ""))
+    f.alpha_composite(logo, ((VW - logo.width) // 2, 110))
+    top = G.text_img(cv["top"], "Black", 92, S.FG, max_w=980, align="center", stroke=6, stroke_fill=(0, 0, 0),
+                     highlight=cv.get("top_highlight", ""), line_gap=1.15)
+    f.alpha_composite(top, ((VW - top.width) // 2, 330))
+    y = 330 + top.height + 80
+    for ln in cv["big"]:
+        size = ln.get("size", 200)
+        im = G.text_img(ln["text"], "Black", size, SC.col(ln.get("color"), S.FG), stroke=10, stroke_fill=(0, 0, 0))
+        while im.width > 1000 and size > 80:
+            size -= 10
+            im = G.text_img(ln["text"], "Black", size, SC.col(ln.get("color"), S.FG), stroke=10, stroke_fill=(0, 0, 0))
+        f.alpha_composite(im, ((VW - im.width) // 2, y))
+        y += im.height + 10
+    if cv.get("bottom"):
+        b = G.text_img(cv["bottom"], "ExtraBold", 54, (255, 255, 255), stroke=5, stroke_fill=(0, 0, 0))
+        f.alpha_composite(b, ((VW - b.width) // 2, y + 30))
+    f.convert("RGB").save(path)
+    return f
+
+
 def job(args):
     ep_dir, i, sh, out = args
     c = render.setup(ep_dir, log=lambda *a: None)
@@ -88,12 +126,18 @@ def job(args):
     n = int((t1 - t0) * FPS)
     for k in range(n):
         p.stdin.write(compose(c, sh, t0 + k / FPS, bg).convert("RGB").tobytes())
+    if sh.get("cover"):  # 영상 끝 0.3초에 커버 화면 → 앱에서 '썸네일 선택'으로 고를 수 있게
+        cv = cover(c, sh, out.with_name(out.stem + "_thumbnail.png")).convert("RGB").tobytes()
+        for _ in range(9):
+            p.stdin.write(cv)
     p.stdin.close()
     p.wait()
     full = ROOT / "out" / ep_dir.name / "video.mp4"
     d = t1 - t0
+    pad = 0.3 if sh.get("cover") else 0
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(silent), "-ss", f"{t0:.2f}", "-t", f"{d:.2f}", "-i", str(full),
-                    "-map", "0:v", "-map", "1:a", "-af", f"afade=t=in:d=0.15,afade=t=out:st={d - 0.4:.2f}:d=0.4",
+                    "-map", "0:v", "-map", "1:a",
+                    "-af", f"afade=t=in:d=0.15,afade=t=out:st={d - 0.4:.2f}:d=0.4,apad=pad_dur={pad}",
                     "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", str(out)], check=True)
     silent.unlink()
     return out
@@ -109,6 +153,10 @@ def main(ep_dir):
     with mp.get_context("fork").Pool(min(len(jobs), mp.cpu_count())) as pool:
         for o in pool.map(job, jobs):
             print("쇼츠 →", o)
+    lines = []
+    for i, sh in enumerate(ep["shorts"], 1):
+        lines.append(f"[쇼츠 {i}] {sh.get('yt_title', sh['title'].replace(chr(10), ' '))}\n{sh.get('yt_desc', '')}\n")
+    (od / "쇼츠_제목_설명.txt").write_text("\n".join(lines), encoding="utf-8")
 
 
 if __name__ == "__main__":
