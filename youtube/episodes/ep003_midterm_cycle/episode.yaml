@@ -34,11 +34,14 @@ thumbnails_vs:
     highlight: "다음 1년은?"
     left: {label: "1950~2022 중간선거", value: "19/19", sub: "1년 뒤 모두 상승", color: up, chart: {series: spx, start: "1950-01-01", log: true, color: [240, 84, 84]}}
     right: {label: "그런데 이걸로 매매하면", value: "76배", sub: "그냥 보유는 393배", color: gold, chart: {series: strat_mid2pres, log: true, color: [255, 194, 70]}}
-thumbnail_pick: 1
+# 대표 썸네일 = thumbnail_v2 (19번 중 19번). 대비형(thumbnail_vs1)은 A/B 테스트용
 thumbnail_v2:
   lines: [{text: "19번 중", size: 170}, {text: "19번", size: 260, color: up}]
-  sub: "중간선거 다음 1년"
+  sub_lines:
+    - {text: "중간선거 다음 1년", size: 96}
+    - {text: "100% 올랐다", size: 150, color: gold, highlight: "100%", hl_color: up}
   arrow: false
+  chart_rect: [1080, 150, 800, 560]
   chart: {series: spx, start: "2022-01-01", end: "2026-11-04", color: [240, 84, 84]}
 
 checks:

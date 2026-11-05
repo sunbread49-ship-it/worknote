@@ -126,7 +126,18 @@ def main(ep_dir):
         G.blit(f, sh.filter(ImageFilter.GaussianBlur(10)), (80 + 8, y + 12), 0.8)
         G.blit(f, t, (80, y))
         y += t.height - int(size * 0.12)
-    if th.get("sub"):
+    if th.get("sub_lines"):  # 강조 문구 여러 줄 (색·크기 지정, 외곽선 + 그림자)
+        y += 30
+        for ln in th["sub_lines"]:
+            size = ln.get("size", 90)
+            col = scenes.col(ln.get("color"), (255, 255, 255))
+            t = G.text_img(ln["text"], "Black", size, col, stroke=max(5, size // 14), stroke_fill=(0, 0, 0),
+                           highlight=ln.get("highlight", ""), hl_fill=scenes.col(ln.get("hl_color"), S.GOLD))
+            sh = G.text_img(ln["text"], "Black", size, (0, 0, 0), stroke=max(5, size // 14), stroke_fill=(0, 0, 0))
+            G.blit(f, sh.filter(ImageFilter.GaussianBlur(8)), (86 + 6, y + 10), 0.8)
+            G.blit(f, t, (86, y))
+            y += t.height - int(size * 0.08)
+    elif th.get("sub"):
         s_ = G.text_img(th["sub"], "ExtraBold", 64, (255, 255, 255), stroke=5, stroke_fill=(0, 0, 0))
         G.blit(f, s_, (86, y + 24))
     out = ROOT / "out" / ep_dir.name / "thumbnail.png"
