@@ -371,3 +371,278 @@ def bird_badge(size=200, ring=(14, 20, 38)):
     lay.putalpha(ImageChops.multiply(lay.getchannel("A"), m))
     im.alpha_composite(lay)
     return im.reduce(k)
+
+
+# ── 주식 악어새 v2: 외곽선 없는 플랫 일러스트 (귀엽지만 성숙한 톤) ──────────
+V2 = {
+    "back": (120, 136, 156), "back_d": (94, 108, 128), "back_l": (150, 164, 182),
+    "belly": (238, 214, 180), "belly_d": (214, 184, 146),
+    "white": (246, 244, 238), "black": (28, 30, 36), "beak": (36, 38, 44),
+    "leg": (120, 134, 150), "gold": (214, 172, 84), "eye_hl": (255, 255, 255),
+    "croc": (44, 98, 86), "croc_d": (30, 72, 64), "croc_l": (66, 124, 108), "croc_eye": (232, 196, 92),
+    "bill": (64, 150, 104), "bill_d": (44, 116, 80), "bill_l": (150, 206, 170),
+}
+
+
+def _smooth(pts, n=12):
+    """Catmull-Rom 스플라인으로 다각형을 부드러운 곡선 점들로 (닫힌 도형)"""
+    out = []
+    m = len(pts)
+    for i in range(m):
+        p0, p1, p2, p3 = pts[(i - 1) % m], pts[i], pts[(i + 1) % m], pts[(i + 2) % m]
+        for k in range(n):
+            t = k / n
+            t2, t3 = t * t, t * t * t
+            x = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3)
+            y = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
+            out.append((x, y))
+    return out
+
+
+def _shape(c, pts, color, u, smooth=True):
+    d = ImageDraw.Draw(c)
+    q = _smooth(pts) if smooth else pts
+    d.polygon([(x * u, y * u) for x, y in q], fill=color + (255,))
+
+
+def _masked(c, pts_mask, draw_fn, u):
+    """pts_mask 영역 안에만 그리기 (무늬를 몸 안에 가두기)"""
+    S_ = c.width
+    lay = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    draw_fn(lay)
+    m = Image.new("L", (S_, S_), 0)
+    ImageDraw.Draw(m).polygon([(x * u, y * u) for x, y in _smooth(pts_mask)], fill=255)
+    lay.putalpha(ImageChops.multiply(lay.getchannel("A"), m))
+    c.alpha_composite(lay)
+
+
+def bird_v2(size=800, holding="bill", glasses=True):
+    """오른쪽을 보는 악어새. 회색 등·검은 머리띠·흰 눈썹·크림색 배, 가는 다리. 날개 끝에 접은 지폐."""
+    S_ = size * K
+    c = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    u = S_ / 1000
+    C = V2
+    d = ImageDraw.Draw(c)
+    # 다리 (가늘고 길게)
+    for x0, x1 in ((455, 430), (520, 545)):
+        d.line([(x0 * u, 700 * u), (x1 * u, 880 * u)], fill=C["leg"] + (255,), width=int(11 * u))
+        for dx in (-34, 0, 30):
+            d.line([(x1 * u, 880 * u), ((x1 + dx) * u, 902 * u)], fill=C["leg"] + (255,), width=int(8 * u))
+    # 꼬리
+    _shape(c, [(300, 560), (150, 610), (160, 640), (320, 615)], C["black"], u)
+    # 몸 (눈물방울형)
+    body = [(300, 560), (370, 470), (520, 430), (650, 450), (700, 540), (660, 660), (540, 720), (400, 690), (320, 620)]
+    _shape(c, body, C["back"], u)
+    # 배 (크림색) — 몸 안에만
+    _masked(c, body, lambda lay: _shape(lay, [(420, 560), (560, 520), (720, 560), (690, 700), (520, 760), (400, 720)], C["belly"], u), u)
+    # 가슴 검은 띠
+    _masked(c, body, lambda lay: _shape(lay, [(600, 470), (680, 470), (720, 540), (650, 560), (610, 530)], C["black"], u), u)
+    # 은은한 그림자 (배 아래쪽)
+    _masked(c, body, lambda lay: _shape(lay, [(380, 690), (560, 660), (690, 640), (640, 760), (420, 760)], C["belly_d"], u), u)
+    # 날개 (등 위, 매끈한 잎사귀형) + 깃 줄무늬
+    wing = [(330, 520), (430, 480), (560, 490), (620, 560), (540, 600), (400, 590)]
+    _shape(c, wing, C["back_d"], u)
+    _masked(c, wing, lambda lay: [ImageDraw.Draw(lay).line([((360 + i * 55) * u, 600 * u), ((440 + i * 50) * u, 500 * u)],
+                                                          fill=C["back_l"] + (150,), width=int(5 * u)) for i in range(4)], u)
+    # 머리
+    head = [(560, 300), (640, 250), (730, 260), (780, 320), (770, 400), (700, 450), (610, 445), (560, 390)]
+    _shape(c, head, C["white"], u)
+    # 검은 머리 위 + 눈을 지나는 검은 띠 (실제 악어새 무늬)
+    _masked(c, head, lambda lay: _shape(lay, [(540, 240), (800, 240), (800, 300), (700, 300), (600, 320), (540, 330)], C["black"], u), u)
+    _masked(c, head, lambda lay: _shape(lay, [(560, 360), (660, 340), (790, 350), (790, 385), (660, 385), (560, 400)], C["black"], u), u)
+    # 부리 (가늘고 길게)
+    _shape(c, [(775, 360), (880, 378), (775, 392)], C["beak"], u, smooth=False)
+    d = ImageDraw.Draw(c)
+    # 눈 (작고 반짝임) — 검은 띠 위에
+    d.ellipse(((688) * u, (346) * u, (728) * u, (386) * u), fill=(16, 16, 20, 255))
+    d.ellipse(((700) * u, (352) * u, (712) * u, (364) * u), fill=C["eye_hl"] + (255,))
+    if glasses:  # 얇은 금테 안경 + 줄
+        d.ellipse((672 * u, 330 * u, 744 * u, 402 * u), outline=C["gold"] + (255,), width=int(6 * u))
+        d.line([(672 * u, 372 * u), (610 * u, 440 * u), (590 * u, 500 * u)], fill=C["gold"] + (200,), width=int(3 * u), joint="curve")
+    # 접은 지폐 (날개 끝에 낀 모습)
+    if holding == "bill":
+        bw, bh = int(230 * u), int(120 * u)
+        bill = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
+        bd = ImageDraw.Draw(bill)
+        r = int(10 * u)
+        bd.rounded_rectangle((0, 0, bw - 1, bh - 1), radius=r, fill=C["bill"] + (255,))
+        bd.rounded_rectangle((int(10 * u), int(10 * u), bw - int(10 * u), bh - int(10 * u)), radius=r, outline=C["bill_l"] + (255,), width=int(3 * u))
+        bd.ellipse((bw / 2 - 30 * u, bh / 2 - 30 * u, bw / 2 + 30 * u, bh / 2 + 30 * u), fill=C["bill_d"] + (255,))
+        from . import draw as G_
+        t = G_.text_img("$", "Black", int(44 * u), C["bill_l"])
+        bill.alpha_composite(t, (int(bw / 2 - t.width / 2), int(bh / 2 - t.height / 2)))
+        bill = bill.rotate(18, resample=Image.BICUBIC, expand=True)
+        c.alpha_composite(bill, (int(500 * u), int(520 * u)))
+        _shape(c, [(560, 560), (620, 560), (640, 610), (590, 620)], C["back_d"], u)  # 날개 끝이 지폐를 덮음
+    return c.reduce(K)
+
+
+def croc_v2(w=1000, h=380):
+    """왼쪽을 보는 악어 머리, 납작하고 기하학적인 실루엣 (외곽선 없음)"""
+    k = 3
+    W_, H_ = w * k, h * k
+    im = Image.new("RGBA", (W_, H_), (0, 0, 0, 0))
+    u = W_ / 1000
+    v = H_ / 380
+    C = V2
+
+    def P(pts):
+        return [(x * u, y * v) for x, y in pts]
+    d = ImageDraw.Draw(im)
+    # 아래턱
+    d.polygon(P([(0, 250), (980, 230), (1000, 300), (940, 340), (0, 360)]), fill=C["croc_d"] + (255,))
+    # 윗턱/머리
+    top = [(0, 250), (0, 160), (140, 130), (420, 140), (700, 95), (900, 80), (1000, 150), (1000, 235)]
+    d.polygon(P(top), fill=C["croc"] + (255,))
+    # 윗면 하이라이트
+    d.polygon(P([(30, 165), (420, 150), (700, 110), (880, 98), (700, 140), (420, 175), (30, 195)]), fill=C["croc_l"] + (255,))
+    # 등 돌기 (뒤쪽)
+    for i in range(5):
+        x = 640 + i * 60
+        d.polygon(P([(x, 100 - i * 2), (x + 26, 50), (x + 52, 92 - i * 2)]), fill=C["croc_d"] + (255,))
+    # 눈두덩 + 눈
+    d.ellipse(P([(560, 40), (680, 140)])[0] + P([(680, 140)])[0], fill=C["croc"] + (255,))
+    d.ellipse(P([(590, 66)])[0] + P([(650, 116)])[0], fill=C["croc_eye"] + (255,))
+    d.ellipse(P([(614, 70)])[0] + P([(626, 112)])[0], fill=(16, 16, 20, 255))
+    # 이빨 (작고 단정하게)
+    for i in range(11):
+        x = 70 + i * 80
+        d.polygon(P([(x, 248), (x + 22, 248), (x + 11, 274)]), fill=(240, 236, 222, 255))
+    # 콧구멍
+    d.ellipse(P([(40, 168)])[0] + P([(62, 182)])[0], fill=C["croc_d"] + (255,))
+    return im.reduce(k)
+
+
+# ── 주식 악어새 v3: 의인화(서 있는 캐릭터, 옷·표정) / 라인 일러스트 ─────────────
+def _grad_fill(c, pts, top, bot, u, smooth=True, hl=None):
+    """세로 그라데이션으로 칠한 도형 (+ 선택: 부드러운 하이라이트)"""
+    S_ = c.width
+    m = Image.new("L", (S_, S_), 0)
+    q = _smooth(pts) if smooth else pts
+    ImageDraw.Draw(m).polygon([(x * u, y * u) for x, y in q], fill=255)
+    bb = m.getbbox()
+    if not bb:
+        return
+    g = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(g)
+    y0, y1 = bb[1], bb[3]
+    for y in range(y0, y1 + 1, 2):
+        t = (y - y0) / max(1, y1 - y0)
+        col = tuple(int(top[i] + (bot[i] - top[i]) * t) for i in range(3))
+        gd.rectangle((bb[0], y, bb[2], y + 2), fill=col + (255,))
+    if hl:
+        h = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+        hx, hy, hr = hl
+        ImageDraw.Draw(h).ellipse(((hx - hr) * u, (hy - hr) * u, (hx + hr) * u, (hy + hr) * u), fill=(255, 255, 255, 70))
+        g.alpha_composite(h.filter(ImageFilter.GaussianBlur(hr * u * 0.5)))
+    g.putalpha(ImageChops.multiply(g.getchannel("A"), m))
+    c.alpha_composite(g)
+
+
+def bird_toon(size=800):
+    """의인화 악어새: 두 발로 서서 남색 조끼+금색 넥타이, 큰 눈·눈썹으로 자신만만한 미소, 한 손엔 상승 차트 폰"""
+    S_ = size * K
+    c = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    u = S_ / 1000
+    d = ImageDraw.Draw(c)
+    # 그림자
+    sh = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    ImageDraw.Draw(sh).ellipse((330 * u, 900 * u, 670 * u, 950 * u), fill=(0, 0, 0, 70))
+    c.alpha_composite(sh.filter(ImageFilter.GaussianBlur(14 * u)))
+    # 다리
+    for x in (430, 560):
+        d.rounded_rectangle(((x - 14) * u, 760 * u, (x + 14) * u, 905 * u), radius=int(14 * u), fill=(92, 104, 120, 255))
+        d.ellipse(((x - 50) * u, 890 * u, (x + 40) * u, 925 * u), fill=(70, 80, 96, 255))
+    # 꼬리
+    _grad_fill(c, [(330, 700), (230, 780), (250, 800), (360, 740)], (40, 42, 52), (24, 26, 32), u)
+    # 몸 (배 크림색, 서 있는 서양배 모양)
+    body = [(500, 430), (620, 480), (670, 620), (640, 760), (500, 800), (360, 760), (330, 620), (380, 480)]
+    _grad_fill(c, body, (246, 230, 204), (222, 196, 160), u, hl=(450, 560, 80))
+    # 조끼 (남색, 몸 양옆)
+    _masked(c, body, lambda lay: (_grad_fill(lay, [(300, 440), (470, 470), (440, 820), (300, 820)], (34, 46, 78), (20, 28, 52), u),
+                                  _grad_fill(lay, [(530, 470), (700, 440), (700, 820), (560, 820)], (34, 46, 78), (20, 28, 52), u)), u)
+    # 넥타이 (금색)
+    _grad_fill(c, [(486, 480), (514, 480), (530, 520), (500, 640), (470, 520)], (236, 196, 96), (196, 150, 60), u, smooth=False)
+    d = ImageDraw.Draw(c)
+    d.polygon([(484 * u, 470 * u), (516 * u, 470 * u), (506 * u, 492 * u), (494 * u, 492 * u)], fill=(206, 160, 70, 255))
+    # 날개-팔 (왼쪽: 허리에 손, 오른쪽: 폰 들기)
+    _grad_fill(c, [(360, 500), (300, 560), (290, 650), (340, 660), (370, 580)], (122, 138, 160), (92, 106, 128), u)
+    _grad_fill(c, [(640, 500), (720, 540), (760, 600), (730, 620), (660, 580)], (122, 138, 160), (92, 106, 128), u)
+    # 폰 (상승 차트)
+    ph = [(720, 520), (800, 500), (830, 620), (750, 640)]
+    _grad_fill(c, ph, (30, 34, 44), (20, 22, 30), u, smooth=False)
+    scr = [(732, 532), (792, 517), (816, 610), (757, 626)]
+    _grad_fill(c, scr, (236, 246, 240), (214, 232, 222), u, smooth=False)
+    d = ImageDraw.Draw(c)
+    d.line([(742 * u, 608 * u), (760 * u, 585 * u), (776 * u, 592 * u), (800 * u, 545 * u)], fill=(46, 160, 100, 255), width=int(7 * u), joint="curve")
+    d.polygon([(800 * u, 538 * u), (808 * u, 556 * u), (790 * u, 552 * u)], fill=(46, 160, 100, 255))
+    _grad_fill(c, [(720, 590), (760, 575), (775, 610), (735, 625)], (122, 138, 160), (92, 106, 128), u)  # 폰 쥔 손
+    # 머리 (큰 머리, 의인화 비율)
+    head = [(500, 120), (620, 150), (680, 250), (660, 370), (580, 440), (470, 445), (380, 400), (340, 290), (370, 180)]
+    _grad_fill(c, head, (250, 248, 242), (228, 224, 214), u, hl=(450, 210, 90))
+    # 검은 정수리 깃 + 눈 아래 검은 띠 (악어새 무늬)
+    _masked(c, head, lambda lay: _grad_fill(lay, [(300, 90), (720, 90), (720, 220), (600, 205), (480, 215), (300, 250)], (44, 46, 56), (28, 30, 38), u), u)
+    _masked(c, head, lambda lay: _grad_fill(lay, [(330, 330), (440, 300), (700, 290), (700, 335), (450, 345), (330, 375)], (44, 46, 56), (28, 30, 38), u), u)
+    # 뒷머리 깃털 한 가닥
+    _grad_fill(c, [(380, 160), (300, 120), (330, 170), (370, 200)], (44, 46, 56), (28, 30, 38), u)
+    d = ImageDraw.Draw(c)
+    # 눈 (큰 눈 + 반짝임) & 눈썹 (자신만만)
+    for ex in (500, 600):
+        d.ellipse(((ex - 44) * u, 236 * u, (ex + 44) * u, 330 * u), fill=(255, 255, 255, 255))
+        d.ellipse(((ex - 22) * u, 252 * u, (ex + 26) * u, 312 * u), fill=(58, 44, 30, 255))
+        d.ellipse(((ex - 12) * u, 262 * u, (ex + 16) * u, 302 * u), fill=(14, 12, 12, 255))
+        d.ellipse(((ex - 6) * u, 262 * u, (ex + 8) * u, 276 * u), fill=(255, 255, 255, 255))
+        d.ellipse(((ex + 6) * u, 290 * u, (ex + 12) * u, 296 * u), fill=(255, 255, 255, 220))
+        # 윗눈꺼풀 살짝 (여유로운 표정)
+        d.chord(((ex - 46) * u, 232 * u, (ex + 46) * u, 300 * u), 190, 350, fill=(236, 232, 222, 255))
+    d.line([(452 * u, 226 * u), (540 * u, 216 * u)], fill=(28, 30, 38, 255), width=int(10 * u))
+    d.line([(562 * u, 214 * u), (648 * u, 232 * u)], fill=(28, 30, 38, 255), width=int(10 * u))
+    # 부리 (작고 단정)
+    _grad_fill(c, [(560, 330), (640, 350), (560, 372)], (56, 58, 66), (32, 34, 40), u, smooth=False)
+    d = ImageDraw.Draw(c)
+    d.line([(560 * u, 352 * u), (620 * u, 352 * u)], fill=(20, 20, 24, 255), width=int(3 * u))
+    # 미소 (부리 옆 살짝 올라감)
+    d.arc((520 * u, 330 * u, 570 * u, 380 * u), 60, 150, fill=(60, 50, 50, 255), width=int(5 * u))
+    # 금테 안경 (한쪽)
+    d.ellipse((546 * u, 228 * u, 654 * u, 338 * u), outline=(216, 174, 84, 255), width=int(7 * u))
+    return c.reduce(K)
+
+
+def bird_line(size=800, ink=(30, 32, 40), fill_body=(120, 136, 156), fill_belly=(240, 222, 192), accent=(214, 172, 84)):
+    """라인 일러스트 악어새: 일정한 굵기의 선 + 최소한의 면 (아이콘·로고용)"""
+    S_ = size * K
+    c = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    u = S_ / 1000
+    lw = int(14 * u)
+    d = ImageDraw.Draw(c)
+
+    def poly(pts, fill=None, close=True):
+        q = _smooth(pts) if close else pts
+        P = [(x * u, y * u) for x, y in q]
+        if fill:
+            d.polygon(P, fill=fill + (255,))
+        d.line(P + ([P[0]] if close else []), fill=ink + (255,), width=lw, joint="curve")
+    # 다리
+    for x0, x1 in ((450, 440), (530, 545)):
+        d.line([(x0 * u, 700 * u), (x1 * u, 860 * u)], fill=ink + (255,), width=lw)
+        d.line([((x1 - 30) * u, 860 * u), ((x1 + 30) * u, 860 * u)], fill=ink + (255,), width=lw)
+    # 몸 · 배
+    poly([(290, 580), (380, 470), (540, 440), (660, 480), (690, 590), (620, 690), (480, 720), (340, 680)], fill_body)
+    poly([(420, 610), (560, 570), (680, 600), (620, 690), (480, 720), (400, 690)], fill_belly)
+    # 꼬리
+    poly([(300, 580), (180, 620), (300, 640)], ink, close=False)
+    # 날개 선
+    d.line([(380 * u, 520 * u), (500 * u, 500 * u), (590 * u, 560 * u)], fill=ink + (255,), width=lw, joint="curve")
+    # 머리
+    poly([(560, 300), (640, 250), (730, 262), (775, 330), (750, 410), (670, 450), (590, 440), (550, 380)], (252, 250, 244))
+    # 머리 무늬 (정수리, 눈 띠) — 선 안쪽 채움
+    d.chord((556 * u, 246 * u, 778 * u, 420 * u), 200, 330, fill=ink + (255,))
+    d.line([(575 * u, 365 * u), (765 * u, 355 * u)], fill=ink + (255,), width=int(22 * u))
+    # 부리
+    poly([(770, 350), (870, 372), (768, 392)], ink, close=False)
+    d.polygon([(770 * u, 350 * u), (870 * u, 372 * u), (768 * u, 392 * u)], fill=ink + (255,))
+    # 눈 + 안경
+    d.ellipse((690 * u, 336 * u, 726 * u, 372 * u), fill=(255, 255, 255, 255))
+    d.ellipse((700 * u, 344 * u, 720 * u, 366 * u), fill=ink + (255,))
+    d.ellipse((676 * u, 322 * u, 740 * u, 386 * u), outline=accent + (255,), width=int(8 * u))
+    return c.reduce(K)
