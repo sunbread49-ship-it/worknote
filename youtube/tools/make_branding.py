@@ -88,9 +88,11 @@ def profile(ch):
     bg = radial((N, N), (255, 220, 110), (250, 178, 50))
     d = ImageDraw.Draw(bg)
     d.ellipse((22, 22, N - 22, N - 22), outline=NAVY + (255,), width=20)
-    a = ant_with_money(720)
-    bg.alpha_composite(shadow(a, 14, 70, (6, 12)), (40 - 40, 70 - 40))
-    bg.alpha_composite(a, (40, 70))
+    from engine.character import croc_mouth
+    sc = croc_mouth(1300).crop((0, 0, 1000, 806))      # 입 벌린 악어 머리 + 입안의 악어새에 집중
+    sc = sc.resize((760, int(760 * sc.height / sc.width)), Image.LANCZOS)
+    bg.alpha_composite(shadow(sc, 14, 60, (6, 12)), (30 - 40, 150 - 40))
+    bg.alpha_composite(sc, (30, 150))
     bg.convert("RGB").save(OUT / "profile.png")
     # 원형 미리보기
     m = Image.new("L", (N, N), 0)
@@ -124,16 +126,17 @@ def banner(ch):
     bg.alpha_composite(g)
     # 안전 영역(모든 기기에서 보이는 곳): 가운데 1546x423 → x 507~2053, y 508~931
     sx0, sy0, sx1, sy1 = 507, 508, 2053, 931
-    a = ant_with_money(420)
-    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))  # 어두운 개미가 묻히지 않게 뒤에 금색 원
-    ImageDraw.Draw(glow).ellipse((sx0 - 10, sy0 - 10, sx0 + 410, sy0 + 410), fill=S.GOLD + (255,))
-    bg.alpha_composite(glow.filter(ImageFilter.GaussianBlur(4)))
-    bg.alpha_composite(shadow(a), (sx0 - 20 - 40, sy0 - 10 - 40))
-    bg.alpha_composite(a, (sx0 - 20, sy0 - 10))
+    from engine.character import croc_mouth
+    a = croc_mouth(560)
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(glow).ellipse((sx0 - 120, sy0 - 60, sx0 + 480, sy0 + 420), fill=S.GOLD + (60,))
+    bg.alpha_composite(glow.filter(ImageFilter.GaussianBlur(80)))
+    bg.alpha_composite(shadow(a), (sx0 - 160 - 40, sy0 + 40 - 40))
+    bg.alpha_composite(a, (sx0 - 160, sy0 + 40))
     calc = calculator(150, 210, "×3").rotate(-8, resample=Image.BICUBIC, expand=True)
     bg.alpha_composite(calc, (sx1 - 190, sy0 + 120))
     name = G.text_img(ch["name"], "Black", 150, (255, 255, 255), stroke=0)
-    tx = sx0 + 420
+    tx = sx0 + 440
     bg.alpha_composite(name, (tx, sy0 + 50))
     # 이름 중 '계산기' 강조 밑줄
     tag = G.text_img(ch.get("tagline", ""), "ExtraBold", 58, S.GOLD)
