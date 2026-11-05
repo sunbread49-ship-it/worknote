@@ -124,6 +124,36 @@ def _money_words(t):
     return t
 
 
+_N1 = ["", "한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉"]
+_N10 = ["", "열", "스물", "서른", "마흔", "쉰", "예순", "일흔", "여든", "아흔"]
+
+
+def native_count(n, ordinal=False):
+    """횟수 읽기: 19번 → 열아홉 번, 20번 → 스무 번, 1번째 → 첫 번째"""
+    if ordinal and n == 1:
+        return "첫"
+    if n == 20:
+        return "스무"
+    t, o = divmod(n, 10)
+    return _N10[t] + _N1[o]
+
+
+def _numbers_ko(t):
+    """피드백으로 정한 숫자 읽기 규칙 (SCRIPT_STYLE.md 참고)"""
+    import re
+    # 횟수: N번째 / N번 → 고유어 (99 이하)
+    t = re.sub(r"(?<![\d.])(\d{1,2})번째", lambda m: native_count(int(m.group(1)), True) + " 번째", t)
+    t = re.sub(r"(?<![\d.])(\d{1,2})번(?!째)", lambda m: native_count(int(m.group(1))) + " 번", t)
+    # 연도·기간: N년 → 한자어로 붙여 읽기 (1990년엔 → 천구백구십년엔, 76년 → 칠십육년)
+    t = re.sub(r"(?<![\d.,])(\d{1,4})년", lambda m: hangul_num(int(m.group(1))) + "년", t)
+    # 쉼표 숫자: 7,568 → 칠천오백육십팔
+    t = re.sub(r"(?<![\d.])(\d{1,3}(?:,\d{3})+)(?![\d.])", lambda m: hangul_num(int(m.group(1).replace(",", ""))), t)
+    # 띄어 읽기 → 붙여 읽기
+    for a, b in (("년 치", "년치"), ("다음 해", "다음해"), ("전 해", "전해"), ("1등", "일뜽")):
+        t = t.replace(a, b)
+    return t
+
+
 def speakable(text, extra=None):
     """TTS가 어색하게 읽는 표현을 소리 내기 좋은 형태로 바꾼다."""
     import re
@@ -135,6 +165,7 @@ def speakable(text, extra=None):
     t = t.replace("…", ",").replace("...", ",")
     t = re.sub(r"[\'\"‘’“”]", "", t)                      # 따옴표는 소리로 쉼을 만들어 어색 → 제거
     t = _money_words(t)
+    t = _numbers_ko(t)
     t = re.sub(r"(\S)\?\s", r"\1? ", t)
     # 조사 바로 뒤 극적인 쉼표("1억이, 450원")는 소리로는 어색 → 제거
     t = re.sub(r"([가-힣])(이|가|은|는|을|를|도),\s(?=[\d가-힣])", r"\1\2 ", t)
