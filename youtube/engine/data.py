@@ -89,6 +89,47 @@ def cycle_years(k, y0=1950, y1=2025):
     return [v for y, v in zip(yr.index.year, yr.values) if (y - 2) % 4 == (k - 2) % 4]
 
 
+def dd_events(th=-0.3, since="1927", years=5):
+    """S&P500이 직전 최고점 대비 th 이하로 처음 내려간 날(하락장마다 1번)
+    → [(날짜, 1년 뒤%, years년 뒤%, 그 뒤 추가 최대낙폭%)] (years년이 안 지난 건 제외)"""
+    p = _daily("spx")
+    dd = p / p.cummax() - 1
+    out, armed = [], False
+    for t, v in dd.loc[str(since):].items():
+        if v == 0:
+            armed = True
+        if armed and v <= th:
+            armed = False
+            end = t + pd.Timedelta(days=365 * years)
+            if end > p.index[-1]:
+                continue
+            f1 = (_by(p, t + pd.Timedelta(days=365)) / _on(p, t) - 1) * 100
+            fy = (_by(p, end) / _on(p, t) - 1) * 100
+            further = (p.loc[t:end].min() / _on(p, t) - 1) * 100
+            out.append((t, f1, fy, further))
+    # 1927년 이전 고점 정보가 없어 첫 하락장은 1929년 고점부터 인정
+    return out
+
+
+def vix_events(level=40, reset=25):
+    """VIX가 level을 처음 넘은 날(reset 아래로 내려가야 다시 인정)
+    → [(날짜, VIX, 나스닥100 1년%, 3배 1년%, 3배 1년 내 최대낙폭%)]. 3배 = TQQQ(2010.2~) / 가상 TQQQ(이전)"""
+    v, n, s3, t = _vix(), _daily("ndx"), _sim3x(), _daily("tqqq")
+    out, armed = [], True
+    for d, x in v.items():
+        if x < reset:
+            armed = True
+        if armed and x > level:
+            armed = False
+            if d + pd.Timedelta(days=365) > n.index[-1]:
+                continue
+            lev = t if d >= pd.Timestamp("2010-02-12") else s3
+            e = d + pd.Timedelta(days=365)
+            out.append((d, float(x), (_by(n, e) / _on(n, d) - 1) * 100, (_by(lev, e) / _on(lev, d) - 1) * 100,
+                        (lev.loc[d:e].min() / _on(lev, d) - 1) * 100))
+    return out
+
+
 def _cycle_strategy(name):
     """중간선거일→대선일만 보유(strat_mid2pres) 또는 대선일→중간선거일만 보유(strat_pres2mid), 나머지는 현금"""
     p = _daily("spx").loc["1950-11-01":]
@@ -157,6 +198,18 @@ def stat(kind: str, **kw) -> float:
         p = _daily("spx")
         v = [(_by(p, election_day(y) + pd.Timedelta(days=365)) / _on(p, election_day(y)) - 1) * 100 for y in range(1950, 2025)]
         return float(np.mean(v) if kind == "anyyear_mean" else np.mean(np.array(v) > 0) * 100)
+    if kind.startswith("dd_"):  # dd_n / dd_mean1 / dd_meanY / dd_winY / dd_upY / dd_further / dd_worstY / dd_worst_further
+        ev = dd_events(kw.get("th", -0.3), kw.get("since", "1927"), kw.get("years", 5))
+        a1 = np.array([e[1] for e in ev]); ay = np.array([e[2] for e in ev]); af = np.array([e[3] for e in ev])
+        return float({"dd_n": len(ev), "dd_mean1": a1.mean(), "dd_meanY": ay.mean(), "dd_winY": (ay > 0).mean() * 100,
+                      "dd_upY": (ay > 0).sum(), "dd_further": af.mean(), "dd_worstY": ay.min(),
+                      "dd_worst_further": af.min(), "dd_win1": (a1 > 0).mean() * 100}[kind])
+    if kind.startswith("vix_"):  # vix_n / vix_ndx / vix_lev / vix_levwin / vix_levup / vix_levworst / vix_dd
+        ev = vix_events(kw.get("level", 40))
+        n_ = np.array([e[2] for e in ev]); l_ = np.array([e[3] for e in ev]); d_ = np.array([e[4] for e in ev])
+        return float({"vix_n": len(ev), "vix_ndx": n_.mean(), "vix_lev": l_.mean(), "vix_levmed": np.median(l_),
+                      "vix_levwin": (l_ > 0).mean() * 100, "vix_levup": (l_ > 0).sum(), "vix_levworst": l_.min(),
+                      "vix_dd": d_.mean(), "vix_ddworst": d_.min()}[kind])
     if kind == "elec_compound":  # 선거일→1년만 보유를 이어 붙인 배수
         v = [x for _, x in elec_fwd(kw.get("which", "midterm"), kw.get("y0", 1950), kw.get("y1", 2022))]
         return float(np.prod([1 + x / 100 for x in v]))

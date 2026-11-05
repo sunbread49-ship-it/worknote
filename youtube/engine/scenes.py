@@ -714,6 +714,10 @@ class YearBars(Scene):
         w = sp.get("which", "midterm")
         if w.startswith("cycle"):
             self.items = D.cycle_years_list(int(w[-1]))
+        elif w == "dd":  # 하락장 매수: 연도 → years년 뒤 수익률
+            self.items = [(e[0].year, e[2]) for e in D.dd_events(sp.get("th", -0.3), sp.get("since", "1927"), sp.get("years", 5))]
+        elif w == "vix":  # VIX 첫 돌파일 → 3배 레버리지 1년 수익률
+            self.items = [(e[0].strftime("%y.%m"), e[3]) for e in D.vix_events(sp.get("level", 40))]
         else:
             self.items = D.elec_fwd(w, sp.get("y0", 1950), sp.get("y1", 2022))
 
@@ -727,7 +731,7 @@ class YearBars(Scene):
         x0, base, w, hmax = 200, 820, 1560, 470
         n = len(self.items)
         slot = w / n
-        vmax = max(abs(v) for _, v in self.items) * 1.15
+        vmax = sp.get("vmax") or max(abs(v) for _, v in self.items) * 1.15
         zero = Image.new("RGBA", (w + 40, 3), S.MUTED + (200,))
         G.blit(f, zero, (x0 - 20, base))
         t0 = self.line_start(sp.get("on", 1))
@@ -739,23 +743,24 @@ class YearBars(Scene):
             c = S.UP if v >= 0 else S.DOWN
             if str(y) in {str(m) for m in sp.get("mark", {})}:
                 c = S.GOLD
-            bh = max(3, abs(v) / vmax * hmax * k)
+            bh = max(3, min(abs(v), vmax) / vmax * hmax * k)
             bw = int(slot * 0.62)
             cx = x0 + slot * (i + 0.5)
             bar = Image.new("RGBA", (bw, int(bh)), c + (255,))
             G.blit(f, bar, (cx, base) if v < 0 else (cx, base - bh), 1, "mt" if v < 0 else "mt")
             G.blit(f, G.text_img(f"{v:+.0f}", "Bold", 22, c), (cx, base - bh - 8 if v >= 0 else base + bh + 8),
                    min(1, k * 2), "mb" if v >= 0 else "mt")
-            G.blit(f, G.text_img(str(y)[2:] if n > 14 else str(y), "Medium", 22, S.MUTED), (cx, base + 14), min(1, k * 2), "mt")
+            lab = str(y)[2:] if (isinstance(y, int) and n > 14) else str(y)
+            G.blit(f, G.text_img(lab, "Medium", 22, S.MUTED), (cx, base + 14), min(1, k * 2), "mt")
         for y, lab in sp.get("mark", {}).items():
-            idx = next((i for i, (yy, _) in enumerate(self.items) if yy == int(y)), None)
+            idx = next((i for i, (yy, _) in enumerate(self.items) if str(yy) == str(y)), None)
             if idx is None:
                 continue
             o = G.appear(t, self.line_start(sp.get("mark_on", 1)))
             cx = x0 + slot * (idx + 0.5)
             v = self.items[idx][1]
             G.blit(f, G.pill(lab, "Bold", 26, (16, 20, 32), S.GOLD, pad=(14, 6)),
-                   (cx, base - abs(v) / vmax * hmax - 50), o, "mb")
+                   (cx, base - min(abs(v), vmax) / vmax * hmax - 50) if v >= 0 else (cx, base + min(abs(v), vmax) / vmax * hmax + 60), o, "mb" if v >= 0 else "mt")
         G.blit(f, G.text_img(sp.get("source", "자료: S&P500 지수(배당 제외) · 선거일 종가 → 1년 뒤"), "Regular", 20, S.MUTED),
                (x0 + w, base + 60), 1, "rt")
         self.draw_common(f, t)
