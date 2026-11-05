@@ -44,6 +44,42 @@ thumbnail_v2:
   chart_rect: [1080, 150, 800, 560]
   chart: {series: spx, start: "2022-01-01", end: "2026-11-04", color: [240, 84, 84]}
 
+shorts:
+  - title: "중간선거 다음 1년"
+    start: "2:34.0"
+    end: "3:10.0"
+    yt_title: "중간선거 다음 1년, 76년 동안 한 번도 안 빠졌다? #중간선거 #미국주식 #shorts"
+    yt_desc: "1950년 이후 미국 중간선거 19번, 선거 다음 1년 S&P500은 19번 모두 올랐습니다. 그런데 이걸로 매매하면? 전체 영상은 @antcalc 채널에서.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "중간선거 끝나고\n1년 뒤"
+      top_highlight: "1년 뒤"
+      big: [{text: "19번 중", color: fg, size: 150}, {text: "19번 상승", color: up, size: 200}]
+      bottom: "76년 동안 한 번도 안 빠졌다?"
+      glow: up
+      chart: {series: spx, start: "2022-06-01", end: "2023-11-30", color: [240, 84, 84]}
+  - title: "중간선거 매매법의 반전"
+    start: "4:17.0"
+    end: "5:00.6"
+    yt_title: "19번 중 19번 오른 매매법… 그냥 들고 있었으면 5배 더 벌었다 #매매법 #백테스트 #shorts"
+    yt_desc: "중간선거 날 사서 대선 날 파는 매매법, 76년 결과는 76배. 그런데 그냥 계속 들고 있었다면? 전체 영상은 @antcalc 채널에서.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "100% 오르는\n매매법인데…"
+      top_highlight: "100%"
+      big: [{text: "76배", color: gold, size: 230}, {text: "VS", color: fg, size: 110}, {text: "393배", color: up, size: 230}]
+      bottom: "그냥 들고 있었다면?"
+      glow: gold
+  - title: "2027년, 대선 전해"
+    start: "1:24.0"
+    end: "2:11.0"
+    yt_title: "2027년이 주식시장에 특별한 이유, 19번 중 17번 올랐다 #대통령임기사이클 #2027 #shorts"
+    yt_desc: "미국 대통령 임기 4년 중 '대선 전 해'는 S&P500 평균 +17.2%, 19번 중 17번 상승. 2027년이 바로 그 해입니다. 전체 영상은 @antcalc 채널에서.\n※ 과거 데이터는 미래를 보장하지 않습니다. 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "2027년이\n특별한 이유"
+      top_highlight: "2027년"
+      big: [{text: "+17.2%", color: gold, size: 220}, {text: "19번 중 17번", color: up, size: 130}]
+      bottom: "대통령 임기 4년 중 최고의 해"
+      glow: gold
+
 checks:
   - {name: "중간선거일→1년 평균(%)", kind: elec_mean}
   - {name: "중간선거일→1년 상승 횟수", kind: elec_up}
