@@ -646,3 +646,145 @@ def bird_line(size=800, ink=(30, 32, 40), fill_body=(120, 136, 156), fill_belly=
     d.ellipse((700 * u, 344 * u, 720 * u, 366 * u), fill=ink + (255,))
     d.ellipse((676 * u, 322 * u, 740 * u, 386 * u), outline=accent + (255,), width=int(8 * u))
     return c.reduce(K)
+
+
+# ── 주식 악어새 v4: 굵은 외곽선 치비 스타일 (악어 + 주둥이 위 악어새) ─────────────
+CH = {
+    "ink": (30, 26, 24), "g": (138, 196, 104), "g_d": (92, 150, 74), "g_l": (176, 220, 140),
+    "cream": (252, 238, 196), "cream_d": (226, 206, 160), "pink": (240, 128, 128), "tooth": (255, 255, 250),
+    "blush": (250, 150, 150), "y": (255, 200, 60),
+    "bill": (120, 186, 120), "bill_d": (78, 140, 86), "bill_l": (214, 238, 200),
+    "b_back": (120, 140, 166), "b_belly": (250, 246, 236), "b_black": (34, 34, 40), "gold": (226, 178, 70),
+}
+
+
+def _ink(c, pts, fill, u, lw=12, smooth=True):
+    """굵은 외곽선 + 면 채우기 (외곽선이 바깥으로 lw 만큼)"""
+    d = ImageDraw.Draw(c)
+    q = _smooth(pts) if smooth else pts
+    P = [(x * u, y * u) for x, y in q]
+    d.line(P + [P[0]], fill=CH["ink"] + (255,), width=int(lw * 2 * u), joint="curve")
+    for x, y in (P[0],):
+        r = lw * u
+        d.ellipse((x - r, y - r, x + r, y + r), fill=CH["ink"] + (255,))
+    d.polygon(P, fill=fill + (255,))
+
+
+def _ink_ell(c, box, fill, u, lw=12):
+    d = ImageDraw.Draw(c)
+    x0, y0, x1, y1 = [v * u for v in box]
+    o = lw * u
+    d.ellipse((x0 - o, y0 - o, x1 + o, y1 + o), fill=CH["ink"] + (255,))
+    d.ellipse((x0, y0, x1, y1), fill=fill + (255,))
+
+
+def _bill_fan(n=4, w=230, h=120, k=3, spread=16):
+    """부채꼴로 펼친 초록 지폐 다발. 반환 (이미지, 손잡이 위치) — 손잡이는 지폐 왼쪽 아래 모서리"""
+    from . import draw as G_
+    L = int((w + h) * 1.6)
+    out = Image.new("RGBA", (L * k, L * k), (0, 0, 0, 0))
+    pv = (int(L * k * 0.35), int(L * k * 0.65))  # 회전 중심(손)
+    for i in range(n):
+        b = Image.new("RGBA", ((w + 24) * k, (h + 24) * k), (0, 0, 0, 0))
+        d = ImageDraw.Draw(b)
+        d.rounded_rectangle((0, 0, (w + 23) * k, (h + 23) * k), radius=14 * k, fill=CH["ink"] + (255,))
+        d.rounded_rectangle((10 * k, 10 * k, (w + 13) * k, (h + 13) * k), radius=8 * k, fill=CH["bill"] + (255,))
+        d.rounded_rectangle((24 * k, 24 * k, (w - 1) * k, (h - 1) * k), radius=6 * k, outline=CH["bill_l"] + (255,), width=4 * k)
+        cx, cy = (w + 24) * k / 2, (h + 24) * k / 2
+        d.ellipse((cx - 34 * k, cy - 34 * k, cx + 34 * k, cy + 34 * k), fill=CH["bill_d"] + (255,))
+        t = G_.text_img("$", "Black", 52 * k, CH["bill_l"])
+        b.alpha_composite(t, (int(cx - t.width / 2), int(cy - t.height / 2)))
+        lay = Image.new("RGBA", out.size, (0, 0, 0, 0))
+        lay.alpha_composite(b, (pv[0] - int(20 * k), pv[1] - b.height + int(20 * k)))
+        lay = lay.rotate(28 + (n - 1 - i) * spread, resample=Image.BICUBIC, center=pv)
+        out.alpha_composite(lay)
+    return out.reduce(k), (pv[0] / k, pv[1] / k)
+
+
+def croc_chibi(size=800, bird=True, money=True, sparkle=True):
+    """치비 악어 캐릭터: 2등신, 굵은 외곽선, 긴 주둥이·솟은 눈·등 비늘, 한 손엔 돈다발. 주둥이 위엔 안경 쓴 작은 악어새."""
+    K3 = 3
+    S_ = size * K3
+    c = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    u = S_ / 1000
+    d = ImageDraw.Draw(c)
+    # 꼬리 + 등 비늘
+    for x, y in ((150, 790), (210, 760), (270, 720), (300, 660), (300, 590)):
+        _ink(c, [(x - 30, y + 10), (x, y - 40), (x + 30, y + 10)], CH["g_d"], u, 10, smooth=False)
+    _ink(c, [(330, 690), (230, 760), (110, 810), (80, 850), (160, 860), (270, 830), (340, 790)], CH["g"], u)
+    # 다리
+    _ink_ell(c, (300, 800, 420, 900), CH["g"], u)
+    _ink_ell(c, (470, 810, 590, 905), CH["g"], u)
+    # 몸통 + 배
+    _ink(c, [(330, 470), (480, 440), (590, 500), (620, 640), (590, 790), (470, 860), (340, 840), (290, 720), (295, 580)], CH["g"], u)
+    _ink(c, [(410, 560), (530, 540), (580, 640), (565, 780), (480, 830), (395, 800), (375, 680)], CH["cream"], u, 8)
+    d = ImageDraw.Draw(c)
+    for y in (620, 680, 740, 790):
+        d.arc((390 * u, (y - 30) * u, 570 * u, (y + 20) * u), 20, 160, fill=CH["cream_d"] + (255,), width=int(7 * u))
+    # 뒤쪽 팔 (돈 드는 팔)
+    fan_img = None
+    if money:
+        fan, (px, py) = _bill_fan()
+        sc = 200 * u / 230
+        fan_img = fan.resize((int(fan.width * sc), int(fan.height * sc)), Image.LANCZOS)
+        fan_pos = (int(815 * u - px * sc), int(650 * u - py * sc))
+    _ink(c, [(570, 560), (680, 560), (790, 610), (800, 660), (700, 670), (590, 630)], CH["g"], u)
+    if fan_img is not None:
+        c.alpha_composite(fan_img, fan_pos)
+    _ink_ell(c, (770, 600, 860, 690), CH["g"], u)
+    # 머리 (넓적) + 긴 주둥이
+    _ink(c, [(840, 330), (890, 370), (880, 440), (780, 470), (600, 480), (560, 410), (600, 330), (720, 310)], CH["g"], u)  # 주둥이
+    _ink(c, [(300, 330), (360, 230), (470, 200), (580, 240), (630, 330), (610, 440), (500, 490), (370, 480), (300, 420)], CH["g"], u)  # 머리
+    d = ImageDraw.Draw(c)
+    # 주둥이 윗면 밝은 띠
+    d.polygon([(p[0] * u, p[1] * u) for p in _smooth([(620, 345), (740, 330), (850, 345), (860, 372), (740, 362), (620, 378)])], fill=CH["g_l"] + (255,))
+    # 입 (활짝 웃음): 아래턱 크림 + 혀
+    _ink(c, [(470, 410), (860, 410), (820, 470), (640, 500), (500, 480)], CH["cream"], u, 9)
+    d = ImageDraw.Draw(c)
+    d.polygon([(p[0] * u, p[1] * u) for p in _smooth([(560, 420), (760, 420), (720, 470), (600, 478)])], fill=CH["pink"] + (255,))
+    d.line([(470 * u, 410 * u), (860 * u, 410 * u)], fill=CH["ink"] + (255,), width=int(9 * u))
+    for i in range(8):  # 윗니
+        x = 520 + i * 42
+        d.polygon([(x * u, 412 * u), ((x + 22) * u, 412 * u), ((x + 11) * u, 436 * u)], fill=CH["tooth"] + (255,), outline=CH["ink"] + (255,))
+    # 콧구멍 혹 + 콧구멍
+    _ink_ell(c, (810, 320, 880, 360), CH["g"], u, 9)
+    d = ImageDraw.Draw(c)
+    d.ellipse((826 * u, 332 * u, 840 * u, 344 * u), fill=CH["ink"] + (255,))
+    d.ellipse((852 * u, 332 * u, 866 * u, 344 * u), fill=CH["ink"] + (255,))
+    # 위로 솟은 눈 (악어 특징) + 큰 눈동자
+    for ex, ey, r in ((420, 250, 70), (545, 235, 64)):
+        _ink_ell(c, (ex - r, ey - r, ex + r, ey + r), CH["g"], u)
+        d = ImageDraw.Draw(c)
+        d.ellipse(((ex - r * 0.62) * u, (ey - r * 0.55) * u, (ex + r * 0.62) * u, (ey + r * 0.7) * u), fill=(255, 255, 255, 255))
+        d.ellipse(((ex - r * 0.36) * u, (ey - r * 0.32) * u, (ex + r * 0.34) * u, (ey + r * 0.6) * u), fill=CH["ink"] + (255,))
+        d.ellipse(((ex - r * 0.18) * u, (ey - r * 0.22) * u, (ex + r * 0.02) * u, (ey - r * 0.02) * u), fill=(255, 255, 255, 255))
+    # 볼터치
+    bl = Image.new("RGBA", (S_, S_), (0, 0, 0, 0))
+    ImageDraw.Draw(bl).ellipse((335 * u, 375 * u, 425 * u, 420 * u), fill=(255, 120, 130, 210))
+    c.alpha_composite(bl.filter(ImageFilter.GaussianBlur(8 * u)))
+    # 앞쪽 팔 (주먹, 가슴 앞)
+    _ink_ell(c, (330, 560, 430, 650), CH["g"], u)
+    d = ImageDraw.Draw(c)
+    d.arc((350 * u, 585 * u, 410 * u, 630 * u), 200, 340, fill=CH["ink"] + (255,), width=int(6 * u))
+    # 주둥이 위 작은 악어새
+    if bird:
+        bx, by = 700, 255
+        _ink(c, [(bx - 70, by + 30), (bx - 120, by + 50), (bx - 70, by + 55)], CH["b_black"], u, 8, smooth=False)  # 꼬리
+        _ink_ell(c, (bx - 80, by - 20, bx + 40, by + 70), CH["b_back"], u, 9)  # 몸
+        d = ImageDraw.Draw(c)
+        d.ellipse(((bx - 30) * u, (by + 10) * u, (bx + 36) * u, (by + 66) * u), fill=CH["b_belly"] + (255,))
+        _ink_ell(c, (bx - 10, by - 90, bx + 80, by), CH["b_belly"], u, 9)  # 머리
+        d = ImageDraw.Draw(c)
+        d.chord(((bx - 10) * u, (by - 90) * u, (bx + 80) * u, (by + 0) * u), 185, 355, fill=CH["b_black"] + (255,))
+        d.line([((bx - 6) * u, (by - 40) * u), ((bx + 78) * u, (by - 46) * u)], fill=CH["b_black"] + (255,), width=int(12 * u))
+        d.polygon([((bx + 76) * u, (by - 50) * u), ((bx + 120) * u, (by - 42) * u), ((bx + 76) * u, (by - 32) * u)], fill=CH["ink"] + (255,))
+        d.ellipse(((bx + 42) * u, (by - 54) * u, (bx + 62) * u, (by - 34) * u), fill=(255, 255, 255, 255))
+        d.ellipse(((bx + 48) * u, (by - 50) * u, (bx + 60) * u, (by - 38) * u), fill=CH["ink"] + (255,))
+        d.ellipse(((bx + 36) * u, (by - 60) * u, (bx + 68) * u, (by - 28) * u), outline=CH["gold"] + (255,), width=int(5 * u))
+        for lx in (bx - 30, bx + 5):
+            d.line([(lx * u, (by + 70) * u), (lx * u, (by + 92) * u)], fill=CH["ink"] + (255,), width=int(7 * u))
+    # 반짝 표시
+    if sparkle:
+        for pts in ([(830, 120), (870, 110), (850, 220), (830, 225)], [(930, 160), (965, 180), (900, 270), (885, 258)]):
+            _ink(c, pts, CH["y"], u, 0, smooth=False)
+    return c.reduce(K3)

@@ -64,14 +64,9 @@ def calculator(w, h, display="×3 = ?"):
 
 
 def ant_with_money(size):
-    """채널 캐릭터: 악어 주둥이 위에서 지폐를 든 악어새 (engine/character.py)"""
-    from engine.character import bird_side, croc_head
-    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    cr = croc_head(int(size * 1.05), int(size * 0.46)).transpose(Image.FLIP_LEFT_RIGHT)  # 왼쪽을 보는 악어, 새는 주둥이 위
-    canvas.alpha_composite(cr, (int(size * 0.24), int(size * 0.6)))
-    b = bird_side(int(size * 0.78), "money")
-    canvas.alpha_composite(b, (int(size * 0.06), int(size * 0.05)))
-    return canvas
+    """채널 캐릭터: 돈다발 든 치비 악어 + 주둥이 위 악어새 (engine/character.py croc_chibi)"""
+    from engine.character import croc_chibi
+    return croc_chibi(size)
 
 
 def _old_ant_with_money(size):
@@ -93,9 +88,9 @@ def profile(ch):
     bg = radial((N, N), (255, 220, 110), (250, 178, 50))
     d = ImageDraw.Draw(bg)
     d.ellipse((22, 22, N - 22, N - 22), outline=NAVY + (255,), width=20)
-    a = ant_with_money(700)
-    bg.alpha_composite(shadow(a, 14, 80, (6, 12)), (40 - 40, 60 - 40))
-    bg.alpha_composite(a, (40, 60))
+    a = ant_with_money(720)
+    bg.alpha_composite(shadow(a, 14, 70, (6, 12)), (40 - 40, 70 - 40))
+    bg.alpha_composite(a, (40, 70))
     bg.convert("RGB").save(OUT / "profile.png")
     # 원형 미리보기
     m = Image.new("L", (N, N), 0)
