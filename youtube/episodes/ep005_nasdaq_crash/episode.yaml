@@ -93,7 +93,43 @@ thumbs:
     left: {label: "버블기 제외", value: "14/14", sub: "1년 뒤 플러스", color: up}
     right: {label: "닷컴 버블", value: "1/22", sub: "1년 뒤 플러스", color: down}
 
-shorts: []
+shorts:
+  - title: "폭락 36번의 결과"
+    start: "1:04.0"
+    end: "1:51.0"
+    yt_title: "나스닥 하루 -6% 폭락한 날 샀다면? 과거 36번의 1년 뒤 결과 #나스닥 #폭락장 #shorts"
+    yt_desc: "1985년 이후 나스닥100이 하루에 6% 넘게 빠진 36번, 그날 샀다면 1년 뒤는? 숨은 함정까지. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다. 과거 데이터는 미래 수익을 보장하지 않습니다."
+    cover:
+      top: "나스닥 -6% 폭락날\n샀다면 1년 뒤"
+      top_highlight: "-6% 폭락날"
+      big: [{text: "36번 중", color: fg, size: 150}, {text: "15번만 플러스?", color: gold, size: 160}]
+      bottom: "숨은 함정 하나"
+      glow: down
+      chart: {series: ndx, start: "2026-06-01", end: "2026-11-05", color: [240, 84, 84]}
+  - title: "팔면 놓치는 것"
+    start: "5:03.0"
+    end: "5:56.0"
+    yt_title: "폭락장에 무서워서 팔았더니… 1,000만 원이 본전 된 이유 #나스닥 #패닉셀 #shorts"
+    yt_desc: "나스닥100 최고의 날 20일 중 18일은 폭락 근처에 있었습니다. 2020년, 2025년 폭락에 팔고 나온 사람과 버틴 사람의 차이. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "폭락에 팔고 나왔다면"
+      top_highlight: "팔고 나왔다면"
+      big: [{text: "1,397만 원", color: up, size: 170}, {text: "vs 999만 원", color: down, size: 170}]
+      bottom: "2020년 코로나 폭락"
+      glow: up
+      chart: {series: ndx, start: "2020-01-02", end: "2021-02-19", color: [240, 84, 84]}
+  - title: "딱 한 번 달랐던 폭락"
+    start: "2:46.0"
+    end: "3:22.0"
+    yt_title: "나스닥 폭락, 딱 한 번 진짜 달랐던 때 — 회복까지 15년 7개월 #닷컴버블 #나스닥 #shorts"
+    yt_desc: "2000년 닷컴 버블: 고점 대비 -82.9%, 회복까지 15년 7개월. 2020년 코로나: 석 달. 같은 폭락, 다른 결말. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover:
+      top: "같은 폭락\n다른 결말"
+      top_highlight: "다른 결말"
+      big: [{text: "15년 7개월", color: down, size: 170}, {text: "vs 석 달", color: up, size: 170}]
+      bottom: "2000년 vs 2020년"
+      glow: down
+      chart: {series: ndx, start: "1998-01-02", end: "2003-06-30", color: [74, 144, 255]}
 
 checks:
   - {name: "11/5 나스닥100 하루(%)", kind: ret, series: ndx, start: "2026-11-04", end: "2026-11-05"}
