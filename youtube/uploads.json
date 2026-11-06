@@ -41,5 +41,30 @@
       "title": "(수동 업로드)",
       "manual": true
     }
+  },
+  "ep005_nasdaq_crash": {
+    "long": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    },
+    "short1": {
+      "id": "i9jl-UgNUO0",
+      "title": "나스닥 하루 -6% 폭락한 날 샀다면? 과거 36번의 1년 뒤 결과 #나스닥 #폭락장 #shorts",
+      "at": "2026-11-06T21:32:43.384989+09:00",
+      "publish_at": null
+    },
+    "short2": {
+      "id": "niOCAbWHzMk",
+      "title": "폭락장에 무서워서 팔았더니… 1,000만 원이 본전 된 이유 #나스닥 #패닉셀 #shorts",
+      "at": "2026-11-06T21:32:45.053248+09:00",
+      "publish_at": null
+    },
+    "short3": {
+      "id": "3IlCFb5nhRA",
+      "title": "나스닥 폭락, 딱 한 번 진짜 달랐던 때 — 회복까지 15년 7개월 #닷컴버블 #나스닥 #shorts",
+      "at": "2026-11-06T21:32:46.744780+09:00",
+      "publish_at": null
+    }
   }
 }
