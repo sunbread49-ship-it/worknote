@@ -59,6 +59,7 @@ def profile(ch):
     prev = Image.new("RGBA", (N, N), (0, 0, 0, 0))
     prev.paste(bg, (0, 0), m)
     prev.save(OUT / "profile_preview_circle.png")
+    prev.resize((400, 400), Image.LANCZOS).save(ROOT / "assets/media/profile_circle.png")  # 영상 로고·쇼츠 CTA 용
 
 
 def banner(ch, cfg):

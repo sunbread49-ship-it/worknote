@@ -130,6 +130,21 @@ def vix_events(level=40, reset=25):
     return out
 
 
+def crash_days(th=-0.06, days=252):
+    """나스닥100 하루 수익률이 th 이하인 날 → [(날짜, 그날%, days거래일 뒤%)] (뒤 기간이 안 지난 날은 제외)"""
+    p = _daily("ndx")
+    r = p.pct_change()
+    out = []
+    for t in r[r <= th].index:
+        i = p.index.get_loc(t)
+        if i + days < len(p):
+            out.append((t, r.loc[t] * 100, (p.iloc[i + days] / p.iloc[i] - 1) * 100))
+    return out
+
+
+BUBBLE = ("2000-01-01", "2002-12-31")  # 닷컴 버블 붕괴기
+
+
 def _cycle_strategy(name):
     """중간선거일→대선일만 보유(strat_mid2pres) 또는 대선일→중간선거일만 보유(strat_pres2mid), 나머지는 현금"""
     p = _daily("spx").loc["1950-11-01":]
@@ -183,6 +198,34 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind.startswith("crash_"):  # 나스닥100 -6% 하락일 통계. scope: all|bubble|ex (버블기 2000~2002 / 제외)
+        ev = crash_days(kw.get("th", -0.06), kw.get("days", 252))
+        sc = kw.get("scope", "all")
+        inb = lambda t: BUBBLE[0] <= str(t.date()) <= BUBBLE[1]
+        ev = [e for e in ev if sc == "all" or (sc == "bubble") == inb(e[0])]
+        v = np.array([e[2] for e in ev])
+        if kind == "crash_n":
+            return float(len(ev))
+        if kind == "crash_up":
+            return float((v > 0).sum())
+        if kind == "crash_mean":
+            return float(v.mean())
+        if kind == "crash_med":
+            return float(np.median(v))
+    if kind == "best_days_miss":  # 나스닥100 since~ 전체 배수 vs 최고의 날 k일 빠졌을 때 배수 (which: all|miss)
+        r = _daily("ndx").pct_change().loc[str(kw.get("since", "1985")):].dropna()
+        if kw.get("which") == "miss":
+            r = r.drop(r.nlargest(int(kw["k"])).index)
+        return float((1 + r).prod())
+    if kind == "split4":  # start일에 1/4, 21·42·63거래일 뒤 1/4씩 → days거래일 뒤 수익률(%)
+        p = series(kw["series"])
+        i = p.index.get_loc(p.loc[str(kw["start"]):].index[0])
+        e = i + kw.get("days", 252)
+        return float((np.mean([p.iloc[e] / p.iloc[i + k] for k in (0, 21, 42, 63)]) - 1) * 100)
+    if kind == "allin":
+        p = series(kw["series"])
+        i = p.index.get_loc(p.loc[str(kw["start"]):].index[0])
+        return float((p.iloc[i + kw.get("days", 252)] / p.iloc[i] - 1) * 100)
     if kind == "ret":  # 일간 시리즈 start→end 변화율(%) (가장 가까운 거래일)
         p = series(kw["series"])
         a = p.loc[str(kw["start"]):].iloc[0] if kw.get("start") else p.iloc[0]

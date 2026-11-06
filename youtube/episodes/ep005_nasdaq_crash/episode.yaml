@@ -1,0 +1,662 @@
+# EP005 · 주식 궁금증, 숫자로 풀기 — 나스닥 -6% 폭락, 37번의 역사로 본 대응법
+# 대본 작성 규칙: youtube/SCRIPT_STYLE.md
+# 기준: 2026-11-05 종가 (나스닥100 28,437.2 → 26,629.8, -6.36%)
+title: "나스닥 하루 -6% 폭락, 과거 37번은 어떻게 됐을까? 1985~2026 백테스트"
+
+tts:
+  voice: ko-KR-Chirp3-HD-Sadaltager
+  rate: 1.12
+
+youtube:
+  title: "나스닥 -6% 폭락, 팔까 살까? 과거 37번의 폭락이 알려준 대응법"
+  description: |
+    2026년 11월 5일, 나스닥100이 하루에 6.36% 빠졌습니다. TQQQ는 하루 -19%.
+    1985년 이후 나스닥100이 하루에 6% 넘게 빠진 날은 이번이 37번째입니다.
+    과거 36번의 폭락 뒤 1년, 실제로 어떻게 됐는지 데이터로 전부 확인했습니다.
+
+    ✔ 폭락 다음 1년, 36번 중 몇 번이 플러스였나
+    ✔ 똑같은 -6%인데 결과가 갈린 이유 (2000년 닷컴 버블 vs 나머지)
+    ✔ 폭락장에 팔고 나왔다면 놓친 것 (최고의 날 20일 중 18일의 비밀)
+    ✔ 한 번에 vs 나눠서, 2008·2020·2000년에 직접 해 보면
+    ✔ 폭락을 기회로 만든 사람들의 공통점
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 투자 판단과 책임은 본인에게 있습니다.
+
+    [자료] 나스닥100 지수 일간 종가(1985.10~2026.11.5, 배당 제외) · QQQ · TQQQ · S&P500
+    1년 = 252거래일 · 분할매수 = 폭락일·1·2·3개월 뒤 4번 같은 금액
+    2000년 3배 수익률은 나스닥100 일간 수익률 x3 - 연 0.95%로 계산한 가상 3배(차입비용 미반영)
+  tags: [나스닥, 나스닥폭락, 나스닥100, QQQ, TQQQ, 폭락장, 하락장대응, 분할매수, 미국주식, 백테스트]
+  privacy: private
+
+# 클릭 유도형 썸네일 (tools/thumbs.py) — 채널 고유 템플릿 7종
+thumbs:
+  - template: calc
+    tag: "나스닥 하루 -6% 폭락"
+    lcd_label: "1년 뒤 플러스"
+    value: "14/14"
+    lines:
+      - {text: "폭락한 날", size: 150}
+      - {text: "샀더니", size: 150, color: yellow}
+      - {text: "진짜일까?", size: 130}
+  - template: receipt
+    tag: "1985~2026 폭락 36번"
+    lines:
+      - {text: "나스닥 폭락에", size: 120}
+      - {text: "산 사람", size: 120}
+      - {text: "영수증", size: 170, color: yellow}
+    receipt_sub: "-6% 폭락일 매수 · 1년 보유"
+    rows:
+      - {k: "폭락 횟수", v: "36번"}
+      - {k: "버블기 제외", v: "14번 중 14번", color: up}
+      - {k: "평균 수익", v: "+46.9%", color: up}
+      - {k: "닷컴 버블", v: "22번 중 1번", color: down}
+    total: "이번은 어느 쪽?"
+    total_color: [30, 30, 30]
+  - template: clipping
+    tag: "2026년 11월 5일"
+    masthead: "THE DAILY MARKET"
+    date: "2026년 11월 5일 · 나스닥 폭락"
+    headline: "나스닥100 하루 -6.36%, 공포 확산"
+    stamp: {text: "37번째", sub: "1985년 이후", size: 170, color: [220, 40, 40], pos: [760, 720]}
+    lines:
+      - {text: "과거 36번은", size: 150}
+      - {text: "어떻게 됐나", size: 150, color: yellow}
+      - {text: "다 알려준다", size: 150}
+  - template: diagonal
+    a: {label: "2000년 폭락에 샀다면", value: "-65.7%", color: red, chart: {series: ndx, start: "2000-04-03", end: "2001-04-03", color: [255, 140, 140]}}
+    b: {label: "2020년 폭락에 샀다면", value: "+61%", color: teal, chart: {series: ndx, start: "2020-03-09", end: "2021-03-09", color: [170, 255, 240]}}
+    ant: false
+    center: "같은 -6% 폭락"
+    bottom: "1년 뒤 결과는?"
+  - template: question
+    lines:
+      - {text: "나스닥 -6% 폭락", size: 110}
+      - {text: "지금 팔면", size: 110}
+      - {text: "최고의 날을", size: 130, color: up}
+      - {text: "놓친다는데", size: 110}
+      - {text: "진짜일까?", size: 190, color: yellow}
+  - template: big_number
+    glow: [150, 20, 40]
+    lines:
+      - {text: "나스닥 폭락 다음 1년", size: 120}
+      - {text: "+46.9%", size: 270, color: up}
+      - {text: "단, 2000년엔 -65%", size: 110, color: yellow, hl: "-65%", hl_color: down}
+    props:
+      - {kind: chart, series: ndx, start: "2026-06-01", end: "2026-11-05", color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
+  - template: vs_numbers
+    top: "나스닥 -6% 폭락일에 샀다면?"
+    top_hl: "샀다면?"
+    left: {label: "버블기 제외", value: "14/14", sub: "1년 뒤 플러스", color: up}
+    right: {label: "닷컴 버블", value: "1/22", sub: "1년 뒤 플러스", color: down}
+
+shorts: []
+
+checks:
+  - {name: "11/5 나스닥100 하루(%)", kind: ret, series: ndx, start: "2026-11-04", end: "2026-11-05"}
+  - {name: "11/5 QQQ 하루(%)", kind: ret, series: qqq, start: "2026-11-04", end: "2026-11-05"}
+  - {name: "11/5 TQQQ 하루(%)", kind: ret, series: tqqq, start: "2026-11-04", end: "2026-11-05"}
+  - {name: "11/5 S&P500 하루(%)", kind: ret, series: spx, start: "2026-11-04", end: "2026-11-05"}
+  - {name: "10/6 고점 대비(%)", kind: ret, series: ndx, start: "2026-10-06", end: "2026-11-05"}
+  - {name: "-6% 하락일(1년 결과 있음)", kind: crash_n}
+  - {name: "그중 1년 뒤 플러스", kind: crash_up}
+  - {name: "1년 뒤 중앙값(%)", kind: crash_med}
+  - {name: "버블기(2000~02) 하락일", kind: crash_n, scope: bubble}
+  - {name: "버블기 플러스", kind: crash_up, scope: bubble}
+  - {name: "버블기 제외 하락일", kind: crash_n, scope: ex}
+  - {name: "버블기 제외 플러스", kind: crash_up, scope: ex}
+  - {name: "버블기 제외 1년 평균(%)", kind: crash_mean, scope: ex}
+  - {name: "2000.3.27 고점→2002.10.7(%)", kind: ret, series: ndx, start: "2000-03-27", end: "2002-10-07"}
+  - {name: "가상3배 2000.3.27→2002.10.7(%)", kind: ret, series: sim3x_ndx, start: "2000-03-27", end: "2002-10-07"}
+  - {name: "1985~ 전체 배수", kind: best_days_miss, which: all}
+  - {name: "최고의 날 10일 빠지면 배수", kind: best_days_miss, which: miss, k: 10}
+  - {name: "2008.9.29 한 번에 1년(%)", kind: allin, series: ndx, start: "2008-09-29"}
+  - {name: "2008.9.29 분할 1년(%)", kind: split4, series: ndx, start: "2008-09-29"}
+  - {name: "2020.3.9 한 번에 1년(%)", kind: allin, series: ndx, start: "2020-03-09"}
+  - {name: "2020.3.9 분할 1년(%)", kind: split4, series: ndx, start: "2020-03-09"}
+  - {name: "2000.4.3 한 번에 1년(%)", kind: allin, series: ndx, start: "2000-04-03"}
+  - {name: "2000.4.3 분할 1년(%)", kind: split4, series: ndx, start: "2000-04-03"}
+  - {name: "직전 1년 2000.4.3(%)", kind: ret, series: ndx, start: "1999-04-01", end: "2000-03-31"}
+  - {name: "직전 1년 2020.3.9(%)", kind: ret, series: ndx, start: "2019-03-07", end: "2020-03-06"}
+  - {name: "직전 1년 2026.11.5(%)", kind: ret, series: ndx, start: "2025-11-03", end: "2026-11-04"}
+
+scenes:
+# ── 인트로 ─────────────────────────────────────────
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "나스닥100\n하루 -6.36%", on: 1, size: 140, highlight: "-6.36%", hl_color: down}
+  narration: ['11월 5일, 나스닥100이 하루 만에 6.36% 빠졌습니다.']
+  bg_word: CRASH
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "TQQQ는 하루 -19%", on: 1, size: 130, highlight: "-19%", hl_color: down, sub: "QQQ -6.5% · S&P500 -4.4%"}
+  narration: ['3배 레버리지인 TQQQ는요? 하루에 19%가 날아갔어요.', 'S&P500도 4.4% 빠졌고요.']
+- type: chart
+  chapter: 인트로
+  chart:
+    series: ndx
+    start: '2026-01-02'
+    end: '2026-11-05'
+    color: [240, 84, 84]
+    title: 나스닥100 · 2026년
+    draw: {on: 1, dur: 2.0}
+    marks:
+    - {date: '2026-10-06', label: 사상 최고, sub: '10.6', on: 1, offset: 1.2, dy: -70, dx: -80, color: gold}
+    - {date: '2026-11-05', label: '-14.7%', sub: 고점 대비, on: 2, dy: 60, dx: -90, color: down, size: 36}
+    source: '자료: 나스닥100 지수 일간 종가 (11.5 기준)'
+  narration: ['불과 한 달 전, 10월 6일에 사상 최고치를 찍었던 지수가,', '지금은 고점보다 14.7% 아래에 있습니다.']
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "지금 팔아야 할까?\n아니면 기회일까?", on: 1, size: 120, highlight: '기회일까?', hl_color: up}
+  narration: ['이럴 때 머릿속이 복잡해지죠. | 지금이라도 팔아야 하나, 아니면 이게 기회인가.']
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "1985년 이후\n37번째", on: 1, size: 150, highlight: 37번째}
+  narration: ['근데요, 이런 날이 처음이 아니에요. | 1985년 이후, 나스닥100이 하루에 6% 넘게 빠진 날은, 이번이 37번째입니다.']
+  bg_word: '37'
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "나스닥 하루 -6% 폭락\n그 뒤 1년은 어땠을까?"
+  highlight: 그 뒤 1년
+  subtitle: 1985년부터 37번의 폭락을 전부 따라가 봤습니다
+  narration: ['그래서 오늘은, 과거 36번의 폭락 뒤에 실제로 무슨 일이 있었는지,', '그리고 그때 어떻게 대응한 사람이 결국 웃었는지, | 숫자로 전부 확인해 보겠습니다.']
+- type: kinetic
+  items:
+  - {text: 사라는 영상 아닙니다, on: 1, size: 110, highlight: 아닙니다, hl_color: down, sub: 과거 데이터는 미래를 보장하지 않습니다}
+  narration: ['아, 먼저요. 지금 사라, 팔라는 영상은 절대 아닙니다. | 과거가 어땠는지를 보는 거예요.']
+
+# ── 36번의 폭락 ─────────────────────────────────────
+- type: card
+  chapter: 36번의 폭락
+  heading: 이렇게 확인했습니다
+  highlight: 확인
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 38
+  bullets:
+  - {text: '나스닥100이 하루 -6% 이상 빠진 날', on: 1, highlight: '-6%', hl_color: down}
+  - {text: 그날 종가에 샀다면, on: 2}
+  - {text: '1년(252거래일) 뒤 수익률은?', on: 3}
+  narration: ['방법은 간단해요. 나스닥100이 하루에 6% 넘게 빠진 날,', '그날 종가에 샀다고 치고,', '1년 뒤에 얼마가 됐는지 보는 겁니다. | 1년이 안 지난 이번 폭락만 빼면, 모두 36번이에요.']
+- type: kinetic
+  chapter: 36번의 폭락
+  items:
+  - {text: "폭락한 날 샀다면\n1년 뒤 플러스는?", on: 1, size: 120, highlight: '플러스는?'}
+  narration: ['자, 예상해 보세요. 폭락한 날 샀다면, 1년 뒤에 플러스였던 건 몇 번일까요?']
+- type: yearbars
+  chapter: 36번의 폭락
+  which: crash
+  on: 1
+  step: 0.08
+  base: 560
+  hmax: 300
+  label_y: 900
+  vmax: 120
+  heading: 나스닥100 -6% 폭락일에 샀다면 · 1년 뒤 수익률 (%)
+  sub: 1985 ~ 2025 · 36번
+  source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['결과입니다. 빨간색이 플러스, 파란색이 마이너스예요.', '어, 근데 생각보다 파란색이 많죠?']
+- type: bignum
+  chapter: 36번의 폭락
+  label: 폭락일에 사서 1년 뒤 플러스
+  from: 0
+  to: 15
+  fmt: '{:.0f}번'
+  final: 36번 중 15번
+  size: 170
+  on: 1
+  dur: 1.0
+  color: neutral
+  sub: 1년 뒤 중앙값 -11.8%
+  sub_on: 2
+  narration: ['36번 중에 플러스는 15번뿐이었어요. 절반도 안 됩니다.', '중간값으로 보면, 1년 뒤 마이너스 11.8%.']
+- type: kinetic
+  chapter: 36번의 폭락
+  items:
+  - {text: "폭락은 기회다?\n틀린 말이었나?", on: 1, size: 120, highlight: 틀린 말, hl_color: down}
+  narration: ['어? 폭락은 기회라고들 하잖아요. | 그럼 그 말이 틀렸던 걸까요?']
+- type: kinetic
+  chapter: 36번의 폭락
+  items:
+  - {text: "36번 중 22번이\n2000 ~ 2002년", on: 1, size: 120, highlight: 2000 ~ 2002년, hl_color: gold}
+  narration: ['근데요, 여기 숨은 게 하나 있어요. | 36번 중에 22번이, 2000년에서 2002년 사이에 몰려 있습니다.']
+  bg_word: '2000'
+- type: versus
+  chapter: 36번의 폭락
+  heading: 폭락일에 사서 1년 뒤 플러스
+  left: {title: 닷컴 버블 붕괴기, value: 22번 중 1번, sub: 2000 ~ 2002년, color: down, on: 1}
+  right: {title: 그 외 모든 폭락, value: 14번 중 14번, sub: '1987 · 1998 · 2008 · 2020 · 2025 …', color: up, on: 2}
+  narration: ['닷컴 버블이 터지던 그 3년 동안은, 22번 중 딱 1번만 플러스였어요.', '그런데 그 기간을 빼면요? 14번 중 14번, 전부 플러스였습니다.']
+- type: bignum
+  chapter: 36번의 폭락
+  label: 버블기를 뺀 14번 · 1년 뒤 평균
+  from: 0
+  to: 46.9
+  fmt: '+{:.1f}%'
+  size: 200
+  on: 1
+  dur: 1.2
+  color: up
+  sub: 14번 모두 플러스
+  sub_on: 1
+  narration: ['평균 수익률은 46.9%. | 1년 만에 거의 1.5배가 된 거죠.']
+- type: kinetic
+  chapter: 36번의 폭락
+  items:
+  - {text: "같은 -6%\n완전히 다른 결말", on: 1, size: 130, highlight: 다른 결말}
+  narration: ['똑같이 하루 6%가 빠졌는데, 결말은 완전히 달랐던 거예요. | 그럼 뭐가 달랐을까요?']
+
+# ── 역대 폭락 사례 ───────────────────────────────────
+- type: kinetic
+  chapter: 역대 폭락
+  items:
+  - {text: "역대 폭락\n4장면", on: 1, size: 140, highlight: 4장면}
+  narration: ['버블기가 아니었던 폭락들, 몇 개만 직접 볼까요?']
+- type: chart
+  chapter: 역대 폭락
+  chart:
+    series: ndx
+    start: '1987-06-01'
+    end: '1988-12-30'
+    color: [240, 84, 84]
+    title: 나스닥100 · 1987 블랙먼데이
+    draw: {on: 1, dur: 1.8}
+    marks:
+    - {date: '1987-10-19', label: '하루 -15.1%', sub: '1987.10.19', on: 1, offset: 1.0, dy: 60, dx: 90, color: down}
+    - {date: '1988-10-17', label: '+12.9%', sub: 1년 뒤, on: 2, dy: -60, dx: -70, color: up, size: 36}
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['먼저 1987년 블랙먼데이. 하루에 15.1%가 빠졌어요. 역대 최악의 하루입니다.', '그날 샀다면, 1년 뒤 12.9% 플러스.']
+- type: chart
+  chapter: 역대 폭락
+  chart:
+    series: ndx
+    start: '1998-04-01'
+    end: '1999-09-30'
+    color: [240, 84, 84]
+    title: 나스닥100 · 1998 러시아 위기 · LTCM
+    draw: {on: 1, dur: 1.8}
+    marks:
+    - {date: '1998-08-31', label: '하루 -9.9%', sub: '1998.8.31', on: 1, offset: 1.0, dy: 60, dx: 90, color: down}
+    - {date: '1999-08-31', label: '+110%', sub: 1년 뒤, on: 2, dy: -60, dx: -70, color: up, size: 36}
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['1998년엔 러시아가 나라 빚을 못 갚겠다고 선언하고, 유명 헤지펀드가 무너졌죠. 하루 마이너스 9.9%.', '1년 뒤엔요? 110%. 두 배가 넘었습니다.']
+- type: chart
+  chapter: 역대 폭락
+  chart:
+    series: ndx
+    start: '2011-04-01'
+    end: '2012-09-28'
+    color: [240, 84, 84]
+    title: 나스닥100 · 2011 미국 신용등급 강등
+    draw: {on: 1, dur: 1.8}
+    marks:
+    - {date: '2011-08-08', label: '하루 -6.1%', sub: '2011.8.8', on: 1, offset: 1.0, dy: 60, dx: 90, color: down}
+    - {date: '2012-08-07', label: '+31.9%', sub: 1년 뒤, on: 2, dy: -60, dx: -70, color: up, size: 36}
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['2011년, 미국 신용등급이 사상 처음으로 강등됐을 때. 마이너스 6.1%.', '1년 뒤 31.9%, 3년 뒤엔 89.8%가 올라 있었어요.']
+- type: chart
+  chapter: 역대 폭락
+  chart:
+    series: ndx
+    start: '2024-11-01'
+    end: '2026-04-30'
+    color: [240, 84, 84]
+    title: 나스닥100 · 2025 관세 쇼크
+    draw: {on: 1, dur: 1.8}
+    marks:
+    - {date: '2025-04-04', label: '하루 -6.1%', sub: '2025.4.4', on: 1, offset: 1.0, dy: 60, dx: 90, color: down}
+    - {date: '2026-04-08', label: '+43.1%', sub: 1년 뒤, on: 2, dy: -60, dx: -70, color: up, size: 36}
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['그리고 바로 작년, 2025년 4월 관세 쇼크. 역시 하루 마이너스 6.1%.', '1년 뒤엔 43.1%가 올라 있었습니다. 기억나시죠?']
+- type: kinetic
+  chapter: 역대 폭락
+  items:
+  - {text: "그때마다 뉴스는\n'이번엔 다르다'", on: 1, size: 120, highlight: 이번엔 다르다, hl_color: gold}
+  narration: ['재밌는 건, 그때마다 뉴스는 똑같았다는 거예요. | 이번엔 다르다, 이번엔 진짜 끝이다.']
+- type: kinetic
+  chapter: 역대 폭락
+  items:
+  - {text: "그런데 딱 한 번\n진짜 달랐던 때", on: 1, size: 120, highlight: 진짜 달랐던, hl_color: down}
+  narration: ['그런데요, 딱 한 번, 진짜로 달랐던 때가 있었습니다.']
+
+# ── 두 종류의 폭락 ───────────────────────────────────
+- type: chart
+  chapter: 두 종류의 폭락
+  chart:
+    series: ndx
+    start: '1998-01-02'
+    end: '2003-06-30'
+    color: [74, 144, 255]
+    title: 나스닥100 · 1998 ~ 2003 닷컴 버블
+    draw: {on: 1, dur: 2.4}
+    marks:
+    - {date: '2000-03-27', label: 고점, sub: '2000.3', on: 1, offset: 1.5, dy: -60, dx: -70, color: gold}
+    - {date: '2002-10-07', label: '-82.9%', sub: '2002.10', on: 2, dy: 60, dx: -60, color: down, size: 36}
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['바로 2000년 닷컴 버블입니다. | 2000년 3월 고점에서,', '2년 반 동안 82.9%가 빠졌어요. 100만 원이 17만 원이 된 겁니다.', '이 사이에 하루 6% 폭락이 스물두 번이나 있었고요.']
+- type: kinetic
+  chapter: 두 종류의 폭락
+  items:
+  - {text: "고점 회복까지\n15년 7개월", on: 1, size: 130, highlight: 15년 7개월, hl_color: down}
+  narration: ['그 고점을 다시 회복한 게 언제였냐면요, | 2015년 11월. 무려 15년 7개월이 걸렸습니다.']
+- type: chart
+  chapter: 두 종류의 폭락
+  chart:
+    series: ndx
+    start: '2019-10-01'
+    end: '2021-03-31'
+    color: [240, 84, 84]
+    title: 나스닥100 · 2020 코로나 폭락
+    draw: {on: 1, dur: 2.0}
+    marks:
+    - {date: '2020-03-16', label: '하루 -12.2%', sub: '2020.3.16', on: 1, offset: 1.2, dy: 60, dx: 90, color: down}
+    - {date: '2021-03-09', label: '+61%', sub: 3.9에 샀다면 1년 뒤, on: 2, dy: -60, dx: -90, color: up, size: 36}
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['반대로 2020년 코로나 폭락이요. | 3월 16일엔 하루에 12%가 빠졌죠.', '근데 3월 9일, 첫 폭락 날에 샀다면, 1년 뒤엔 61%가 올라 있었습니다.']
+- type: kinetic
+  chapter: 두 종류의 폭락
+  items:
+  - {text: "고점 회복까지\n석 달", on: 1, size: 130, highlight: 석 달, hl_color: up}
+  narration: ['고점 회복까지는 석 달이면 충분했고요.']
+- type: kinetic
+  chapter: 두 종류의 폭락
+  items:
+  - {text: 차이는 폭락 전에 있었다, on: 1, size: 120, highlight: 폭락 전}
+  narration: ['둘의 차이는, 폭락하는 날이 아니라, | 폭락하기 전에 있었어요.']
+- type: bars
+  chapter: 두 종류의 폭락
+  heading: 폭락 직전 1년 동안 얼마나 올랐나
+  subheading: 나스닥100 · 첫 폭락일 직전 1년 수익률
+  subheading_on: 1
+  bars:
+    unit: '%'
+    rect: [200, 330, 1520, 430]
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+    groups:
+    - label: 2000년 4월
+      on: 1
+      vmax: 110
+      bars:
+      - {label: 직전 1년, color: down, value: 98.0}
+    - label: 2020년 3월
+      on: 2
+      vmax: 110
+      bars:
+      - {label: 직전 1년, color: neutral, value: 21.0}
+    - label: 2026년 11월
+      on: 3
+      vmax: 110
+      bars:
+      - {label: 직전 1년, color: gold, value: 9.0}
+  narration: ['닷컴 버블 때는, 폭락 직전 1년 동안 나스닥이 거의 두 배, 98%가 올라 있었어요.', '2020년엔 21%였고요.', '그리고 이번 폭락 직전 1년은, 9%였습니다.']
+  note: '직전 1년 = 첫 폭락일 전 252거래일 · 2026년은 11.4 기준'
+- type: card
+  chapter: 두 종류의 폭락
+  heading: 폭락 앞에서 체크할 것
+  highlight: 체크
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 38
+  bullets:
+  - {text: 폭락 전에 너무 많이 오르지 않았나, on: 1}
+  - {text: 기업들이 실제로 돈을 벌고 있나, on: 2}
+  - {text: "공포의 원인이 '사건'인가, '거품'인가", on: 3, highlight: '거품', hl_color: down}
+  narration: ['그래서 폭락 앞에서 볼 건 이런 거예요. | 첫째, 폭락 전에 너무 많이 오르진 않았나.', '둘째, 기업들이 실제로 돈을 벌고 있나. | 2000년엔 이익 없이 기대만으로 오른 회사가 많았거든요.', '셋째, 이 공포가 전쟁이나 전염병 같은 사건 때문인지, | 아니면 거품이 꺼지는 건지.']
+- type: kinetic
+  chapter: 두 종류의 폭락
+  items:
+  - {text: "이번이 어느 쪽인지는\n아무도 모릅니다", on: 1, size: 110, highlight: 아무도 모릅니다, hl_color: gold}
+  narration: ['솔직히요, 이번이 어느 쪽인지는 아무도 몰라요. 저도 모르고요.', '그래서 중요한 건 맞히는 게 아니라, | 어느 쪽이 와도 살아남는 대응법이에요.']
+
+# ── 폭락 직후 ───────────────────────────────────────
+- type: kinetic
+  chapter: 폭락 직후
+  items:
+  - {text: "그럼 폭락 다음 날은?", on: 1, size: 130, highlight: 다음 날}
+  narration: ['그럼 당장 궁금한 거, 폭락 다음 날은 어땠을까요?']
+- type: bignum
+  chapter: 폭락 직후
+  label: 폭락 다음 날 반등 (버블기 제외)
+  from: 0
+  to: 13
+  fmt: '{:.0f}번'
+  final: 14번 중 13번
+  size: 170
+  on: 1
+  dur: 1.0
+  color: up
+  sub: 다음 날 평균 +4.3%
+  sub_on: 2
+  narration: ['버블기를 뺀 14번 중에, 다음 날 반등한 게 13번이에요.', '평균 4.3% 올랐습니다.']
+- type: kinetic
+  chapter: 폭락 직후
+  items:
+  - {text: "근데 반등했다고\n끝난 게 아니었다", on: 1, size: 120, highlight: 끝난 게 아니었다, hl_color: down}
+  narration: ['근데요, 반등했다고 끝난 게 아니었어요.']
+- type: card
+  chapter: 폭락 직후
+  heading: 폭락일에 산 뒤 석 달 안에 (버블기 제외)
+  highlight: 석 달 안에
+  width: 1500
+  size: 50
+  gap: 38
+  bullets:
+  - {text: '일주일 뒤 플러스: 14번 중 8번', on: 1, highlight: 8번}
+  - {text: '석 달 안에 더 빠진 폭: 평균 -7.5%', on: 2, highlight: '-7.5%', hl_color: down}
+  - {text: '최악은 2008년: 산 뒤에 -30.7% 더', on: 3, highlight: '-30.7%', hl_color: down}
+  narration: ['일주일 뒤로 보면, 플러스는 14번 중 8번으로 확 줄고요.', '산 다음 석 달 안에, 평균 7.5%는 더 빠졌어요.', '최악은 2008년이었어요. 폭락한 날 샀는데, 거기서 30.7%가 더 빠졌습니다.']
+- type: kinetic
+  chapter: 폭락 직후
+  items:
+  - {text: "폭락 첫날이\n바닥은 아니다", on: 1, size: 130, highlight: 바닥은 아니다, hl_color: gold}
+  narration: ['그러니까 폭락 첫날이 바닥이라는 보장은 없어요. | 이게 뒤에서 볼 대응법의 핵심입니다.']
+
+# ── 대응법 ① 팔지 않기 ───────────────────────────────
+- type: kinetic
+  chapter: 대응법 ①
+  items:
+  - {text: "대응법 ①\n공포에 던지지 않기", on: 1, size: 120, highlight: 던지지 않기}
+  narration: ['첫 번째 대응법. 공포에 던지지 않기.']
+- type: kinetic
+  chapter: 대응법 ①
+  items:
+  - {text: "최고의 날 20일 중\n18일은 폭락 근처", on: 1, size: 120, highlight: 18일, hl_color: up}
+  narration: ['이거 진짜 재밌는 숫자인데요. | 1985년 이후 나스닥100이 가장 많이 오른 날 20일을 뽑아 봤더니,', '그중 18일이, 하루 6% 폭락한 날에서 2주 안에 있었어요.']
+- type: card
+  chapter: 대응법 ①
+  heading: 역대 최고의 날 TOP 5
+  highlight: 최고의 날
+  width: 1500
+  size: 48
+  numbered: true
+  gap: 30
+  bullets:
+  - {text: '2001.1.3   +18.8%', on: 1, highlight: '+18.8%', hl_color: up}
+  - {text: '2008.10.13   +12.6%', on: 1, offset: 0.4, highlight: '+12.6%', hl_color: up}
+  - {text: '2025.4.9   +12.0%', on: 1, offset: 0.8, highlight: '+12.0%', hl_color: up}
+  - {text: '2000.12.5   +11.7%', on: 1, offset: 1.2, highlight: '+11.7%', hl_color: up}
+  - {text: '2008.10.28   +10.9%', on: 2, highlight: '+10.9%', hl_color: up}
+  narration: ['가장 많이 오른 날들을 보면, 전부 폭락장 한가운데예요.', '2008년 금융위기, 2025년 관세 폭락, 2000년 닷컴 버블. | 가장 무서울 때, 가장 크게 오른 거죠.']
+- type: kinetic
+  chapter: 대응법 ①
+  items:
+  - {text: "팔고 나오면\n이 날도 같이 놓친다", on: 1, size: 120, highlight: 같이 놓친다, hl_color: down}
+  narration: ['그러니까 폭락에 놀라서 팔고 나오면, | 바로 그 뒤에 오는 최고의 날까지 같이 놓치게 돼요.']
+- type: versus
+  chapter: 대응법 ①
+  heading: 1985년에 1,000만 원을 나스닥100에 넣었다면
+  left: {title: 그냥 들고 있었다면, value: '23.7억', sub: 237배, color: up, on: 1}
+  right: {title: 최고의 날 10일만 놓쳤다면, value: 7.8억, sub: 78배, color: down, on: 2}
+  narration: ['1985년에 1,000만 원을 넣고 그냥 들고 있었다면, 지금 23억 7천만 원이에요.', '근데 41년 동안, 최고의 날 딱 10일만 놓쳤다면요? | 7억 8천만 원. 3분의 1로 줄어듭니다.']
+  note: '배당 제외 · 2026.11.5 기준'
+- type: kinetic
+  chapter: 대응법 ①
+  items:
+  - {text: "1만 일 중 10일", on: 1, size: 150, highlight: 10일, hl_color: down}
+  narration: ['만 일이 넘는 거래일 중에, 딱 10일이요.']
+
+- type: kinetic
+  chapter: 대응법 ①
+  items:
+  - {text: "실제로 팔고 나왔다면?", on: 1, size: 130, highlight: '팔고 나왔다면?', hl_color: down}
+  narration: ['실제 사례로 볼까요? 폭락 날 팔고, 고점을 회복한 걸 확인한 다음에 다시 샀다면요.']
+- type: versus
+  chapter: 대응법 ①
+  heading: 2020년 2월 고점에 1,000만 원 · 1년 뒤
+  left: {title: 그냥 버텼다면, value: '1,397만 원', sub: '+39.7%', color: up, on: 1}
+  right: {title: '3.16 팔고 6월에 다시 샀다면', value: 999만 원, sub: 본전도 못 찾음, color: down, on: 2}
+  narration: ['2020년 2월 고점에 1,000만 원이 있던 사람이, 그냥 버텼다면, 1년 뒤 1,397만 원.', '근데 3월 16일, 하루 12% 빠진 날 무서워서 팔고, | 6월에 고점을 회복한 걸 보고 다시 샀다면요? 1년 뒤 999만 원. 본전이에요.']
+- type: versus
+  chapter: 대응법 ①
+  heading: 2025년 2월 고점에 1,000만 원 · 이듬해 4월
+  left: {title: 그냥 버텼다면, value: '1,091만 원', sub: '+9.1%', color: up, on: 1}
+  right: {title: '4.4 팔고 6월에 다시 샀다면', value: 855만 원, sub: '-14.5%', color: down, on: 2}
+  narration: ['작년 관세 폭락도 똑같아요. 버틴 사람은 1,091만 원,', '팔았다가 다시 들어간 사람은 855만 원. | 같은 시장에 있었는데, 236만 원 차이가 난 거죠.']
+
+# ── 대응법 ② 나눠서 들어가기 ─────────────────────────
+- type: kinetic
+  chapter: 대응법 ②
+  items:
+  - {text: "대응법 ②\n한 번에 말고, 나눠서", on: 1, size: 120, highlight: 나눠서}
+  narration: ['두 번째 대응법. 들어간다면, 한 번에 말고 나눠서.']
+- type: card
+  chapter: 대응법 ②
+  heading: 두 가지 방법 비교
+  highlight: 비교
+  width: 1500
+  size: 50
+  gap: 38
+  bullets:
+  - {text: '한 번에: 폭락한 날 전부', on: 1}
+  - {text: '나눠서: 폭락한 날 + 1·2·3개월 뒤, 4번 똑같이', on: 2}
+  - {text: '둘 다 첫 폭락일부터 1년 뒤 비교', on: 3}
+  narration: ['비교는 이렇게 했어요. 하나는 폭락한 날, 한 번에 전부 사는 거고,', '다른 하나는 폭락한 날, 그리고 1개월, 2개월, 3개월 뒤에, | 4번 똑같이 나눠서 사는 겁니다.', '둘 다 첫 폭락일에서 1년 뒤에 비교했어요.']
+- type: bars
+  chapter: 대응법 ②
+  heading: 한 번에 vs 나눠서 · 1년 뒤 수익률
+  subheading: 나스닥100 · 첫 폭락일 기준
+  subheading_on: 1
+  bars:
+    unit: '%'
+    rect: [200, 330, 1520, 430]
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+    groups:
+    - label: 2020년 3월 코로나
+      on: 1
+      vmax: 70
+      bars:
+      - {label: 한 번에, color: up, stat: {kind: allin, series: ndx, start: '2020-03-09'}}
+      - {label: 나눠서, color: neutral, stat: {kind: split4, series: ndx, start: '2020-03-09'}}
+    - label: 2008년 9월 금융위기
+      on: 2
+      vmax: 70
+      bars:
+      - {label: 한 번에, color: neutral, stat: {kind: allin, series: ndx, start: '2008-09-29'}}
+      - {label: 나눠서, color: up, stat: {kind: split4, series: ndx, start: '2008-09-29'}}
+  narration: ['2020년처럼 바로 반등하면, 한 번에 산 쪽이 61%로 더 좋았어요. 나눠 산 쪽은 47%.', '근데 2008년은 반대예요. 폭락 뒤에도 두 달을 더 빠졌거든요. | 한 번에 산 쪽은 15%, 나눠 산 쪽은 34%였습니다.']
+- type: versus
+  chapter: 대응법 ②
+  heading: 2000년 4월 닷컴 버블 · 1년 뒤
+  left: {title: 한 번에, value: -65.7%, color: down, on: 1}
+  right: {title: 나눠서, value: -63.1%, color: down, on: 1}
+  narration: ['그럼 닷컴 버블 때는요? | 한 번에 샀든 나눠서 샀든, 둘 다 60% 넘게 잃었어요.']
+- type: kinetic
+  chapter: 대응법 ②
+  items:
+  - {text: "분할매수는 마법이 아니라\n보험", on: 1, size: 120, highlight: 보험, hl_color: gold}
+  narration: ['그러니까 분할매수는, 수익률을 올려 주는 마법이 아니에요. | 평균으로 보면 오히려 조금 낮았어요.', '대신 2008년 같은 최악을 피하게 해 주는, 보험에 가깝습니다. | 바닥은 아무도 모르니까요.']
+
+# ── 대응법 ③ 레버리지 ────────────────────────────────
+- type: kinetic
+  chapter: 대응법 ③
+  items:
+  - {text: "대응법 ③\n폭락장에 3배는 조심", on: 1, size: 120, highlight: 3배, hl_color: down}
+  narration: ['세 번째. 폭락장에 레버리지로 들어가는 건, 정말 조심해야 해요.']
+- type: versus
+  chapter: 대응법 ③
+  heading: 2000년 3월 고점 → 2002년 10월 바닥
+  left: {title: 나스닥100, value: -82.9%, sub: 회복까지 15년 7개월, color: down, on: 1}
+  right: {title: 3배 레버리지였다면, value: -99.9%, sub: 사실상 0원, color: down, on: 2}
+  narration: ['닷컴 버블 때 나스닥100이 82.9% 빠졌다고 했죠.', '3배 레버리지였다면요? 마이너스 99.9%. | 1,000만 원이 1만 원이 됩니다. 회복이 아니라, 끝이에요.']
+  note: '3배 = 나스닥100 일간 수익률 x3 - 연 0.95% 가상 계산'
+- type: kinetic
+  chapter: 대응법 ③
+  items:
+  - {text: "폭락장에서 살아남아야\n반등도 내 것", on: 1, size: 120, highlight: 살아남아야}
+  narration: ['폭락 뒤의 반등은, 살아남은 사람만 가져갈 수 있어요.']
+
+# ── 대응법 ④ 준비 ──────────────────────────────────
+- type: kinetic
+  chapter: 대응법 ④
+  items:
+  - {text: "대응법 ④\n기회는 준비된 사람 몫", on: 1, size: 120, highlight: 준비된 사람}
+  narration: ['마지막 네 번째. 폭락을 기회로 만든 사람들의 공통점이에요.']
+- type: card
+  chapter: 대응법 ④
+  heading: 폭락을 기회로 만든 사람들
+  highlight: 기회
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 38
+  bullets:
+  - {text: 폭락 전에 현금을 남겨 두었다, on: 1}
+  - {text: '언제, 얼마씩 살지 미리 정해 두었다', on: 2}
+  - {text: 1년 넘게 기다릴 수 있는 돈이었다, on: 3}
+  narration: ['첫째, 폭락이 오기 전에 현금을 남겨 두었어요. | 돈이 없으면, 기회가 와도 볼 수만 있잖아요.', '둘째, 언제 얼마씩 살지 미리 정해 뒀어요. | 공포 한가운데서 결정하면, 대부분 틀리거든요.', '셋째, 1년 넘게 기다릴 수 있는 돈이었어요. | 오늘 본 숫자도 전부 1년 뒤 얘기였죠.']
+- type: kinetic
+  chapter: 대응법 ④
+  items:
+  - {text: "나눠서 · 기다리고 · 버틴다", on: 1, size: 120, highlight: 버틴다}
+  narration: ['나눠서 사고, 기다리고, 버틴다. | 결국 이게 전부였어요.']
+
+# ── 결론 ────────────────────────────────────────────
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: 오늘의 결론, on: 1, size: 140}
+  narration: ['자, 오늘 확인한 거 정리해 볼게요.']
+  bg_word: CHECK
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: 나스닥 -6% 폭락 36번, on: 1, size: 110}
+  narration: ['나스닥100이 하루 6% 넘게 빠진 날은, 이번 전까지 36번.']
+  stamp: {text: '버블기 빼면 14번 중 14번 상승', color: up, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 64}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: 닷컴 버블 붕괴기, on: 1, size: 110}
+  narration: ['단, 닷컴 버블 때는 22번 중 21번이 마이너스였어요.']
+  stamp: {text: '22번 중 21번 하락', color: down, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: 최고의 날은 폭락 근처, on: 1, size: 110}
+  narration: ['그리고 최고의 날은, 늘 폭락 근처에 있었습니다.']
+  stamp: {text: '20일 중 18일', color: up, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: "폭락은 위기이자 기회\n준비한 사람에게만", on: 1, size: 120, highlight: 준비한 사람}
+  narration: ['폭락은 위기이자 기회였어요. | 다만, 준비한 사람에게만요.']
+- type: outro
+  heading: "폭락은 준비된 사람에게\n기회였다"
+  highlight: 준비된 사람
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: "본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.\n과거 데이터는 미래 수익을 보장하지 않습니다."
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['오늘 같은 폭락, 앞으로도 또 옵니다. 그때를 위해 지금 준비해 두세요.', '여러분은 이번 폭락, 어떻게 대응하고 계세요? | 궁금했던 주제, 종목, 매매법, 뭐든 댓글로 남겨 주세요. 다음 영상에서 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']

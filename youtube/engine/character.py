@@ -1,3 +1,4 @@
+from pathlib import Path
 """채널 캐릭터 '계산기 개미' — 코드로 그린 귀여운 개미 캐릭터.
 
   ant_character(size, holding="moneybag" | "calculator" | None, mood="smile" | "wow")
@@ -226,6 +227,21 @@ def ant_side(size=800, carry="money", glasses=True, mood="smile"):
 
 
 def logo_badge(size=200, ring=(14, 20, 38)):
+    """채널 로고: 프로필(사용자 일러스트 악어새) 원형 + 흰 테두리. 파일이 없으면 예전 개미 배지."""
+    p = Path(__file__).resolve().parents[1] / "assets/media/profile_circle.png"
+    if p.exists():
+        k = 3
+        S = size * k
+        im = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+        ImageDraw.Draw(im).ellipse((0, 0, S - 1, S - 1), fill=(255, 255, 255, 255))
+        b = int(S * 0.06)
+        pic = Image.open(p).convert("RGBA").resize((S - 2 * b, S - 2 * b), Image.LANCZOS)
+        im.alpha_composite(pic, (b, b))
+        return im.resize((size, size), Image.LANCZOS)
+    return _logo_badge_ant(size, ring)
+
+
+def _logo_badge_ant(size=200, ring=(14, 20, 38)):
     """채널 로고: 금색 원 + 남색 테두리 + 지폐 진 옆모습 개미"""
     k = 3
     S = size * k
@@ -903,3 +919,11 @@ def croc_mouth(w=1000, bird=True):
     if bird:
         _bird_chibi(c, 330, 478, 1.0, u)
     return c.reduce(K3)
+
+
+def croc_bird(size=400, mood=None):
+    """채널 캐릭터(사용자 일러스트: 입 벌린 악어 + 지폐 문 악어새). size = 결과 높이(px)"""
+    p = Path(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png"
+    im = Image.open(p).convert("RGBA")
+    im = im.crop(im.getbbox())
+    return im.resize((int(im.width * size / im.height), size), Image.LANCZOS)

@@ -213,8 +213,8 @@ def prop(spec):
     """소품 하나 만들기: {kind: ant|money|order|rising|emoji|chart|calculator|image, ...}"""
     k = spec["kind"]
     if k == "ant":
-        from engine.character import ant_side
-        return ant_side(spec.get("size", 600), spec.get("carry", "money"), mood=spec.get("mood", "smile"))
+        from engine.character import croc_bird
+        return croc_bird(int(spec.get("size", 600) * 0.75))
     if k == "money":
         from engine.character import money_stack
         n = spec.get("stacks", 1)
@@ -316,8 +316,8 @@ def t_calc(sp):
         y += tg.height + 30
     lines_block(f, sp["lines"], y, x=1110, maxw=780, gap=0)
     if sp.get("ant", True):
-        from engine.character import ant_side
-        a = ant_side(380, sp.get("carry", "money"), mood=sp.get("mood", "smile"))
+        from engine.character import croc_bird
+        a = croc_bird(260)
         shadowed(f, a, (W - 40, H + 30), "rb", blur=16, alpha=0.5)
     return f
 
@@ -344,7 +344,7 @@ def t_receipt(sp):
     rh = 210 + len(rows) * 104 + 170
     r = Image.new("RGBA", (rw, rh), CREAM + (255,))
     d = ImageDraw.Draw(r)
-    ttl = G.text_img(sp.get("receipt_title", "개미의 계산기"), "Black", 52, (30, 30, 30))
+    ttl = G.text_img(sp.get("receipt_title", "주식 악어새"), "Black", 52, (30, 30, 30))
     r.alpha_composite(ttl, ((rw - ttl.width) // 2, 50))
     sub = G.text_img(sp.get("receipt_sub", "백테스트 영수증"), "SemiBold", 32, (110, 110, 110))
     r.alpha_composite(sub, ((rw - sub.width) // 2, 120))
@@ -450,8 +450,8 @@ def t_diagonal(sp):
     shadowed(f, fit(B["label"], 70, 820), (W - 80, H - 400), "rt")
     shadowed(f, fit(B["value"], 260, 880, color=B.get("color", "teal")), (W - 70, H - 60), "rb")
     if sp.get("ant", True):
-        from engine.character import ant_side
-        an = ant_side(420, None, mood="wow")
+        from engine.character import croc_bird
+        an = croc_bird(300)
         shadowed(f, an, (W / 2 + 30, H / 2 + 30), "mm", blur=16, alpha=0.5)
     if sp.get("center"):
         shadowed(f, fit(sp["center"], 80, 700, color="yellow"), (W - 80, 60), "rt")

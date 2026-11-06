@@ -716,6 +716,8 @@ class YearBars(Scene):
             self.items = D.cycle_years_list(int(w[-1]))
         elif w == "dd":  # 하락장 매수: 연도 → years년 뒤 수익률
             self.items = [(e[0].year, e[2]) for e in D.dd_events(sp.get("th", -0.3), sp.get("since", "1927"), sp.get("years", 5))]
+        elif w == "crash":  # 나스닥100 -6% 하락일 → 1년(252거래일) 뒤 수익률
+            self.items = [(e[0].strftime("%y.%m"), e[2]) for e in D.crash_days(sp.get("th", -0.06))]
         elif w == "vix":  # VIX 첫 돌파일 → 3배 레버리지 1년 수익률
             self.items = [(e[0].strftime("%y.%m"), e[3]) for e in D.vix_events(sp.get("level", 40))]
         else:
@@ -728,7 +730,8 @@ class YearBars(Scene):
                    (200, 150), G.appear(t, 0.1))
         if sp.get("sub"):
             G.blit(f, G.text_img(sp["sub"], "Medium", 30, S.MUTED), (200, 222), G.appear(t, 0.2))
-        x0, base, w, hmax = 200, 820, 1560, 470
+        x0, base, w, hmax = 200, sp.get("base", 820), 1560, sp.get("hmax", 470)
+        label_y = sp.get("label_y")
         n = len(self.items)
         slot = w / n
         vmax = sp.get("vmax") or max(abs(v) for _, v in self.items) * 1.15
@@ -748,10 +751,18 @@ class YearBars(Scene):
             cx = x0 + slot * (i + 0.5)
             bar = Image.new("RGBA", (bw, int(bh)), c + (255,))
             G.blit(f, bar, (cx, base) if v < 0 else (cx, base - bh), 1, "mt" if v < 0 else "mt")
-            G.blit(f, G.text_img(f"{v:+.0f}", "Bold", 22, c), (cx, base - bh - 8 if v >= 0 else base + bh + 8),
+            if n <= 24 or sp.get("values", False):
+                G.blit(f, G.text_img(f"{v:+.0f}", "Bold", 22, c), (cx, base - bh - 8 if v >= 0 else base + bh + 8),
                    min(1, k * 2), "mb" if v >= 0 else "mt")
             lab = str(y)[2:] if (isinstance(y, int) and n > 14) else str(y)
-            G.blit(f, G.text_img(lab, "Medium", 22, S.MUTED), (cx, base + 14), min(1, k * 2), "mt")
+            if n > 24:  # 막대가 많으면 연도가 바뀔 때만 'YY 표기
+                yy = str(y)[:2]
+                if i and str(self.items[i - 1][0])[:2] == yy:
+                    lab = ""
+                else:
+                    lab = "'" + yy
+            if lab:
+                G.blit(f, G.text_img(lab, "Medium", 22, S.MUTED), (cx, label_y or base + 14), min(1, k * 2), "mt")
         for y, lab in sp.get("mark", {}).items():
             idx = next((i for i, (yy, _) in enumerate(self.items) if str(yy) == str(y)), None)
             if idx is None:
@@ -762,7 +773,7 @@ class YearBars(Scene):
             G.blit(f, G.pill(lab, "Bold", 26, (16, 20, 32), S.GOLD, pad=(14, 6)),
                    (cx, base - min(abs(v), vmax) / vmax * hmax - 50) if v >= 0 else (cx, base + min(abs(v), vmax) / vmax * hmax + 60), o, "mb" if v >= 0 else "mt")
         G.blit(f, G.text_img(sp.get("source", "자료: S&P500 지수(배당 제외) · 선거일 종가 → 1년 뒤"), "Regular", 20, S.MUTED),
-               (x0 + w, base + 60), 1, "rt")
+               (x0 + w, (label_y or base) + 60), 1, "rt")
         self.draw_common(f, t)
 
     def extra_sfx(self):
