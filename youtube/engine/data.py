@@ -142,6 +142,23 @@ def crash_days(th=-0.06, days=252):
     return out
 
 
+# 미국 정부 구성(달력 연도 기준, 1950~): 대통령 정당 + 의회(상·하원) 장악 · 2001년은 상원이 중간에 바뀌어 '의회 분할'
+GOV = {}
+for _ys, _k in (((1949, 1952), "uD"), ((1953, 1954), "uR"), ((1955, 1960), "RpDc"), ((1961, 1968), "uD"),
+                ((1969, 1976), "RpDc"), ((1977, 1980), "uD"), ((1981, 1986), "split"), ((1987, 1992), "RpDc"),
+                ((1993, 1994), "uD"), ((1995, 2000), "DpRc"), ((2001, 2002), "split"), ((2003, 2006), "uR"),
+                ((2007, 2008), "RpDc"), ((2009, 2010), "uD"), ((2011, 2014), "split"), ((2015, 2016), "DpRc"),
+                ((2017, 2018), "uR"), ((2019, 2020), "split"), ((2021, 2022), "uD"), ((2023, 2024), "split"),
+                ((2025, 2026), "uR"), ((2027, 2028), "RpDc")):
+    for _y in range(_ys[0], _ys[1] + 1):
+        GOV[_y] = _k
+
+
+def year_ret(y, name="spx"):
+    p = _daily(name)
+    return (p.loc[:f"{y}-12-31"].iloc[-1] / p.loc[:f"{y - 1}-12-31"].iloc[-1] - 1) * 100
+
+
 BUBBLE = ("2000-01-01", "2002-12-31")  # 닷컴 버블 붕괴기
 
 
@@ -198,6 +215,17 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind.startswith("gov_"):  # 정부 구성별 S&P500 연간 수익률. cfg: uD|uR|RpDc|DpRc|split|divided|unified, exclude: [연도]
+        c = kw["cfg"]
+        grp = {"divided": ("RpDc", "DpRc", "split"), "unified": ("uD", "uR")}.get(c, (c,))
+        ys = [y for y, k in GOV.items() if k in grp and kw.get("y0", 1950) <= y <= kw.get("y1", 2025)
+              and y not in kw.get("exclude", [])]
+        v = np.array([year_ret(y) for y in ys])
+        return float({"gov_n": len(v), "gov_mean": v.mean() if len(v) else 0, "gov_up": (v > 0).sum(),
+                      "gov_med": np.median(v) if len(v) else 0}[kind])
+    if kind == "max_dd_window":  # start~end 사이 최대 낙폭(%)
+        w = series(kw["series"]).loc[str(kw["start"]):str(kw["end"])]
+        return float(((w / w.cummax()) - 1).min() * 100)
     if kind.startswith("crash_"):  # 나스닥100 -6% 하락일 통계. scope: all|bubble|ex (버블기 2000~2002 / 제외)
         ev = crash_days(kw.get("th", -0.06), kw.get("days", 252))
         sc = kw.get("scope", "all")
