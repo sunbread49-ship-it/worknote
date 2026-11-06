@@ -13,7 +13,8 @@
 업로드 내용
   롱폼: out/<ep>/video.mp4 + 제목·설명(설명란.txt 기준, 챕터 포함) + 태그 + 대표 썸네일 + 한국어 자막(captions.srt)
   쇼츠: out/<ep>/shorts/shortN.mp4 + episode.yaml shorts[N].yt_title / yt_desc
-  결과는 out/<ep>/uploaded.json 에 기록 → 같은 파일을 두 번 올리지 않음
+  결과는 youtube/uploads.json 에 기록(커밋할 것) → 같은 파일을 두 번 올리지 않음
+  --publish-at next → 다음 빈 화·금 18:00 KST 롱폼, 쇼츠는 다음 날부터 하루 1개
 
 주의
   - API 프로젝트가 YouTube 감사(audit)를 통과하기 전에는 업로드 영상이 '비공개'로 잠긴다.
@@ -142,6 +143,28 @@ def plan(ep_dir, want_long, want_shorts, publish_at, shorts_every):
     return items, out
 
 
+SLOT_DAYS = (1, 4)   # 화(1)·금(4)
+SLOT_HOUR = 18       # 18:00 KST
+LOG_PATH = ROOT / "uploads.json"  # git에 커밋되는 업로드 기록 (out/ 은 git 제외라 세션이 바뀌면 사라짐)
+
+
+def load_log():
+    return json.loads(LOG_PATH.read_text(encoding="utf-8")) if LOG_PATH.exists() else {}
+
+
+def next_slot(log, now=None):
+    """이미 예약된 롱폼과 겹치지 않는 다음 화·금 18:00 (최소 3시간 여유)."""
+    now = now or dt.datetime.now(KST)
+    taken = {v.get("publish_at", "")[:16] for ep in log.values() for k, v in ep.items() if k == "long" and v.get("publish_at")}
+    d = now + dt.timedelta(hours=3)
+    cand = d.replace(hour=SLOT_HOUR, minute=0, second=0, microsecond=0)
+    if cand < d:
+        cand += dt.timedelta(days=1)
+    while cand.weekday() not in SLOT_DAYS or cand.isoformat()[:16] in taken:
+        cand += dt.timedelta(days=1)
+    return cand
+
+
 def parse_every(s):
     s = s.strip().lower()
     n, unit = int(s[:-1]), s[-1]
@@ -153,7 +176,7 @@ def main():
     ap.add_argument("episode", nargs="?")
     ap.add_argument("--long", action="store_true")
     ap.add_argument("--shorts", default="", help="예: 1,2,3")
-    ap.add_argument("--publish-at", help="한국 시간 예약 공개. 예: 2026-11-10T18:00")
+    ap.add_argument("--publish-at", help="한국 시간 예약 공개. 예: 2026-11-10T18:00 · 'next' = 다음 빈 화·금 18:00")
     ap.add_argument("--shorts-every", default="1d", help="쇼츠 예약 간격 (1d=하루, 6h=6시간)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="이미 올린 것도 다시 올리기")
@@ -170,10 +193,13 @@ def main():
 
     ep_dir = Path(a.episode).resolve()
     shorts = [int(x) for x in a.shorts.split(",") if x.strip()]
-    when = dt.datetime.fromisoformat(a.publish_at).replace(tzinfo=KST) if a.publish_at else None
+    all_log = load_log()
+    if a.publish_at == "next":
+        when = next_slot(all_log)
+    else:
+        when = dt.datetime.fromisoformat(a.publish_at).replace(tzinfo=KST) if a.publish_at else None
     items, out = plan(ep_dir, a.long, shorts, when, parse_every(a.shorts_every))
-    log_path = out / "uploaded.json"
-    log = json.loads(log_path.read_text()) if log_path.exists() else {}
+    log = all_log.setdefault(ep_dir.name, {})
     for it in items:
         mark = " (이미 올림)" if it["key"] in log and not a.force else ""
         print(f"[{it['key']}] {it['title']}{mark}")
@@ -203,7 +229,7 @@ def main():
             add_to_playlist(tok, vid, it["playlist"])
         log[it["key"]] = {"id": vid, "title": it["title"], "at": dt.datetime.now(KST).isoformat(),
                           "publish_at": it["publish_at"].isoformat() if it["publish_at"] else None}
-        log_path.write_text(json.dumps(log, ensure_ascii=False, indent=2))
+        LOG_PATH.write_text(json.dumps(all_log, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

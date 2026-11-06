@@ -8,7 +8,7 @@
 
 ## 2. OAuth 동의 화면 만들기
 - https://console.cloud.google.com/auth/overview → **시작하기**
-  - 앱 이름: `개미의 계산기 업로더` / 사용자 지원 이메일: 본인 Gmail
+  - 앱 이름: `주식 악어새 업로더` / 사용자 지원 이메일: 본인 Gmail
   - 대상(사용자 유형): **외부**
   - 연락처 이메일: 본인 Gmail → 완료
 - **데이터 액세스(범위)** → 범위 추가 → 아래 2개 체크 → 저장
@@ -31,7 +31,7 @@
    ```
    https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.force-ssl
    ```
-4. 구글 로그인 → **채널 선택 화면에서 '개미의 계산기' 채널**을 고르기 (본인 이름 채널 말고)
+4. 구글 로그인 → **채널 선택 화면에서 '주식 악어새' 채널**을 고르기 (본인 이름 채널 말고)
 5. '확인되지 않은 앱' 경고 → **고급** → **(안전하지 않음)으로 이동** → 허용
 6. **Step 2** → **Exchange authorization code for tokens** → 나온 **Refresh token** 복사
 
@@ -51,12 +51,17 @@
 - 통과 전: 자동 업로드(비공개) → 스튜디오 앱에서 '공개'만 누르기
 - 통과 후: 예약 공개까지 완전 자동
 
+## 정기 일정 (확정)
+- **롱폼: 매주 화·금 18:00 KST** · 쇼츠: 롱폼 다음 날부터 하루 1개 18:00
+- 영상 완성 후 한 번에 예약: `--publish-at next` 가 다음 빈 화·금 18시를 자동으로 고름
+- 감사 통과 전에는 비공개로만 올라가므로 → 예약 시간에 스튜디오 앱에서 '공개'로 바꾸기
+- 연결 테스트 완료 (2026-11-06): 비공개 업로드 성공 · 테스트 영상은 삭제
+
 ## 업로드 명령 (참고)
 ```bash
 python tools/upload.py episodes/ep004_templeton_vix --long --shorts 1,2,3 --dry-run               # 미리 보기
-python tools/upload.py episodes/ep004_templeton_vix --long --shorts 1,2,3 \
-       --publish-at 2026-11-10T18:00 --shorts-every 1d                                             # 롱폼 18시, 쇼츠 하루 1개
+python tools/upload.py episodes/ep005_xxx --long --shorts 1,2,3 --publish-at next                 # 다음 화·금 18시 + 쇼츠 하루 1개
 ```
 - 대표 썸네일: `out/<ep>/thumbnail_pick.png` 가 있으면 그걸, 없으면 `thumbnail.png`
-- 올린 기록: `out/<ep>/uploaded.json` (중복 업로드 방지)
+- 올린 기록: `uploads.json` (중복 업로드 방지, 업로드 후 커밋) · 직접 올린 것도 여기 `manual: true`로 적어 둠
 - 하루 할당량(10,000): 업로드 1건 1,600 → 하루 롱폼 1 + 쇼츠 3 정도가 안전

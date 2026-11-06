@@ -1,0 +1,45 @@
+{
+  "ep001_buffett_fear": {
+    "long": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    }
+  },
+  "ep002_tqqq_reddit": {
+    "long": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    }
+  },
+  "ep003_midterm_cycle": {
+    "long": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    }
+  },
+  "ep004_templeton_vix": {
+    "long": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    },
+    "short1": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    },
+    "short2": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    },
+    "short3": {
+      "id": null,
+      "title": "(수동 업로드)",
+      "manual": true
+    }
+  }
+}
