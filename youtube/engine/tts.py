@@ -146,6 +146,10 @@ def _numbers_ko(t):
     t = re.sub(r"(?<![\d.])(\d{1,2})번(?!째)", lambda m: native_count(int(m.group(1))) + " 번", t)
     # 연도·기간: N년 → 한자어로 붙여 읽기 (1990년엔 → 천구백구십년엔, 76년 → 칠십육년)
     t = re.sub(r"(?<![\d.,])(\d{1,4})년", lambda m: hangul_num(int(m.group(1))) + "년", t)
+    # 날짜: 3월 16일엔 → 삼월 십육일엔 (숫자와 '일엔/일에' 사이가 끊겨 읽히는 문제 · EP005 피드백)
+    _mon = {6: "유월", 10: "시월"}
+    t = re.sub(r"(?<![\d.,])(\d{1,2})월", lambda m: _mon.get(int(m.group(1)), hangul_num(int(m.group(1))) + "월"), t)
+    t = re.sub(r"(?<![\d.,])(\d{1,2})일(?=[가-힣\s,.!?]|$)", lambda m: hangul_num(int(m.group(1))) + "일", t)
     # 쉼표 숫자: 7,568 → 칠천오백육십팔
     t = re.sub(r"(?<![\d.])(\d{1,3}(?:,\d{3})+)(?![\d.])", lambda m: hangul_num(int(m.group(1).replace(",", ""))), t)
     # "-30%에 사도" → 에와 사를 붙여 자연스럽게

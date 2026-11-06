@@ -78,6 +78,11 @@ def cover(c, sh, path):
     """쇼츠 썸네일(1080x1920): 위 질문 / 가운데 큰 숫자 대비 / 아래 채널"""
     from engine import charts
     cv = sh["cover"]
+    if cv.get("style") == "punch":  # 롱폼 '훅' 장면과 같은 디자인의 컬러 커버
+        from engine import punch as P
+        f = P.cover_vertical(cv, SC._logo(c.channel.get("name", "")), VW, VH)
+        f.convert("RGB").save(path)
+        return f
     f = vbg()
     glow = Image.new("RGBA", (VW, VH), (0, 0, 0, 0))
     gd = ImageDraw.Draw(glow)

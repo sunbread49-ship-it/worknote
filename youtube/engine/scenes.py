@@ -705,6 +705,30 @@ class Kinetic(Scene):
                 for it in self.spec["items"] if it.get("sfx", "whoosh") != "none"]
 
 
+class Punch(Scene):
+    """훅 비주얼: 컬러 풀스크린 + 큰 숫자 '쾅' (engine/punch.py). 롱폼에 3~6번만, 핵심 포인트에서.
+    spec: tone(up|down|gold), label, big, sub, on(큰 글자 등장 문장), sub_on, mascot"""
+    default_transition = "cut"
+
+    def draw(self, f, t):
+        from . import punch as P
+        sp = self.spec
+        t0 = self.line_start(sp.get("on", 1))
+        k = G.clamp((t - t0) / 0.28)
+        k_sub = G.appear(t, self.line_start(sp.get("sub_on", sp.get("on", 1))) + 0.35, 0.3)
+        k_m = G.appear(t, t0 + 0.3, 0.45)
+        im = P.compose(S.W, S.H, sp, k, k_sub, k_m)
+        f.paste(im, (0, 0))
+        # 등장 순간 흰 번쩍임 (0.12초)
+        fl = 1 - G.clamp((t - t0) / 0.12)
+        if t >= t0 and fl > 0:
+            f.alpha_composite(Image.new("RGBA", f.size, (255, 255, 255, int(150 * fl))))
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec.get("on", 1)), self.spec.get("sfx", "boom"), 0.45)]
+
+
 class YearBars(Scene):
     """연도별 막대 (예: 중간선거일 → 1년 뒤 수익률). spec: which(midterm|pres), heading, on, mark: {연도: 라벨}"""
 
@@ -781,7 +805,7 @@ class YearBars(Scene):
         return [(t0 + i * self.spec.get("step", 0.12), "tick", 0.5) for i in range(len(self.items))]
 
 
-TYPES = {"yearbars": YearBars, "kinetic": Kinetic, "reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
+TYPES = {"punch": Punch, "yearbars": YearBars, "kinetic": Kinetic, "reddit": Reddit, "bignum": BigNum, "versus": Versus, "title": Title, "quote": Quote, "card": Card, "chart": Chart, "bars": Bars, "outro": Outro}
 
 
 def make(spec, idx, channel):
