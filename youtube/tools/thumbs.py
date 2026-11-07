@@ -447,7 +447,7 @@ def t_diagonal(sp):
     A, B = sp["a"], sp["b"]
     shadowed(f, fit(A["label"], 70, 820), (80, 70), "lt")
     shadowed(f, fit(A["value"], 260, 880, color=A.get("color", "red")), (70, 160), "lt")
-    shadowed(f, fit(B["label"], 70, 820), (W - 80, H - 400), "rt")
+    shadowed(f, fit(B["label"], 70, 820), (W - 80, H - 450), "rt")
     shadowed(f, fit(B["value"], 260, 880, color=B.get("color", "teal")), (W - 70, H - 60), "rb")
     if sp.get("ant", True):
         from engine.character import croc_bird

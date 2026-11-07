@@ -34,7 +34,86 @@ youtube:
   tags: [핼러윈매매법, SellinMay, 계절성, 11월, 추수감사절, S&P500, 나스닥, 매매법, 백테스트, 미국주식]
   privacy: private
 
-shorts: []
+# 클릭 유도형 썸네일 (tools/thumbs.py) 7종
+thumbs:
+  - template: calc
+    tag: "핼러윈 매매법 76년"
+    lcd_label: "1950년 100만 원"
+    value: "3.69억"
+    lines:
+      - {text: "5월에 팔면", size: 150}
+      - {text: "1.17억", size: 160, color: yellow}
+      - {text: "진짜일까?", size: 130}
+  - template: receipt
+    tag: "11월에 사서 5월에 팔았다면"
+    lines:
+      - {text: "핼러윈", size: 140}
+      - {text: "매매법", size: 140}
+      - {text: "영수증", size: 170, color: yellow}
+    receipt_sub: "S&P500 · 1950 ~ 2026"
+    rows:
+      - {k: "11월 성적", v: "12달 중 1등", color: up}
+      - {k: "겨울 평균", v: "+6.95%", color: up}
+      - {k: "여름 평균", v: "+2.08%"}
+      - {k: "76년 뒤", v: "들고 있기의 1/3", color: down}
+    total: "5월에 팔까?"
+    total_color: [30, 30, 30]
+  - template: clipping
+    tag: "Sell in May"
+    masthead: "THE DAILY MARKET"
+    date: "월가 100년 격언"
+    headline: "5월엔 팔고 떠나라, 11월에 돌아오라"
+    stamp: {text: "반전 2번", sub: "76년 백테스트", size: 150, color: [220, 40, 40], pos: [760, 720]}
+    lines:
+      - {text: "11월에 사서", size: 150}
+      - {text: "5월에 팔아라", size: 150, color: yellow}
+      - {text: "따라만 하면?", size: 150}
+  - template: diagonal
+    ant: false
+    a: {label: "5월에 팔고 쉬면", value: "1.17억", color: red, chart: {series: halloween_spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [255, 140, 140]}}
+    b: {label: "그냥 들고 있으면", value: "3.69억", color: teal, chart: {series: spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [170, 255, 240]}}
+    center: "1950년 100만 원"
+    bottom: "5월에 팔아라?"
+  - template: question
+    lines:
+      - {text: "11월에 사서", size: 120}
+      - {text: "5월에 팔면", size: 120}
+      - {text: "무조건 번다", size: 140, color: up}
+      - {text: "는데", size: 110}
+      - {text: "진짜일까?", size: 190, color: yellow}
+  - template: big_number
+    glow: [150, 20, 40]
+    lines:
+      - {text: "1년 12달 중 1등", size: 110}
+      - {text: "11월", size: 270, color: up}
+      - {text: "그런데 5월에 팔면 손해?", size: 100, color: yellow, hl: "손해?", hl_color: down}
+    props:
+      - {kind: chart, series: spx, start: "2025-10-31", end: "2026-04-30", color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
+  - template: vs_numbers
+    top: "11월에 사서 5월에 팔았다면?"
+    top_hl: "5월에 팔았다면?"
+    left: {label: "핼러윈 매매법", value: "1.17억", sub: "1950년 100만 원", color: down}
+    right: {label: "그냥 들고 있기", value: "3.69억", sub: "2026년 4월", color: up}
+
+shorts:
+  - title: "11월 1등"
+    start: "0:44.0"
+    end: "1:30.0"
+    yt_title: "1년 12달 중 주가가 가장 좋았던 달은? 76년 데이터 #11월 #S&P500 #shorts"
+    yt_desc: "1950~2025 S&P500 달별 평균 수익률, 1등은 11월(+1.86%), 꼴찌는 9월. 11월부터 4월에 1년 상승의 4분의 3이 몰려 있었습니다. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: up, top: "1년 12달 성적표", label: "S&P500 · 1950 ~ 2025", big: "11월 = 1등", sub: "평균 +1.86% · 꼴찌는 9월"}
+  - title: "5월에 팔면"
+    start: "3:24.0"
+    end: "4:24.0"
+    yt_title: "11월에 사서 5월에 팔았더니… 76년 뒤 3배 차이 #핼러윈매매법 #SellinMay #shorts"
+    yt_desc: "겨울만 투자하는 핼러윈 매매법 vs 그냥 들고 있기, 1950년 100만 원의 결과. 그리고 쉬는 동안 이자가 몇 %면 역전되는지. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 배당·세금 미반영. 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: gold, top: "5월에 팔고 쉬었다면", label: "1950년 100만 원 → 2026년", big: "3배 차이", sub: "들고 있기 3.69억 vs 핼러윈 1.17억"}
+  - title: "최근 10년 반전"
+    start: "4:39.0"
+    end: "5:14.0"
+    yt_title: "Sell in May, 요즘은 안 통한다? 최근 10년은 여름이 이겼다 #미국주식 #계절성 #shorts"
+    yt_desc: "1970년대엔 겨울이 여름보다 9%p 더 벌었지만, 2020년대엔 처음으로 역전. 최근 10년은 여름 +6.93% vs 겨울 +6.78%. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: down, top: "Sell in May, 요즘은?", label: "최근 10년 · S&P500", big: "여름이 이겼다", sub: "2020년대 처음으로 역전"}
 
 checks:
   - {name: "11월 평균(%)", kind: month_mean, month: 11}
