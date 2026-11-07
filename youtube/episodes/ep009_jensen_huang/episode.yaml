@@ -66,7 +66,7 @@ thumbs:
       - {text: "지금 어디에?", size: 140}
   - template: diagonal
     ant: false
-    a: {label: "2002년 · 고점 대비", value: "-??%", color: red, chart: {series: nvda, start: "2001-06-01", end: "2002-12-31", color: [255, 140, 140]}}
+    a: {label: "2002년 · 고점 대비", value: "-89.7%", color: red, chart: {series: nvda, start: "2001-06-01", end: "2002-12-31", color: [255, 140, 140]}}
     b: {label: "상장 첫날 → 지금", value: "?배", color: teal, chart: {series: nvda, start: "1999-01-22", end: "2026-11-06", log: true, color: [170, 255, 240]}}
     center: "젠슨 황 · 엔비디아"
     bottom: "버틸 수 있었을까?"
@@ -91,10 +91,13 @@ thumbs:
     left: {label: "최대 하락", value: "-??%", sub: "2002년", color: down}
     right: {label: "지금", value: "??억", sub: "2026년 11월", color: up}
   - template: silhouette
-    figure: person
-    rim: gold
+    figure: people/jensen_huang_silhouette.png
+    fig_h: 1080
+    fig_x: 1360
+    mark_at: 0.86
+    mark_size: 190
+    rim: [118, 185, 0]
     glow: [20, 90, 40]
-    hint: {kind: chip, color: [118, 185, 0], pos: [860, 700]}
     tag: "숫자로 보는 인물 ①"
     lines:
       - {text: "식당 접시닦이 소년", size: 96}

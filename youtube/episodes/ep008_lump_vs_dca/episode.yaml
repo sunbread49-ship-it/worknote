@@ -66,8 +66,8 @@ thumbs:
       - {text: "다 알려준다", size: 150}
   - template: diagonal
     ant: false
-    a: {label: "나눠서 넣은 사람", value: "?", color: red, chart: {series: spx, start: "2008-01-01", end: "2009-12-31", color: [255, 140, 140]}}
-    b: {label: "한 번에 넣은 사람", value: "?", color: teal, chart: {series: spx, start: "2016-11-01", end: "2018-01-31", color: [170, 255, 240]}}
+    a: {label: "나눠서 · 1년 뒤 평균", value: "+5.0%", color: red, chart: {series: spx, start: "2008-01-01", end: "2009-12-31", color: [255, 140, 140]}}
+    b: {label: "한 번에 · 1년 뒤 평균", value: "?", color: teal, chart: {series: spx, start: "2016-11-01", end: "2018-01-31", color: [170, 255, 240]}}
     center: "목돈 1,200만 원"
     bottom: "누가 이겼을까?"
   - template: question
@@ -100,7 +100,6 @@ thumbs:
     glow: [90, 70, 10]
     mark: "?"
     mark_size: 300
-    hint: {emoji: coin, size: 200, color: [255, 210, 80], pos: [1050, 330]}
     tag: "목돈 1,200만 원이 생겼다"
     lines:
       - {text: "오늘 한 번에?", size: 120}

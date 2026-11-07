@@ -553,7 +553,15 @@ def t_silhouette(sp):
     rc = C(sp.get("rim", "gold"))
     f = bg_dark(sp.get("glow", (40, 50, 90)), (0.72, 0.55))
     fig = sp.get("figure", "person")
-    if fig == "person":
+    if str(fig).endswith(".png"):  # 실제 사진에서 따낸 실루엣 (assets/people/*.png)
+        im = Image.open(ROOT / "assets" / fig).convert("RGBA")
+        h = sp.get("fig_h", 1000)
+        im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
+        im.putalpha(im.getchannel("A"))
+        dark = Image.new("RGBA", im.size, (8, 9, 14, 255))
+        dark.putalpha(im.getchannel("A"))
+        im = dark
+    elif fig == "person":
         im = person_bust(sp.get("fig_h", 960))
     else:
         from engine.editorial import silhouette

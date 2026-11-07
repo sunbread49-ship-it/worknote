@@ -70,7 +70,7 @@ thumbs:
       - {text: "이렇게 됐다", size: 150}
   - template: diagonal
     ant: false
-    a: {label: "5월에 팔고 쉬면", value: "?억", color: red, chart: {series: halloween_spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [255, 140, 140]}}
+    a: {label: "5월에 팔고 쉬면", value: "1.17억", color: red, chart: {series: halloween_spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [255, 140, 140]}}
     b: {label: "그냥 들고 있으면", value: "?억", color: teal, chart: {series: spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [170, 255, 240]}}
     center: "1950년 100만 원"
     bottom: "누가 더 벌었을까?"
@@ -104,7 +104,6 @@ thumbs:
     glow: [120, 50, 10]
     mark: "?"
     mark_size: 300
-    hint: {emoji: turkey, size: 230, color: [255, 200, 80], pos: [1060, 330]}
     tag: "핼러윈 → 추수감사절"
     lines:
       - {text: "10월 말에 사서", size: 110}
