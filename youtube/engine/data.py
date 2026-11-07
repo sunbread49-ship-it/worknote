@@ -183,6 +183,24 @@ def thanksgiving(y0=1950, y1=2025):
     return out
 
 
+def lump_dca(name="spx", y0=1950, months=12, horizon=12, end="2026-10-31", cash=0.0):
+    """매달 시작점마다: 한 번에(12) vs 12개월 나눠(1씩, 대기 현금 0%) → horizon개월 뒤 가치(투자금 1 기준 배수)
+    → DataFrame[start, lump, dca, half, ath(시작 시 사상 최고치 근처 여부), paper_lump, paper_dca]"""
+    p = _daily(name)
+    mm = p.resample("ME").last()
+    hi = mm.cummax()
+    m = mm.loc[str(y0):end]
+    v, h = m.values, hi.loc[m.index].values
+    rows = []
+    for i in range(len(v) - max(horizon, months)):
+        l = v[i + horizon] / v[i]
+        d = sum(v[i + horizon] / v[i + k] * (1 + cash) ** (k / 12) for k in range(months)) / months
+        pl = min(v[i + k] / v[i] for k in range(months + 1)) - 1
+        pdv = min(sum(v[i + k] / v[i + j] for j in range(min(k + 1, months))) / min(k + 1, months) for k in range(months + 1)) - 1
+        rows.append((m.index[i], l, d, 0.5 * l + 0.5 * d, v[i] >= h[i] * 0.999, pl, pdv))
+    return pd.DataFrame(rows, columns=["start", "lump", "dca", "half", "ath", "paper_lump", "paper_dca"])
+
+
 BUBBLE = ("2000-01-01", "2002-12-31")  # 닷컴 버블 붕괴기
 
 
@@ -248,6 +266,35 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind.startswith("ld_") and kind != "ld_case":  # 한 번에 vs 나눠서. series, y0, horizon, ath(True면 사상 최고치 시작만)
+        mo = kw.get("months", 12)
+        df = lump_dca(kw.get("series", "spx"), kw.get("y0", 1950), mo, kw.get("horizon", mo), cash=kw.get("cash", 0.0))
+        if kw.get("ath"):
+            df = df[df.ath]
+        if kw.get("decade"):
+            df = df[(df.start.dt.year // 10) * 10 == kw["decade"]]
+        f = {"ld_n": lambda: len(df), "ld_win": lambda: (df.lump > df.dca).mean() * 100,
+             "ld_diff": lambda: ((df.lump - df.dca) * 100).mean(),
+             "ld_lump": lambda: (df.lump.mean() - 1) * 100, "ld_dca": lambda: (df.dca.mean() - 1) * 100,
+             "ld_half": lambda: (df.half.mean() - 1) * 100,
+             "ld_lump_worst": lambda: (df.lump.min() - 1) * 100, "ld_dca_worst": lambda: (df.dca.min() - 1) * 100,
+             "ld_half_worst": lambda: (df.half.min() - 1) * 100,
+             "ld_lump_loss": lambda: (df.lump < 1).mean() * 100, "ld_dca_loss": lambda: (df.dca < 1).mean() * 100,
+             "ld_paper_lump": lambda: df.paper_lump.mean() * 100, "ld_paper_dca": lambda: df.paper_dca.mean() * 100,
+             "ld_half_beat": lambda: (df.half > df.dca).mean() * 100}
+        return float(f[kind]())
+    if kind == "ld_case":  # start(YYYY-MM)에 1200만 원: which=lump|dca, at=개월 뒤(또는 'now')
+        p = _daily(kw.get("series", "spx"))
+        m = p.resample("ME").last().loc[:"2026-10-31"]
+        i = list(m.index.strftime("%Y-%m")).index(kw["start"])
+        e = len(m) - 1 if kw.get("at") == "now" else i + int(kw["at"])
+        v = m.values
+        if kw.get("which") == "lump":
+            return float(1200 * v[e] / v[i])
+        return float(sum(100 * v[e] / v[i + k] for k in range(12)))
+    if kind == "dca_forever":  # start부터 매달 100만 원 적립 → 2026.10 말 평가액(만 원). which=value|invested
+        m = _daily(kw.get("series", "spx")).resample("ME").last().loc[kw["start"]:"2026-10-31"]
+        return float(len(m) * 100 if kw.get("which") == "invested" else (100 / m).sum() * m.iloc[-1])
     if kind.startswith("season_") and kind != "season_beat":  # 겨울(10.31→다음 해 4.30) / 여름(4.30→10.31). which: winter|summer, y0, y1
         v = np.array([x for _, x in seasons(kw.get("series", "spx"), kw.get("which", "winter"), kw.get("y0", 1950), kw.get("y1", 2025))]) * 100
         return float({"season_n": len(v), "season_mean": v.mean(), "season_up": (v > 0).sum()}[kind])

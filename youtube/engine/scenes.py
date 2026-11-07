@@ -827,7 +827,7 @@ def make(spec, idx, channel):
 def chrome(f, scene, t_global, total, channel):
     lg = _logo(channel.get("name", "채널명"))
     G.blit(f, lg, (34, 26), 0.95)
-    if channel.get("_series_tag"):  # 로고 옆 이번 편 주제 태그
+    if channel.get("_series_tag") and scene.spec["type"] not in ("chart", "bars", "yearbars", "versus"):  # 로고 옆 주제 태그 (상단 제목 있는 장면 제외)
         G.blit(f, G.pill(channel["_series_tag"], "SemiBold", 28, S.FG, (40, 46, 62), pad=(20, 8)),
                (34 + lg.width + 18, 26 + lg.height / 2 - 20), 0.85, "lt")
     ch = scene.spec.get("chapter")
