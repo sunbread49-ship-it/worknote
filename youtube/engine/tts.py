@@ -159,6 +159,9 @@ def _numbers_ko(t):
     _mon = {6: "유월", 10: "시월"}
     t = re.sub(r"(?<![\d.,])(\d{1,2})월", lambda m: _mon.get(int(m.group(1)), hangul_num(int(m.group(1))) + "월"), t)
     t = re.sub(r"(?<![\d.,])(\d{1,2})일(?=[가-힣\s,.!?]|$)", lambda m: hangul_num(int(m.group(1))) + "일", t)
+    # 'N조 달러' → 붙여 읽기 (오조달러 · EP009 피드백)
+    t = re.sub(r"(?<![\d.,])(\d+)조\s*달러", lambda m: hangul_num(int(m.group(1))) + "조달러", t)
+    t = re.sub(r"(?<![\d.,])(\d+)조(?=[\s,.]|$)", lambda m: hangul_num(int(m.group(1))) + "조", t)
     # 쉼표 숫자: 7,568 → 칠천오백육십팔
     t = re.sub(r"(?<![\d.])(\d{1,3}(?:,\d{3})+)(?![\d.])", lambda m: hangul_num(int(m.group(1).replace(",", ""))), t)
     # "-30%에 사도" → 에와 사를 붙여 자연스럽게

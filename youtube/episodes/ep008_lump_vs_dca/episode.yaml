@@ -1,240 +1,293 @@
 # EP008 · 주식 궁금증, 숫자로 풀기 — 목돈, 한 번에 vs 나눠서
-# 대본 작성 규칙: youtube/SCRIPT_STYLE.md · '발상 전환' 흐름 시범 적용 (질문을 바꾸는 순간)
-title: "목돈 1,200만 원, 한 번에 넣을까 나눠서 넣을까? S&P500 76년 백테스트"
-series_tag: "한 번에 vs 나눠서"
-
-tts:
-  voice: ko-KR-Chirp3-HD-Sadaltager
-  rate: 1.12
-
+title: 목돈 1,200만 원, 한 번에 넣을까 나눠서 넣을까? S&P500 76년 백테스트
+series_tag: 한 번에 vs 나눠서
+tts: {voice: ko-KR-Chirp3-HD-Sadaltager, rate: 1.12}
 youtube:
-  title: "목돈 생기면 한 번에? 나눠서? 76년 데이터는 한쪽 손을 들었다"
-  description: |
-    1,200만 원이 생겼습니다. 오늘 한 번에 넣을까요, 매달 100만 원씩 1년 동안 나눠 넣을까요?
+  title: 목돈 생기면 한 번에? 나눠서? 76년 데이터는 한쪽 손을 들었다
+  description: '1,200만 원이 생겼습니다. 오늘 한 번에 넣을까요, 매달 100만 원씩 1년 동안 나눠 넣을까요?
+
     "나눠 사는 게 안전하다"는 말, S&P500 76년 · 나스닥100 40년 데이터로 910번 직접 비교했습니다.
 
+
     ✔ 한 번에 vs 나눠서, 910번 붙여 보면 누가 이기나
+
     ✔ 사상 최고치일 때 한 번에 넣어도 될까?
+
     ✔ 2000년 · 2008년, 최악의 타이밍에 넣었다면
+
     ✔ 나눠 사도 1년 뒤 손실 확률은 거의 같았다 (반전)
+
     ✔ 질문을 바꾸면 답이 바뀐다: 절반만 먼저 넣기
 
+
     궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+
     📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
 
+
     ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
+
     ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 세금·수수료·배당은 반영하지 않았습니다. 투자 판단과 책임은 본인에게 있습니다.
 
+
     [자료] S&P500 월말 종가(1950~2026.10) · 나스닥100(1986~) · 배당 제외
+
     한 번에 = 시작 달 말에 1,200만 원 / 나눠서 = 시작 달부터 12개월 동안 매달 100만 원(기다리는 돈 이자 0%)
+
     비교 시점: 시작 후 12개월(기본) · 60개월 · 120개월
+
+    '
   tags: [적립식, 거치식, 분할매수, 목돈투자, S&P500, 나스닥, 장기투자, 백테스트, 미국주식, ETF]
   privacy: private
-
 thumbs:
-  - template: calc
-    tag: "목돈 1,200만 원"
-    lcd_label: "한 번에 넣은 쪽 승률"
-    value: "??%"
-    lines:
-      - {text: "나눠 사면", size: 150}
-      - {text: "손해였다?", size: 150, color: yellow}
-      - {text: "910번 비교", size: 120}
-  - template: receipt
-    tag: "S&P500 76년 · 910번"
-    lines:
-      - {text: "목돈", size: 150}
-      - {text: "한 번에 vs 나눠서", size: 110}
-      - {text: "영수증", size: 170, color: yellow}
-    receipt_sub: "1,200만 원 · 1년 뒤"
-    rows:
-      - {k: "한 번에 승률", v: "??%", color: up}
-      - {k: "나눠서 승률", v: "??%"}
-      - {k: "최고치에 넣으면", v: "???", color: down}
-      - {k: "손실 확률", v: "반전?"}
-    total: "어떻게 넣을까?"
-    total_color: [30, 30, 30]
-  - template: clipping
-    tag: "적립식의 배신?"
-    masthead: "THE DAILY MARKET"
-    date: "S&P500 · 1950 ~ 2026"
-    headline: "나눠 사는 게 안전하다는 믿음, 숫자로 확인"
-    stamp: {text: "?", sub: "910번 검증", size: 230, color: [220, 40, 40], pos: [760, 720]}
-    lines:
-      - {text: "목돈 생기면", size: 150}
-      - {text: "한 번에? 나눠서?", size: 130, color: yellow}
-      - {text: "다 알려준다", size: 150}
-  - template: diagonal
-    ant: false
-    a: {label: "나눠서 · 1년 뒤 평균", value: "+5.0%", color: red, chart: {series: spx, start: "2008-01-01", end: "2009-12-31", color: [255, 140, 140]}}
-    b: {label: "한 번에 · 1년 뒤 평균", value: "?", color: teal, chart: {series: spx, start: "2016-11-01", end: "2018-01-31", color: [170, 255, 240]}}
-    center: "목돈 1,200만 원"
-    bottom: "누가 이겼을까?"
-  - template: question
-    lines:
-      - {text: "목돈은", size: 120}
-      - {text: "나눠 사는 게", size: 120}
-      - {text: "안전하다", size: 140, color: up}
-      - {text: "던데", size: 110}
-      - {text: "진짜일까?", size: 190, color: yellow}
-  - template: big_number
-    glow: [150, 20, 40]
-    lines:
-      - {text: "한 번에 vs 나눠서 · 910번", size: 100}
-      - {text: "??%", size: 280, color: up}
-      - {text: "이긴 쪽은 의외로…", size: 100, color: yellow}
-    props:
-      - {kind: chart, series: spx, start: "2016-01-01", end: "2026-10-31", color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
-  - template: vs_numbers
-    top: "목돈 1,200만 원, 어떻게 넣을까?"
-    top_hl: "어떻게 넣을까?"
-    left: {label: "나눠서", value: "?%", sub: "이긴 비율", color: down}
-    right: {label: "한 번에", value: "?%", sub: "이긴 비율", color: up}
-  - template: silhouette
-    figure: moneybag
-    fig_h: 640
-    fig_x: 1460
-    fig_y: 960
-    mark_at: 0.42
-    rim: [255, 200, 60]
-    glow: [90, 70, 10]
-    mark: "?"
-    mark_size: 300
-    tag: "목돈 1,200만 원이 생겼다"
-    lines:
-      - {text: "오늘 한 번에?", size: 120}
-      - {text: "1년 동안 나눠서?", size: 120}
-      - {text: "76년 정답은", size: 150, color: yellow}
-      - {text: "의외였다", size: 170, color: yellow}
-
+- template: calc
+  tag: 목돈 1,200만 원
+  lcd_label: 한 번에 넣은 쪽 승률
+  value: ??%
+  lines:
+  - {text: 나눠 사면, size: 150}
+  - {text: '손해였다?', size: 150, color: yellow}
+  - {text: 910번 비교, size: 120}
+- template: receipt
+  tag: S&P500 76년 · 910번
+  lines:
+  - {text: 목돈, size: 150}
+  - {text: 한 번에 vs 나눠서, size: 110}
+  - {text: 영수증, size: 170, color: yellow}
+  receipt_sub: 1,200만 원 · 1년 뒤
+  rows:
+  - {k: 한 번에 승률, v: '??%', color: up}
+  - {k: 나눠서 승률, v: '??%'}
+  - {k: 최고치에 넣으면, v: '???', color: down}
+  - {k: 손실 확률, v: '반전?'}
+  total: 어떻게 넣을까?
+  total_color: [30, 30, 30]
+- template: clipping
+  tag: 적립식의 배신?
+  masthead: THE DAILY MARKET
+  date: S&P500 · 1950 ~ 2026
+  headline: 나눠 사는 게 안전하다는 믿음, 숫자로 확인
+  stamp:
+    text: '?'
+    sub: 910번 검증
+    size: 230
+    color: [220, 40, 40]
+    pos: [760, 720]
+  lines:
+  - {text: 목돈 생기면, size: 150}
+  - {text: '한 번에? 나눠서?', size: 130, color: yellow}
+  - {text: 다 알려준다, size: 150}
+- template: diagonal
+  ant: false
+  a:
+    label: 나눠서 · 1년 뒤 평균
+    value: +5.0%
+    color: red
+    chart:
+      series: spx
+      start: '2008-01-01'
+      end: '2009-12-31'
+      color: [255, 140, 140]
+  b:
+    label: 한 번에 · 1년 뒤 평균
+    value: '?'
+    color: teal
+    chart:
+      series: spx
+      start: '2016-11-01'
+      end: '2018-01-31'
+      color: [170, 255, 240]
+  center: 목돈 1,200만 원
+  bottom: 누가 이겼을까?
+- template: question
+  lines:
+  - {text: 목돈은, size: 120}
+  - {text: 나눠 사는 게, size: 120}
+  - {text: 안전하다, size: 140, color: up}
+  - {text: 던데, size: 110}
+  - {text: '진짜일까?', size: 190, color: yellow}
+- template: big_number
+  glow: [150, 20, 40]
+  lines:
+  - {text: 한 번에 vs 나눠서 · 910번, size: 100}
+  - {text: '??%', size: 280, color: up}
+  - {text: 이긴 쪽은 의외로…, size: 100, color: yellow}
+  props:
+  - kind: chart
+    series: spx
+    start: '2016-01-01'
+    end: '2026-10-31'
+    color: [255, 90, 90]
+    w: 640
+    h: 480
+    pos: [1580, 640]
+- template: vs_numbers
+  top: 목돈 1,200만 원, 어떻게 넣을까?
+  top_hl: 어떻게 넣을까?
+  left: {label: 나눠서, value: '?%', sub: 이긴 비율, color: down}
+  right: {label: 한 번에, value: '?%', sub: 이긴 비율, color: up}
+- template: silhouette
+  figure: moneybag
+  fig_h: 640
+  fig_x: 1460
+  fig_y: 960
+  mark_at: 0.42
+  rim: [255, 200, 60]
+  glow: [90, 70, 10]
+  mark: '?'
+  mark_size: 300
+  tag: 목돈 1,200만 원이 생겼다
+  lines:
+  - {text: '오늘 한 번에?', size: 120}
+  - {text: '1년 동안 나눠서?', size: 120}
+  - {text: 76년 정답은, size: 150, color: yellow}
+  - {text: 의외였다, size: 170, color: yellow}
 shorts:
-  - title: "910번 비교"
-    start: "1:13.0"
-    end: "1:53.0"
-    yt_title: "목돈은 나눠 사야 안전하다? 910번 비교했더니 #적립식 #분할매수 #shorts"
-    yt_desc: "1,200만 원을 한 번에 vs 1년 동안 나눠서. S&P500 1950~2025, 910번을 직접 비교한 결과. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
-    cover: {style: punch, tone: up, top: "목돈, 한 번에? 나눠서?", label: "S&P500 · 910번 비교", big: "한 번에 71.6% 승", sub: "나눠 사기의 진짜 역할은?"}
-  - title: "코로나 vs 2022"
-    start: "4:15.0"
-    end: "4:53.0"
-    yt_title: "폭락 직전에 목돈을 넣었다면? 2020년과 2022년, 정반대 결과 #폭락장 #적립식 #shorts"
-    yt_desc: "2020년 2월 코로나 폭락 직전 1,200만 원 → 1년 뒤 한 번에 1,548만 원 vs 나눠서 1,420만 원. 2022년엔 정반대. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
-    cover: {style: punch, tone: gold, top: "폭락 직전에 목돈을 넣었다면", label: "2020년 2월 · 1,200만 원 · 1년 뒤", big: "1,548만 vs 1,420만", sub: "그런데 2022년엔 정반대"}
-  - title: "손실 확률 반전"
-    start: "5:29.0"
-    end: "5:59.0"
-    yt_title: "나눠 사도 손실 확률은 똑같았다? 25.3% vs 25.9% #분할매수 #투자심리 #shorts"
-    yt_desc: "1년 뒤 손실 확률, 한 번에 25.3% vs 나눠서 25.9%. 나눠 사기는 손실을 피하는 게 아니라 얕게 만든다. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
-    cover: {style: punch, tone: down, top: "나눠 사면 덜 잃을까?", label: "1년 뒤 손실 확률 · S&P500", big: "25.3% vs 25.9%", sub: "한 번에 vs 나눠서 · 거의 같다"}
+- title: 910번 비교
+  start: '1:08.0'
+  end: '1:59.0'
+  yt_title: '목돈은 나눠 사야 안전하다? 910번 비교했더니 #적립식 #분할매수 #shorts'
+  yt_desc: '1,200만 원을 한 번에 vs 1년 동안 나눠서. S&P500 1950~2025, 910번을 직접 비교한 결과. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
 
+    ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
+  cover: {style: punch, tone: up, top: '목돈, 한 번에? 나눠서?', label: S&P500 · 910번 비교, big: 한 번에 71.6% 승, sub: '나눠 사기의 진짜 역할은?'}
+- title: 코로나 vs 2022
+  start: '4:32.0'
+  end: '5:11.0'
+  yt_title: '폭락 직전에 목돈을 넣었다면? 2020년과 2022년, 정반대 결과 #폭락장 #적립식 #shorts'
+  yt_desc: '2020년 2월 코로나 폭락 직전 1,200만 원 → 1년 뒤 한 번에 1,548만 원 vs 나눠서 1,420만 원. 2022년엔 정반대. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
+
+    ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
+  cover: {style: punch, tone: gold, top: 폭락 직전에 목돈을 넣었다면, label: '2020년 2월 · 1,200만 원 · 1년 뒤', big: '1,548만 vs 1,420만', sub: 그런데 2022년엔 정반대}
+- title: 손실 확률 반전
+  start: '5:59.0'
+  end: '6:23.0'
+  yt_title: '나눠 사도 손실 확률은 똑같았다? 25.3% vs 25.9% #분할매수 #투자심리 #shorts'
+  yt_desc: '1년 뒤 손실 확률, 한 번에 25.3% vs 나눠서 25.9%. 나눠 사기는 손실을 피하는 게 아니라 얕게 만든다. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
+
+    ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
+  cover: {style: punch, tone: down, top: '나눠 사면 덜 잃을까?', label: 1년 뒤 손실 확률 · S&P500, big: 25.3% vs 25.9%, sub: 한 번에 vs 나눠서 · 거의 같다}
 checks:
-  - {name: "비교 횟수", kind: ld_n}
-  - {name: "한 번에 승률 12개월(%)", kind: ld_win}
-  - {name: "평균 차이(%p)", kind: ld_diff}
-  - {name: "한 번에 승률 5년(%)", kind: ld_win, horizon: 60}
-  - {name: "한 번에 승률 10년(%)", kind: ld_win, horizon: 120}
-  - {name: "나스닥 승률(%)", kind: ld_win, series: ndx, y0: 1986}
-  - {name: "나스닥 비교 횟수", kind: ld_n, series: ndx, y0: 1986}
-  - {name: "나스닥 평균 차이(%p)", kind: ld_diff, series: ndx, y0: 1986}
-  - {name: "사상 최고치 시작 승률(%)", kind: ld_win, ath: true}
-  - {name: "사상 최고치 시작 횟수", kind: ld_n, ath: true}
-  - {name: "한 번에 1년 평균(%)", kind: ld_lump}
-  - {name: "나눠서 1년 평균(%)", kind: ld_dca}
-  - {name: "절반 1년 평균(%)", kind: ld_half}
-  - {name: "한 번에 최악(%)", kind: ld_lump_worst}
-  - {name: "나눠서 최악(%)", kind: ld_dca_worst}
-  - {name: "절반 최악(%)", kind: ld_half_worst}
-  - {name: "나스닥 한 번에 최악(%)", kind: ld_lump_worst, series: ndx, y0: 1986}
-  - {name: "나스닥 나눠서 최악(%)", kind: ld_dca_worst, series: ndx, y0: 1986}
-  - {name: "1년 뒤 손실 확률 한 번에(%)", kind: ld_lump_loss}
-  - {name: "1년 뒤 손실 확률 나눠서(%)", kind: ld_dca_loss}
-  - {name: "1년 중 평균 최대 평가손 한 번에(%)", kind: ld_paper_lump}
-  - {name: "1년 중 평균 최대 평가손 나눠서(%)", kind: ld_paper_dca}
-  - {name: "절반이 나눠서보다 나은 비율(%)", kind: ld_half_beat}
-  - {name: "2007.10 한 번에 1년(만원)", kind: ld_case, start: "2007-10", which: lump, at: 12}
-  - {name: "2007.10 나눠서 1년(만원)", kind: ld_case, start: "2007-10", which: dca, at: 12}
-  - {name: "2007.10 한 번에 지금(만원)", kind: ld_case, start: "2007-10", which: lump, at: now}
-  - {name: "2007.10 나눠서 지금(만원)", kind: ld_case, start: "2007-10", which: dca, at: now}
-  - {name: "2016.11 한 번에 지금(만원)", kind: ld_case, start: "2016-11", which: lump, at: now}
-  - {name: "2016.11 나눠서 지금(만원)", kind: ld_case, start: "2016-11", which: dca, at: now}
-  - {name: "2000.1부터 매달 100만 원 평가액(만원)", kind: dca_forever, start: "2000-01"}
-  - {name: "2007.10.31→2009.3.9(%)", kind: ret, series: spx, start: "2007-10-31", end: "2009-03-09"}
-  - {name: "6개월 나눔 승률(%)", kind: ld_win, months: 6}
-  - {name: "24개월 나눔 승률(%)", kind: ld_win, months: 24}
-  - {name: "36개월 나눔 승률(%)", kind: ld_win, months: 36}
-  - {name: "이자 4% 승률(%)", kind: ld_win, cash: 0.04}
-  - {name: "이자 5% 승률(%)", kind: ld_win, cash: 0.05}
-  - {name: "2000년대 승률(%)", kind: ld_win, decade: 2000}
-  - {name: "1990년대 승률(%)", kind: ld_win, decade: 1990}
-  - {name: "2020년대 승률(%)", kind: ld_win, decade: 2020}
-  - {name: "2020.2 한 번에 1년", kind: ld_case, start: "2020-02", which: lump, at: 12}
-  - {name: "2020.2 나눠서 1년", kind: ld_case, start: "2020-02", which: dca, at: 12}
-  - {name: "2022.1 한 번에 1년", kind: ld_case, start: "2022-01", which: lump, at: 12}
-  - {name: "2022.1 나눠서 1년", kind: ld_case, start: "2022-01", which: dca, at: 12}
-  - {name: "2000.1부터 넣은 돈(만원)", kind: dca_forever, start: "2000-01", which: invested}
-
+- {name: 비교 횟수, kind: ld_n}
+- {name: 한 번에 승률 12개월(%), kind: ld_win}
+- {name: 평균 차이(%p), kind: ld_diff}
+- {name: 한 번에 승률 5년(%), kind: ld_win, horizon: 60}
+- {name: 한 번에 승률 10년(%), kind: ld_win, horizon: 120}
+- {name: 나스닥 승률(%), kind: ld_win, series: ndx, y0: 1986}
+- {name: 나스닥 비교 횟수, kind: ld_n, series: ndx, y0: 1986}
+- {name: 나스닥 평균 차이(%p), kind: ld_diff, series: ndx, y0: 1986}
+- {name: 사상 최고치 시작 승률(%), kind: ld_win, ath: true}
+- {name: 사상 최고치 시작 횟수, kind: ld_n, ath: true}
+- {name: 한 번에 1년 평균(%), kind: ld_lump}
+- {name: 나눠서 1년 평균(%), kind: ld_dca}
+- {name: 절반 1년 평균(%), kind: ld_half}
+- {name: 한 번에 최악(%), kind: ld_lump_worst}
+- {name: 나눠서 최악(%), kind: ld_dca_worst}
+- {name: 절반 최악(%), kind: ld_half_worst}
+- {name: 나스닥 한 번에 최악(%), kind: ld_lump_worst, series: ndx, y0: 1986}
+- {name: 나스닥 나눠서 최악(%), kind: ld_dca_worst, series: ndx, y0: 1986}
+- {name: 1년 뒤 손실 확률 한 번에(%), kind: ld_lump_loss}
+- {name: 1년 뒤 손실 확률 나눠서(%), kind: ld_dca_loss}
+- {name: 1년 중 평균 최대 평가손 한 번에(%), kind: ld_paper_lump}
+- {name: 1년 중 평균 최대 평가손 나눠서(%), kind: ld_paper_dca}
+- {name: 절반이 나눠서보다 나은 비율(%), kind: ld_half_beat}
+- {name: 2007.10 한 번에 1년(만원), kind: ld_case, start: 2007-10, which: lump, at: 12}
+- {name: 2007.10 나눠서 1년(만원), kind: ld_case, start: 2007-10, which: dca, at: 12}
+- {name: 2007.10 한 번에 지금(만원), kind: ld_case, start: 2007-10, which: lump, at: now}
+- {name: 2007.10 나눠서 지금(만원), kind: ld_case, start: 2007-10, which: dca, at: now}
+- {name: 2016.11 한 번에 지금(만원), kind: ld_case, start: 2016-11, which: lump, at: now}
+- {name: 2016.11 나눠서 지금(만원), kind: ld_case, start: 2016-11, which: dca, at: now}
+- {name: 2000.1부터 매달 100만 원 평가액(만원), kind: dca_forever, start: 2000-01}
+- {name: 2007.10.31→2009.3.9(%), kind: ret, series: spx, start: '2007-10-31', end: '2009-03-09'}
+- {name: 6개월 나눔 승률(%), kind: ld_win, months: 6}
+- {name: 24개월 나눔 승률(%), kind: ld_win, months: 24}
+- {name: 36개월 나눔 승률(%), kind: ld_win, months: 36}
+- {name: 이자 4% 승률(%), kind: ld_win, cash: 0.04}
+- {name: 이자 5% 승률(%), kind: ld_win, cash: 0.05}
+- {name: 2000년대 승률(%), kind: ld_win, decade: 2000}
+- {name: 1990년대 승률(%), kind: ld_win, decade: 1990}
+- {name: 2020년대 승률(%), kind: ld_win, decade: 2020}
+- {name: 2020.2 한 번에 1년, kind: ld_case, start: 2020-02, which: lump, at: 12}
+- {name: 2020.2 나눠서 1년, kind: ld_case, start: 2020-02, which: dca, at: 12}
+- {name: 2022.1 한 번에 1년, kind: ld_case, start: 2022-01, which: lump, at: 12}
+- {name: 2022.1 나눠서 1년, kind: ld_case, start: 2022-01, which: dca, at: 12}
+- {name: 2000.1부터 넣은 돈(만원), kind: dca_forever, start: 2000-01, which: invested}
+- {name: S&P500 사상 최고치 마감일(1950~), kind: ath_days, series: spx, y0: 1950}
 scenes:
-# ── 인트로 ─────────────────────────────────────────
 - type: kinetic
   chapter: 인트로
   items:
-  - {text: "목돈 1,200만 원이\n생겼다", on: 1, size: 130, highlight: '1,200만 원'}
+  - {text: '목돈 1,200만 원이
+
+      생겼다', 'on': 1, size: 130, highlight: '1,200만 원'}
   narration: ['목돈 1,200만 원이 생겼다고 해 볼게요. | 보너스든, 적금 만기든요.']
-- type: versus
+- type: duel
   chapter: 인트로
   heading: 어떻게 넣을까?
-  left: {title: '한 번에', value: '1,200만 원', sub: '오늘 전부', color: up, on: 1}
-  right: {title: '나눠서', value: '100만 원 × 12', sub: '1년 동안 매달', color: neutral, on: 2}
+  left: {title: 한 번에, value: '1,200만 원', sub: 오늘 전부, color: up, 'on': 1}
+  right: {title: 나눠서, value: 100만 원 × 12, sub: 1년 동안 매달, color: neutral, 'on': 2}
   narration: ['오늘 한 번에 전부 넣을까요,', '아니면 매달 100만 원씩, 1년 동안 나눠서 넣을까요?']
 - type: kinetic
   chapter: 인트로
   items:
-  - {text: "\"나눠 사는 게\n안전하다\"", on: 1, size: 120, highlight: '안전하다', hl_color: gold}
-  narration: ['보통은 나눠 사라고들 하죠. 그게 안전하다고요. | 특히 요즘처럼 시장이 흔들릴 땐 더 그렇고요.']
+  - {text: '"나눠 사는 게
+
+      안전하다"', 'on': 1, size: 120, highlight: 안전하다, hl_color: gold}
+  narration: [보통은 나눠 사라고들 하죠. 그게 안전하다고요. | 특히 요즘처럼 시장이 흔들릴 땐 더 그렇고요.]
 - type: title
   skyline: true
   y: 250
   kicker: 주식 궁금증, 숫자로 풀기
-  title: "한 번에 vs 나눠서\n누가 더 벌었을까?"
+  title: '한 번에 vs 나눠서
+
+    누가 더 벌었을까?'
   highlight: 누가 더 벌었을까?
   subtitle: S&P500 76년, 910번을 직접 붙여 봤습니다
   narration: ['그래서 오늘은 1950년부터 76년 동안, | 매달 새로 시작했다고 치고 910번을 전부 붙여 봤어요.', '나스닥, 사상 최고치일 때, 그리고 최악의 타이밍까지 전부 볼게요.', '미리 말씀드리면, 결론은 한쪽으로 꽤 확실하게 기울어요. | 그런데 마지막에 질문을 바꾸면, 답이 달라집니다.']
-- type: kinetic
-  items:
-  - {text: '사라는 영상 아닙니다', on: 1, size: 110, highlight: '아닙니다', hl_color: down, sub: '과거 데이터는 미래를 보장하지 않습니다'}
-  narration: ['아, 먼저요. 지금 사라, 팔라는 영상은 절대 아닙니다.']
-
-# ── 규칙 ────────────────────────────────────────────
 - type: timeline
   chapter: 규칙
   kicker: 비교 방법
   title: 1년 동안, 두 사람의 길
   highlight: 두 사람
-  ticks: [{label: '1월', sub: 시작, hl: true}, {label: '3월'}, {label: '5월'}, {label: '7월'}, {label: '9월'}, {label: '11월'}, {label: '12월 말', sub: 비교, hl: true}]
-  bands: [{from: 0, to: 6, label: '한 번에: 첫 달에 1,200만 원', color: coral, on: 1}]
-  tag: {text: '나눠서: 매달 100만 원', at: 3, color: [30, 42, 92], on: 2}
-  bottom: '기다리는 돈은 이자 0%로 계산'
+  ticks:
+  - {label: 1월, sub: 시작, hl: true}
+  - {label: 3월}
+  - {label: 5월}
+  - {label: 7월}
+  - {label: 9월}
+  - {label: 11월}
+  - {label: 12월 말, sub: 비교, hl: true}
+  bands:
+  - {from: 0, to: 6, label: '한 번에: 첫 달에 1,200만 원', color: coral, 'on': 1}
+  tag:
+    text: '나눠서: 매달 100만 원'
+    at: 3
+    color: [30, 42, 92]
+    'on': 2
+  bottom: 기다리는 돈은 이자 0%로 계산
   bottom_hl: 이자 0%
   bottom_on: 3
-  narration: ['규칙은 이래요. 한 사람은 첫 달에 1,200만 원을 한 번에 넣고,', '다른 사람은 매달 100만 원씩, 열두 번에 나눠 넣어요.', '아직 안 넣은 돈은 그냥 현금으로 둔다고 쳤고요. | 그리고 1년 뒤에 누가 더 많은지 봅니다.']
+  narration: ['규칙은 이래요. 한 사람은 첫 달에 1,200만 원을 한 번에 넣고,', '다른 사람은 매달 100만 원씩, 열두 번에 나눠 넣어요.', 아직 안 넣은 돈은 그냥 현금으로 둔다고 쳤고요. | 그리고 1년 뒤에 누가 더 많은지 봅니다.]
 - type: quote
   chapter: 규칙
-  original: "Dollar-cost averaging"
+  original: Dollar-cost averaging
   text: 같은 금액을, 정해진 간격으로 꾸준히 산다.
   highlight: 꾸준히
-  source: '적립식 투자(달러 코스트 애버리징) · 벤저민 그레이엄이 「현명한 투자자」(1949)에서 소개'
-  narration: ['참고로 나눠 사는 방법엔 이름이 있어요. 달러 코스트 애버리징.', '같은 금액을 정해진 간격으로 꾸준히 사는 거죠. | 워런 버핏의 스승, 벤저민 그레이엄이 1949년 책에서 소개한 방법이기도 해요.']
+  source: 적립식 투자(달러 코스트 애버리징) · 벤저민 그레이엄이 「현명한 투자자」(1949)에서 소개
+  narration: [참고로 나눠 사는 방법엔 이름이 있어요. 달러 코스트 애버리징., '같은 금액을 정해진 간격으로 꾸준히 사는 거죠. | 워런 버핏의 스승, 벤저민 그레이엄이 1949년 책에서 소개한 방법이기도 해요.']
 - type: kinetic
   chapter: 규칙
   items:
-  - {text: "1950년 1월부터\n매달 새로 시작", on: 1, size: 120, highlight: '매달', sub: '총 910번 비교'}
-  narration: ['이걸 1950년 1월에 시작했다면, 2월에 시작했다면, | 이런 식으로 매달 새로 시작해서 910번을 비교했어요.']
+  - {text: '1950년 1월부터
 
-# ── 결과 ────────────────────────────────────────────
+      매달 새로 시작', 'on': 1, size: 120, highlight: 매달, sub: 총 910번 비교}
+  narration: ['이걸 1950년 1월에 시작했다면, 2월에 시작했다면, | 이런 식으로 매달 새로 시작해서 910번을 비교했어요.']
 - type: kinetic
   chapter: 결과
   items:
-  - {text: "누가 더 자주\n이겼을까?", on: 1, size: 130, highlight: '이겼을까?'}
+  - {text: '누가 더 자주
+
+      이겼을까?', 'on': 1, size: 130, highlight: '이겼을까?'}
   narration: ['자, 예상해 보세요. 누가 더 자주 이겼을까요? | 나눠서? 아니면 한 번에?']
 - type: grid
   chapter: 결과
@@ -245,17 +298,17 @@ scenes:
   k: 72
   cols: 20
   cell: 50
-  headline: '100번 중 72번, 한 번에 승'
+  headline: 100번 중 72번, 한 번에 승
   headline_hl: 72번
-  narration: ['결과는 한 번에 넣은 쪽이었어요. 910번 중에 71.6%.', '100번으로 치면 72번은, 한 번에 넣은 사람이 더 많았습니다.']
+  narration: [결과는 한 번에 넣은 쪽이었어요. 910번 중에 71.6%., '100번으로 치면 72번은, 한 번에 넣은 사람이 더 많았습니다.']
 - type: punch
   chapter: 결과
   tone: up
-  label: 'S&P500 · 910번 비교 · 1년 뒤'
-  big: '한 번에 71.6% 승'
-  sub: '평균 4.4%p 더 벌었다'
+  label: S&P500 · 910번 비교 · 1년 뒤
+  big: 한 번에 71.6% 승
+  sub: 평균 4.4%p 더 벌었다
   sub_on: 2
-  narration: ['한 번에, 71.6% 승.', '평균으로는 4.4%포인트를 더 벌었고요.']
+  narration: ['한 번에, 71.6% 승.', 평균으로는 4.4%포인트를 더 벌었고요.]
 - type: bars
   chapter: 결과
   heading: 기간을 늘려도 비슷할까?
@@ -267,45 +320,80 @@ scenes:
     source: '자료: S&P500 월말 종가 (배당 제외)'
     groups:
     - label: 1년 뒤
-      on: 1
+      'on': 1
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win}
     - label: 5년 뒤
-      on: 2
+      'on': 2
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, horizon: 60}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, horizon: 60}
     - label: 10년 뒤
-      on: 2
+      'on': 2
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, horizon: 120}}
-  narration: ['1년 뒤가 아니라, 5년 뒤, 10년 뒤로 봐도요,', '한 번에 넣은 쪽이 70% 넘게 이겼어요. | 결과가 거의 안 바뀝니다.']
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, horizon: 120}
+  narration: ['1년 뒤가 아니라, 5년 뒤, 10년 뒤로 봐도요,', 한 번에 넣은 쪽이 70% 넘게 이겼어요. | 결과가 거의 안 바뀝니다.]
 - type: yearbars
   chapter: 결과
-  items: [["1950년대", 75.8], ["1960년대", 65.8], ["1970년대", 59.2], ["1980년대", 68.3], ["1990년대", 90.0], ["2000년대", 57.5], ["2010년대", 79.2], ["2020년대", 81.4]]
-  mark: {"2000년대": "가장 낮음"}
+  items:
+  - [1950년대, 75.8]
+  - [1960년대, 65.8]
+  - [1970년대, 59.2]
+  - [1980년대, 68.3]
+  - [1990년대, 90.0]
+  - [2000년대, 57.5]
+  - [2010년대, 79.2]
+  - [2020년대, 81.4]
+  mark: {2000년대: 가장 낮음}
   mark_on: 2
   fmt: '{:.0f}%'
   val_size: 32
   vmax: 100
-  on: 1
+  'on': 1
   step: 0.15
   heading: 연대별 · 한 번에 넣은 쪽이 이긴 비율 (%)
   sub: S&P500 · 1년 뒤 기준 · 2020년대는 2020 ~ 2025
   source: '자료: S&P500 월말 종가 (배당 제외)'
-  narration: ['연대별로 나눠 봐도, 모든 연대에서 한 번에 넣은 쪽이 절반 넘게 이겼어요.', '가장 낮았던 2000년대도 57.5%. | 닷컴 버블과 금융위기가 다 들어 있는 10년인데도요.']
+  narration: ['연대별로 나눠 봐도, 모든 연대에서 한 번에 넣은 쪽이 절반 넘게 이겼어요.', 가장 낮았던 2000년대도 57.5%. | 닷컴 버블과 금융위기가 다 들어 있는 10년인데도요.]
+- type: frames
+  chapter: 결과
+  title: 가장 높았던 10년 vs 가장 낮았던 10년
+  highlight: 10년
+  panels:
+  - series: spx
+    start: '1990-01-01'
+    end: '1999-12-31'
+    color: [240, 200, 120]
+    caption: 1990년대 · 한 번에 승률
+    value: 90.0%
+    good: true
+    'on': 1
+  - series: spx
+    start: '2000-01-01'
+    end: '2009-12-31'
+    color: [150, 180, 240]
+    caption: 2000년대 · 한 번에 승률
+    value: 57.5%
+    'on': 2
+  narration: ['1990년대처럼 꾸준히 오른 10년엔, 한 번에 넣은 쪽이 무려 90% 이겼어요.', 반대로 두 번이나 반 토막이 난 2000년대엔 57.5%. | 그래도 절반은 넘었죠.]
 - type: kinetic
   chapter: 결과
   items:
-  - {text: "다른 나라도 비슷했다", on: 1, size: 120, highlight: '비슷했다', sub: '2012년 뱅가드 연구 · 미국 · 영국 · 호주 약 3분의 2'}
+  - {text: 다른 나라도 비슷했다, 'on': 1, size: 120, highlight: 비슷했다, sub: 2012년 뱅가드 연구 · 미국 · 영국 · 호주 약 3분의 2}
   narration: ['세계 최대 운용사 중 하나인 뱅가드도 2012년에 비슷한 연구를 냈는데요, | 미국, 영국, 호주 모두 약 3분의 2는 한 번에 넣는 쪽이 이겼다고 해요.']
-- type: versus
+- type: duel
   chapter: 결과
   heading: 나스닥100 · 1986 ~ 2025 · 478번 비교
-  left: {title: '한 번에 승률', value: '77.2%', sub: 'S&P500보다 더 높다', color: up, on: 1}
-  right: {title: '평균 차이', value: '+8.3%p', sub: '1년 뒤 기준', color: up, on: 2}
+  left: {title: 한 번에 승률, value: 77.2%, sub: S&P500보다 더 높다, color: up, 'on': 1}
+  right: {title: 평균 차이, value: +8.3%p, sub: 1년 뒤 기준, color: up, 'on': 2}
   narration: ['나스닥100으로 하면 차이가 더 벌어져요. 한 번에 넣은 쪽이 77.2% 이겼고,', '평균 8.3%포인트를 더 벌었습니다. | 더 많이 오르는 시장일수록, 기다리는 비용도 그만큼 커지는 거죠.']
 - type: bars
   chapter: 결과
@@ -318,30 +406,40 @@ scenes:
     source: '자료: S&P500 월말 종가 (배당 제외)'
     groups:
     - label: 6개월에 나눠
-      on: 1
+      'on': 1
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, months: 6}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, months: 6}
     - label: 12개월에 나눠
-      on: 1
+      'on': 1
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win}
     - label: 24개월에 나눠
-      on: 2
+      'on': 2
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, months: 24}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, months: 24}
     - label: 36개월에 나눠
-      on: 2
+      'on': 2
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, months: 36}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, months: 36}
   narration: ['그리고 나누는 기간을 길게 잡을수록, 한 번에 넣는 쪽 승률이 더 올라가요.', '6개월에 나누면 67%, 2년에 나누면 76.6%, 3년이면 81.7%. | 오래 기다릴수록, 놓치는 상승도 커지는 거죠.']
 - type: kinetic
   chapter: 결과
   items:
-  - {text: "왜 한 번에가\n이길까?", on: 1, size: 130, highlight: '왜'}
+  - {text: '왜 한 번에가
+
+      이길까?', 'on': 1, size: 130, highlight: 왜}
   narration: ['왜 그럴까요? 이유는 생각보다 단순해요.']
 - type: card
   chapter: 결과
@@ -352,51 +450,65 @@ scenes:
   numbered: true
   gap: 38
   bullets:
-  - {text: '주식시장은 오르는 달이 내리는 달보다 많다', on: 1}
-  - {text: '나눠 사면, 기다리는 돈은 그동안 놀고 있다', on: 2, highlight: '놀고 있다', hl_color: down}
-  - {text: '그래서 평균적으로는 더 늦게, 더 비싸게 산다', on: 3}
+  - {text: 주식시장은 오르는 달이 내리는 달보다 많다, 'on': 1}
+  - {text: '나눠 사면, 기다리는 돈은 그동안 놀고 있다', 'on': 2, highlight: 놀고 있다, hl_color: down}
+  - {text: '그래서 평균적으로는 더 늦게, 더 비싸게 산다', 'on': 3}
   narration: ['첫째, 주식시장은 오르는 달이 내리는 달보다 많았어요.', '둘째, 나눠 사면 아직 안 넣은 돈은 그동안 그냥 놀고 있죠.', '그러니까 평균적으로 보면, 나눠 산 사람이 더 늦게, 더 비싸게 사게 되는 거예요.']
 - type: kpi
   chapter: 결과
   kpis:
-  - {label: '1년 뒤 평균 · 한 번에', value: '+9.4%', on: 1}
-  - {label: '1년 뒤 평균 · 나눠서', value: '+5.0%', color: navy, on: 1}
+  - {label: 1년 뒤 평균 · 한 번에, value: +9.4%, 'on': 1}
+  - {label: 1년 뒤 평균 · 나눠서, value: +5.0%, color: navy, 'on': 1}
   bars:
-  - {label: '한 번에', value: 9.4, text: '+9.4%', hl: true}
-  - {label: '나눠서', value: 5.0, text: '+5.0%', hl: false}
+  - {label: 한 번에, value: 9.4, text: +9.4%, hl: true}
+  - {label: 나눠서, value: 5.0, text: +5.0%, hl: false}
   bars_on: 2
   vmax: 11
-  credit: 'S&P500 · 1950 ~ 2025 · 910번 평균'
+  credit: S&P500 · 1950 ~ 2025 · 910번 평균
   narration: ['1년 뒤 평균 수익률로 보면, 한 번에는 9.4%, 나눠서는 5.0%.', '거의 두 배 차이죠. | 1,200만 원으로 치면, 1년에 50만 원 넘게 차이가 나는 셈이에요.']
-
-# ── 사상 최고치 ──────────────────────────────────────
 - type: kinetic
   chapter: 사상 최고치
   items:
-  - {text: "그래도 지금은\n너무 비싸잖아?", on: 1, size: 120, highlight: '너무 비싸잖아?', hl_color: gold}
+  - {text: '그래도 지금은
+
+      너무 비싸잖아?', 'on': 1, size: 120, highlight: '너무 비싸잖아?', hl_color: gold}
   narration: ['근데요, 이런 생각 드시죠. | 그건 평균이고, 지금처럼 주가가 너무 비쌀 땐 다르지 않을까?']
 - type: capsule
   chapter: 사상 최고치
   kicker: 사상 최고치 근처에서 시작했을 때 · 226번
   value: '75.2'
   unit: '%'
-  accent: '한 번에 승'
+  accent: 한 번에 승
   badge: 오히려 더 높다
-  ghost: 'ATH'
-  sub: '평소(71.6%)보다 승률이 더 높았다'
-  sub_hl: '더 높았다'
-  narration: ['그래서 사상 최고치 근처에서 시작한 226번만 따로 봤어요.', '결과는요? 한 번에 넣은 쪽이 75.2% 이겼어요. | 평소보다 오히려 더 높았습니다.']
+  ghost: ATH
+  sub: 평소(71.6%)보다 승률이 더 높았다
+  sub_hl: 더 높았다
+  narration: [그래서 사상 최고치 근처에서 시작한 226번만 따로 봤어요., '결과는요? 한 번에 넣은 쪽이 75.2% 이겼어요. | 평소보다 오히려 더 높았습니다.']
+- type: poster
+  chapter: 사상 최고치
+  kicker: S&P500 · 1950 ~ 2026 (로그 스케일)
+  title: '사상 최고치만
+
+    1,538번'
+  highlight: 1,538번
+  sun: [1560, 330, 140]
+  ridge: {series: spx, start: '1950-01-01', end: '2026-10-31', log: true, height: 470}
+  pin: {at: 0.5, label: 고점의 연속, 'on': 1}
+  credit: '1950 ~ 2026.11 종가 기준 · 산 모양: S&P500 실제 흐름'
+  narration: ['1950년 이후 S&P500이 사상 최고치로 마감한 날은 1,538번이에요. 거래일 열세 번에 한 번꼴이죠.', '최고치라서 무섭다는 생각이, 숫자로는 꼭 맞지 않았던 거예요.']
 - type: kinetic
   chapter: 사상 최고치
   items:
-  - {text: "최고치는\n또 최고치를 부른다", on: 1, size: 120, highlight: '또 최고치'}
-  narration: ['오르는 시장에선, 최고치 다음에 또 최고치가 오는 경우가 많았던 거죠.']
+  - {text: '최고치는
 
-# ── 최악의 타이밍 ────────────────────────────────────
+      또 최고치를 부른다', 'on': 1, size: 120, highlight: 또 최고치}
+  narration: ['오르는 시장에선, 최고치 다음에 또 최고치가 오는 경우가 많았던 거죠.']
 - type: kinetic
   chapter: 최악의 타이밍
   items:
-  - {text: "하지만\n최악의 타이밍이었다면?", on: 1, size: 120, highlight: '최악의 타이밍', hl_color: down}
+  - {text: '하지만
+
+      최악의 타이밍이었다면?', 'on': 1, size: 120, highlight: 최악의 타이밍, hl_color: down}
   narration: ['하지만 평균만 보면 안 되죠. | 하필 최악의 타이밍에 넣었다면요?']
 - type: chart
   chapter: 최악의 타이밍
@@ -406,44 +518,54 @@ scenes:
     end: '2009-12-31'
     color: [74, 144, 255]
     title: S&P500 · 2007 ~ 2009 금융위기
-    draw: {on: 1, dur: 2.0}
+    draw: {'on': 1, dur: 2.0}
     marks:
-    - {date: '2007-10-31', label: '1,200만 원 투자', sub: '2007.10', on: 1, offset: 1.0, dy: 70, dx: 110, color: gold}
-    - {date: '2009-03-09', label: '-56%', sub: 바닥, on: 2, dy: 60, dx: 80, color: down, size: 36}
+    - {date: '2007-10-31', label: '1,200만 원 투자', sub: '2007.10', 'on': 1, offset: 1.0, dy: 70, dx: 110, color: gold}
+    - {date: '2009-03-09', label: -56%, sub: 바닥, 'on': 2, dy: 60, dx: 80, color: down, size: 36}
     source: '자료: S&P500 일간 종가 (배당 제외)'
-  narration: ['2007년 10월, 금융위기 직전 고점에 넣었다고 해 볼게요.', '그 뒤로 시장은 고점 대비 56%까지 빠집니다.']
+  narration: ['2007년 10월, 금융위기 직전 고점에 넣었다고 해 볼게요.', 그 뒤로 시장은 고점 대비 56%까지 빠집니다.]
 - type: isobars
   chapter: 최악의 타이밍
   kicker: 2007년 10월 · 1,200만 원
   title: 한 번에 vs 나눠서, 그 뒤
   highlight: 그 뒤
-  on: 1
+  'on': 1
   step: 0.35
   gamma: 1.0
   items:
-  - {label: '750만', year: '한 번에', sub: '1년 뒤', value: 750}
-  - {label: '860만', year: '나눠서', sub: '1년 뒤', value: 860, hl: true}
-  - {label: '1,094만', year: '한 번에', sub: '5년 뒤', value: 1094}
-  - {label: '1,254만', year: '나눠서', sub: '5년 뒤', value: 1254, hl: true}
-  credit: 'S&P500 월말 종가 · 배당 제외'
+  - {label: 750만, year: 한 번에, sub: 1년 뒤, value: 750}
+  - {label: 860만, year: 나눠서, sub: 1년 뒤, value: 860, hl: true}
+  - {label: '1,094만', year: 한 번에, sub: 5년 뒤, value: 1094}
+  - {label: '1,254만', year: 나눠서, sub: 5년 뒤, value: 1254, hl: true}
+  credit: S&P500 월말 종가 · 배당 제외
   narration: ['1년 뒤, 한 번에 넣은 사람은 750만 원. 나눠 넣은 사람은 860만 원이었어요.', '5년 뒤에도 1,094만 원 대 1,254만 원. | 이런 때는 나눠 산 쪽이 확실히 덜 아팠죠.']
-- type: versus
+- type: duel
   chapter: 최악의 타이밍
-  heading: '그 사람들, 지금은? (2026년 10월)'
-  left: {title: '2007.10 한 번에', value: '5,871만 원', sub: '1,200만 원이 4.9배', color: up, on: 1}
-  right: {title: '2007.10 나눠서', value: '6,729만 원', sub: '이번엔 나눠서가 승', color: up, on: 2}
+  heading: 그 사람들, 지금은? (2026년 10월)
+  left: {title: 2007.10 한 번에, value: '5,871만 원', sub: '1,200만 원이 4.9배', color: up, 'on': 1}
+  right: {title: 2007.10 나눠서, value: '6,729만 원', sub: 이번엔 나눠서가 승, color: up, 'on': 2}
   narration: ['그럼 그 두 사람, 지금은 어떻게 됐을까요? 한 번에 넣은 사람은 5,871만 원.', '나눠 넣은 사람은 6,729만 원. | 최악의 타이밍이었지만, 둘 다 결국 크게 불었어요.']
-- type: versus
+- type: hbars
   chapter: 최악의 타이밍
-  heading: '반대로 2016년 11월에 시작했다면 · 지금'
-  left: {title: '한 번에', value: '4,137만 원', sub: '이번엔 한 번에 승', color: up, on: 1}
-  right: {title: '나눠서', value: '3,811만 원', sub: '326만 원 차이', color: neutral, on: 2}
+  kicker: 2016년 11월에 1,200만 원 · 2026년 10월
+  title: 평범한 시기라면?
+  highlight: 평범한 시기
+  rows:
+  - {label: 나눠서, value: 3811, text: '3,811만 원', 'on': 1}
+  - {label: 한 번에, value: 4137, text: '4,137만 원', hl: true, 'on': 1, offset: 0.6}
   narration: ['반대로 평범한 시기였던 2016년 11월에 시작했다면, 한 번에 넣은 사람이 4,137만 원,', '나눠 넣은 사람은 3,811만 원. | 이렇게 대부분의 평범한 시기엔 한 번에 쪽이 앞섰어요.']
-- type: versus
+- type: hbars
   chapter: 최악의 타이밍
-  heading: 1년 뒤 최악의 결과
-  left: {title: 'S&P500 · 한 번에', value: '-44.8%', sub: '2008년 2월 시작', color: down, on: 1}
-  right: {title: 'S&P500 · 나눠서', value: '-35.0%', sub: '같은 시기', color: neutral, on: 1}
+  kicker: S&P500 · 910번 중 최악
+  title: 1년 뒤 최악의 결과
+  highlight: 최악
+  rows:
+  - label: 한 번에 (2008년 2월 시작)
+    value: 44.8
+    text: -44.8%
+    color: [60, 110, 200]
+    'on': 1
+  - {label: 나눠서 (같은 시기), value: 35.0, text: -35.0%, 'on': 1, offset: 0.6}
   narration: ['910번 중 최악만 뽑아 보면, 한 번에는 마이너스 44.8%, 나눠서는 마이너스 35.0%였어요.']
 - type: chart
   chapter: 최악의 타이밍
@@ -453,79 +575,111 @@ scenes:
     end: '2021-03-31'
     color: [240, 84, 84]
     title: S&P500 · 2020 코로나 폭락
-    draw: {on: 1, dur: 2.0}
+    draw: {'on': 1, dur: 2.0}
     marks:
-    - {date: '2020-02-28', label: '1,200만 원 투자', sub: '2020.2 말', on: 1, offset: 1.0, dy: -70, dx: -100, color: gold}
-    - {date: '2020-03-23', label: '바닥', sub: '3.23', on: 1, offset: 1.6, dy: 60, dx: 70, color: down}
+    - {date: '2020-02-28', label: '1,200만 원 투자', sub: 2020.2 말, 'on': 1, offset: 1.0, dy: -70, dx: -100, color: gold}
+    - {date: '2020-03-23', label: 바닥, sub: '3.23', 'on': 1, offset: 1.6, dy: 60, dx: 70, color: down}
     source: '자료: S&P500 일간 종가 (배당 제외)'
   narration: ['그럼 이건 어떨까요? 2020년 2월 말, 코로나 폭락이 한창 시작될 때 넣었다면요.', '바로 다음 달, 시장은 바닥까지 떨어집니다.']
-- type: versus
+- type: duel
   chapter: 최악의 타이밍
   heading: 2020년 2월 말 · 1,200만 원 · 1년 뒤
-  left: {title: '한 번에', value: '1,548만 원', sub: '폭락 직전에 넣었는데도', color: up, on: 1}
-  right: {title: '나눠서', value: '1,420만 원', sub: '싸게 산 달도 있었지만', color: neutral, on: 2}
+  left: {title: 한 번에, value: '1,548만 원', sub: 폭락 직전에 넣었는데도, color: up, 'on': 1}
+  right: {title: 나눠서, value: '1,420만 원', sub: 싸게 산 달도 있었지만, color: neutral, 'on': 2}
   narration: ['그런데 1년 뒤엔, 한 번에 넣은 사람이 1,548만 원으로 이겼어요.', '나눠 넣은 사람은 1,420만 원. | 폭락이 짧고 반등이 빠르면, 일찍 다 들어가 있는 쪽이 유리했던 거죠.']
 - type: versus
   chapter: 최악의 타이밍
   heading: 2022년 1월 · 1,200만 원 · 1년 뒤
-  left: {title: '한 번에', value: '1,083만 원', sub: '금리 인상 하락장', color: down, on: 1}
-  right: {title: '나눠서', value: '1,205만 원', sub: '천천히 빠질 땐 나눠서 승', color: up, on: 2}
+  left: {title: 한 번에, value: '1,083만 원', sub: 금리 인상 하락장, color: down, 'on': 1}
+  right: {title: 나눠서, value: '1,205만 원', sub: 천천히 빠질 땐 나눠서 승, color: up, 'on': 2}
   narration: ['반대로 2022년처럼 1년 내내 천천히 빠지는 하락장에선,', '나눠 넣은 쪽이 1,205만 원으로 이겼어요. 한 번에는 1,083만 원이었고요.']
 - type: kinetic
   chapter: 최악의 타이밍
   items:
-  - {text: "짧고 깊은 폭락 → 한 번에\n길고 느린 하락 → 나눠서", on: 1, size: 96, highlight: '나눠서', hl_color: gold}
+  - {text: '짧고 깊은 폭락 → 한 번에
+
+      길고 느린 하락 → 나눠서', 'on': 1, size: 96, highlight: 나눠서, hl_color: gold}
   narration: ['짧고 깊은 폭락엔 한 번에가, 길고 느린 하락엔 나눠서가 나았던 셈이에요.', '문제는, 그게 어느 쪽인지 미리 알 수 없다는 거죠.']
 - type: punch
   chapter: 최악의 타이밍
   tone: down
-  label: '나스닥100 · 2000년 닷컴 버블에 시작'
-  big: '-67.3%'
-  sub: '한 번에 넣었다면 1년 뒤 · 나눠서는 -48.8%'
+  label: 나스닥100 · 2000년 닷컴 버블에 시작
+  big: -67.3%
+  sub: 한 번에 넣었다면 1년 뒤 · 나눠서는 -48.8%
   sub_on: 2
-  narration: ['나스닥은 더 무섭죠. 2000년 버블 꼭대기에 한 번에 넣었다면, 1년 뒤 마이너스 67.3%.', '나눠 넣었어도 마이너스 48.8%였어요.']
-
-# ── 발상 전환 ───────────────────────────────────────
+  narration: ['나스닥은 더 무섭죠. 2000년 버블 꼭대기에 한 번에 넣었다면, 1년 뒤 마이너스 67.3%.', 나눠 넣었어도 마이너스 48.8%였어요.]
 - type: flap
   chapter: 발상 전환
-  word: "QUESTION"
-  hl_chars: "Q"
-  sub: "질문을 바꿔 보면"
+  word: QUESTION
+  hl_chars: Q
+  sub: 질문을 바꿔 보면
   highlight: 바꿔 보면
   narration: ['자, 여기서 질문을 한번 바꿔 볼게요.']
 - type: kinetic
   chapter: 발상 전환
   items:
-  - {text: "어느 쪽이 더 버나?\n→ 어느 쪽을 끝까지 버티나?", on: 1, size: 100, highlight: '끝까지 버티나?', hl_color: gold}
+  - {text: '어느 쪽이 더 버나?
+
+      → 어느 쪽을 끝까지 버티나?', 'on': 1, size: 100, highlight: '끝까지 버티나?', hl_color: gold}
   narration: ['어느 쪽이 더 버느냐가 아니라, | 어느 쪽이 내가 끝까지 버틸 수 있느냐로요.', '왜냐면 아무리 숫자가 좋아도, 중간에 무서워서 팔면 그 숫자는 내 것이 아니거든요.']
 - type: kinetic
   chapter: 발상 전환
   items:
-  - {text: "잃는 고통은\n얻는 기쁨의 약 2배", on: 1, size: 120, highlight: '약 2배', hl_color: down, sub: '행동경제학 · 손실 회피 (카너먼 · 트버스키)'}
+  - {text: '잃는 고통은
+
+      얻는 기쁨의 약 2배', 'on': 1, size: 120, highlight: 약 2배, hl_color: down, sub: 행동경제학 · 손실 회피 (카너먼 · 트버스키)}
   narration: ['행동경제학에선, 사람은 잃을 때의 고통을 얻을 때의 기쁨보다 두 배쯤 크게 느낀다고 해요.', '노벨 경제학상을 받은 대니얼 카너먼의 연구죠. | 그래서 숫자로는 한 번에가 나아도, 마음은 나눠 사고 싶어지는 거예요.']
-- type: versus
+- type: kpi
   chapter: 발상 전환
-  heading: 1년 동안 겪는 '최대 평가손' 평균
-  left: {title: '한 번에', value: '-6.3%', sub: '1년 안에 가장 깊었을 때', color: down, on: 1}
-  right: {title: '나눠서', value: '-5.0%', sub: '덜 깊다', color: neutral, on: 2}
-  narration: ['1년 동안 계좌가 가장 깊이 파였을 때를 평균 내 보면, 한 번에는 마이너스 6.3%,', '나눠서는 마이너스 5.0%. | 나눠 산 쪽이 덜 아팠어요. 생각보다 큰 차이는 아니지만요.']
+  kpis:
+  - label: 1년 중 가장 깊었을 때 평균 · 한 번에
+    value: -6.3%
+    color: [60, 110, 200]
+    'on': 1
+  - {label: 같은 기준 · 나눠서, value: -5.0%, color: navy, 'on': 2}
+  bars:
+  - {label: 한 번에, value: 6.3, text: -6.3%, hl: false}
+  - {label: 나눠서, value: 5.0, text: -5.0%, hl: true}
+  bars_on: 2
+  vmax: 7
+  credit: S&P500 · 910번 평균 · 평가손 깊이
+  narration: ['1년 동안 계좌가 가장 깊이 파였을 때를 평균 내 보면, 한 번에는 마이너스 6.3%,', 나눠서는 마이너스 5.0%. | 나눠 산 쪽이 덜 아팠어요. 생각보다 큰 차이는 아니지만요.]
+- type: grid
+  chapter: 발상 전환
+  kicker: S&P500 · 1년 뒤 손실이 난 경우 · 100번으로 줄이면
+  title: 1년 뒤 마이너스였던 횟수
+  highlight: 마이너스
+  n: 100
+  k: 25
+  cols: 20
+  cell: 50
+  hit_color: [60, 110, 200]
+  headline: 100번 중 약 25번
+  headline_hl: 25번
+  narration: ['100번 넣는다고 치면, 1년 뒤 마이너스인 게 25번쯤이에요.', '이게 한 번에 넣었을 때만 그런 걸까요?']
 - type: punch
   chapter: 발상 전환
   tone: gold
-  label: '1년 뒤 손실이 날 확률'
-  big: '25.3% vs 25.9%'
-  sub: '한 번에 vs 나눠서 · 거의 같다'
+  label: 1년 뒤 손실이 날 확률
+  big: 25.3% vs 25.9%
+  sub: 한 번에 vs 나눠서 · 거의 같다
   sub_on: 2
   narration: ['그런데 반전이 하나 있어요. 1년 뒤에 손실일 확률은요,', '한 번에 25.3%, 나눠서 25.9%. | 거의 똑같았어요.']
 - type: kinetic
   chapter: 발상 전환
   items:
-  - {text: "나눠 사기는\n손실을 '피하는' 게 아니라\n'얕게' 만든다", on: 1, size: 96, highlight: "'얕게'", hl_color: gold}
-  narration: ['그러니까 나눠 사기는 손실을 피하게 해 주는 게 아니에요. | 손실을 얕게 만들어 주는 거죠.', '그 대가로, 평균 수익은 덜 가져가고요.']
+  - {text: '나눠 사기는
+
+      손실을 ''피하는'' 게 아니라
+
+      ''얕게'' 만든다', 'on': 1, size: 96, highlight: '''얕게''', hl_color: gold}
+  narration: [그러니까 나눠 사기는 손실을 피하게 해 주는 게 아니에요. | 손실을 얕게 만들어 주는 거죠., '그 대가로, 평균 수익은 덜 가져가고요.']
 - type: kinetic
   chapter: 발상 전환
   items:
-  - {text: "기다리는 돈에\n이자가 붙는다면?", on: 1, size: 120, highlight: '이자', hl_color: gold}
+  - {text: '기다리는 돈에
+
+      이자가 붙는다면?', 'on': 1, size: 120, highlight: 이자, hl_color: gold}
   narration: ['하나 더 바꿔 볼게요. 기다리는 돈을 그냥 두지 않고, 예금이나 파킹통장에 넣어 둔다면요?']
 - type: bars
   chapter: 발상 전환
@@ -538,72 +692,100 @@ scenes:
     source: '자료: S&P500 월말 종가 (배당 제외)'
     groups:
     - label: 이자 0%
-      on: 1
+      'on': 1
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win}
     - label: 연 2%
-      on: 1
+      'on': 1
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, cash: 0.02}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, cash: 0.02}
     - label: 연 4%
-      on: 2
+      'on': 2
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, cash: 0.04}}
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, cash: 0.04}
     - label: 연 5%
-      on: 2
+      'on': 2
       vmax: 100
       bars:
-      - {label: 한 번에 승, color: up, stat: {kind: ld_win, cash: 0.05}}
-  narration: ['이자가 붙으면 나눠 사기가 조금 따라오긴 해요.', '연 4%면 한 번에 승률이 65.6%, 연 5%여도 62.7%. | 그래도 여전히 한 번에 쪽이 앞섰습니다.']
+      - label: 한 번에 승
+        color: up
+        stat: {kind: ld_win, cash: 0.05}
+  narration: [이자가 붙으면 나눠 사기가 조금 따라오긴 해요., '연 4%면 한 번에 승률이 65.6%, 연 5%여도 62.7%. | 그래도 여전히 한 번에 쪽이 앞섰습니다.']
+- type: timeline
+  chapter: 발상 전환
+  kicker: 절충안
+  title: 절반은 오늘, 절반은 나눠서
+  highlight: 절반
+  ticks:
+  - {label: 1월, sub: 600만 원, hl: true}
+  - {label: 3월}
+  - {label: 5월}
+  - {label: 7월}
+  - {label: 9월}
+  - {label: 11월}
+  - {label: 12월}
+  bands:
+  - {from: 0, to: 6, label: 나머지 600만 원 · 매달 50만 원, color: coral, 'on': 1}
+  bottom: 평균과 최악, 둘 다 가운데
+  bottom_hl: 가운데
+  bottom_on: 2
+  narration: ['방법은 이래요. 1,200만 원 중 600만 원은 오늘 바로 넣고,', 나머지 600만 원은 1년 동안 매달 50만 원씩 나눠 넣는 거죠.]
 - type: hbars
   chapter: 발상 전환
   kicker: S&P500 · 910번 · 1년 뒤
   title: 그럼 절반만 먼저 넣으면?
   highlight: 절반만
   rows:
-  - {label: '나눠서 (100만 원 × 12) · 최악 -35.0%', value: 5.0, text: '+5.0%', on: 1}
-  - {label: '절반은 한 번에, 절반은 나눠서 · 최악 -39.9%', value: 7.2, text: '+7.2%', hl: true, on: 2}
-  - {label: '한 번에 (1,200만 원) · 최악 -44.8%', value: 9.4, text: '+9.4%', on: 1, offset: 0.6}
-  credit: '배당·세금 제외 · 기다리는 돈 이자 0%'
+  - {label: 나눠서 (100만 원 × 12) · 최악 -35.0%, value: 5.0, text: +5.0%, 'on': 1}
+  - {label: '절반은 한 번에, 절반은 나눠서 · 최악 -39.9%', value: 7.2, text: +7.2%, hl: true, 'on': 2}
+  - {label: '한 번에 (1,200만 원) · 최악 -44.8%', value: 9.4, text: +9.4%, 'on': 1, offset: 0.6}
+  credit: 배당·세금 제외 · 기다리는 돈 이자 0%
   narration: ['그래서 많이들 쓰는 절충안이 있어요. 600만 원은 한 번에, 600만 원은 나눠서.', '평균은 7.2%로 가운데, 최악도 가운데. | 나눠서만 넣었을 때와 비교하면, 910번 중 71.6%에서 더 나았어요.']
-
-# ── 현실 ────────────────────────────────────────────
 - type: kinetic
   chapter: 현실
   items:
-  - {text: "그런데 우리 대부분은\n목돈이 없다", on: 1, size: 120, highlight: '목돈이 없다', hl_color: gold}
+  - {text: '그런데 우리 대부분은
+
+      목돈이 없다', 'on': 1, size: 120, highlight: 목돈이 없다, hl_color: gold}
   narration: ['그리고 사실, 우리 대부분은 1,200만 원이 한 번에 생기지 않죠. | 월급은 매달 들어오니까요.']
 - type: capsule
   chapter: 현실
   kicker: 2000년 1월부터 매달 100만 원 · S&P500 · 2026년 10월
   value: '14.3'
-  unit: '억 원'
+  unit: 억 원
   badge: 넣은 돈 3.2억
-  ghost: '₩'
-  sub: '닷컴 버블 꼭대기에서 시작했는데도'
-  sub_hl: '꼭대기'
+  ghost: ₩
+  sub: 닷컴 버블 꼭대기에서 시작했는데도
+  sub_hl: 꼭대기
   narration: ['닷컴 버블 꼭대기였던 2000년 1월부터, 매달 100만 원씩 꾸준히 넣었다면요?', '넣은 돈은 3억 2천2백만 원, 지금 평가액은 14억 3천만 원이에요. | 최악의 시작점이었는데도요.']
 - type: poster
   chapter: 현실
   kicker: S&P500 · 2000.1 ~ 2026.10
-  title: "최악의 출발점에서\n시작한 월급 적립"
+  title: '최악의 출발점에서
+
+    시작한 월급 적립'
   highlight: 월급 적립
   sun: [1560, 330, 140]
   ridge: {series: spx, start: '2000-01-01', end: '2026-10-31', height: 430}
-  pin: {at: 0.02, label: '2000년 1월 시작', on: 1}
-  figure: {name: bull, at: 0.92, size: 140, on: 2}
+  pin: {at: 0.02, label: 2000년 1월 시작, 'on': 1}
   credit: '산 모양: S&P500 2000 ~ 2026 실제 흐름'
-  narration: ['2000년부터 시장은 이렇게 움직였어요. 처음 10년은 두 번이나 반 토막이 났죠.', '그 시기를 버틴 적립식 투자자는, 그 뒤 15년 상승을 전부 가져갔어요.']
+  narration: [2000년부터 시장은 이렇게 움직였어요. 처음 10년은 두 번이나 반 토막이 났죠., '그 시기를 버틴 적립식 투자자는, 그 뒤 15년 상승을 전부 가져갔어요.']
 - type: kinetic
   chapter: 현실
   items:
-  - {text: "월급 적립은 선택이 아니라\n가장 자연스러운 '한 번에'", on: 1, size: 100, highlight: "'한 번에'"}
-  narration: ['월급이 들어올 때마다 바로 넣는 건, 사실 그 돈을 받은 날 한 번에 넣는 거예요. | 그래서 적립식은 오늘 결론과도 맞아요.', '오늘 비교한 건, 이미 손에 쥔 목돈을 어떻게 넣을지에 대한 이야기였던 거죠.']
+  - {text: '월급 적립은 선택이 아니라
 
-# ── 결론 ────────────────────────────────────────────
+      가장 자연스러운 ''한 번에''', 'on': 1, size: 100, highlight: '''한 번에'''}
+  narration: ['월급이 들어올 때마다 바로 넣는 건, 사실 그 돈을 받은 날 한 번에 넣는 거예요. | 그래서 적립식은 오늘 결론과도 맞아요.', '오늘 비교한 건, 이미 손에 쥔 목돈을 어떻게 넣을지에 대한 이야기였던 거죠.']
 - type: card
   chapter: 결론
   heading: 목돈이 생겼다면
@@ -613,33 +795,51 @@ scenes:
   numbered: true
   gap: 38
   bullets:
-  - {text: '숫자만 보면 한 번에 넣는 쪽이 70% 넘게 이겼다', on: 1}
-  - {text: '하락이 무서우면, 나눠 사기는 손실을 얕게 만드는 보험', on: 2}
-  - {text: '중간에 팔지 않을 방법을 고르는 게 진짜 정답', on: 3, highlight: '팔지 않을 방법', hl_color: up}
+  - {text: 숫자만 보면 한 번에 넣는 쪽이 70% 넘게 이겼다, 'on': 1}
+  - {text: '하락이 무서우면, 나눠 사기는 손실을 얕게 만드는 보험', 'on': 2}
+  - {text: 중간에 팔지 않을 방법을 고르는 게 진짜 정답, 'on': 3, highlight: 팔지 않을 방법, hl_color: up}
   narration: ['정리하면요. 첫째, 숫자만 보면 한 번에 넣는 쪽이 70% 넘게 이겼어요.', '둘째, 하락이 너무 무섭다면, 나눠 사기는 손실을 얕게 해 주는 보험이에요.', '셋째, 결국 정답은, 내가 중간에 팔지 않고 버틸 수 있는 방법을 고르는 거예요.', '한 번에 넣고 매일 잔고를 보며 잠 못 잘 거라면, 절반씩 나눠도 충분히 괜찮은 선택이에요.']
 - type: kinetic
   chapter: 오늘의 결론
   items:
-  - {text: 오늘의 결론, on: 1, size: 140}
+  - {text: 오늘의 결론, 'on': 1, size: 140}
   narration: ['자, 오늘 확인한 거 정리해 볼게요.']
   bg_word: CHECK
 - type: kinetic
   chapter: 오늘의 결론
   items:
-  - {text: '한 번에 vs 나눠서 · 910번', on: 1, size: 110}
+  - {text: 한 번에 vs 나눠서 · 910번, 'on': 1, size: 110}
   narration: ['한 번에 넣은 쪽이, 910번 중에 71.6% 이겼어요.']
-  stamp: {text: '한 번에 71.6% 승', color: up, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+  stamp:
+    text: 한 번에 71.6% 승
+    color: up
+    'on': 1
+    offset: 0.6
+    pos: [960, 700]
+    rot: -5
+    size: 72
 - type: kinetic
   chapter: 오늘의 결론
   items:
-  - {text: '1년 뒤 손실 확률', on: 1, size: 110}
+  - {text: 1년 뒤 손실 확률, 'on': 1, size: 110}
   narration: ['그런데 1년 뒤 손실 확률은, 나눠 사도 거의 같았죠.']
-  stamp: {text: '25.3% vs 25.9%', color: gold, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+  stamp:
+    text: 25.3% vs 25.9%
+    color: gold
+    'on': 1
+    offset: 0.6
+    pos: [960, 700]
+    rot: -5
+    size: 72
 - type: outro
-  heading: "더 버는 방법보다\n끝까지 버티는 방법"
+  heading: '더 버는 방법보다
+
+    끝까지 버티는 방법'
   highlight: 끝까지 버티는 방법
   sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
-  disclaimer: "본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.\n과거 데이터는 미래 수익을 보장하지 않으며 세금·수수료·배당은 반영하지 않았습니다."
+  disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
+
+    과거 데이터는 미래 수익을 보장하지 않으며 세금·수수료·배당은 반영하지 않았습니다.'
   subscribe_on: 3
   signature: 오늘도 감 말고, 숫자로 투자하세요.
   signature_on: 4

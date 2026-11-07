@@ -266,6 +266,9 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind == "ath_days":
+        p = series(kw.get("series", "spx")).loc[str(kw.get("y0", 1950)):]
+        return float((p >= p.cummax()).sum())
     if kind.startswith("ld_") and kind != "ld_case":  # 한 번에 vs 나눠서. series, y0, horizon, ath(True면 사상 최고치 시작만)
         mo = kw.get("months", 12)
         df = lump_dca(kw.get("series", "spx"), kw.get("y0", 1950), mo, kw.get("horizon", mo), cash=kw.get("cash", 0.0))

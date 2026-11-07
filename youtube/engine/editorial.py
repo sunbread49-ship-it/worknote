@@ -961,3 +961,60 @@ def _frame_panel(pw, ph, series_, start, end, color, log):
 
 
 TYPES.update({"capsule": Capsule, "isobars": IsoBars, "kpi": KPI, "frames": Frames})
+
+
+class Duel(Editorial):
+    """종이 위 두 장의 카드가 엇갈려 놓이는 비교(versus 대체). left/right: {title, value, sub, color, on}, heading"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        if sp.get("heading"):
+            h = riso_text(sp["heading"], 64, NAVY, CORAL, off=(4, 3), highlight=sp.get("highlight", ""), hl_fill=CORAL)
+            G.blit(f, h, (S.W / 2, 170), G.appear(t, 0.0, 0.3), "mt")
+        for j, side in enumerate(("left", "right")):
+            c = sp[side]
+            t0 = self.line_start(c.get("on", 1))
+            k = G.ease_out((t - t0) / 0.45)
+            if k <= 0:
+                continue
+            col = _rc(c.get("color"), CORAL if j else NAVY)
+            if c.get("color") in ("up",):
+                col = CORAL
+            elif c.get("color") in ("down",):
+                col = (60, 110, 200)
+            elif c.get("color") in ("neutral", None):
+                col = NAVY if j == 0 else (120, 112, 98)
+            W2, H2 = 680, 420
+            kk = 2
+            im = Image.new("RGBA", ((W2 + 24) * kk, (H2 + 24) * kk), (0, 0, 0, 0))
+            d = ImageDraw.Draw(im)
+            d.rectangle((20 * kk, 22 * kk, (W2 + 20) * kk, (H2 + 22) * kk), fill=(30, 30, 40, 70))
+            d.rectangle((0, 0, W2 * kk, H2 * kk), fill=(252, 248, 238, 255), outline=col + (255,), width=6 * kk)
+            d.rectangle((0, 0, W2 * kk, 70 * kk), fill=col + (255,))
+            im = im.resize((W2 + 24, H2 + 24), Image.LANCZOS)
+            tt = T(c.get("title", ""), 40, PAPER, "ExtraBold")
+            im.alpha_composite(tt, (34, 35 - tt.height // 2 + 2))
+            v = T(counter(c["value"], (t - t0) / 0.8), c.get("size", 120), col, "Black")
+            while v.width > W2 - 60:
+                v = v.resize((int(v.width * 0.9), int(v.height * 0.9)), Image.LANCZOS)
+            im.alpha_composite(v, ((W2 - v.width) // 2, 70 + (H2 - 70 - v.height) // 2 - 24))
+            if c.get("sub"):
+                sb = T(c["sub"], 32, (110, 104, 92), "SemiBold", max_w=W2 - 60, align="center")
+                im.alpha_composite(sb, ((W2 - sb.width) // 2, H2 - 40 - sb.height))
+            ang = (-4 if j == 0 else 3) * (0.5 + 0.5 * k) + (1 - k) * (12 if j else -12)
+            im = im.rotate(ang, resample=Image.BICUBIC, expand=True)
+            cx = S.W / 2 + (-390 if j == 0 else 390)
+            G.blit(f, im, (cx, 600 + (1 - k) * 80 + (20 if j else -10)), k, "mm")
+        vs = sp.get("mid", "VS")
+        if t > self.line_start(sp["right"].get("on", 1)):
+            st = _riso_stamp(vs)
+            G.blit(f, st.rotate(-8, expand=True, resample=Image.BICUBIC), (S.W / 2, 600), G.appear(t, self.line_start(sp["right"].get("on", 1)) + 0.2, 0.2), "mm")
+        riso_credit(f, sp)
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec[s].get("on", 1)), "pop", 0.35) for s in ("left", "right")]
+
+
+TYPES.update({"duel": Duel})
