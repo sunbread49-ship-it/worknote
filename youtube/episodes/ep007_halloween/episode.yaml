@@ -1,0 +1,558 @@
+# EP007 · 매매법 해부 ③ — 핼러윈 매매법 (11월에 사서 5월에 판다) + 추수감사절
+# 대본 작성 규칙: youtube/SCRIPT_STYLE.md · 새 '리소 인쇄' 장면(poster·dotmap·flap·ticket·timeline·grid·hbars·profile) 섞음
+title: "11월에 사서 5월에 팔아라? 핼러윈 매매법 76년 백테스트"
+series_tag: "11월에 사서 5월에 판다?"
+
+tts:
+  voice: ko-KR-Chirp3-HD-Sadaltager
+  rate: 1.12
+
+youtube:
+  title: "11월에 사서 5월에 팔아라? '핼러윈 매매법' 76년 백테스트 결과"
+  description: |
+    "5월엔 팔고 떠나라(Sell in May)." 월가에서 가장 오래된 격언 중 하나입니다.
+    거꾸로 말하면 11월에 사서 4월까지 들고 있으라는 뜻이죠. 이른바 '핼러윈 매매법'.
+    1950년부터 76년 치 S&P500, 그리고 나스닥100으로 정말 통했는지 백테스트했습니다.
+
+    ✔ 1년 12달 성적표, 11월은 몇 등?
+    ✔ 겨울 6개월 vs 여름 6개월, 76년 승부
+    ✔ 5월에 팔고 쉬었다면? 그냥 들고 있었다면? (반전)
+    ✔ 현금 이자가 몇 %면 핼러윈 매매법이 이기나
+    ✔ 11월 첫 주부터 빠진 해, 그 겨울은?
+    ✔ 최근 10년은 달랐다 · 나스닥은 5월도 강했다
+    ✔ 보너스: 추수감사절 앞뒤 이틀, 76번 중 64번 상승
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 세금·수수료는 반영하지 않았습니다. 투자 판단과 책임은 본인에게 있습니다.
+
+    [자료] S&P500 일간 종가(배당 제외, 1950~2026.4) · 나스닥100(1985~)
+    겨울 = 10월 마지막 거래일 종가 → 다음 해 4월 마지막 거래일 종가 · 여름 = 4월 말 → 10월 말
+    월별 수익률 = 월말 종가 기준(1950~2025) · 추수감사절 = 전 화요일 종가 → 다음 날 금요일 종가
+  tags: [핼러윈매매법, SellinMay, 계절성, 11월, 추수감사절, S&P500, 나스닥, 매매법, 백테스트, 미국주식]
+  privacy: private
+
+shorts: []
+
+checks:
+  - {name: "11월 평균(%)", kind: month_mean, month: 11}
+  - {name: "11월 상승 해", kind: month_up, month: 11}
+  - {name: "9월 평균(%)", kind: month_mean, month: 9}
+  - {name: "9월 상승 해", kind: month_up, month: 9}
+  - {name: "12월 평균(%)", kind: month_mean, month: 12}
+  - {name: "4월 평균(%)", kind: month_mean, month: 4}
+  - {name: "겨울 평균(%)", kind: season_mean}
+  - {name: "겨울 상승", kind: season_up}
+  - {name: "여름 평균(%)", kind: season_mean, which: summer}
+  - {name: "여름 상승", kind: season_up, which: summer}
+  - {name: "겨울>여름 해", kind: season_beat}
+  - {name: "핼러윈 배수(현금 0%)", kind: halloween_mult}
+  - {name: "보유 배수", kind: halloween_mult, which: hold}
+  - {name: "핼러윈 배수(현금 2%)", kind: halloween_mult, cash: 0.02}
+  - {name: "핼러윈 배수(현금 3.1%)", kind: halloween_mult, cash: 0.031}
+  - {name: "핼러윈 배수(현금 4%)", kind: halloween_mult, cash: 0.04}
+  - {name: "최근10년 겨울(%)", kind: season_mean, y0: 2016}
+  - {name: "최근10년 겨울 상승", kind: season_up, y0: 2016}
+  - {name: "최근10년 여름(%)", kind: season_mean, which: summer, y0: 2016}
+  - {name: "최근10년 여름 상승", kind: season_up, which: summer, y0: 2016}
+  - {name: "나스닥 겨울(%)", kind: season_mean, series: ndx, y0: 1985}
+  - {name: "나스닥 여름(%)", kind: season_mean, series: ndx, which: summer, y0: 1986}
+  - {name: "나스닥 5월(%)", kind: month_mean, series: ndx, month: 5, y0: 1986}
+  - {name: "나스닥 5월 상승", kind: month_up, series: ndx, month: 5, y0: 1986}
+  - {name: "나스닥 핼러윈 배수", kind: halloween_mult, series: ndx, y0: 1985}
+  - {name: "나스닥 보유 배수", kind: halloween_mult, series: ndx, y0: 1985, which: hold}
+  - {name: "추수감사절 상승", kind: tg_up}
+  - {name: "추수감사절 평균(%)", kind: tg_mean}
+  - {name: "아무 이틀 평균(%)", kind: avg_2day}
+  - {name: "나스닥 1월(%)", kind: month_mean, series: ndx, month: 1, y0: 1986}
+  - {name: "나스닥 11월(%)", kind: month_mean, series: ndx, month: 11, y0: 1986}
+  - {name: "나스닥 9월(%)", kind: month_mean, series: ndx, month: 9, y0: 1986}
+  - {name: "2008 여름(%)", kind: ret, series: spx, start: "2008-04-30", end: "2008-10-31"}
+  - {name: "1987 여름(%)", kind: ret, series: spx, start: "1987-04-30", end: "1987-10-31"}
+  - {name: "2026.10.30→11.5 S&P500(%)", kind: ret, series: spx, start: "2026-10-30", end: "2026-11-05"}
+
+scenes:
+# ── 인트로 ─────────────────────────────────────────
+- type: flap
+  chapter: 인트로
+  word: "SELL IN\nMAY"
+  hl_chars: "MAY"
+  sub: "5월엔 팔고 떠나라"
+  highlight: 떠나라
+  narration: ['월가엔 백 년 넘게 내려온 말이 있어요. | 셀 인 메이. 5월엔 팔고 떠나라.']
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "거꾸로 말하면\n11월에 사라?", on: 1, size: 130, highlight: '11월에 사라?'}
+  narration: ['거꾸로 말하면요, 가을에 사서 봄까지 들고 있으라는 거죠.', '10월 말 핼러윈에 산다고 해서, 핼러윈 매매법이라고도 불러요.']
+- type: chart
+  chapter: 인트로
+  chart:
+    series: spx
+    start: '2026-09-01'
+    end: '2026-11-05'
+    color: [240, 84, 84]
+    title: S&P500 · 2026년 9월 ~ 11월 5일
+    draw: {on: 1, dur: 1.6}
+    marks:
+    - {date: '2026-10-30', label: 핼러윈 직전, sub: '10.30', on: 1, offset: 1.0, dy: -80, dx: -90, color: gold}
+    - {date: '2026-11-05', label: '-3.0%', sub: '11.5', on: 2, dy: 60, dx: -80, color: down, size: 36}
+    source: '자료: S&P500 지수 일간 종가 (11.5 기준)'
+  narration: ['그런데 올해는 시작부터 삐끗했죠.', '10월 마지막 날 종가로 샀다면, 11월 5일까지 벌써 3% 마이너스예요.']
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "그래도 11월에 사면\n결국 이길까?", on: 1, size: 120, highlight: '결국 이길까?', hl_color: gold}
+  narration: ['그래도 76년을 길게 보면, 11월에 사서 5월에 파는 게 이겼을까요?']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 매매법 해부
+  title: "11월에 사서 5월에 판다\n정말 통했을까?"
+  highlight: 정말 통했을까?
+  subtitle: 핼러윈 매매법을 S&P500 76년 · 나스닥100 40년으로 백테스트했습니다
+  narration: ['매매법 해부, 세 번째 시간입니다.', '오늘은 핼러윈 매매법을, 1950년부터 76년 치 데이터로 끝까지 뜯어보겠습니다. | 미리 말씀드리면, 중간에 반전이 두 번 있어요.']
+- type: kinetic
+  items:
+  - {text: '사라는 영상 아닙니다', on: 1, size: 110, highlight: '아닙니다', hl_color: down, sub: '과거 데이터는 미래를 보장하지 않습니다'}
+  narration: ['아, 먼저요. 지금 사라, 팔라는 영상은 절대 아닙니다. | 과거가 어땠는지를 보는 거예요.']
+
+# ── 12달 성적표 ─────────────────────────────────────
+- type: kinetic
+  chapter: 12달 성적표
+  items:
+  - {text: "1년 12달\n성적표", on: 1, size: 140, highlight: 성적표}
+  narration: ['먼저 1년 열두 달, 성적표부터 볼게요.']
+- type: yearbars
+  chapter: 12달 성적표
+  items: [['1월', 1.08], ['2월', -0.03], ['3월', 1.04], ['4월', 1.43], ['5월', 0.38], ['6월', 0.2], ['7월', 1.31], ['8월', 0.04], ['9월', -0.63], ['10월', 0.9], ['11월', 1.86], ['12월', 1.41]]
+  mark: {'11월': '1등'}
+  mark_on: 2
+  vmax: 2.2
+  fmt: '{:+.2f}'
+  val_size: 28
+  on: 1
+  step: 0.1
+  heading: S&P500 달별 평균 수익률 (%)
+  sub: 1950 ~ 2025 · 월말 종가 기준
+  source: '자료: S&P500 일간 종가 (배당 제외)'
+  narration: ['1950년부터 76년, 달마다 평균 수익률을 내 보면요.', '1등은 11월이에요. 평균 1.86%.', '꼴찌는 9월, 마이너스 0.63%고요.']
+- type: punch
+  chapter: 12달 성적표
+  tone: up
+  label: 'S&P500 · 1950 ~ 2025'
+  big: '11월 = 1등'
+  sub: '평균 +1.86% · 76년 중 53년 상승'
+  sub_on: 2
+  narration: ['11월이 1년 중 1등.', '76년 중에 53년, 열 번에 일곱 번은 올랐어요.']
+- type: kinetic
+  chapter: 12달 성적표
+  items:
+  - {text: "2등 4월 · 3등 12월", on: 1, size: 130, highlight: '4월', sub: '상위권이 전부 11월 ~ 4월 안에'}
+  narration: ['참고로 2등은 4월, 3등은 12월이에요. | 상위권이 전부 11월부터 4월 사이에 몰려 있죠.']
+- type: grid
+  chapter: 12달 성적표
+  kicker: S&P500 · 1950 ~ 2025
+  title: 9월은 반대
+  highlight: 반대
+  n: 76
+  k: 34
+  hit_color: [30, 42, 92]
+  headline: '9월 상승은 76년 중 34년뿐'
+  headline_hl: 34년
+  narration: ['반대로 9월은, 오른 해가 76년 중 34년뿐이었어요. 절반도 안 되죠.']
+- type: profile
+  chapter: 12달 성적표
+  kicker: 11월부터 달별 평균을 이어 붙이면
+  title: 1년 상승의 4분의 3이 여기에
+  highlight: 4분의 3
+  values: [0, 1.86, 3.27, 4.35, 4.32, 5.36, 6.79, 7.17, 7.37, 8.68, 8.72, 8.09, 8.99]
+  labels: ['11월', '12월', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '']
+  hl: [0, 6]
+  hl_on: 1
+  pins: [{text: '+6.79%', at: 6, on: 1}]
+  credit: '1950~2025 달별 평균 단순 합'
+  narration: ['11월부터 달별 평균을 차례로 이어 붙이면, 4월 말까지 6.8%.', '1년 전체가 9% 정도니까, 4분의 3이 11월부터 4월 사이에 몰려 있는 거예요.']
+
+- type: card
+  chapter: 12달 성적표
+  heading: 왜 겨울이 강할까? (흔히 나오는 설명)
+  highlight: 왜 겨울이
+  width: 1500
+  size: 48
+  numbered: true
+  gap: 34
+  bullets:
+  - {text: '연말 보너스 · 새해 연금 납입으로 돈이 들어온다', on: 1}
+  - {text: '블랙프라이데이 · 연말 쇼핑 시즌, 소비가 몰린다', on: 2}
+  - {text: '여름엔 휴가로 거래가 줄고, 9~10월엔 결산 매도가 나온다', on: 3}
+  narration: ['그럼 왜 겨울이 강했을까요? 흔히 나오는 설명은 이래요. | 첫째, 연말 보너스와 새해 연금 납입으로 돈이 들어온다.', '둘째, 블랙프라이데이부터 연말까지, 소비가 1년 중 가장 많이 몰린다.', '셋째, 여름엔 휴가철이라 거래가 줄고, 가을엔 펀드들이 결산하면서 파는 물량이 나온다.']
+- type: kinetic
+  chapter: 12달 성적표
+  items:
+  - {text: "설명은 그럴듯하지만\n증명된 건 아니다", on: 1, size: 110, highlight: '증명된 건 아니다', hl_color: gold}
+  narration: ['다만 이건 어디까지나 그럴듯한 해석이에요. | 숫자가 원인까지 증명해 주진 않거든요.']
+# ── 핼러윈 매매법 ───────────────────────────────────
+- type: timeline
+  chapter: 핼러윈 매매법
+  kicker: 핼러윈 매매법
+  title: 10월 말에 사서, 4월 말에 판다
+  highlight: 10월 말
+  ticks: [{label: '10.31', sub: 핼러윈, hl: true}, {label: '12월'}, {label: '2월'}, {label: '4.30', sub: 매도, hl: true}, {label: '6월'}, {label: '8월'}, {label: '10.31', sub: 다시 매수}]
+  bands: [{from: 0, to: 3, label: '주식 6개월', color: coral, on: 1}, {from: 3, to: 6, label: '현금 6개월', color: [150, 140, 120], on: 2}]
+  tag: {text: '반복', at: 6, color: [30, 42, 92], on: 2}
+  bottom: '1년의 절반만 시장에 있는다'
+  bottom_hl: 절반만
+  bottom_on: 2
+  narration: ['규칙은 간단해요. 10월 마지막 날 종가에 사서, 4월 마지막 날 종가에 판다.', '그리고 5월부터 10월까지는, 현금으로 쉬는 거죠.']
+- type: quote
+  chapter: 핼러윈 매매법
+  original: "Sell in May and go away, and come on back on St. Leger's Day."
+  text: 5월엔 팔고 떠났다가, 세인트 레저 날에 돌아오라.
+  highlight: 돌아오라
+  source: 영국 런던 증권가의 옛 격언 · 세인트 레저는 9월 경마 대회
+  narration: ['원래는 영국 런던의 옛말이에요. 5월엔 팔고 떠났다가, 9월 경마 대회 날 돌아오라.', '여름엔 귀족들이 휴가를 떠나서, 시장이 한산했다는 데서 나왔다고 해요.']
+- type: versus
+  chapter: 핼러윈 매매법
+  heading: S&P500 6개월 평균 수익률 · 1950 ~ 2025
+  left: {title: '겨울 (11월 ~ 4월)', value: '+6.95%', sub: '76년 중 58년 상승', color: up, on: 1}
+  right: {title: '여름 (5월 ~ 10월)', value: '+2.08%', sub: '76년 중 50년 상승', color: neutral, on: 2}
+  narration: ['결과는요? 겨울 6개월은 평균 6.95%, 76년 중 58년 올랐어요.', '여름 6개월은 평균 2.08%. 세 배 넘게 차이가 납니다.']
+- type: grid
+  chapter: 핼러윈 매매법
+  kicker: 같은 해 겨울 vs 여름
+  title: 겨울이 이긴 해
+  highlight: 겨울
+  n: 76
+  k: 47
+  headline: '76년 중 47년, 겨울 승'
+  headline_hl: 47년
+  narration: ['같은 해끼리 붙여 봐도, 겨울이 이긴 해가 76년 중 47년이에요.']
+- type: yearbars
+  chapter: 핼러윈 매매법
+  which: season
+  on: 1
+  step: 0.05
+  base: 560
+  hmax: 300
+  label_y: 900
+  heading: 해마다 겨울 수익률 - 여름 수익률 (%p)
+  sub: S&P500 · 1950 ~ 2025 · 빨강 = 겨울 승
+  source: '자료: S&P500 일간 종가 (배당 제외)'
+  narration: ['해마다 겨울에서 여름을 빼 보면, 이렇게 생겼어요. 빨간색이 겨울이 이긴 해.', '대부분 빨간색인데, 최근으로 올수록 파란색도 자주 보이죠? 이건 뒤에서 다시 볼게요.']
+- type: kinetic
+  chapter: 핼러윈 매매법
+  items:
+  - {text: "미국만의 일도 아니다?", on: 1, size: 130, highlight: '미국만', sub: "2002년 연구: 37개 나라 중 36곳에서 겨울이 더 강했다"}
+  narration: ['이게 미국만의 일도 아니에요. 2002년 한 경제학 논문은, 37개 나라 주식시장 중 36곳에서 겨울 6개월이 더 강했다고 발표했어요.']
+- type: card
+  chapter: 핼러윈 매매법
+  heading: 여름에 터진 폭락들
+  highlight: 여름
+  width: 1500
+  size: 48
+  gap: 30
+  bullets:
+  - {text: '2008  리먼 사태   여름 6개월 -30.1%', on: 1, highlight: '-30.1%', hl_color: down}
+  - {text: '1974  오일쇼크   -18.2%', on: 1, offset: 0.5, highlight: '-18.2%', hl_color: down}
+  - {text: '2002  닷컴 버블 붕괴   -17.8%', on: 1, offset: 1.0, highlight: '-17.8%', hl_color: down}
+  - {text: '1987  블랙먼데이 (10월)   -12.7%', on: 2, highlight: '-12.7%', hl_color: down}
+  narration: ['그리고 역사적인 폭락이 유독 여름과 가을에 몰려 있었어요. 2008년 리먼 사태, 1974년 오일쇼크, 2002년 닷컴 버블.', '1987년 블랙먼데이도 10월이었죠.']
+- type: punch
+  chapter: 핼러윈 매매법
+  tone: down
+  label: '2008년 여름 6개월 (4.30 → 10.31)'
+  big: '-30.1%'
+  sub: '핼러윈 매매법이었다면 현금으로 피했다'
+  sub_on: 2
+  narration: ['2008년 여름 6개월에만 마이너스 30.1%.', '핼러윈 매매법이었다면, 현금으로 들고 있어서 그대로 피했을 구간이에요.']
+- type: card
+  chapter: 핼러윈 매매법
+  heading: 겨울에도 터졌다
+  highlight: 겨울에도
+  width: 1500
+  size: 48
+  gap: 30
+  bullets:
+  - {text: '1973 ~ 74 겨울  오일쇼크   -16.6%', on: 1, highlight: '-16.6%', hl_color: down}
+  - {text: '1969 ~ 70 겨울   -16.1%', on: 1, offset: 0.4, highlight: '-16.1%', hl_color: down}
+  - {text: '2000 ~ 01 겨울  닷컴 버블   -12.6%', on: 1, offset: 0.8, highlight: '-12.6%', hl_color: down}
+  - {text: '2021 ~ 22 겨울  금리 인상 시작   -10.3%', on: 1, offset: 1.2, highlight: '-10.3%', hl_color: down}
+  narration: ['물론 겨울이라고 안전한 건 아니었어요. 1973년 오일쇼크 겨울엔 마이너스 16.6%, 2000년 닷컴 버블 겨울엔 마이너스 12.6%.', '가장 최근엔 2021년 겨울, 금리 인상이 시작되면서 마이너스 10.3%였죠.']
+- type: kinetic
+  chapter: 핼러윈 매매법
+  items:
+  - {text: "그럼 핼러윈 매매법이\n정답?", on: 1, size: 120, highlight: '정답?', hl_color: gold}
+  narration: ['오, 그럼 핼러윈 매매법이 정답일까요? | 진짜 중요한 건 지금부터예요.']
+
+# ── 반전 ────────────────────────────────────────────
+- type: poster
+  chapter: 반전
+  kicker: S&P500 · 1950.10 ~ 2026.4
+  title: "76년 동안\n쉬지 않고 오른 산"
+  highlight: 쉬지 않고
+  sun: [1560, 330, 150]
+  ridge: {series: spx, start: '1950-10-31', end: '2026-04-30', log: true, height: 470}
+  pin: {at: 0.04, label: '1950년 100만 원', on: 1}
+  figure: {name: bull, at: 0.9, size: 150, on: 2}
+  credit: '산 모양: S&P500 로그 스케일'
+  narration: ['1950년 10월에 100만 원을 넣었다고 해 볼게요.', '그리고 2026년 4월까지, 두 사람이 각자 다르게 투자했어요.']
+- type: hbars
+  chapter: 반전
+  kicker: 1950년 10월에 100만 원 · 2026년 4월 결과
+  title: 누가 가장 많이 벌었을까?
+  rows:
+  - {label: '핼러윈 매매법 (여름엔 현금, 이자 0%)', value: 116.6, text: '1.17억', on: 1}
+  - {label: '그냥 계속 들고 있기', value: 369.1, text: '3.69억', hl: true, on: 2}
+  credit: '배당·세금 제외 · 현금 기간 수익 0% 가정'
+  narration: ['5월에 팔고 쉬는 핼러윈 매매법은, 1억 1천7백만 원.', '그런데 그냥 계속 들고만 있었다면요? 3억 6천9백만 원. 세 배가 넘습니다.']
+- type: chart
+  chapter: 반전
+  chart:
+    lines:
+    - {series: spx, color: up, label: 그냥 들고 있기}
+    - {series: halloween_spx, color: neutral, label: 핼러윈 매매법, fill: false}
+    start: '1950-10-31'
+    end: '2026-04-30'
+    base: 100
+    unit: won
+    log: true
+    end_labels: true
+    rect: [210, 200, 1240, 620]
+    title: 1950년 10월에 100만 원 (로그 스케일)
+    draw: {on: 1, dur: 2.6}
+    source: '자료: S&P500 일간 종가 (배당 제외) · 현금 기간 수익 0%'
+  narration: ['76년 동안 두 사람의 돈이 어떻게 불었는지 그려 보면,', '처음엔 거의 붙어 가다가, 시간이 갈수록 간격이 점점 벌어지죠.']
+- type: punch
+  chapter: 반전
+  tone: gold
+  label: '핼러윈 매매법 vs 그냥 들고 있기'
+  big: '3배 차이'
+  sub: '여름 평균 +2.08%도 76년 쌓이면 크다'
+  sub_on: 2
+  narration: ['3배 차이.', '여름 6개월이 겨울보다 약하긴 했어도, 평균 2%씩 76년 쌓이면 이렇게 커지는 거죠.']
+- type: kinetic
+  chapter: 반전
+  items:
+  - {text: "근데 쉬는 동안\n이자를 받는다면?", on: 1, size: 120, highlight: '이자', hl_color: gold}
+  narration: ['근데요, 쉬는 6개월 동안 현금을 그냥 두지 않고, | 예금이나 단기 채권에 넣어서 이자를 받는다면요?']
+- type: ticket
+  chapter: 반전
+  kicker: 핼러윈 매매법이 이기려면
+  title: 쉬는 동안 받아야 할 이자
+  label: '1950 ~ 2026 · 손익분기 연 이자율'
+  value: '3.1'
+  unit: '% 이상'
+  stub: "이것보다\n높으면 승\n낮으면 패"
+  narration: ['계산해 보니, 쉬는 동안 연 3.1%보다 높은 이자를 받았다면, 핼러윈 매매법이 이겼어요.']
+- type: versus
+  chapter: 반전
+  heading: 쉬는 동안 이자를 받았다면 · 100만 원 → 2026년 4월
+  left: {title: '연 2% 이자', value: '2.48억', sub: '그냥 들고 있기(3.69억)에 짐', color: neutral, on: 1}
+  right: {title: '연 4% 이자', value: '5.18억', sub: '그냥 들고 있기(3.69억)를 이김', color: up, on: 2}
+  narration: ['연 2%였다면 2억 4천8백만 원으로 지고,', '연 4%였다면 5억 1천8백만 원으로 이깁니다. | 결국 그때그때 금리가 승부를 가른 거죠.']
+- type: card
+  chapter: 반전
+  heading: 계산에 안 들어간 것
+  highlight: 안 들어간 것
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 38
+  bullets:
+  - {text: '1년에 두 번 사고팔 때 드는 세금 · 수수료', on: 1}
+  - {text: '배당 (계속 들고 있으면 더 받음)', on: 2}
+  - {text: '2010년대처럼 금리가 0%에 가까웠던 시기', on: 3}
+  narration: ['다만 이 계산엔 빠진 게 있어요. | 첫째, 1년에 두 번씩 사고팔면 세금과 수수료가 붙죠.', '둘째, 계속 들고 있으면 받는 배당도 빠져 있고요.', '셋째, 2010년대처럼 금리가 거의 0%였던 때는, 쉬는 동안 받을 이자도 거의 없었어요.']
+
+# ── 최근 10년 · 나스닥 ──────────────────────────────
+- type: kinetic
+  chapter: 최근 10년
+  items:
+  - {text: "그리고 최근 10년은?", on: 1, size: 130, highlight: '최근 10년'}
+  narration: ['그리고 하나 더. 요즘도 통할까요? 최근 10년만 따로 봤어요.']
+- type: yearbars
+  chapter: 최근 10년
+  items: [["1950년대", 3.75], ["1960년대", 6.42], ["1970년대", 9.21], ["1980년대", 4.01], ["1990년대", 7.12], ["2000년대", 2.57], ["2010년대", 4.34], ["2020년대", -0.75]]
+  mark: {"2020년대": "역전"}
+  mark_on: 2
+  fmt: '{:+.1f}'
+  val_size: 30
+  vmax: 10
+  on: 1
+  step: 0.15
+  heading: 연대별 · 겨울이 여름보다 얼마나 더 벌었나 (%p)
+  sub: S&P500 · 같은 해 겨울 6개월 - 여름 6개월 평균 · 2020년대는 2020 ~ 2025
+  source: '자료: S&P500 일간 종가 (배당 제외)'
+  narration: ['연대별로 나눠 보면 더 분명해요. 1970년대엔 겨울이 여름보다 평균 9%포인트 넘게 더 벌었어요.', '그런데 2020년대엔, 처음으로 마이너스가 됐습니다. 여름이 더 벌었다는 뜻이죠.']
+- type: versus
+  chapter: 최근 10년
+  heading: S&P500 6개월 평균 · 최근 10년 (2016 ~ 2025)
+  left: {title: '겨울 (11월 ~ 4월)', value: '+6.78%', sub: '10년 중 7년 상승', color: neutral, on: 1}
+  right: {title: '여름 (5월 ~ 10월)', value: '+6.93%', sub: '10년 중 9년 상승', color: up, on: 2}
+  narration: ['최근 10년, 겨울은 평균 6.78%.', '여름은요? 6.93%. 오히려 여름이 살짝 이겼어요. 10년 중 9년이 올랐고요.']
+- type: punch
+  chapter: 최근 10년
+  tone: gold
+  label: '최근 10년 (2016 ~ 2025)'
+  big: '여름이 이겼다'
+  sub: '여름 +6.93% vs 겨울 +6.78%'
+  narration: ['최근 10년은, 여름이 이겼습니다.', '여름에도 꾸준히 오른 빅테크 랠리 영향이라는 해석이 많은데, 이유가 뭐든 공식이 늘 통하진 않는다는 거죠.']
+- type: yearbars
+  chapter: 나스닥
+  items: [['1월', 2.52], ['2월', 0.59], ['3월', 0.93], ['4월', 1.53], ['5월', 2.19], ['6월', 0.81], ['7월', 1.72], ['8월', 0.52], ['9월', -0.53], ['10월', 1.7], ['11월', 2.37], ['12월', 1.61]]
+  mark: {'5월': '3등'}
+  mark_on: 2
+  fmt: '{:+.2f}'
+  val_size: 28
+  vmax: 3
+  on: 1
+  step: 0.1
+  heading: 나스닥100 달별 평균 수익률 (%)
+  sub: 1986 ~ 2025 · 월말 종가 기준
+  source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['나스닥100도 달별로 볼게요. 1등은 1월, 2등은 11월이에요.', '그런데 3등이 5월이에요. 팔고 떠나라던 그 5월이, 나스닥에선 평균 2.19%나 올랐어요.']
+- type: versus
+  chapter: 나스닥
+  heading: 나스닥100 · 1985 ~ 2026
+  left: {title: '겨울 6개월 평균', value: '+10.3%', sub: '41번 중 31번 상승', color: up, on: 1}
+  right: {title: '5월 한 달 평균', value: '+2.19%', sub: '40년 중 27년 상승', color: up, on: 2}
+  narration: ['그래도 나스닥100 역시 겨울 6개월은 평균 10.3%로 강했어요.', '그런데 5월 한 달만 떼어 보면 평균 2.19%. 5월에 팔고 떠났다면, 이 좋은 달을 통째로 놓친 셈이죠.']
+- type: hbars
+  chapter: 나스닥
+  kicker: 나스닥100 · 1985년 10월에 100만 원
+  title: 핼러윈 매매법 vs 그냥 들고 있기
+  rows:
+  - {label: '핼러윈 매매법 (여름엔 현금, 이자 0%)', value: 31.7, text: '3,170만 원', on: 1}
+  - {label: '그냥 계속 들고 있기', value: 237.7, text: '2.38억', hl: true, on: 1, offset: 0.8}
+  credit: '배당·세금 제외 · 2026년 4월 기준'
+  narration: ['그래서 나스닥에선 차이가 더 벌어져요. 핼러윈 매매법은 3천1백7십만 원, 그냥 들고 있기는 2억 3천8백만 원.']
+
+- type: kinetic
+  chapter: 나스닥
+  items:
+  - {text: "S&P500도 나스닥도\n결국 '들고 있기' 승", on: 1, size: 110, highlight: "'들고 있기' 승", hl_color: up}
+  narration: ['S&P500이든 나스닥이든, 이자가 없다면 결국 그냥 들고 있기가 이겼어요. | 오른 날을 놓치지 않는 게 그만큼 중요했던 거죠.']
+# ── 11월 첫 주 ──────────────────────────────────────
+- type: kinetic
+  chapter: 11월 첫 주
+  items:
+  - {text: "11월 첫 주부터\n빠진 해는?", on: 1, size: 120, highlight: '빠진 해는?', hl_color: down}
+  narration: ['그럼 올해처럼, 11월 첫 주부터 빠지면 어땠을까요?']
+- type: card
+  chapter: 11월 첫 주
+  heading: 11월 첫 5거래일에 -2% 넘게 빠진 해
+  highlight: -2%
+  width: 1500
+  size: 46
+  gap: 26
+  bullets:
+  - {text: '1951 · 1957 · 1967  →  그 겨울 플러스', on: 1}
+  - {text: '1973  →  그 겨울 -16.6%', on: 2, highlight: '-16.6%', hl_color: down}
+  - {text: '1976  →  -4.3%', on: 2, offset: 0.4, highlight: '-4.3%', hl_color: down}
+  - {text: '2007  →  -10.6%', on: 2, offset: 0.8, highlight: '-10.6%', hl_color: down}
+  - {text: '2008  →  -9.9%', on: 2, offset: 1.2, highlight: '-9.9%', hl_color: down}
+  narration: ['1950년 이후, 11월 첫 다섯 거래일에 2% 넘게 빠진 해는 7번이었어요. | 그중 3번은 그 겨울이 플러스였고,', '나머지 4번은 마이너스였어요. 1973년, 76년, 그리고 2007년, 2008년.']
+- type: punch
+  chapter: 11월 첫 주
+  tone: down
+  label: '11월 첫 주 -2% 이상 하락한 해 · 그 겨울'
+  big: '7번 중 3번 상승'
+  sub: '평균 -4.2% · 표본 7개라 참고만'
+  sub_on: 2
+  narration: ['그 겨울 평균은 마이너스 4.2%. 7번 중 3번만 올랐어요.', '다만 표본이 7개뿐이라, 이걸로 올해를 점치긴 어려워요. 올해는 4거래일 만에 마이너스 3%였고요.']
+
+# ── 추수감사절 ──────────────────────────────────────
+- type: poster
+  chapter: 추수감사절
+  kicker: 보너스 · 11월 넷째 목요일
+  title: "추수감사절엔\n시장도 쉬어 갈까?"
+  highlight: 쉬어 갈까?
+  ridge: {series: spx, start: '2025-06-01', end: '2025-12-31'}
+  pin: {at: 0.69, label: '추수감사절', on: 1}
+  figure: {name: turkey, at: 0.86, size: 170, on: 1}
+  credit: '산 모양: S&P500 2025.6~12 실제 흐름'
+  narration: ['보너스 하나 더. 11월엔 미국 최대 명절, 추수감사절이 있죠.', '목요일은 장이 쉬고, 다음 날 금요일은 반나절만 열려요.']
+- type: dotmap
+  chapter: 추수감사절
+  kicker: 미국 전체가 쉬는 날
+  title: "그 앞뒤 이틀\n주가는?"
+  highlight: 주가는?
+  states: {'New York': coral}
+  stat: {value: '64/76', label: '수요일 → 금요일 S&P500 상승', on: 2}
+  credit: '지도: us-states GeoJSON(PublicaMundi)'
+  narration: ['연휴 전날인 수요일부터, 연휴 다음 날인 금요일까지 이틀.', '1950년부터 76번 중 64번, 주가가 올랐어요.']
+- type: ticket
+  chapter: 추수감사절
+  kicker: 추수감사절 앞뒤 이틀 · 1950 ~ 2025
+  title: 평소 이틀의 약 9배
+  highlight: 약 9배
+  label: '수요일 → 금요일 평균'
+  value: '+0.61'
+  unit: '%'
+  stub: "아무 이틀\n평균은\n+0.07%"
+  narration: ['평균 0.61%. 아무 이틀이나 골랐을 때 평균이 0.07%니까, 약 9배예요.', '물론 이틀짜리라 금액으로는 크지 않고, 사고팔 비용을 생각하면 매매법이라기보단 재미있는 통계 정도로 보시면 돼요.', '그리고 연말의 진짜 주인공, 산타랠리는요? 12월에 따로 한 편으로 제대로 파헤쳐 드릴게요.']
+
+# ── 결론 ────────────────────────────────────────────
+- type: quote
+  chapter: 결론
+  original: "Our favorite holding period is forever."
+  text: 우리가 가장 좋아하는 보유 기간은, 영원입니다.
+  highlight: 영원
+  source: 워런 버핏 · 1988년 주주 서한
+  narration: ['워런 버핏은 1988년 주주 서한에 이렇게 썼어요.', '우리가 가장 좋아하는 보유 기간은, 영원입니다.']
+- type: quote
+  chapter: 결론
+  original: "Far more money has been lost by investors preparing for corrections, or trying to anticipate corrections, than has been lost in corrections themselves."
+  text: 하락장 그 자체보다, 하락장을 대비하거나 예측하려다 잃은 돈이 훨씬 많다.
+  highlight: 예측하려다 잃은 돈
+  source: 피터 린치
+  narration: ['피터 린치가 이런 말을 했어요.', '하락장 그 자체보다, 하락장을 대비하거나 예측하려다 잃은 돈이 훨씬 많다.']
+- type: card
+  chapter: 결론
+  heading: 계절성, 이렇게 보면 된다
+  highlight: 이렇게
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 38
+  bullets:
+  - {text: '11월 ~ 4월이 강했던 건 76년 동안 사실', on: 1}
+  - {text: '하지만 5월에 다 팔고 쉬면 오히려 덜 벌었다', on: 2, highlight: '덜 벌었다', hl_color: down}
+  - {text: '계절성은 매매 신호가 아니라 참고 지표', on: 3}
+  narration: ['정리하면요. 첫째, 11월부터 4월이 강했던 건 76년 동안 사실이었어요.', '둘째, 하지만 그렇다고 5월에 다 팔고 쉬면, 이자가 높지 않은 한 오히려 덜 벌었습니다.', '셋째, 그래서 계절성은 매매 신호라기보다, 참고 지표 정도로 보는 게 좋아요.']
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: 오늘의 결론, on: 1, size: 140}
+  narration: ['자, 오늘 확인한 거 정리해 볼게요.']
+  bg_word: CHECK
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '겨울 vs 여름 (76년)', on: 1, size: 110}
+  narration: ['겨울 6개월은 평균 6.95%, 여름은 2.08%.']
+  stamp: {text: '겨울 압승', color: up, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '5월에 팔고 쉬었다면', on: 1, size: 110}
+  narration: ['그런데 5월에 팔고 쉬었다면, 그냥 들고 있기의 3분의 1.']
+  stamp: {text: '3.69억 vs 1.17억', color: down, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '최근 10년', on: 1, size: 110}
+  narration: ['그리고 최근 10년은, 여름이 이겼습니다.']
+  stamp: {text: '여름 승', color: gold, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: outro
+  heading: "달력보다 강한 건\n시장에 머문 시간"
+  highlight: 시장에 머문 시간
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: "본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.\n과거 데이터는 미래 수익을 보장하지 않으며 세금·수수료는 반영하지 않았습니다."
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['결국 달력보다 강했던 건, 시장에 머문 시간이었어요.', '여러분은 5월에 파시나요, 그냥 들고 가시나요? | 궁금했던 주제, 종목, 매매법, 뭐든 댓글로 남겨 주세요. 다음 영상에서 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']

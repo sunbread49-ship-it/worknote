@@ -159,6 +159,30 @@ def year_ret(y, name="spx"):
     return (p.loc[:f"{y}-12-31"].iloc[-1] / p.loc[:f"{y - 1}-12-31"].iloc[-1] - 1) * 100
 
 
+def seasons(name="spx", which="winter", y0=1950, y1=2025):
+    p = _daily(name)
+    c = lambda d: p.loc[:d].iloc[-1]
+    out = []
+    for y in range(y0, y1 + 1):
+        if which == "winter":
+            if pd.Timestamp(f"{y + 1}-04-30") <= p.index[-1] and pd.Timestamp(f"{y}-10-31") >= p.index[0]:
+                out.append((y, c(f"{y + 1}-04-30") / c(f"{y}-10-31") - 1))
+        elif pd.Timestamp(f"{y}-04-30") >= p.index[0]:
+            out.append((y, c(f"{y}-10-31") / c(f"{y}-04-30") - 1))
+    return out
+
+
+def thanksgiving(y0=1950, y1=2025):
+    p = _daily("spx")
+    out = []
+    for y in range(y0, y1 + 1):
+        th = [d for d in pd.date_range(f"{y}-11-01", f"{y}-11-30") if d.weekday() == 3][3]
+        a = p.loc[:th - pd.Timedelta(days=2)].iloc[-1]
+        b = p.loc[th + pd.Timedelta(days=1):].iloc[0]
+        out.append(b / a - 1)
+    return out
+
+
 BUBBLE = ("2000-01-01", "2002-12-31")  # 닷컴 버블 붕괴기
 
 
@@ -189,6 +213,15 @@ def series(name: str, start=None, end=None) -> pd.Series:
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()
+    elif name in ("halloween_spx", "halloween_ndx"):  # 10월 말~4월 말만 보유, 나머지 현금(0%) 자산 곡선
+        p = _daily(name.split("_")[1])
+        r = p.pct_change().fillna(0)
+        m, d = r.index.month, r.index.day
+        # 그날 수익률을 받으려면 '전날 보유 중'이어야 함: 보유 구간 = 11월~4월 (10월 마지막 거래일 종가 매수 → 4월 마지막 거래일 종가 매도)
+        held = pd.Series(r.index.month, index=r.index).isin([11, 12, 1, 2, 3, 4])
+        held &= r.index >= pd.Timestamp("1950-11-01")
+        s = (1 + r.where(held, 0)).cumprod()
+        s = s / s.loc[:"1950-10-31"].iloc[-1] if name == "halloween_spx" else s / s.loc[:"1985-10-31"].iloc[-1]
     elif name.endswith("_drawdown") and name[:-9] in ("tqqq", "sqqq", "qqq", "ndx", "sim3x_ndx"):
         p = series(name[:-9])
         s = (p / p.cummax() - 1) * 100
@@ -215,6 +248,32 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind.startswith("season_") and kind != "season_beat":  # 겨울(10.31→다음 해 4.30) / 여름(4.30→10.31). which: winter|summer, y0, y1
+        v = np.array([x for _, x in seasons(kw.get("series", "spx"), kw.get("which", "winter"), kw.get("y0", 1950), kw.get("y1", 2025))]) * 100
+        return float({"season_n": len(v), "season_mean": v.mean(), "season_up": (v > 0).sum()}[kind])
+    if kind == "season_beat":  # 겨울이 같은 해 여름보다 높았던 해 수
+        w = dict(seasons(kw.get("series", "spx"), "winter", kw.get("y0", 1950), kw.get("y1", 2025)))
+        sm = dict(seasons(kw.get("series", "spx"), "summer", kw.get("y0", 1950), kw.get("y1", 2025)))
+        return float(sum(w[y] > sm[y] for y in w if y in sm))
+    if kind == "halloween_mult":  # 핼러윈 매매(겨울만 보유, 여름은 현금 연 cash 이자) 배수. which: winter|hold
+        sr = kw.get("series", "spx")
+        w = seasons(sr, "winter", kw.get("y0", 1950), kw.get("y1", 2025))
+        if kw.get("which") == "hold":
+            p = _daily(sr)
+            return float(p.loc[:f"{w[-1][0] + 1}-04-30"].iloc[-1] / p.loc[:f"{w[0][0]}-10-31"].iloc[-1])
+        return float(np.prod([(1 + x) * (1 + kw.get("cash", 0.0)) ** 0.5 for _, x in w]))
+    if kind.startswith("month_"):  # 달별 수익률. month, y0, y1
+        p = _daily(kw.get("series", "spx"))
+        y0, y1 = kw.get("y0", 1950), kw.get("y1", 2025)
+        m = p.loc[f"{y0 - 1}-12-01":f"{y1}-12-31"].resample("ME").last().pct_change().dropna() * 100
+        m = m[(m.index.year >= y0) & (m.index.month == kw["month"])]
+        return float({"month_mean": m.mean(), "month_up": (m > 0).sum(), "month_n": len(m)}[kind])
+    if kind.startswith("tg_"):  # 추수감사절 전 화요일 종가 → 다음 날 금요일 종가
+        v = np.array(thanksgiving(kw.get("y0", 1950), kw.get("y1", 2025))) * 100
+        return float({"tg_n": len(v), "tg_mean": v.mean(), "tg_up": (v > 0).sum()}[kind])
+    if kind == "avg_2day":  # 아무 이틀 평균 수익률(%)
+        r = _daily("spx").loc[str(kw.get("y0", 1950)):str(kw.get("y1", 2025))].pct_change().dropna()
+        return float(((1 + r).rolling(2).apply(np.prod, raw=True) - 1).mean() * 100)
     if kind.startswith("gov_"):  # 정부 구성별 S&P500 연간 수익률. cfg: uD|uR|RpDc|DpRc|split|divided|unified, exclude: [연도]
         c = kw["cfg"]
         grp = {"divided": ("RpDc", "DpRc", "split"), "unified": ("uD", "uR")}.get(c, (c,))
