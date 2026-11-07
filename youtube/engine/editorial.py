@@ -116,20 +116,25 @@ def shadow(f, im, xy, anchor="lt", op=1.0, blur=10, alpha=0.6):
     G.blit(f, im, xy, op, anchor)
 
 
-def header(f, sp, t, t0, y=210, center=True):
+def header(f, sp, t, t0, y=210, center=True, fg=S.FG, acc=Y):
     """kicker(노랑, 작게) + title(흰, 크게, 부분 노랑)"""
     x = S.W / 2 if center else 200
     anc = "mt" if center else "lt"
     yy = y
     if sp.get("kicker"):
-        k = T(sp["kicker"], 40, Y, "ExtraBold")
-        shadow(f, k, (x, yy), anc, G.appear(t, t0, 0.3))
+        k = T(sp["kicker"], 40, acc, "ExtraBold")
+        shadow(f, k, (x, yy), anc, G.appear(t, t0, 0.3), alpha=0.6 if fg == S.FG else 0)
         yy += k.height + 6
     if sp.get("title"):
-        tt = T(sp["title"], sp.get("title_size", 84), S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y,
-               align="center" if center else "left", line_gap=1.15)
         k = G.ease_out((t - t0 - 0.05) / 0.35)
-        shadow(f, tt, (x, yy + (1 - k) * 24), anc, k)
+        if fg == S.FG:
+            tt = T(sp["title"], sp.get("title_size", 84), fg, "Black", highlight=sp.get("highlight", ""), hl_fill=acc,
+                   align="center" if center else "left", line_gap=1.15)
+            shadow(f, tt, (x, yy + (1 - k) * 24), anc, k)
+        else:
+            tt = riso_text(sp["title"], sp.get("title_size", 84), fg, CORAL, highlight=sp.get("highlight", ""), hl_fill=acc,
+                           align="center" if center else "left", line_gap=1.15)
+            G.blit(f, tt, (x, yy + (1 - k) * 24), k, anc)
         yy += tt.height
     return yy
 
@@ -162,102 +167,22 @@ class Editorial(Scene):
     default_transition = "cut"
 
     def base(self, f):
-        bd, _ = backdrop(self.spec.get("bg"))
-        f.paste(bd, (0, 0))
+        bg = self.spec.get("bg") or {"kind": "paper"}
+        self.paper = bg.get("kind") == "paper"
+        if self.paper:
+            f.paste(paper_bg(), (0, 0))
+            self.fg, self.acc, self.dim, self.off = NAVY, CORAL, (120, 112, 98), (196, 186, 166)
+        else:
+            bd, _ = backdrop(bg)
+            f.paste(bd, (0, 0))
+            self.fg, self.acc, self.dim, self.off = S.FG, Y, (190, 196, 210), (90, 94, 108)
+
+    def hdr(self, f, t, **kw):
+        return header(f, self.spec, t, 0.0, fg=self.fg, acc=self.acc, **kw)
 
     def finish(self, f, t):
-        credit(f, self.spec)
+        (riso_credit if getattr(self, "paper", False) else credit)(f, self.spec)
         self.draw_common(f, t)
-
-
-class InfoBox(Editorial):
-    """왼쪽: 큰 문구(배경 위) / 오른쪽: 노란 띠 정보 박스 (kicker · value+unit · sub)"""
-
-    def draw(self, f, t):
-        sp = self.spec
-        self.base(f)
-        t0 = self.line_start(sp.get("on", 1))
-        if sp.get("title"):
-            header(f, sp, t, 0.0, y=sp.get("title_y", 300), center=False)
-        bw, bh = sp.get("box_w", 620), 360
-        x0, y0 = sp.get("box_x", 1180), sp.get("box_y", 420)
-        k = G.ease_out((t - t0) / 0.4)
-        if k <= 0:
-            return self.finish(f, t)
-        box = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
-        d = ImageDraw.Draw(box)
-        d.rectangle((14, 14, bw - 1, bh - 1), fill=(10, 10, 14, 120))          # 그림자 판
-        d.rectangle((0, 0, bw - 14, bh - 14), fill=INK + (245,))
-        d.rectangle((0, 0, bw - 14, 7), fill=Y + (255,))
-        y = 44
-        if sp.get("box_kicker"):
-            kk = T(sp["box_kicker"], 34, Y, "ExtraBold")
-            box.alpha_composite(kk, (44, y))
-            y += kk.height + 4
-        val = counter(sp["value"], (t - t0) / 0.9)
-        v = T(val, sp.get("value_size", 150), S.FG, "Black")
-        box.alpha_composite(v, (40, y))
-        if sp.get("unit"):
-            u = T(sp["unit"], 70, S.FG, "Black")
-            box.alpha_composite(u, (48 + v.width, y + v.height - u.height - 18))
-        y += v.height
-        if sp.get("box_sub"):
-            ss = T(sp["box_sub"], 38, Y, "ExtraBold")
-            box.alpha_composite(ss, (44, y + 2))
-        G.blit(f, box, (x0 + (1 - k) * 80, y0), k)
-        self.finish(f, t)
-
-    def extra_sfx(self):
-        return [(self.line_start(self.spec.get("on", 1)), "pop", 0.4)]
-
-
-class Knockout(Editorial):
-    """배경 그림으로 채운 거대한 단어 + 아래 작은 설명"""
-
-    def draw(self, f, t):
-        sp = self.spec
-        bd, bright = backdrop(sp.get("bg"))
-        f.paste(bd, (0, 0))
-        fill = _paper(sp.get("fill_tone", "gold")).copy()
-        if bright is not None:  # 글자 안에 실제 차트가 비치도록
-            lay = _chart_layer({**sp["bg"], "color": sp.get("fill_line", (120, 40, 20))}, S.W, S.H)
-            fill.alpha_composite(G.with_opacity(lay, 0.8))
-        fill = ImageEnhance.Brightness(fill.convert("RGB")).enhance(sp.get("fill_bright", 1.0)).convert("RGBA")
-        word = sp["word"]
-        size = sp.get("size", 300)
-        m = T(word, size, (255, 255, 255), "Black")
-        while m.width > S.W - 200 and size > 80:
-            size -= 10
-            m = T(word, size, (255, 255, 255), "Black")
-        k = G.ease_out(t / 0.6)
-        sc = 1.08 - 0.08 * k
-        mw, mh = int(m.width * sc), int(m.height * sc)
-        m2 = m.resize((mw, mh), Image.BICUBIC)
-        x, y = (S.W - mw) // 2, int(S.H * 0.42 - mh / 2)
-        cut = fill.crop((x, y, x + mw, y + mh))
-        cut.putalpha(m2.getchannel("A"))
-        sh = Image.new("RGBA", (mw, mh), (0, 0, 0, 0))
-        sh.putalpha(m2.getchannel("A").point(lambda a: a * 0.7))
-        G.blit(f, sh.filter(ImageFilter.GaussianBlur(14)), (x + 6, y + 12), k)
-        G.blit(f, cut, (x, y), k)
-        if sp.get("sub"):
-            o = G.appear(t, self.line_start(sp.get("sub_on", 1)) + 0.4, 0.4)
-            s = T(sp["sub"], 52, S.FG, "ExtraBold", highlight=sp.get("highlight", ""), hl_fill=Y)
-            shadow(f, s, (S.W / 2, y + mh + 40), "mt", o)
-        self.finish(f, t)
-
-    def extra_sfx(self):
-        return [(0.05, "boom", 0.35)]
-
-
-@lru_cache(maxsize=4)
-def _paper(tone):
-    w, h = S.W, S.H
-    base = {"gold": (230, 180, 70), "blue": (80, 140, 230), "red": (220, 80, 80)}.get(tone, (230, 180, 70))
-    a = np.ones((h, w, 3), np.float32) * np.array(base, np.float32)
-    a += _grain(w, h, seed=7, amt=16)[..., None]
-    a += (_grain(w // 4, h // 4, seed=9, amt=22).repeat(4, 0).repeat(4, 1)[:h, :w])[..., None]
-    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
 
 
 class Timeline(Editorial):
@@ -266,36 +191,36 @@ class Timeline(Editorial):
     def draw(self, f, t):
         sp = self.spec
         self.base(f)
-        header(f, sp, t, 0.0, y=sp.get("title_y", 200))
+        self.hdr(f, t, y=sp.get("title_y", 200))
         ticks = sp["ticks"]
         x0, x1, yl = 300, S.W - 300, sp.get("line_y", 600)
         n = len(ticks)
         xs = [x0 + (x1 - x0) * i / max(1, n - 1) for i in range(n)]
         d = ImageDraw.Draw(f)
         kl = G.ease_out(t / 0.6)
-        d.line((x0, yl, x0 + (x1 - x0) * kl, yl), fill=(255, 255, 255, 235), width=5)
+        d.line((x0, yl, x0 + (x1 - x0) * kl, yl), fill=self.fg + (235,), width=5)
         for i, (x, tk) in enumerate(zip(xs, ticks)):
             o = G.appear(t, 0.1 + i * 0.06, 0.2)
             if o <= 0:
                 continue
-            d.line((x, yl - 18, x, yl + 18), fill=(255, 255, 255, int(235 * o)), width=5)
+            d.line((x, yl - 18, x, yl + 18), fill=self.fg + (int(235 * o),), width=5)
             hl = tk.get("hl")
-            lab = T(tk["label"], 38, Y if hl else S.FG, "ExtraBold")
+            lab = T(tk["label"], 38, self.acc if hl else self.fg, "ExtraBold")
             G.blit(f, lab, (x, yl + 34), o, "mt")
             if tk.get("sub"):
-                G.blit(f, T(tk["sub"], 26, (190, 196, 210), "SemiBold"), (x, yl + 34 + lab.height + 4), o, "mt")
+                G.blit(f, T(tk["sub"], 26, self.dim, "SemiBold"), (x, yl + 34 + lab.height + 4), o, "mt")
         for b in sp.get("bands", []):
             i0, i1 = b["from"], b["to"]
             tb = self.line_start(b.get("on", 1))
             kb = G.ease_out((t - tb) / 0.6)
             if kb <= 0:
                 continue
-            c = _col(b.get("color"), Y)
+            c = _col(b.get("color"), self.acc)
             bx0, bx1 = xs[i0], xs[i0] + (xs[i1] - xs[i0]) * kb
             band = Image.new("RGBA", (max(2, int(bx1 - bx0)), 22), c + (235,))
             G.blit(f, band, (bx0, yl - 11))
             if b.get("label"):
-                lb = G.pill(b["label"], "ExtraBold", 32, INK if c == Y else S.FG, c, pad=(20, 8))
+                lb = G.pill(b["label"], "ExtraBold", 32, PAPER, c, pad=(20, 8))
                 G.blit(f, lb, ((xs[i0] + xs[i1]) / 2, yl - 40), min(1, kb * 1.5), "mb")
         tg = sp.get("tag")
         if tg:
@@ -305,8 +230,8 @@ class Timeline(Editorial):
             G.blit(f, p, (xs[tg.get("at", n - 1)], yl - 100), o, "mb")
         if sp.get("bottom"):
             o = G.appear(t, self.line_start(sp.get("bottom_on", 1)) + 0.3, 0.35)
-            b = T(sp["bottom"], 64, S.FG, "Black", highlight=sp.get("bottom_hl", ""), hl_fill=Y)
-            shadow(f, b, (S.W / 2, yl + 190), "mt", o)
+            b = T(sp["bottom"], 64, self.fg, "Black", highlight=sp.get("bottom_hl", ""), hl_fill=self.acc)
+            G.blit(f, b, (S.W / 2, yl + 190), o, "mt")
         self.finish(f, t)
 
 
@@ -316,7 +241,7 @@ class Grid(Editorial):
     def draw(self, f, t):
         sp = self.spec
         self.base(f)
-        yy = header(f, sp, t, 0.0, y=sp.get("title_y", 170))
+        yy = self.hdr(f, t, y=sp.get("title_y", 170))
         n, cols = sp["n"], sp.get("cols", 19)
         hits = sp.get("hits")  # 강조할 칸 인덱스(없으면 앞에서부터 k개)
         hit = set(hits) if hits is not None else set(range(sp["k"]))
@@ -333,14 +258,14 @@ class Grid(Editorial):
             if o <= 0:
                 continue
             on = i in hit and t >= t0 + sp.get("hl_delay", 0.6) + i * sp.get("step", 0.02)
-            colr = _col(sp.get("hit_color"), Y) if on else (90, 94, 108)
+            colr = _col(sp.get("hit_color"), self.acc) if on else self.off
             im = _person(cell, colr) if person else _cell(cell, colr, sp.get("labels", [None] * n)[i])
             G.blit(f, im, (gx + c * (cell + gap), gy + r * (cell + gap)), o)
         yb = gy + rows * (cell + gap) + 40
         if sp.get("headline"):
             o = G.appear(t, self.line_start(sp.get("headline_on", 1)) + 0.4, 0.35)
-            h = T(sp["headline"], 68, S.FG, "Black", highlight=sp.get("headline_hl", ""), hl_fill=Y)
-            shadow(f, h, (S.W / 2, yb), "mt", o)
+            h = T(sp["headline"], 68, self.fg, "Black", highlight=sp.get("headline_hl", ""), hl_fill=self.acc)
+            G.blit(f, h, (S.W / 2, yb), o, "mt")
         self.finish(f, t)
 
 
@@ -369,7 +294,7 @@ class HBars(Editorial):
     def draw(self, f, t):
         sp = self.spec
         self.base(f)
-        yy = header(f, sp, t, 0.0, y=sp.get("title_y", 200))
+        yy = self.hdr(f, t, y=sp.get("title_y", 200))
         rows = sp["rows"]
         vmax = sp.get("vmax") or max(abs(r["value"]) for r in rows)
         x0, wmax = 300, S.W - 600
@@ -378,18 +303,18 @@ class HBars(Editorial):
             t0 = self.line_start(r.get("on", 1)) + r.get("offset", 0)
             k = G.ease_out((t - t0) / 0.7)
             hl = r.get("hl")
-            c = _col(r.get("color"), Y if hl else (200, 204, 214))
-            lab = T(r["label"], 36, Y if hl else (230, 200, 120), "ExtraBold")
+            c = _col(r.get("color"), self.acc if hl else (self.off if self.paper else (200, 204, 214)))
+            lab = T(r["label"], 36, self.acc if hl else (self.dim if self.paper else (230, 200, 120)), "ExtraBold")
             G.blit(f, lab, (x0, y), min(1, k * 2) if k > 0 else 0)
             y += lab.height + 10
             bw = max(8, int(wmax * abs(r["value"]) / vmax * k))
             if k > 0:
                 G.blit(f, Image.new("RGBA", (bw, 58), c + (255,)), (x0, y))
-                txt = T(counter(r.get("text", str(r["value"])), (t - t0) / 0.7), 64, Y if hl else S.FG, "Black")
+                txt = T(counter(r.get("text", str(r["value"])), (t - t0) / 0.7), 64, self.acc if hl else self.fg, "Black")
                 if bw + txt.width + 30 < wmax + 220:
-                    shadow(f, txt, (x0 + bw + 24, y + 29), "lm", min(1, k * 2))
+                    shadow(f, txt, (x0 + bw + 24, y + 29), "lm", min(1, k * 2), alpha=0 if self.paper else 0.6)
                 else:
-                    shadow(f, txt, (x0 + bw, y - 8), "rb", min(1, k * 2))
+                    shadow(f, txt, (x0 + bw, y - 8), "rb", min(1, k * 2), alpha=0 if self.paper else 0.6)
             y += 58 + 40
         self.finish(f, t)
 
@@ -400,7 +325,7 @@ class Profile(Editorial):
     def draw(self, f, t):
         sp = self.spec
         self.base(f)
-        header(f, sp, t, 0.0, y=sp.get("title_y", 200))
+        self.hdr(f, t, y=sp.get("title_y", 200))
         v = np.array(sp["values"], float)
         n = len(v)
         x0, x1, base, hh = 280, S.W - 280, 820, sp.get("height", 300)
@@ -415,8 +340,8 @@ class Profile(Editorial):
         d = ImageDraw.Draw(lay)
         kd = G.ease_out(t / 1.0)
         m = max(2, int(len(fx) * kd))
-        d.line([(x * k, y * k) for x, y in zip(fx[:m], fy[:m])], fill=(200, 204, 214, 230), width=4 * k)
-        d.line((x0 * k, base * k, x1 * k, base * k), fill=(255, 255, 255, 220), width=3 * k)
+        d.line([(x * k, y * k) for x, y in zip(fx[:m], fy[:m])], fill=(self.dim if self.paper else (200, 204, 214)) + (230,), width=4 * k)
+        d.line((x0 * k, base * k, x1 * k, base * k), fill=self.fg + (220,), width=3 * k)
         if sp.get("hl"):
             i0, i1 = sp["hl"]
             th = self.line_start(sp.get("hl_on", 1))
@@ -426,70 +351,30 @@ class Profile(Editorial):
                 sel = (fx >= a) & (fx <= b)
                 pts = [(x * k, y * k) for x, y in zip(fx[sel], fy[sel])]
                 if len(pts) > 1:
-                    d.polygon(pts + [(pts[-1][0], base * k), (pts[0][0], base * k)], fill=Y + (150,))
-                    d.line(pts, fill=Y + (255,), width=6 * k)
+                    d.polygon(pts + [(pts[-1][0], base * k), (pts[0][0], base * k)], fill=self.acc + (150,))
+                    d.line(pts, fill=self.acc + (255,), width=6 * k)
                     ex, ey = pts[-1]
                     r = 14 * k
-                    d.ellipse((ex - r, ey - r, ex + r, ey + r), fill=Y + (255,))
-                    d.ellipse((ex - 2.2 * r, ey - 2.2 * r, ex + 2.2 * r, ey + 2.2 * r), outline=Y + (200,), width=3 * k)
+                    d.ellipse((ex - r, ey - r, ex + r, ey + r), fill=self.acc + (255,))
+                    d.ellipse((ex - 2.2 * r, ey - 2.2 * r, ex + 2.2 * r, ey + 2.2 * r), outline=self.acc + (200,), width=3 * k)
         f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
         labels = sp.get("labels", [])
         for i, lab in enumerate(labels):
             if not lab:
                 continue
             hl = sp.get("hl") and sp["hl"][0] <= i <= sp["hl"][1]
-            G.blit(f, T(lab, 32, Y if hl else S.FG, "ExtraBold"), (xs[i], base + 22), kd, "mt")
+            G.blit(f, T(lab, 32, self.acc if hl else self.fg, "ExtraBold"), (xs[i], base + 22), kd, "mt")
         for c in sp.get("pins", []):
             o = G.appear(t, self.line_start(c.get("on", 1)) + 0.3, 0.3)
-            p = G.pill(c["text"], "ExtraBold", 34, INK, Y, pad=(20, 8), radius=4)
+            p = G.pill(c["text"], "ExtraBold", 34, PAPER if self.paper else INK, self.acc, pad=(20, 8), radius=4)
             G.blit(f, p, (xs[c["at"]], ys[c["at"]] - 40), o, "mb")
         self.finish(f, t)
 
 
-TYPES = {"infobox": InfoBox, "knockout": Knockout, "timeline": Timeline, "grid": Grid, "hbars": HBars, "profile": Profile}
+TYPES = {"timeline": Timeline, "grid": Grid, "hbars": HBars, "profile": Profile}
 
 
 # ── 포스터형: 컬러 배경 + 무늬 띠 + 실제 차트로 만든 검은 '산' 실루엣 ─────────
-POSTER = {"rust": ((214, 112, 52), (176, 78, 30)), "teal": ((40, 150, 150), (18, 96, 104)),
-          "mustard": ((232, 178, 52), (196, 132, 24)), "navy": ((52, 86, 160), (26, 46, 100)),
-          "plum": ((150, 70, 120), (96, 36, 80)), "sage": ((128, 160, 110), (80, 112, 70))}
-
-
-@lru_cache(maxsize=8)
-def _poster_bg(tone):
-    w, h = S.W, S.H
-    c1, c2 = POSTER.get(tone, POSTER["rust"])
-    y, x = np.ogrid[-1:1:h * 1j, -1:1:w * 1j]
-    r = np.clip(np.sqrt(x * x * 0.6 + (y + 0.1) ** 2) / 1.3, 0, 1)[..., None]
-    a = np.array(c1, np.float32) * (1 - r) + np.array(c2, np.float32) * r
-    a += _grain(w, h, seed=11, amt=7)[..., None]
-    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
-
-
-@lru_cache(maxsize=4)
-def _band(color=(26, 20, 18), w=S.W):
-    """무늬 띠: 작은 캔들(양봉·음봉) 반복 — 주식 채널 고유 패턴"""
-    k = 2
-    h = 44
-    im = Image.new("RGBA", (w * k, h * k), (0, 0, 0, 0))
-    d = ImageDraw.Draw(im)
-    d.line((0, 3 * k, w * k, 3 * k), fill=color + (255,), width=3 * k)
-    d.line((0, (h - 4) * k, w * k, (h - 4) * k), fill=color + (255,), width=3 * k)
-    x, i = 14, 0
-    pat = [(10, 30), (16, 26), (8, 22), (14, 34), (12, 24), (18, 30)]
-    while x < w:
-        t, b = pat[i % len(pat)]
-        cx = x * k
-        d.line((cx, (t - 4) * k, cx, (b + 4) * k), fill=color + (255,), width=2 * k)
-        if i % 2 == 0:
-            d.rectangle((cx - 5 * k, t * k, cx + 5 * k, b * k), fill=color + (255,))
-        else:
-            d.rectangle((cx - 5 * k, t * k, cx + 5 * k, b * k), outline=color + (255,), width=2 * k)
-        x += 28
-        i += 1
-    return im.resize((w, h), Image.LANCZOS)
-
-
 @lru_cache(maxsize=16)
 def silhouette(name, h, color=(26, 20, 18)):
     """Fluent 3D 이모지 → 단색 실루엣"""
@@ -504,78 +389,6 @@ def silhouette(name, h, color=(26, 20, 18)):
     return out
 
 
-class Poster(Editorial):
-    """tone, kicker, title(검은 글씨, highlight 흰색), ridge: {series, start, end, log} 실루엣,
-    pin: {at(0~1), label, on}, figure: {name, at(0~1), size, on}"""
-
-    def draw(self, f, t):
-        sp = self.spec
-        f.paste(_poster_bg(sp.get("tone", "rust")), (0, 0))
-        dark = (26, 20, 18)
-        band = _band(dark)
-        G.blit(f, band, (0, 200), 0.95)
-        G.blit(f, band, (0, 860), 0.95)
-        y = 268
-        if sp.get("kicker"):
-            k = T(sp["kicker"], 40, dark, "ExtraBold")
-            G.blit(f, k, (S.W / 2, y), G.appear(t, 0.0, 0.3), "mt")
-            y += k.height + 4
-        if sp.get("title"):
-            tt = T(sp["title"], 76, dark, "Black", highlight=sp.get("highlight", ""), hl_fill=(255, 255, 255), align="center")
-            kk = G.ease_out(t / 0.4)
-            G.blit(f, tt, (S.W / 2, y + (1 - kk) * 20), kk, "mt")
-        # 능선: 실제 지수 흐름을 평평한 '산'으로
-        rg = sp.get("ridge")
-        x0, x1, base = 140, S.W - 140, 845
-        if rg:
-            from . import data as D
-            s = D.series(rg["series"], rg.get("start"), rg.get("end")).dropna()
-            v = np.log(s.values) if rg.get("log") else s.values
-            n = 220
-            v = np.interp(np.linspace(0, len(v) - 1, n), np.arange(len(v)), v)
-            v = np.convolve(np.pad(v, 2, mode="edge"), np.ones(5) / 5, mode="valid")
-            lo, hi = v.min(), v.max()
-            hh = rg.get("height", 250)
-            xs = np.linspace(x0, x1, n)
-            nv = (v - lo) / (hi - lo + 1e-9)
-            nv = 0.12 + 0.88 * nv                       # 낮은 곳도 살짝 언덕으로
-            taper = np.clip(np.minimum(np.linspace(0, 1, n), np.linspace(1, 0, n)) / 0.07, 0, 1) ** 0.7
-            ys = base - 14 - nv * taper * hh
-            kd = G.ease_out((t - 0.15) / 0.9)
-            m = max(2, int(n * kd))
-            k = 2
-            lay = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
-            d = ImageDraw.Draw(lay)
-            pts = [(x * k, y * k) for x, y in zip(xs[:m], ys[:m])]
-            d.polygon(pts + [(xs[m - 1] * k, base * k), (x0 * k, base * k)], fill=dark + (255,))
-            d.rectangle((x0 * k, (base - 14) * k, xs[m - 1] * k, base * k), fill=dark + (255,))
-            f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
-            self._ridge = (xs, ys)
-        pin = sp.get("pin")
-        if pin and rg:
-            o = G.appear(t, self.line_start(pin.get("on", 1)) + 0.3, 0.3)
-            xs, ys = self._ridge
-            i = int(pin.get("at", 0.3) * (len(xs) - 1))
-            px, top = xs[i], max(ys[i] - 120, 470)
-            d = ImageDraw.Draw(f)
-            if o > 0:
-                for yy in range(int(top + 40), int(ys[i]), 14):
-                    d.line((px, yy, px, yy + 7), fill=dark + (int(255 * o),), width=3)
-                lb = G.pill(pin["label"], "ExtraBold", 34, (255, 255, 255), dark, pad=(18, 8), radius=2)
-                G.blit(f, lb, (px, top + 34), o, "mb")
-        fg = sp.get("figure")
-        if fg and rg:
-            o = G.appear(t, self.line_start(fg.get("on", 1)) + 0.2, 0.4)
-            xs, ys = self._ridge
-            i = int(fg.get("at", 0.7) * (len(xs) - 1))
-            im = silhouette(fg["name"], int(min(fg.get("size", 150), ys[i] + 8 - 440)), dark)
-            if fg.get("flip"):
-                im = im.transpose(Image.FLIP_LEFT_RIGHT)
-            G.blit(f, im, (xs[i], ys[i] + 8 + (1 - o) * 30), o, "mb")
-        self.finish(f, t)
-
-
-# ── 지도: 미국 주 / 세계 ─────────────────────────────────────────
 def _albers(lon, lat, lon0=-96, lat0=37.5, p1=29.5, p2=45.5):
     import math
     r = math.radians
@@ -603,83 +416,312 @@ def _us_shapes():
     return out
 
 
-class USMap(Editorial):
-    """미국 지도. fill: 기본 주 색, states: {주 이름: 색}, kicker/title 왼쪽 아래, bars: 오른쪽 아래 막대
-    bars: [{label, left, right, left_color, right_color, mid}]"""
+
+
+# ════════════════════════════════════════════════════════════════
+# 채널 고유 '리소 인쇄' 스타일 — 크림색 종이 + 남색·코랄·금색 2~3도 인쇄 + 살짝 어긋난 판(오프셋)
+# ════════════════════════════════════════════════════════════════
+PAPER = (243, 235, 218)
+NAVY = (30, 42, 92)
+CORAL = (236, 96, 82)
+GOLD = (240, 176, 40)
+RISO = {"navy": NAVY, "coral": CORAL, "gold": GOLD, "teal": (22, 140, 140), "ink": (30, 30, 36)}
+
+
+def _rc(c, default=NAVY):
+    if isinstance(c, (list, tuple)):
+        return tuple(c)
+    return RISO.get(c, default)
+
+
+@lru_cache(maxsize=4)
+def paper_bg(tint=None):
+    w, h = S.W, S.H
+    base = np.array(_rc(tint, PAPER) if tint else PAPER, np.float32)
+    a = np.ones((h, w, 3), np.float32) * base
+    a += _grain(w, h, seed=21, amt=6)[..., None]
+    # 종이 섬유 얼룩
+    a += (_grain(w // 8, h // 8, seed=22, amt=3).repeat(8, 0).repeat(8, 1)[:h, :w])[..., None]
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+
+
+@lru_cache(maxsize=8)
+def halftone(w, h, color, step=14, rmax=5.0, direction="down"):
+    """망점 그라데이션 판"""
+    k = 2
+    im = Image.new("RGBA", (w * k, h * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    for yy in range(0, h, step):
+        frac = yy / max(1, h)
+        r = rmax * (frac if direction == "down" else 1 - frac)
+        if r < 0.6:
+            continue
+        off = step / 2 if (yy // step) % 2 else 0
+        for xx in range(int(off), w, step):
+            d.ellipse(((xx - r) * k, (yy - r) * k, (xx + r) * k, (yy + r) * k), fill=color + (255,))
+    return im.resize((w, h), Image.LANCZOS)
+
+
+def riso_text(text, size, color=NAVY, shadow_c=CORAL, off=(5, 4), weight="Black", **kw):
+    """글자 + 어긋난 색판 그림자"""
+    a = T(text, size, color, weight, **kw)
+    b = T(text, size, shadow_c, weight, **kw)
+    im = Image.new("RGBA", (a.width + off[0], a.height + off[1]), (0, 0, 0, 0))
+    im.alpha_composite(G.with_opacity(b, 0.85), off)
+    im.alpha_composite(a, (0, 0))
+    return im
+
+
+def riso_header(f, sp, t, x=150, y=200):
+    if sp.get("kicker"):
+        k = T(sp["kicker"], 40, CORAL, "ExtraBold")
+        G.blit(f, k, (x + 4, y), G.appear(t, 0.0, 0.3))
+        y += k.height + 6
+    if sp.get("title"):
+        tt = riso_text(sp["title"], sp.get("title_size", 86), NAVY, CORAL, highlight=sp.get("highlight", ""), hl_fill=CORAL,
+                       line_gap=1.12)
+        kk = G.ease_out(t / 0.4)
+        G.blit(f, tt, (x, y + (1 - kk) * 18), kk)
+        y += tt.height
+    return y
+
+
+def riso_credit(f, sp):
+    if sp.get("credit"):
+        G.blit(f, T(sp["credit"], 20, (110, 104, 92), "SemiBold"), (S.W - S.SAFE_X + 40, 128), 0.9, "rt")
+
+
+class RisoPoster(Editorial):
+    """종이 포스터: 왼쪽 위 제목, 해(금색 원), 실제 지수로 만든 산(남색 + 코랄 어긋난 판 + 가로 결),
+    pin: {at, label, on} 동그란 표식 + 말풍선, figure: {name, at, size, on} 실루엣"""
 
     def draw(self, f, t):
         sp = self.spec
-        f.paste(_poster_bg(sp.get("tone", "teal")), (0, 0))
-        f.alpha_composite(Image.new("RGBA", f.size, (0, 20, 30, 120)))
-        shapes = _us_shapes()
-        allp = [p for polys in shapes.values() for poly in polys for p in poly]
-        xs_, ys_ = [p[0] for p in allp], [p[1] for p in allp]
-        mnx, mxx, mny, mxy = min(xs_), max(xs_), min(ys_), max(ys_)
-        W, H = 1240, 700
-        ox, oy = (S.W - W) / 2 + 140, 150
-        sc = min(W / (mxx - mnx), H / (mxy - mny))
-
-        def P(p):
-            return (ox + (p[0] - mnx) * sc) * 2, (oy + (mxy - p[1]) * sc) * 2
-
+        f.paste(paper_bg(), (0, 0))
+        sun = sp.get("sun", [1500, 360, 170])
+        ks = G.ease_out(t / 0.8)
+        if sun:
+            r = sun[2] * (0.7 + 0.3 * ks)
+            s_im = Image.new("RGBA", (int(r * 2) + 4, int(r * 2) + 4), (0, 0, 0, 0))
+            ImageDraw.Draw(s_im).ellipse((2, 2, 2 + r * 2, 2 + r * 2), fill=_rc(sp.get("sun_color"), GOLD) + (255,))
+            G.blit(f, s_im, (sun[0], sun[1]), ks, "mm")
+        riso_header(f, sp, t)
+        rg = sp["ridge"]
+        from . import data as D
+        s = D.series(rg["series"], rg.get("start"), rg.get("end")).dropna()
+        v = np.log(s.values) if rg.get("log") else s.values
+        n = 240
+        v = np.interp(np.linspace(0, len(v) - 1, n), np.arange(len(v)), v)
+        v = np.convolve(np.pad(v, 3, mode="edge"), np.ones(7) / 7, mode="valid")
+        lo, hi = v.min(), v.max()
+        nv = 0.15 + 0.85 * (v - lo) / (hi - lo + 1e-9)
+        x0, x1, base, hh = 0, S.W, 1000, rg.get("height", 420)
+        xs = np.linspace(x0, x1, n)
+        ys = base - nv * hh
+        kd = G.ease_out((t - 0.1) / 1.0)
+        m = max(2, int(n * kd))
         k = 2
-        base = sp.get("fill", [44, 70, 150])
+        main = _rc(sp.get("ridge_color"), NAVY)
+        for col_, (dx, dy), op in ((CORAL, (12, -10), 0.9), (main, (0, 0), 1.0)):
+            lay = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
+            d = ImageDraw.Draw(lay)
+            pts = [((x + dx) * k, (y + dy) * k) for x, y in zip(xs[:m], ys[:m])]
+            d.polygon(pts + [((xs[m - 1] + dx) * k, S.H * k), ((x0 + dx) * k, S.H * k)], fill=col_ + (255,))
+            lay = lay.resize((S.W, S.H), Image.LANCZOS)
+            f.alpha_composite(G.with_opacity(lay, op))
+        # 산 안쪽 가로 결(인쇄 줄무늬)
+        hatch = Image.new("RGBA", f.size, (0, 0, 0, 0))
+        hd = ImageDraw.Draw(hatch)
+        for yy in range(int(ys.min()) + 30, S.H, 18):
+            hd.line((0, yy, S.W, yy), fill=PAPER + (34,), width=3)
+        mask = Image.new("L", f.size, 0)
+        ImageDraw.Draw(mask).polygon([(x, y + 24) for x, y in zip(xs[:m], ys[:m])] + [(xs[m - 1], S.H), (0, S.H)], fill=255)
+        hatch.putalpha(Image.fromarray(np.minimum(np.array(hatch.getchannel("A")), np.array(mask))))
+        f.alpha_composite(hatch)
+        pin = sp.get("pin")
+        if pin:
+            o = G.appear(t, self.line_start(pin.get("on", 1)) + 0.3, 0.3)
+            i = int(pin.get("at", 0.3) * (n - 1))
+            px, py = xs[i], ys[i]
+            if o > 0:
+                d = ImageDraw.Draw(f)
+                r = 16
+                d.ellipse((px - r - 6, py - r - 6, px + r + 6, py + r + 6), fill=PAPER + (int(255 * o),))
+                d.ellipse((px - r, py - r, px + r, py + r), fill=GOLD + (int(255 * o),))
+                ty = py - 130
+                d.line((px, py - r - 6, px, ty + 40), fill=NAVY + (int(255 * o),), width=4)
+                lb = G.pill(pin["label"], "ExtraBold", 36, PAPER, NAVY, pad=(22, 10), radius=26)
+                G.blit(f, lb, (min(max(px, 60 + lb.width / 2), S.W - 60 - lb.width / 2), ty + 40), o, "mb")
+        fg = sp.get("figure")
+        if fg:
+            o = G.appear(t, self.line_start(fg.get("on", 1)) + 0.2, 0.4)
+            i = int(fg.get("at", 0.7) * (n - 1))
+            size = fg.get("size", 170)
+            a = silhouette(fg["name"], size, CORAL)
+            b = silhouette(fg["name"], size, _rc(fg.get("color"), GOLD))
+            if fg.get("flip"):
+                a, b = a.transpose(Image.FLIP_LEFT_RIGHT), b.transpose(Image.FLIP_LEFT_RIGHT)
+            G.blit(f, a, (xs[i] + 8, ys[i] + 14 + (1 - o) * 30), o * 0.9, "mb")
+            G.blit(f, b, (xs[i], ys[i] + 8 + (1 - o) * 30), o, "mb")
+        riso_credit(f, sp)
+        self.draw_common(f, t)
+
+
+class DotMap(Editorial):
+    """점(망점)으로 찍은 미국 지도. states: {주: 색}, title/kicker 왼쪽 위, stat: {value, label} 오른쪽 아래"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        riso_header(f, sp, t)
+        dots = _us_dots(sp.get("step", 15))
+        hl = sp.get("states", {})
+        ton = self.line_start(sp.get("states_on", 1)) + 0.3
+        k = 2
         lay = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
         d = ImageDraw.Draw(lay)
-        order = list(shapes.keys())
-        kk = G.ease_out(t / 0.8)
-        hl = sp.get("states", {})
-        for j, nm in enumerate(order):
-            c = tuple(hl.get(nm, base)) if t >= self.line_start(sp.get("states_on", 1)) + 0.2 else tuple(base)
-            for poly in shapes[nm]:
-                d.polygon([P(p) for p in poly], fill=c + (255,), outline=(240, 236, 220, 255), width=2 * k)
-        lay = lay.resize((S.W, S.H), Image.LANCZOS)
-        # 입체감: 그림자 + 질감
-        a = lay.getchannel("A")
-        sh = Image.new("RGBA", f.size, (0, 0, 0, 0))
-        sh.putalpha(a.point(lambda v: int(v * 0.55)))
-        G.blit(f, sh.filter(ImageFilter.GaussianBlur(12)), (10, 16), kk)
-        arr = np.array(lay).astype(np.float32)
-        arr[..., :3] += _grain(S.W, S.H, seed=5, amt=14)[..., None]
-        lay = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGBA")
-        G.blit(f, lay, (0, (1 - kk) * 20), kk)
-        # 아래쪽 어둡게 + 제목
-        grad = np.linspace(0, 1, 360)[:, None] ** 1.6 * 220
-        g = Image.fromarray(np.repeat(grad, S.W, 1).astype(np.uint8), "L")
-        dk = Image.new("RGBA", (S.W, 360), (6, 10, 18, 255))
-        dk.putalpha(g)
-        f.alpha_composite(dk, (0, S.H - 360))
-        y = 760
-        if sp.get("kicker"):
-            kt = T(sp["kicker"], 40, Y, "ExtraBold")
-            G.blit(f, kt, (200, y), G.appear(t, 0.2, 0.3))
-            y += kt.height + 4
-        if sp.get("title"):
-            tt = T(sp["title"], 72, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y)
-            shadow(f, tt, (200, y), "lt", G.appear(t, 0.3, 0.35))
-        bx, by = 1180, 760
-        for b in sp.get("bars", []):
-            o = G.ease_out((t - self.line_start(b.get("on", 1)) - 0.2) / 0.6)
-            if o <= 0:
+        kk = G.ease_out(t / 0.9)
+        for (x, y, nm) in dots:
+            if (x - 420) / 1400 > kk * 1.2:
                 continue
-            tot = b["left"] + b["right"] + b.get("mid", 0)
-            bw = 540
-            G.blit(f, T(b["label"], 34, S.FG, "ExtraBold"), (bx - 30, by + 6), o, "rt")
-            lw = int(bw * b["left"] / tot * o)
-            rw = int(bw * b["right"] / tot * o)
-            lc, rc = _col(b.get("left_color"), (60, 120, 230)), _col(b.get("right_color"), (226, 70, 60))
-            G.blit(f, Image.new("RGBA", (bw, 30), (70, 74, 86, 255)), (bx, by + 8), o)
-            if lw:
-                G.blit(f, Image.new("RGBA", (lw, 30), lc + (255,)), (bx, by + 8))
-            if rw:
-                G.blit(f, Image.new("RGBA", (rw, 30), rc + (255,)), (bx + bw - rw, by + 8))
-            G.blit(f, Image.new("RGBA", (3, 44), (255, 255, 255, 230)), (bx + bw // 2, by + 1), o)
-            G.blit(f, T(str(b["left"]), 52, tuple(min(255, c + 50) for c in lc), "Black"), (bx, by + 44), o)
-            G.blit(f, T(str(b["right"]), 52, tuple(min(255, c + 40) for c in rc), "Black"), (bx + bw, by + 44), o, "rt")
-            if b.get("note"):
-                G.blit(f, T(b["note"], 24, (210, 214, 224), "SemiBold"), (bx + bw / 2, by + 60), o, "mt")
-            by += 130
-        self.finish(f, t)
+            c = _rc(hl[nm]) if (nm in hl and t >= ton) else (150, 160, 190)
+            r = 6.0 if (nm in hl and t >= ton) else 4.6
+            d.ellipse(((x - r) * k, (y - r) * k, (x + r) * k, (y + r) * k), fill=c + (255,))
+        f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
+        st = sp.get("stat")
+        if st:
+            o = G.appear(t, self.line_start(st.get("on", 1)) + 0.3, 0.3)
+            v = riso_text(st["value"], 140, CORAL, NAVY, off=(6, 5))
+            G.blit(f, v, (150, 850), o, "lb")
+            G.blit(f, T(st["label"], 38, NAVY, "ExtraBold"), (156, 862), o, "lt")
+        riso_credit(f, sp)
+        self.draw_common(f, t)
 
 
-TYPES.update({"poster": Poster, "usmap": USMap})
+@lru_cache(maxsize=2)
+def _us_dots(step=15):
+    from PIL import ImageDraw as D2
+    shapes = _us_shapes()
+    allp = [p for polys in shapes.values() for poly in polys for p in poly]
+    xs_, ys_ = [p[0] for p in allp], [p[1] for p in allp]
+    mnx, mxx, mny, mxy = min(xs_), max(xs_), min(ys_), max(ys_)
+    W, H = 1180, 660
+    sc = min(W / (mxx - mnx), H / (mxy - mny))
+    ox, oy = S.W - W - 110, 250
+    lab = Image.new("I", (S.W, S.H), 0)
+    d = D2.Draw(lab)
+    names = list(shapes)
+    for j, nm in enumerate(names):
+        for poly in shapes[nm]:
+            d.polygon([(ox + (p[0] - mnx) * sc, oy + (mxy - p[1]) * sc) for p in poly], fill=j + 1)
+    a = np.array(lab)
+    out = []
+    for yy in range(oy, oy + H + 1, step):
+        off = step // 2 if ((yy - oy) // step) % 2 else 0
+        for xx in range(ox + off, ox + W + 1, step):
+            v = a[yy, xx]
+            if v:
+                out.append((xx, yy, names[v - 1]))
+    return tuple(out)
+
+
+class SplitFlap(Editorial):
+    """공항 출발 안내판처럼 글자 타일이 한 칸씩 넘어가며 나타나는 큰 단어"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        word = sp["word"]
+        lines = word.split("\n")
+        tile_w, tile_h, gap = sp.get("tile", (118, 168, 12))
+        n_max = max(len(l) for l in lines)
+        tw = n_max * (tile_w + gap)
+        if tw > S.W - 200:
+            r = (S.W - 200) / tw
+            tile_w, tile_h, gap = int(tile_w * r), int(tile_h * r), max(6, int(gap * r))
+        y = sp.get("y", 300)
+        idx = 0
+        for li, line in enumerate(lines):
+            x = (S.W - len(line) * (tile_w + gap) + gap) / 2
+            for ch in line:
+                t0 = 0.1 + idx * 0.06
+                k = G.clamp((t - t0) / 0.18)
+                if ch != " " and k > 0:
+                    tile = _flap(ch, tile_w, tile_h, sp.get("hl_chars", "") and ch in sp.get("hl_chars", ""))
+                    sy = max(0.05, abs(np.cos((1 - k) * np.pi / 2 * 2)) if k < 1 else 1)
+                    th = max(2, int(tile_h * (k if k < 1 else 1)))
+                    G.blit(f, tile.resize((tile_w, th)), (x, y + (tile_h - th) / 2))
+                x += tile_w + gap
+                idx += 1
+            y += tile_h + gap * 2
+        if sp.get("sub"):
+            o = G.appear(t, self.line_start(sp.get("sub_on", 1)) + 0.5, 0.4)
+            s = riso_text(sp["sub"], 56, NAVY, CORAL, off=(4, 3), weight="ExtraBold", highlight=sp.get("highlight", ""), hl_fill=CORAL)
+            G.blit(f, s, (S.W / 2, y + 30), o, "mt")
+        riso_credit(f, sp)
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(0.1, "tick", 0.3), (0.4, "tick", 0.3), (0.7, "tick", 0.3)]
+
+
+@lru_cache(maxsize=128)
+def _flap(ch, w, h, hl=False):
+    k = 2
+    im = Image.new("RGBA", (w * k, h * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    bg = CORAL if hl else NAVY
+    d.rounded_rectangle((0, 0, w * k - 1, h * k - 1), radius=12 * k, fill=bg + (255,))
+    d.rounded_rectangle((0, 0, w * k - 1, h * k // 2), radius=12 * k, fill=tuple(min(255, c + 14) for c in bg) + (255,))
+    im = im.resize((w, h), Image.LANCZOS)
+    g = T(ch, int(h * 0.68), PAPER, "Black")
+    im.alpha_composite(g, ((w - g.width) // 2, (h - g.height) // 2 - 2))
+    d = ImageDraw.Draw(im)
+    d.line((0, h // 2, w, h // 2), fill=(10, 14, 30, 255), width=3)
+    return im
+
+
+class Ticket(Editorial):
+    """티켓 모양 카드: 왼쪽(라벨·큰 숫자) | 점선 절취선 | 오른쪽 꼬리(보조 정보). 위에 제목"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        riso_header(f, sp, t)
+        t0 = self.line_start(sp.get("on", 1))
+        k = G.ease_out((t - t0) / 0.45)
+        if k > 0:
+            W, H, stub = 1340, 380, 360
+            kk = 2
+            im = Image.new("RGBA", ((W + 20) * kk, (H + 20) * kk), (0, 0, 0, 0))
+            d = ImageDraw.Draw(im)
+            d.rounded_rectangle((16 * kk, 16 * kk, (W + 16) * kk, (H + 16) * kk), radius=28 * kk, fill=CORAL + (255,))
+            d.rounded_rectangle((0, 0, W * kk, H * kk), radius=28 * kk, fill=NAVY + (255,))
+            cx = (W - stub) * kk
+            for yy in range(30 * kk, (H - 30) * kk, 26 * kk):
+                d.line((cx, yy, cx, yy + 12 * kk), fill=PAPER + (200,), width=3 * kk)
+            for cy in (0, H * kk):
+                d.ellipse((cx - 22 * kk, cy - 22 * kk, cx + 22 * kk, cy + 22 * kk), fill=PAPER + (255,))
+            im = im.resize((W + 20, H + 20), Image.LANCZOS)
+            if sp.get("label"):
+                im.alpha_composite(T(sp["label"], 38, GOLD, "ExtraBold"), (60, 50))
+            val = counter(sp["value"], (t - t0) / 0.9)
+            v = T(val, sp.get("value_size", 170), PAPER, "Black")
+            im.alpha_composite(v, (54, 105))
+            if sp.get("unit"):
+                u = T(sp["unit"], 64, PAPER, "Black")
+                im.alpha_composite(u, (64 + v.width, 105 + v.height - u.height - 20))
+            if sp.get("stub"):
+                st = T(sp["stub"], 40, PAPER, "ExtraBold", max_w=stub - 60, align="center", line_gap=1.25)
+                im.alpha_composite(st, (W - stub + (stub - st.width) // 2, (H - st.height) // 2))
+            ang = (1 - k) * 8 - 2
+            im = im.rotate(ang, resample=Image.BICUBIC, expand=True)
+            G.blit(f, im, (S.W / 2, sp.get("y", 680) + (1 - k) * 60), k, "mm")
+        riso_credit(f, sp)
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec.get("on", 1)), "pop", 0.4)]
+
+
+TYPES.update({"poster": RisoPoster, "dotmap": DotMap, "flap": SplitFlap, "ticket": Ticket})

@@ -1,96 +1,80 @@
-title: "에디토리얼 장면 데모"
+title: "리소 장면 데모"
 series_tag: "11월에 사서 5월에 판다?"
 tts: {voice: ko-KR-Chirp3-HD-Sadaltager, rate: 1.12}
 scenes:
-- type: knockout
-  bg: {kind: chart, series: spx, start: '1950-01-01', end: '2026-11-05', log: true, color: [255, 190, 60]}
-  word: SELL IN MAY
+- type: flap
+  word: "SELL IN\nMAY"
+  hl_chars: "MAY"
   sub: "5월엔 팔고 떠나라, 월가의 오래된 격언"
   highlight: 월가의 오래된 격언
-  credit: '배경: S&P500 1950~2026 (로그)'
   narration: ['월가엔 백 년 넘게 내려온 말이 있어요. 5월엔 팔고 떠나라.']
+- type: poster
+  kicker: 11월 넷째 목요일
+  title: "추수감사절엔\n시장도 쉬어 갈까?"
+  highlight: 쉬어 갈까?
+  ridge: {series: spx, start: '2025-06-01', end: '2025-12-31'}
+  pin: {at: 0.69, label: '추수감사절', on: 1}
+  figure: {name: turkey, at: 0.86, size: 170, on: 1}
+  credit: '산 모양: S&P500 2025.6~12 실제 흐름'
+  narration: ['11월 넷째 목요일, 미국은 추수감사절이에요. 시장도 쉬어 갈까요?']
+- type: poster
+  kicker: S&P500 · 1950 ~ 2025
+  title: "76년 동안\n오른 산"
+  highlight: 76년
+  sun: [1560, 330, 150]
+  ridge: {series: spx, start: '1950-01-01', end: '2025-12-31', log: true, height: 470}
+  pin: {at: 0.04, label: '1950년 100만 원', on: 1}
+  figure: {name: bull, at: 0.93, size: 150, on: 1}
+  credit: '산 모양: S&P500 로그 스케일'
+  narration: ['76년 동안, 이 산을 그냥 올라탄 사람이 가장 많이 벌었어요.']
+- type: dotmap
+  kicker: 11월 넷째 목요일
+  title: "미국 전체가\n쉬는 날"
+  highlight: 쉬는 날
+  states: {'New York': coral, Illinois: gold, Texas: navy, California: navy}
+  stat: {value: '64/76', label: '앞뒤 이틀 S&P500 상승', on: 1}
+  credit: '지도: us-states GeoJSON(PublicaMundi)'
+  narration: ['미국 전체가 쉬는 날이죠.']
+- type: ticket
+  kicker: 추수감사절 앞뒤 이틀
+  title: 수요일 → 금요일 S&P500
+  label: '1950 ~ 2025 · 상승 횟수'
+  value: '64'
+  unit: '/ 76번'
+  stub: "평균\n+0.61%\n평소의 약 8배"
+  narration: ['그 앞뒤 이틀, 76번 중 64번 올랐어요.']
 - type: timeline
-  bg: {kind: calendar, tone: navy, hl: [NOV, DEC, JAN, FEB, MAR, APR]}
   kicker: 핼러윈 매매법
   title: 11월에 사서, 5월에 판다
   highlight: 11월
   ticks: [{label: '10.31', sub: 핼러윈, hl: true}, {label: '12월'}, {label: '2월'}, {label: '4.30', hl: true}, {label: '6월'}, {label: '8월'}, {label: '10.31'}]
-  bands: [{from: 0, to: 3, label: '주식 6개월', color: yellow, on: 1}, {from: 3, to: 6, label: '현금 6개월', color: [110, 116, 132], on: 2}]
-  tag: {text: '다시 매수', at: 6, color: up, on: 2}
+  bands: [{from: 0, to: 3, label: '주식 6개월', color: coral, on: 1}, {from: 3, to: 6, label: '현금 6개월', color: [150, 140, 120], on: 1}]
+  tag: {text: '다시 매수', at: 6, color: [30, 42, 92], on: 1}
   bottom: '1년의 절반만 투자한다'
   bottom_hl: 절반만
-  credit: '규칙: 10월 말 종가 매수 → 4월 말 종가 매도'
-  narration: ['규칙은 간단해요. 핼러윈인 10월 말에 사서, 4월 말에 판다.', '나머지 6개월은 현금으로 쉬는 거죠.']
+  narration: ['규칙은 간단해요.']
 - type: grid
-  bg: {kind: grain, tone: ink}
   kicker: S&P500 · 1950 ~ 2025
   title: 11월~4월, 주가가 오른 해
   n: 76
   k: 58
-  cols: 19
-  cell: 54
   headline: '76년 중 58년 상승'
   headline_hl: 58년
-  credit: '자료: S&P500 일간 종가 (배당 제외)'
-  narration: ['1950년부터 76번의 겨울 중에, 주가가 오른 건 58번이었어요.']
+  narration: ['58번이었어요.']
+- type: hbars
+  kicker: 1950년에 100만 원을 넣었다면
+  title: 누가 더 벌었을까?
+  rows:
+  - {label: '여름(5~10월)만', value: 3.6, text: '360만 원'}
+  - {label: '겨울(11~4월)만 · 핼러윈 매매법', value: 119.2, text: '1.19억'}
+  - {label: '그냥 계속 들고 있기', value: 431.3, text: '4.31억', hl: true}
+  narration: ['결과는요?']
 - type: profile
-  bg: {kind: grain, tone: navy}
-  kicker: S&P500 월별 평균 수익률을 이어 붙이면
+  kicker: S&P500 월별 평균을 이어 붙이면
   title: 1년 중 가장 센 구간
   highlight: 가장 센 구간
   values: [0, 1.8, 3.2, 4.3, 4.3, 5.3, 6.8, 7.2, 7.4, 8.7, 8.8, 8.2, 9.1]
   labels: ['11월', '12월', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '']
   hl: [0, 6]
   pins: [{text: '+6.8%', at: 6, on: 1}]
-  credit: '1950~2025 월평균 누적 (단순 합)'
-  narration: ['월별 평균을 11월부터 이어 붙여 보면, 11월부터 4월까지가 1년 상승의 대부분이에요.']
-- type: hbars
-  bg: {kind: chart, series: spx, start: '1950-01-01', end: '2025-12-31', log: true, color: [120, 140, 200], op: 0.25}
-  kicker: 1950년에 100만 원을 넣었다면
-  title: 누가 더 벌었을까?
-  rows:
-  - {label: '여름(5~10월)만 투자', value: 3.6, text: '360만 원', on: 1}
-  - {label: '겨울(11~4월)만 투자 · 핼러윈 매매법', value: 119.2, text: '1.19억', on: 1, offset: 0.6}
-  - {label: '그냥 계속 들고 있기', value: 431.3, text: '4.31억', hl: true, on: 2}
-  credit: '배당·이자 제외 · 현금 기간 수익 0% 가정'
-  narration: ['결과는요? 여름만 투자하면 360만 원, 겨울만 투자하면 1억 1천9백만 원.', '그런데 그냥 들고만 있었다면, 4억 3천만 원이었습니다.']
-- type: infobox
-  bg: {kind: chart, series: spx, start: '2026-09-01', end: '2026-11-05', color: [240, 84, 84], op: 0.55}
-  title: "추수감사절 앞뒤\n이틀"
-  highlight: 추수감사절
-  box_kicker: '수요일 → 금요일 S&P500'
-  value: '64'
-  unit: '/76번 상승'
-  value_size: 170
-  box_sub: '평균 +0.61% · 평소 이틀의 약 8배'
-  credit: '1950~2025 · 추수감사절 전 화요일 종가 → 다음 날 금요일 종가'
-  narration: ['그리고 11월엔 추수감사절이 있죠. 그 앞뒤 이틀, 76번 중 64번 올랐어요.']
-- type: poster
-  tone: rust
-  kicker: 11월 넷째 목요일
-  title: 추수감사절엔 시장도 쉬어 간다?
-  highlight: 쉬어 간다?
-  ridge: {series: spx, start: '2025-06-01', end: '2025-12-31'}
-  pin: {at: 0.69, label: '11월 추수감사절', on: 1}
-  figure: {name: turkey, at: 0.86, size: 140, on: 1}
-  credit: '능선: S&P500 2025.6~12 실제 흐름'
-  narration: ['11월 넷째 목요일, 미국은 추수감사절이에요. 시장도 쉬어 갈까요?']
-- type: poster
-  tone: teal
-  kicker: S&P500 · 1950 ~ 2025
-  title: 76년 동안 오른 산
-  highlight: 76년
-  ridge: {series: spx, start: '1950-01-01', end: '2025-12-31', log: true, height: 280}
-  pin: {at: 0.03, label: '1950년 100만 원', on: 1}
-  figure: {name: bull, at: 0.88, size: 150, on: 1}
-  credit: '능선: S&P500 로그 스케일'
-  narration: ['76년 동안, 이 산을 그냥 올라탄 사람이 가장 많이 벌었어요.']
-- type: usmap
-  tone: teal
-  fill: [44, 72, 160]
-  states: {Texas: [226, 70, 60], California: [60, 130, 240], 'New York': [255, 204, 40]}
-  kicker: 11월 넷째 목요일
-  title: 미국 전체가 쉬는 날
-  highlight: 쉬는 날
-  credit: '지도: PublicaMundi us-states GeoJSON'
-  narration: ['미국 전체가 쉬는 날이죠.']
+  narration: ['11월부터 4월까지가 대부분이에요.']
