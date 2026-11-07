@@ -1,5 +1,6 @@
 assets/*
 !assets/people/
+!assets/photos/
 !assets/media/
 assets/media/*
 # 사용자 캐릭터 일러스트(원본·배경 제거본·로고)는 보관

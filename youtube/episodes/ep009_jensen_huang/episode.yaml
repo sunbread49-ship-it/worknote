@@ -129,11 +129,11 @@ thumbs:
   left: {label: 최대 하락, value: '-??%', sub: 2002년, color: down}
   right: {label: 지금, value: '??억', sub: 2026년 11월, color: up}
 - template: silhouette
-  figure: people/jensen_huang_silhouette.png
-  fig_h: 1080
-  fig_x: 1360
-  mark_at: 0.86
-  mark_size: 190
+  figure: people/jensen_huang_cc.png
+  fig_h: 860
+  fig_x: 1420
+  mark_at: 0.82
+  mark_size: 180
   rim: [118, 185, 0]
   glow: [20, 90, 40]
   tag: 숫자로 보는 인물 ①
@@ -272,17 +272,20 @@ scenes:
 
       해 봤다"', 'on': 1, size: 120, highlight: 가장 낮은 일, hl_color: gold}
   narration: ['그는 나중에 인터뷰에서, 그때 어떤 일이든 가장 잘하려고 했던 습관이 지금까지 이어졌다고 말하곤 해요.']
-- type: card
+- type: portrait
   chapter: 소년 시절
-  heading: 창업 전 커리어
-  highlight: 커리어
-  width: 1500
-  size: 50
-  gap: 36
-  bullets:
-  - {text: 오리건 주립대 전기공학 (1984), 'on': 1}
-  - {text: AMD · LSI 로직에서 반도체 칩 설계, 'on': 2}
-  - {text: 스탠퍼드 대학원 전기공학 석사 (1992), 'on': 3}
+  photo: jensen_010
+  focus: [0.5, 0.15]
+  kicker: 엔비디아 공동 창업자 · CEO
+  name: 젠슨 황
+  line: 아홉 살 이민 소년, 칩 설계 엔지니어로
+  line_hl: 칩 설계 엔지니어
+  chips:
+  - {text: 1963 대만 출생, 'on': 1}
+  - {text: 오리건 주립대 전기공학, 'on': 1}
+  - {text: AMD · LSI 로직, 'on': 2}
+  - {text: 스탠퍼드 석사, 'on': 3}
+  - {text: 1993 창업 · 30세, 'on': 3}
   narration: ['오리건 주립대에서 전기공학을 전공하고,', 에이엠디와 엘에스아이 로직에서 칩을 설계했어요. 엔비디아의 라이벌이 되는 바로 그 에이엠디죠., 일하면서 스탠퍼드 대학원 석사도 마칩니다.]
 - type: capsule
   chapter: 창업
@@ -315,31 +318,32 @@ scenes:
 
       시장에서 외면', 'on': 1, size: 120, highlight: 외면, hl_color: down}
   narration: ['그런데 1995년에 낸 첫 제품, NV1은 시장에서 외면받아요. | 업계가 가는 방향과 다른 방식을 골랐거든요.']
-- type: card
+- type: checklist
   chapter: 창업
-  heading: 1996년, 망하기 직전
-  highlight: 망하기 직전
-  width: 1500
-  size: 50
-  numbered: true
-  gap: 36
-  bullets:
-  - {text: 게임기 회사 세가와 맺은 칩 개발 계약도 실패 위기, 'on': 1}
-  - {text: '"이 방식으론 못 만든다" 솔직하게 털어놓음', 'on': 2, highlight: 솔직하게, hl_color: gold}
-  - {text: 세가가 오히려 500만 달러를 투자 · 직원 절반 이상은 회사를 떠남, 'on': 3}
+  kicker: 1996년
+  title: 망하기 직전
+  sub: 첫 제품 NV1 실패 이후
+  items:
+  - {text: 세가 칩 계약도 실패 위기, 'on': 1}
+  - {text: '"이 방식으론 못 만든다" 고백', 'on': 2, highlight: 고백}
+  - {text: 세가 500만 달러 투자 · 직원 절반 퇴사, 'on': 3}
   narration: [게임기 회사 세가와 맺은 계약도 위기였죠. 이대로면 약속한 칩을 만들 수가 없었어요., 젠슨 황은 세가 쪽에 솔직하게 털어놓아요. 이 방식으로는 못 만들겠다고요., '그런데 세가는 오히려 500만 달러를 투자해 줍니다. | 그 돈으로 버텼지만, 직원 절반 이상은 회사를 떠나야 했어요.']
-- type: ticket
+- type: photo_title
   chapter: 창업
+  bg:
+    kind: photo
+    file: dennys_sign
+    dark: 0.55
+    gray: 0.5
+    focus: [0.5, 0.35]
   kicker: 2023년 · 산호세의 그 데니스
-  title: 창업 자리에 붙은 명판
-  highlight: 명판
-  label: '"1조 달러 회사가 시작된 곳"'
-  value: 그 자리
-  stub: '지금도
+  title: '1조 달러 회사가
 
-    손님이
-
-    앉는 자리'
+    시작된 자리'
+  highlight: 1조 달러
+  sub: 창업 구석 자리에 기념 명판
+  sub_hl: 기념 명판
+  sub_on: 1
   narration: ['재밌는 건, 2023년에 그 데니스 매장 구석 자리에 기념 명판이 붙었다는 거예요.', 1조 달러 회사가 시작된 자리라고요.]
 - type: punch
   chapter: 창업
@@ -370,13 +374,22 @@ scenes:
   - {text: '1월, 나스닥 상장 (공모가 12달러)', 'on': 1}
   - {text: '8월, GeForce 256 출시 · "세계 최초의 GPU"라는 말을 만듦', 'on': 2, highlight: GPU, hl_color: up}
   narration: ['1999년 1월, 엔비디아는 나스닥에 상장해요. 공모가는 12달러였죠.', '그리고 그해 지포스 256을 내놓으면서, 그래픽 처리 장치, 지피유라는 말을 처음 만들어 냅니다.']
-- type: duel
+- type: split
   chapter: 상장
-  heading: 2000년, 라이벌의 몰락
-  left: {title: 3dfx, value: 파산, sub: 한때 그래픽카드 1위, color: down, 'on': 1}
-  right: {title: 엔비디아, value: 자산 인수, sub: 라이벌의 기술과 인재를 품다, color: up, 'on': 2}
+  left:
+    photo: voodoo3
+    label: 3dfx
+    label_color: [255, 90, 90]
+    sub: 한때 그래픽카드 1위
+    focus: [0.5, 0.5]
+  right:
+    photo: nvidia_hq
+    kicker: 2000년, 라이벌의 몰락
+    title: 엔비디아
+    sub: 라이벌의 기술을 품다
+    focus: [0.6, 0.4]
+  sub_on: 2
   narration: [당시 그래픽카드 1위는 3dfx라는 회사였어요. 그런데 신제품이 계속 늦어지면서 무너지죠., '2000년 말, 엔비디아는 그 라이벌의 기술과 자산을 사들입니다. | 창업 7년 만에 업계 1위가 된 거예요.']
-  mid: '2000'
 - type: isobars
   chapter: 상장
   kicker: 상장 첫날 종가에 100만 원 · 배당 재투자 · 2026.11.6
@@ -402,6 +415,20 @@ scenes:
   pin: {at: 0.02, label: 1999 상장, 'on': 1}
   credit: '산 모양: NVDA 수정주가 실제 흐름'
   narration: [27년 동안의 엔비디아 주가를 산처럼 그려 보면 이래요. 멀리서 보면 거의 쉬지 않고 오른 것 같죠., '그런데 가까이 들어가 보면, 이 산엔 낭떠러지가 여러 번 있었어요.']
+- type: photo_title
+  chapter: 상처
+  bg:
+    kind: photo
+    file: nvidia_hq
+    dark: 0.66
+    gray: 0.9
+    focus: [0.55, 0.4]
+  kicker: 그런데
+  title: '4,975배로 가는 길엔
+
+    낭떠러지가 있었다'
+  highlight: 낭떠러지
+  narration: ['그런데 이 4,975배로 가는 길엔, 낭떠러지가 여러 번 있었어요.']
 - type: chart
   chapter: 상처
   chart:
@@ -503,18 +530,18 @@ scenes:
   left: {title: 그전까지, value: 게임 그래픽, sub: 화면을 빨리 그리는 칩, color: neutral, 'on': 1}
   right: {title: CUDA 이후, value: 모든 계산, sub: 과학 · 금융 · 그리고 AI, color: up, 'on': 2}
   narration: [그전까지 지피유는 게임 화면을 그리는 칩이었죠., '쿠다는 그 칩을, 누구나 아무 계산에나 쓸 수 있게 만든 도구예요. | 수천 개의 작은 계산기를 동시에 돌리는 거죠.']
-- type: card
+- type: checklist
   chapter: 발상 전환
-  heading: 왜 다들 반대했나
-  highlight: 반대
-  width: 1500
-  size: 50
-  numbered: true
-  gap: 36
-  bullets:
-  - {text: 모든 칩에 기능을 넣느라 비용 증가 → 이익 감소, 'on': 1}
-  - {text: 당장 쓰는 고객이 거의 없었다, 'on': 2}
-  - {text: '2006년 → 2008년 말, 주가 -74%', 'on': 3, highlight: -74%, hl_color: down}
+  bg: {kind: photo, file: nvidia_cebit2005, dark: 0.72, blur: 6, gray: 0.9}
+  kicker: 2006년 · CUDA
+  title: 모두가 반대한 이유
+  sub: 당장은 돈이 안 되는 베팅
+  items:
+  - {text: 칩마다 기능 추가 → 이익 감소, 'on': 1}
+  - {text: 쓰는 고객이 거의 없었다, 'on': 2}
+  - {text: 2년 뒤 주가 -74%, 'on': 3, highlight: -74%}
+  icon: chip
+  icon_on: 1
   narration: ['문제는 돈이었어요. 게임용 칩에까지 이 기능을 다 넣다 보니 비용이 늘고, 이익은 줄었죠.', 정작 그걸 쓰는 고객은 거의 없었고요., '쿠다를 내놓은 2006년 11월부터 2008년 말까지, 주가는 74%가 빠집니다.']
 - type: kinetic
   chapter: 발상 전환

@@ -139,6 +139,52 @@ def header(f, sp, t, t0, y=210, center=True, fg=S.FG, acc=Y):
     return yy
 
 
+@lru_cache(maxsize=24)
+def _photo(name, dark, blur, gray, focus):
+    from pathlib import Path
+    import json
+    d = Path(__file__).resolve().parents[1] / "assets" / "photos"
+    meta = json.loads((d / f"{name}.json").read_text())
+    im = Image.open(d / meta["file"]).convert("RGB")
+    # 화면 비율로 채우기 (focus: 0~1 가로 · 세로 중심)
+    sc = max(S.W / im.width, S.H / im.height)
+    im = im.resize((int(im.width * sc) + 1, int(im.height * sc) + 1), Image.LANCZOS)
+    fx, fy = focus
+    x0 = int((im.width - S.W) * fx)
+    y0 = int((im.height - S.H) * fy)
+    im = im.crop((x0, y0, x0 + S.W, y0 + S.H))
+    if gray:
+        im = ImageEnhance.Color(im).enhance(1 - gray)
+    if blur:
+        im = im.filter(ImageFilter.GaussianBlur(blur))
+    a = np.array(im, np.float32) * (1 - dark)
+    a = a * _vignette(S.W, S.H, 0.5)
+    out = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+    return out, meta["credit"]
+
+
+def photo_backdrop(bg):
+    return _photo(bg["file"], bg.get("dark", 0.62), bg.get("blur", 0), bg.get("gray", 0.85), tuple(bg.get("focus", (0.5, 0.4))))
+
+
+def photo_card(name, w, h, gray=0.0, focus=(0.5, 0.35)):
+    """사진을 w×h 카드로 잘라 반환 (테두리 · 그림자 포함)"""
+    from pathlib import Path
+    import json
+    d = Path(__file__).resolve().parents[1] / "assets" / "photos"
+    meta = json.loads((d / f"{name}.json").read_text())
+    im = Image.open(d / meta["file"]).convert("RGB")
+    sc = max(w / im.width, h / im.height)
+    im = im.resize((int(im.width * sc) + 1, int(im.height * sc) + 1), Image.LANCZOS)
+    x0, y0 = int((im.width - w) * focus[0]), int((im.height - h) * focus[1])
+    im = im.crop((x0, y0, x0 + w, y0 + h))
+    if gray:
+        im = ImageEnhance.Color(im).enhance(1 - gray)
+    card = Image.new("RGBA", (w + 8, h + 8), (230, 232, 238, 255))
+    card.paste(im, (4, 4))
+    return card, meta["credit"]
+
+
 def credit(f, sp):
     if sp.get("credit"):
         G.blit(f, T(sp["credit"], 20, (200, 204, 214), "SemiBold"), (S.W - S.SAFE_X + 40, 128), 0.75, "rt")
@@ -167,9 +213,15 @@ class Editorial(Scene):
     default_transition = "cut"
 
     def base(self, f):
-        bg = self.spec.get("bg") or {"kind": "paper"}
+        bg = self.spec.get("bg") or {"kind": "grain", "tone": "navy"}
         self.paper = bg.get("kind") == "paper"
-        if self.paper:
+        if bg.get("kind") == "photo":
+            im, cr = photo_backdrop(bg)
+            f.paste(im, (0, 0))
+            if cr and not self.spec.get("credit"):
+                self.spec["credit"] = cr
+            self.fg, self.acc, self.dim, self.off = S.FG, Y, (200, 204, 214), (90, 94, 108)
+        elif self.paper:
             f.paste(paper_bg(), (0, 0))
             self.fg, self.acc, self.dim, self.off = NAVY, CORAL, (120, 112, 98), (196, 186, 166)
         else:
@@ -686,8 +738,11 @@ class Ticket(Editorial):
 
     def draw(self, f, t):
         sp = self.spec
-        f.paste(paper_bg(), (0, 0))
-        riso_header(f, sp, t)
+        self.base(f)
+        if self.paper:
+            riso_header(f, sp, t)
+        else:
+            self.hdr(f, t, y=180, center=False)
         t0 = self.line_start(sp.get("on", 1))
         k = G.ease_out((t - t0) / 0.45)
         if k > 0:
@@ -717,8 +772,7 @@ class Ticket(Editorial):
             ang = (1 - k) * 8 - 2
             im = im.rotate(ang, resample=Image.BICUBIC, expand=True)
             G.blit(f, im, (S.W / 2, sp.get("y", 680) + (1 - k) * 60), k, "mm")
-        riso_credit(f, sp)
-        self.draw_common(f, t)
+        self.finish(f, t)
 
     def extra_sfx(self):
         return [(self.line_start(self.spec.get("on", 1)), "pop", 0.4)]
@@ -860,7 +914,10 @@ class KPI(Editorial):
             lab = T(kp["label"], 38, self.fg, "ExtraBold")
             G.blit(f, lab, (180, y), o)
             y += lab.height + 6
-            v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), 132, _rc(kp.get("color"), CORAL), NAVY if self.paper else (0, 0, 0), off=(5, 5))
+            kc = _rc(kp.get("color"), CORAL)
+            if not self.paper and kc == NAVY:
+                kc = (205, 210, 222)
+            v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), 132, kc, NAVY if self.paper else (0, 0, 0), off=(5, 5))
             G.blit(f, v, (172, y), o)
             y += v.height + 40
         bars = sp["bars"]
@@ -968,10 +1025,10 @@ class Duel(Editorial):
 
     def draw(self, f, t):
         sp = self.spec
-        f.paste(paper_bg(), (0, 0))
+        self.base(f)
         if sp.get("heading"):
-            h = riso_text(sp["heading"], 64, NAVY, CORAL, off=(4, 3), highlight=sp.get("highlight", ""), hl_fill=CORAL)
-            G.blit(f, h, (S.W / 2, 170), G.appear(t, 0.0, 0.3), "mt")
+            h = T(sp["heading"], 64, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y)
+            shadow(f, h, (S.W / 2, 170), "mt", G.appear(t, 0.0, 0.3))
         for j, side in enumerate(("left", "right")):
             c = sp[side]
             t0 = self.line_start(c.get("on", 1))
@@ -1010,11 +1067,595 @@ class Duel(Editorial):
         if t > self.line_start(sp["right"].get("on", 1)):
             st = _riso_stamp(vs)
             G.blit(f, st.rotate(-8, expand=True, resample=Image.BICUBIC), (S.W / 2, 600), G.appear(t, self.line_start(sp["right"].get("on", 1)) + 0.2, 0.2), "mm")
-        riso_credit(f, sp)
-        self.draw_common(f, t)
+        self.finish(f, t)
 
     def extra_sfx(self):
         return [(self.line_start(self.spec[s].get("on", 1)), "pop", 0.35) for s in ("left", "right")]
 
 
 TYPES.update({"duel": Duel})
+
+
+# ════════════════════════════════════════════════════════════════
+# 어두운 톤 도식화 변주 (사진 배경 · 분할 · 체크리스트 · 인물 카드 · 사람 아이콘+진행 막대)
+# ════════════════════════════════════════════════════════════════
+class SplitFlap(Editorial):
+    """공항 출발 안내판처럼 글자 타일이 한 칸씩 넘어가며 나타나는 큰 단어"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        word = sp["word"]
+        lines = word.split("\n")
+        tile_w, tile_h, gap = sp.get("tile", (118, 168, 12))
+        n_max = max(len(l) for l in lines)
+        tw = n_max * (tile_w + gap)
+        if tw > S.W - 200:
+            r = (S.W - 200) / tw
+            tile_w, tile_h, gap = int(tile_w * r), int(tile_h * r), max(6, int(gap * r))
+        y = sp.get("y", 300)
+        idx = 0
+        for li, line in enumerate(lines):
+            x = (S.W - len(line) * (tile_w + gap) + gap) / 2
+            for ch in line:
+                t0 = 0.1 + idx * 0.06
+                k = G.clamp((t - t0) / 0.18)
+                if ch != " " and k > 0:
+                    tile = _flap(ch, tile_w, tile_h, sp.get("hl_chars", "") and ch in sp.get("hl_chars", ""))
+                    sy = max(0.05, abs(np.cos((1 - k) * np.pi / 2 * 2)) if k < 1 else 1)
+                    th = max(2, int(tile_h * (k if k < 1 else 1)))
+                    G.blit(f, tile.resize((tile_w, th)), (x, y + (tile_h - th) / 2))
+                x += tile_w + gap
+                idx += 1
+            y += tile_h + gap * 2
+        if sp.get("sub"):
+            o = G.appear(t, self.line_start(sp.get("sub_on", 1)) + 0.5, 0.4)
+            s = riso_text(sp["sub"], 56, NAVY, CORAL, off=(4, 3), weight="ExtraBold", highlight=sp.get("highlight", ""), hl_fill=CORAL)
+            G.blit(f, s, (S.W / 2, y + 30), o, "mt")
+        riso_credit(f, sp)
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(0.1, "tick", 0.3), (0.4, "tick", 0.3), (0.7, "tick", 0.3)]
+
+
+@lru_cache(maxsize=128)
+def _flap(ch, w, h, hl=False):
+    k = 2
+    im = Image.new("RGBA", (w * k, h * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    bg = CORAL if hl else NAVY
+    d.rounded_rectangle((0, 0, w * k - 1, h * k - 1), radius=12 * k, fill=bg + (255,))
+    d.rounded_rectangle((0, 0, w * k - 1, h * k // 2), radius=12 * k, fill=tuple(min(255, c + 14) for c in bg) + (255,))
+    im = im.resize((w, h), Image.LANCZOS)
+    g = T(ch, int(h * 0.68), PAPER, "Black")
+    im.alpha_composite(g, ((w - g.width) // 2, (h - g.height) // 2 - 2))
+    d = ImageDraw.Draw(im)
+    d.line((0, h // 2, w, h // 2), fill=(10, 14, 30, 255), width=3)
+    return im
+
+
+class Ticket(Editorial):
+    """티켓 모양 카드: 왼쪽(라벨·큰 숫자) | 점선 절취선 | 오른쪽 꼬리(보조 정보). 위에 제목"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        if self.paper:
+            riso_header(f, sp, t)
+        else:
+            self.hdr(f, t, y=180, center=False)
+        t0 = self.line_start(sp.get("on", 1))
+        k = G.ease_out((t - t0) / 0.45)
+        if k > 0:
+            W, H, stub = 1340, 380, 360
+            kk = 2
+            im = Image.new("RGBA", ((W + 20) * kk, (H + 20) * kk), (0, 0, 0, 0))
+            d = ImageDraw.Draw(im)
+            d.rounded_rectangle((16 * kk, 16 * kk, (W + 16) * kk, (H + 16) * kk), radius=28 * kk, fill=CORAL + (255,))
+            d.rounded_rectangle((0, 0, W * kk, H * kk), radius=28 * kk, fill=NAVY + (255,))
+            cx = (W - stub) * kk
+            for yy in range(30 * kk, (H - 30) * kk, 26 * kk):
+                d.line((cx, yy, cx, yy + 12 * kk), fill=PAPER + (200,), width=3 * kk)
+            for cy in (0, H * kk):
+                d.ellipse((cx - 22 * kk, cy - 22 * kk, cx + 22 * kk, cy + 22 * kk), fill=PAPER + (255,))
+            im = im.resize((W + 20, H + 20), Image.LANCZOS)
+            if sp.get("label"):
+                im.alpha_composite(T(sp["label"], 38, GOLD, "ExtraBold"), (60, 50))
+            val = counter(sp["value"], (t - t0) / 0.9)
+            v = T(val, sp.get("value_size", 170), PAPER, "Black")
+            im.alpha_composite(v, (54, 105))
+            if sp.get("unit"):
+                u = T(sp["unit"], 64, PAPER, "Black")
+                im.alpha_composite(u, (64 + v.width, 105 + v.height - u.height - 20))
+            if sp.get("stub"):
+                st = T(sp["stub"], 40, PAPER, "ExtraBold", max_w=stub - 60, align="center", line_gap=1.25)
+                im.alpha_composite(st, (W - stub + (stub - st.width) // 2, (H - st.height) // 2))
+            ang = (1 - k) * 8 - 2
+            im = im.rotate(ang, resample=Image.BICUBIC, expand=True)
+            G.blit(f, im, (S.W / 2, sp.get("y", 680) + (1 - k) * 60), k, "mm")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec.get("on", 1)), "pop", 0.4)]
+
+
+TYPES.update({"poster": RisoPoster, "dotmap": DotMap, "flap": SplitFlap, "ticket": Ticket})
+
+
+# ════════════════════════════════════════════════════════════════
+# 변주 2탄 — 캡슐 숫자 · 아이소메트릭 탑 · KPI+막대 · 액자 비교 (리소 톤 유지)
+# ════════════════════════════════════════════════════════════════
+class Capsule(Editorial):
+    """가운데 큰 알약 모양 카드: 숫자 + 단위 + 강조어, 기울어진 도장. kicker 위, sub 아래"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        if sp.get("ghost"):  # 배경에 아주 큰 옅은 글자
+            g = T(sp["ghost"], 420, (self.fg if self.paper else (255, 255, 255)), "Black")
+            G.blit(f, g, (S.W / 2 + 30 - t * 10, S.H / 2), 0.06, "mm")
+        y = 230
+        if sp.get("kicker"):
+            k = T(sp["kicker"], 46, self.dim if self.paper else (200, 204, 214), "ExtraBold")
+            G.blit(f, k, (S.W / 2, y), G.appear(t, 0.0, 0.3), "mb")
+        t0 = self.line_start(sp.get("on", 1))
+        kk = G.ease_out((t - t0) / 0.45)
+        if kk > 0:
+            val = T(counter(sp["value"], (t - t0) / 0.9), sp.get("value_size", 210), NAVY, "Black")
+            unit = T(sp.get("unit", ""), 84, NAVY, "Black") if sp.get("unit") else None
+            acc = T(sp.get("accent", ""), 84, CORAL, "Black") if sp.get("accent") else None
+            w = val.width + (unit.width + 24 if unit else 0) + (acc.width + 20 if acc else 0) + 160
+            h = val.height + 70
+            k2 = 2
+            cap = Image.new("RGBA", ((w + 24) * k2, (h + 24) * k2), (0, 0, 0, 0))
+            d = ImageDraw.Draw(cap)
+            d.rounded_rectangle((18 * k2, 22 * k2, (w + 18) * k2, (h + 22) * k2), radius=h * k2 // 2, fill=(CORAL if self.paper else (10, 12, 20)) + (255,))
+            d.rounded_rectangle((0, 0, w * k2, h * k2), radius=h * k2 // 2, fill=PAPER + (255,), outline=NAVY + (255,), width=6 * k2)
+            cap = cap.resize((w + 24, h + 24), Image.LANCZOS)
+            x = 80
+            cap.alpha_composite(val, (x, (h - val.height) // 2 + 4))
+            x += val.width + 24
+            if unit:
+                cap.alpha_composite(unit, (x, (h + val.height) // 2 - unit.height - 18))
+                x += unit.width + 20
+            if acc:
+                cap.alpha_composite(acc, (x, (h + val.height) // 2 - acc.height - 18))
+            sc = 0.85 + 0.15 * kk
+            cap2 = cap.resize((int(cap.width * sc), int(cap.height * sc)), Image.BICUBIC)
+            G.blit(f, cap2, (S.W / 2, 540), kk, "mm")
+            if sp.get("badge"):
+                ks = G.clamp((t - t0 - 0.5) / 0.22)
+                if ks > 0:
+                    st = _riso_stamp(sp["badge"])
+                    s2 = 1.8 - 0.8 * G.ease_out(ks)
+                    st = st.resize((int(st.width * s2), int(st.height * s2)), Image.BICUBIC).rotate(8, expand=True, resample=Image.BICUBIC)
+                    G.blit(f, st, (S.W / 2 + cap.width / 2 - 20, 540 - cap.height / 2 + 10), min(1, ks * 1.5), "mm")
+        if sp.get("sub"):
+            o = G.appear(t, self.line_start(sp.get("sub_on", 1)) + 0.4, 0.3)
+            s = T(sp["sub"], 40, self.fg, "ExtraBold", highlight=sp.get("sub_hl", ""), hl_fill=self.acc)
+            G.blit(f, s, (S.W / 2, 770), o, "mt")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        t0 = self.line_start(self.spec.get("on", 1))
+        return [(t0, "pop", 0.4)] + ([(t0 + 0.5, "boom", 0.25)] if self.spec.get("badge") else [])
+
+
+def _riso_stamp(text):
+    tx = T(text, 54, GOLD, "Black")
+    w, h = tx.width + 60, tx.height + 34
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, w - 1, h - 1), fill=NAVY + (255,), outline=GOLD + (255,), width=6)
+    im.alpha_composite(tx, (30, 14))
+    return im
+
+
+class IsoBars(Editorial):
+    """아이소메트릭 탑(블록)이 차례로 솟는 성장 그래프. items: [{label(위), year(아래), sub, value, hl}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=sp.get("center", False))
+        items = sp["items"]
+        n = len(items)
+        vmax = max(it["value"] for it in items)
+        x0, x1, base = 260, S.W - 220, sp.get("base", 800)
+        slot = (x1 - x0) / n
+        bw = min(170, slot * 0.62)
+        dep = bw * 0.42
+        hmax = sp.get("hmax", 440)
+        t0 = self.line_start(sp.get("on", 1))
+        for i, it in enumerate(items):
+            k = G.ease_out((t - t0 - i * sp.get("step", 0.25)) / 0.5)
+            if k <= 0:
+                continue
+            cx = x0 + slot * (i + 0.5)
+            hh = max(14, hmax * (it["value"] / vmax) ** sp.get("gamma", 0.55) * k)
+            hl = it.get("hl")
+            top_c = CORAL if hl else ((92, 150, 120) if not self.paper else (120, 168, 140))
+            front = NAVY if self.paper else (40, 46, 62)
+            side = tuple(max(0, c - 18) for c in front)
+            kk = 2
+            im = Image.new("RGBA", (int((bw + dep) * kk) + 4, int((hh + dep) * kk) + 4), (0, 0, 0, 0))
+            d = ImageDraw.Draw(im)
+            fx0, fy0 = 0, dep * kk
+            d.rectangle((fx0, fy0, bw * kk, (dep + hh) * kk), fill=front + (255,))
+            d.polygon([(bw * kk, fy0), ((bw + dep) * kk, 0), ((bw + dep) * kk, hh * kk), (bw * kk, (dep + hh) * kk)], fill=side + (255,))
+            d.polygon([(0, fy0), (dep * kk, 0), ((bw + dep) * kk, 0), (bw * kk, fy0)], fill=top_c + (255,))
+            if hl:
+                d.polygon([(0, fy0), (dep * kk, 0), ((bw + dep) * kk, 0), (bw * kk, fy0)], outline=GOLD + (255,), width=4 * kk)
+            # 앞면 줄무늬(리소 결)
+            for yy in range(int(fy0 + 20 * kk), int((dep + hh) * kk), 18 * kk):
+                d.line((0, yy, bw * kk, yy), fill=(255, 255, 255, 18), width=2 * kk)
+            im = im.resize((im.width // kk, im.height // kk), Image.LANCZOS)
+            G.blit(f, im, (cx - bw / 2, base - hh - dep))
+            lab = T(it["label"], 46 if hl else 38, (CORAL if hl else self.fg), "Black")
+            G.blit(f, lab, (cx + dep / 2, base - hh - dep - 14), min(1, k * 2), "mb")
+            G.blit(f, T(str(it["year"]), 36, self.fg, "Black"), (cx, base + 20), min(1, k * 2), "mt")
+            if it.get("sub"):
+                G.blit(f, T(it["sub"], 26, self.dim, "SemiBold"), (cx, base + 64), min(1, k * 2), "mt")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        t0 = self.line_start(self.spec.get("on", 1))
+        return [(t0 + i * self.spec.get("step", 0.25), "tick", 0.25) for i in range(len(self.spec["items"]))]
+
+
+class KPI(Editorial):
+    """왼쪽: KPI 2~3개(작은 라벨 + 큰 숫자) / 오른쪽: 세로 막대(값 위에 표시, 마지막 강조)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        y = 300
+        for j, kp in enumerate(sp["kpis"]):
+            o = G.appear(t, self.line_start(kp.get("on", 1)) + 0.1, 0.35)
+            lab = T(kp["label"], 38, self.fg, "ExtraBold")
+            G.blit(f, lab, (180, y), o)
+            y += lab.height + 6
+            kc = _rc(kp.get("color"), CORAL)
+            if not self.paper and kc == NAVY:
+                kc = (205, 210, 222)
+            v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), 132, kc, NAVY if self.paper else (0, 0, 0), off=(5, 5))
+            G.blit(f, v, (172, y), o)
+            y += v.height + 40
+        bars = sp["bars"]
+        n = len(bars)
+        x0, x1, base, hmax = 880, S.W - 150, 720, 400
+        slot = (x1 - x0) / n
+        bw = slot * 0.74
+        vmax = sp.get("vmax") or max(b["value"] for b in bars) * 1.05
+        t0 = self.line_start(sp.get("bars_on", 1))
+        for i, b in enumerate(bars):
+            k = G.ease_out((t - t0 - i * 0.15) / 0.5)
+            if k <= 0:
+                continue
+            cx = x0 + slot * (i + 0.5)
+            hh = max(6, hmax * abs(b["value"]) / vmax * k)
+            hl = b.get("hl", i == n - 1)
+            c = GOLD if hl else ((214, 206, 188) if self.paper else (214, 218, 226))
+            bar = Image.new("RGBA", (int(bw), int(hh)), c + (255,))
+            if b["value"] < 0:
+                hh = min(hh, 110)
+                bar = Image.new("RGBA", (int(bw), int(hh)), (120, 150, 220, 255))
+                G.blit(f, bar, (cx - bw / 2, base))
+                G.blit(f, T(b.get("text", str(b["value"])), 36, (90, 120, 200), "Black"), (cx, base + hh + 8), min(1, k * 2), "mt")
+                G.blit(f, T(b["label"], 30, self.fg, "ExtraBold"), (cx, base - 12), min(1, k * 2), "mb")
+            else:
+                G.blit(f, bar, (cx - bw / 2, base - hh))
+                G.blit(f, T(b.get("text", str(b["value"])), 44 if hl else 36, self.fg, "Black"), (cx, base - hh - 12), min(1, k * 2), "mb")
+                G.blit(f, T(b["label"], 30, self.fg, "ExtraBold"), (cx, base + 18), min(1, k * 2), "mt")
+        d = ImageDraw.Draw(f)
+        d.line((x0 - 10, base, x1 + 10, base), fill=self.fg + (160,), width=3)
+        self.finish(f, t)
+
+
+@lru_cache(maxsize=2)
+def _gold_dust():
+    """어두운 배경 + 금빛 먼지(보케)"""
+    w, h = S.W, S.H
+    a = np.ones((h, w, 3), np.float32) * np.array([16, 13, 10], np.float32)
+    a = a * _vignette(w, h, 0.4) + _grain(w, h, seed=31, amt=5)[..., None]
+    im = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+    lay = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    rng = np.random.default_rng(5)
+    for _ in range(90):
+        x, y, r = rng.uniform(0, w), rng.uniform(0, h), rng.uniform(1.5, 7)
+        d.ellipse((x - r, y - r, x + r, y + r), fill=(255, 200, 110, int(rng.uniform(40, 150))))
+    im.alpha_composite(lay.filter(ImageFilter.GaussianBlur(2.2)))
+    return im
+
+
+class Frames(Editorial):
+    """미술관 액자 두 개(금테) 안에 실제 차트, 아래 캡션. panels: [{series, start, end, color, caption, hl, on}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(_gold_dust(), (0, 0))
+        if sp.get("title"):
+            tt = T(sp["title"], 56, (240, 226, 196), "ExtraBold", highlight=sp.get("highlight", ""), hl_fill=GOLD)
+            G.blit(f, tt, (S.W / 2, 150), G.appear(t, 0.0, 0.3), "mt")
+        pw, ph = 700, 400
+        xs = [S.W / 2 - pw - 40, S.W / 2 + 40]
+        for j, pn in enumerate(sp["panels"][:2]):
+            o = G.appear(t, self.line_start(pn.get("on", 1)) + 0.15, 0.45)
+            if o <= 0:
+                continue
+            x, y = xs[j], 280
+            fr = _frame_panel(pw, ph, pn.get("series", "spx"), pn.get("start"), pn.get("end"), tuple(pn.get("color", (240, 200, 120))), pn.get("log", False))
+            G.blit(f, fr, (x, y + (1 - o) * 20), o)
+            cap = T(pn["caption"], 38, (230, 216, 190), "SemiBold", highlight=pn.get("hl", ""), hl_fill=GOLD)
+            G.blit(f, cap, (x + pw / 2 + 8, y + ph + 50), o, "mt")
+            if pn.get("value"):
+                v = T(pn["value"], 64, GOLD if pn.get("good") else (130, 170, 240), "Black")
+                G.blit(f, v, (x + pw / 2 + 8, y + ph + 108), o, "mt")
+        self.finish(f, t)
+
+
+@lru_cache(maxsize=8)
+def _frame_panel(pw, ph, series_, start, end, color, log):
+    from . import data as D
+    k = 2
+    im = Image.new("RGBA", ((pw + 16) * k, (ph + 16) * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, (pw + 16) * k - 1, (ph + 16) * k - 1), fill=(150, 112, 50, 255))
+    d.rectangle((5 * k, 5 * k, (pw + 11) * k, (ph + 11) * k), outline=(240, 200, 120, 255), width=2 * k)
+    d.rectangle((8 * k, 8 * k, (pw + 8) * k, (ph + 8) * k), fill=(20, 18, 16, 255))
+    s = D.series(series_, start, end).dropna()
+    v = np.log(s.values) if log else s.values
+    xs = np.linspace(40, pw - 40, len(v)) + 8
+    lo, hi = v.min(), v.max()
+    ys = ph - 50 - (v - lo) / (hi - lo + 1e-9) * (ph - 120) + 8
+    pts = [(x * k, y * k) for x, y in zip(xs, ys)]
+    d.polygon(pts + [(xs[-1] * k, (ph - 30) * k), (xs[0] * k, (ph - 30) * k)], fill=color + (60,))
+    d.line(pts, fill=color + (255,), width=4 * k)
+    im = im.resize((pw + 16, ph + 16), Image.LANCZOS)
+    lab = T(f"{s.index[0].year} ~ {s.index[-1].year}", 26, (220, 200, 160), "SemiBold")
+    im.alpha_composite(lab, (30, 24))
+    return im
+
+
+TYPES.update({"capsule": Capsule, "isobars": IsoBars, "kpi": KPI, "frames": Frames})
+
+
+class Duel(Editorial):
+    """종이 위 두 장의 카드가 엇갈려 놓이는 비교(versus 대체). left/right: {title, value, sub, color, on}, heading"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        if sp.get("heading"):
+            h = T(sp["heading"], 64, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y)
+            shadow(f, h, (S.W / 2, 170), "mt", G.appear(t, 0.0, 0.3))
+        for j, side in enumerate(("left", "right")):
+            c = sp[side]
+            t0 = self.line_start(c.get("on", 1))
+            k = G.ease_out((t - t0) / 0.45)
+            if k <= 0:
+                continue
+            col = _rc(c.get("color"), CORAL if j else NAVY)
+            if c.get("color") in ("up",):
+                col = CORAL
+            elif c.get("color") in ("down",):
+                col = (60, 110, 200)
+            elif c.get("color") in ("neutral", None):
+                col = NAVY if j == 0 else (120, 112, 98)
+            W2, H2 = 680, 420
+            kk = 2
+            im = Image.new("RGBA", ((W2 + 24) * kk, (H2 + 24) * kk), (0, 0, 0, 0))
+            d = ImageDraw.Draw(im)
+            d.rectangle((20 * kk, 22 * kk, (W2 + 20) * kk, (H2 + 22) * kk), fill=(30, 30, 40, 70))
+            d.rectangle((0, 0, W2 * kk, H2 * kk), fill=(252, 248, 238, 255), outline=col + (255,), width=6 * kk)
+            d.rectangle((0, 0, W2 * kk, 70 * kk), fill=col + (255,))
+            im = im.resize((W2 + 24, H2 + 24), Image.LANCZOS)
+            tt = T(c.get("title", ""), 40, PAPER, "ExtraBold")
+            im.alpha_composite(tt, (34, 35 - tt.height // 2 + 2))
+            v = T(counter(c["value"], (t - t0) / 0.8), c.get("size", 120), col, "Black")
+            while v.width > W2 - 60:
+                v = v.resize((int(v.width * 0.9), int(v.height * 0.9)), Image.LANCZOS)
+            im.alpha_composite(v, ((W2 - v.width) // 2, 70 + (H2 - 70 - v.height) // 2 - 24))
+            if c.get("sub"):
+                sb = T(c["sub"], 32, (110, 104, 92), "SemiBold", max_w=W2 - 60, align="center")
+                im.alpha_composite(sb, ((W2 - sb.width) // 2, H2 - 40 - sb.height))
+            ang = (-4 if j == 0 else 3) * (0.5 + 0.5 * k) + (1 - k) * (12 if j else -12)
+            im = im.rotate(ang, resample=Image.BICUBIC, expand=True)
+            cx = S.W / 2 + (-390 if j == 0 else 390)
+            G.blit(f, im, (cx, 600 + (1 - k) * 80 + (20 if j else -10)), k, "mm")
+        vs = sp.get("mid", "VS")
+        if t > self.line_start(sp["right"].get("on", 1)):
+            st = _riso_stamp(vs)
+            G.blit(f, st.rotate(-8, expand=True, resample=Image.BICUBIC), (S.W / 2, 600), G.appear(t, self.line_start(sp["right"].get("on", 1)) + 0.2, 0.2), "mm")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec[s].get("on", 1)), "pop", 0.35) for s in ("left", "right")]
+
+
+TYPES.update({"duel": Duel})
+
+
+# ════════════════════════════════════════════════════════════════
+# 어두운 톤 도식화 변주 (사진 배경 · 분할 · 체크리스트 · 인물 카드 · 사람 아이콘+진행 막대)
+# ════════════════════════════════════════════════════════════════
+class PhotoTitle(Editorial):
+    """어둡게 깐 사진 위 가운데 큰 제목 + 작은 부제 (장 전환용)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        k = G.ease_out(t / 0.5)
+        if sp.get("kicker"):
+            G.blit(f, T(sp["kicker"], 40, Y, "ExtraBold"), (S.W / 2, 380), k, "mb")
+        tt = T(sp["title"], sp.get("size", 150), S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y, align="center", line_gap=1.1)
+        sc = 1.06 - 0.06 * k
+        tt2 = tt.resize((int(tt.width * sc), int(tt.height * sc)), Image.BICUBIC)
+        shadow(f, tt2, (S.W / 2, S.H / 2 - 20), "mm", k, blur=16, alpha=0.8)
+        if sp.get("sub"):
+            o = G.appear(t, self.line_start(sp.get("sub_on", 1)) + 0.3, 0.35)
+            shadow(f, T(sp["sub"], 48, S.FG, "ExtraBold", highlight=sp.get("sub_hl", ""), hl_fill=Y), (S.W / 2, S.H / 2 + tt.height / 2 + 30), "mt", o)
+        self.finish(f, t)
+
+
+class Split(Editorial):
+    """왼쪽 1/3: 흑백 사진 패널 + 큰 이름표 / 노란 세로선 / 오른쪽: 어두운 사진 위 제목.
+    left: {photo, label, label_color}, right: {photo, kicker, title, sub}"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        L, R = sp["left"], sp["right"]
+        bgR, cr2 = _photo(R["photo"], R.get("dark", 0.55), 0, R.get("gray", 0.6), tuple(R.get("focus", (0.6, 0.35))))
+        f.paste(bgR, (0, 0))
+        lw = 600
+        card, cr1 = photo_card(L["photo"], lw, S.H, gray=1.0, focus=tuple(L.get("focus", (0.5, 0.4))))
+        card = card.crop((4, 4, lw + 4, S.H + 4))
+        card = Image.blend(card.convert("RGB"), Image.new("RGB", card.size, (20, 22, 30)), 0.45).convert("RGBA")
+        kL = G.ease_out(t / 0.5)
+        G.blit(f, card, (-(1 - kL) * 120, 0), kL)
+        ImageDraw.Draw(f).rectangle((lw, 0, lw + 6, S.H), fill=Y + (255,))
+        if L.get("label"):
+            lab = T(L["label"], L.get("size", 110), _col(L.get("label_color"), (80, 170, 255)), "Black")
+            shadow(f, lab, (lw / 2, S.H / 2 - 40), "mm", kL)
+        if L.get("sub"):
+            G.blit(f, T(L["sub"], 36, S.FG, "ExtraBold"), (lw / 2, S.H / 2 + 60), kL, "mt")
+        o = G.appear(t, self.line_start(sp.get("on", 1)) + 0.2, 0.4)
+        x = lw + 90
+        y = S.H / 2 - 170
+        if R.get("kicker"):
+            shadow(f, T(R["kicker"], 52, S.FG, "Black"), (x, y), "lt", o)
+            y += 80
+        tt = T(R["title"], R.get("size", 150), Y, "Black")
+        shadow(f, tt, (x - 6, y + (1 - o) * 20), "lt", o)
+        y += tt.height + 10
+        if R.get("sub"):
+            shadow(f, T(R["sub"], 52, S.FG, "Black"), (x, y), "lt", G.appear(t, self.line_start(sp.get("sub_on", 1)) + 0.4, 0.35))
+        self.spec.setdefault("credit", " · ".join(dict.fromkeys([cr1, cr2])))
+        self.finish(f, t)
+
+
+class Checklist(Editorial):
+    """흐린 사진 배경 · 왼쪽: 작은 노란 순번 + 큰 제목 + 부제 + 체크 항목 / 오른쪽: 그림(icon: chip|emoji이름|photo카드)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        x, y = 230, 230
+        if sp.get("kicker"):
+            G.blit(f, T(sp["kicker"], 44, Y, "Black"), (x, y), G.appear(t, 0.0, 0.3))
+            y += 64
+        tt = T(sp["title"], sp.get("title_size", 120), S.FG, "Black")
+        shadow(f, tt, (x - 4, y), "lt", G.ease_out(t / 0.4))
+        y += tt.height + 4
+        if sp.get("sub"):
+            G.blit(f, T(sp["sub"], 40, (220, 224, 232), "ExtraBold"), (x, y), G.appear(t, 0.2, 0.3))
+            y += 90
+        for it in sp["items"]:
+            o = G.appear(t, self.line_start(it.get("on", 1)) + it.get("offset", 0), 0.3)
+            if o <= 0:
+                y += 96
+                continue
+            ck = _check(52)
+            G.blit(f, ck, (x, y + 8), o)
+            shadow(f, T(it["text"], 62, S.FG, "Black", highlight=it.get("highlight", ""), hl_fill=Y), (x + 78, y), "lt", o)
+            y += 96
+        ic = sp.get("icon")
+        if ic:
+            o = G.ease_out((t - self.line_start(sp.get("icon_on", 1)) - 0.2) / 0.5)
+            if o > 0:
+                if ic == "chip":
+                    import sys
+                    from pathlib import Path
+                    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+                    from thumbs import chip_icon
+                    im = chip_icon(520, (118, 185, 0))
+                elif ic.startswith("photo:"):
+                    im, cr = photo_card(ic[6:], 520, 380, focus=tuple(sp.get("icon_focus", (0.5, 0.4))))
+                    self.spec.setdefault("credit", cr)
+                else:
+                    im = silhouette(ic, 440, Y)
+                G.blit(f, im, (sp.get("icon_x", 1450), 600 + (1 - o) * 40), o, "mm")
+        self.finish(f, t)
+
+
+def _check(s, c=Y):
+    k = 3
+    im = Image.new("RGBA", (s * k, s * k), (0, 0, 0, 0))
+    ImageDraw.Draw(im).line([(s * k * 0.12, s * k * 0.55), (s * k * 0.4, s * k * 0.82), (s * k * 0.9, s * k * 0.2)], fill=c + (255,), width=int(s * k * 0.16), joint="curve")
+    return im.resize((s, s), Image.LANCZOS)
+
+
+class Portrait(Editorial):
+    """흐린 배경 · 왼쪽 사진 카드 / 오른쪽: 노란 작은 설명 · 큰 이름 · 노란 강조 줄 · 정보 칩(2~6개)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        card, cr = photo_card(sp["photo"], sp.get("pw", 440), sp.get("ph", 560), gray=sp.get("gray", 0.0), focus=tuple(sp.get("focus", (0.5, 0.25))))
+        self.spec.setdefault("credit", cr)
+        k = G.ease_out(t / 0.5)
+        shadow(f, card, (230, 210 + (1 - k) * 30), "lt", k, blur=20, alpha=0.7)
+        x, y = 230 + card.width + 90, 250
+        if sp.get("kicker"):
+            G.blit(f, T(sp["kicker"], 40, Y, "ExtraBold"), (x, y), G.appear(t, 0.15, 0.3))
+            y += 62
+        nm = T(sp["name"], 110, S.FG, "Black")
+        shadow(f, nm, (x - 4, y), "lt", G.appear(t, 0.25, 0.35))
+        y += nm.height + 16
+        if sp.get("line"):
+            G.blit(f, T(sp["line"], 48, S.FG, "Black", highlight=sp.get("line_hl", ""), hl_fill=Y), (x, y), G.appear(t, 0.4, 0.3))
+            y += 90
+        cx = x
+        for j, ch in enumerate(sp.get("chips", [])):
+            o = G.appear(t, self.line_start(ch.get("on", 1)) + j * 0.12 if isinstance(ch, dict) else self.line_start(1) + j * 0.12, 0.25)
+            txt = ch["text"] if isinstance(ch, dict) else ch
+            tx = T(txt, 40, S.FG, "ExtraBold")
+            w = max(250, tx.width + 60)
+            box = Image.new("RGBA", (w, 74), (0, 0, 0, 0))
+            ImageDraw.Draw(box).rectangle((0, 0, w - 1, 73), fill=(16, 18, 26, 235), outline=(110, 114, 128, 255), width=2)
+            box.alpha_composite(tx, ((w - tx.width) // 2, (74 - tx.height) // 2))
+            if cx + w > S.W - 180:
+                cx = x
+                y += 92
+            G.blit(f, box, (cx, y), o)
+            cx += w + 18
+        self.finish(f, t)
+
+
+class People(Editorial):
+    """사람 아이콘 n개 중 k개 노랑 + 문구 / 아래 진행 막대(값/최대) + 끝 눈금 라벨"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        n, kk = sp["n"], sp["k"]
+        s = sp.get("icon", 92)
+        gap = 22
+        w = n * s + (n - 1) * gap
+        x0, y0 = (S.W - w) / 2, 230
+        t0 = self.line_start(sp.get("on", 1))
+        for i in range(n):
+            o = G.appear(t, t0 + i * 0.08, 0.2)
+            on = i < kk and t > t0 + 0.5 + i * 0.08
+            G.blit(f, _person(s, Y if on else (90, 94, 108)), (x0 + i * (s + gap), y0), o)
+        if sp.get("headline"):
+            shadow(f, T(sp["headline"], 76, S.FG, "Black", highlight=sp.get("headline_hl", ""), hl_fill=Y), (S.W / 2, y0 + s * 1.25 + 40), "mt", G.appear(t, t0 + 0.6, 0.3))
+        b = sp.get("bar")
+        if b:
+            tb = self.line_start(b.get("on", 2))
+            k = G.ease_out((t - tb) / 0.8)
+            bx0, bx1, by = 330, S.W - 330, 690
+            ImageDraw.Draw(f).rectangle((bx0, by, bx1, by + 44), fill=(90, 94, 108, 200))
+            if k > 0:
+                fw = (bx1 - bx0) * b["value"] / b["max"] * k
+                ImageDraw.Draw(f).rectangle((bx0, by, bx0 + fw, by + 44), fill=Y + (255,))
+                lab = T(b["label"], 58, S.FG, "Black", highlight=b.get("label_hl", ""), hl_fill=Y)
+                shadow(f, lab, (bx0 + fw, by - 18), "rb", min(1, k * 1.5))
+            ImageDraw.Draw(f).line((bx1, by - 20, bx1, by + 64), fill=(240, 240, 240, 255), width=4)
+            G.blit(f, T(b["max_label"], 38, S.FG, "ExtraBold"), (bx1, by + 76), 1, "mt")
+        self.finish(f, t)
+
+
+TYPES.update({"photo_title": PhotoTitle, "split": Split, "checklist": Checklist, "portrait": Portrait, "people": People})
