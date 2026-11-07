@@ -31,7 +31,85 @@ youtube:
   tags: [적립식, 거치식, 분할매수, 목돈투자, S&P500, 나스닥, 장기투자, 백테스트, 미국주식, ETF]
   privacy: private
 
-shorts: []
+thumbs:
+  - template: calc
+    tag: "목돈 1,200만 원"
+    lcd_label: "한 번에 넣은 쪽 승률"
+    value: "71.6%"
+    lines:
+      - {text: "나눠 사면", size: 150}
+      - {text: "손해였다?", size: 150, color: yellow}
+      - {text: "910번 비교", size: 120}
+  - template: receipt
+    tag: "S&P500 76년 · 910번"
+    lines:
+      - {text: "목돈", size: 150}
+      - {text: "한 번에 vs 나눠서", size: 110}
+      - {text: "영수증", size: 170, color: yellow}
+    receipt_sub: "1,200만 원 · 1년 뒤"
+    rows:
+      - {k: "한 번에 승률", v: "71.6%", color: up}
+      - {k: "평균 차이", v: "+4.4%p", color: up}
+      - {k: "최악(한 번에)", v: "-44.8%", color: down}
+      - {k: "손실 확률", v: "거의 같음"}
+    total: "어떻게 넣을까?"
+    total_color: [30, 30, 30]
+  - template: clipping
+    tag: "적립식의 배신?"
+    masthead: "THE DAILY MARKET"
+    date: "S&P500 · 1950 ~ 2026"
+    headline: "나눠 사는 게 안전하다는 믿음, 숫자로 확인"
+    stamp: {text: "71.6%", sub: "한 번에 승", size: 170, color: [220, 40, 40], pos: [760, 720]}
+    lines:
+      - {text: "목돈 생기면", size: 150}
+      - {text: "한 번에 넣어라?", size: 140, color: yellow}
+      - {text: "다 알려준다", size: 150}
+  - template: diagonal
+    ant: false
+    a: {label: "나눠서 · 1년 뒤 평균", value: "+5.0%", color: red, chart: {series: spx, start: "2008-01-01", end: "2009-12-31", color: [255, 140, 140]}}
+    b: {label: "한 번에 · 1년 뒤 평균", value: "+9.4%", color: teal, chart: {series: spx, start: "2016-11-01", end: "2018-01-31", color: [170, 255, 240]}}
+    center: "목돈 1,200만 원"
+    bottom: "어떻게 넣을까?"
+  - template: question
+    lines:
+      - {text: "목돈은", size: 120}
+      - {text: "나눠 사는 게", size: 120}
+      - {text: "안전하다", size: 140, color: up}
+      - {text: "던데", size: 110}
+      - {text: "진짜일까?", size: 190, color: yellow}
+  - template: big_number
+    glow: [150, 20, 40]
+    lines:
+      - {text: "한 번에 vs 나눠서 · 910번", size: 100}
+      - {text: "71.6%", size: 270, color: up}
+      - {text: "그런데 손실 확률은 같았다", size: 100, color: yellow, hl: "같았다", hl_color: down}
+    props:
+      - {kind: chart, series: spx, start: "2016-01-01", end: "2026-10-31", color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
+  - template: vs_numbers
+    top: "목돈 1,200만 원, 어떻게 넣을까?"
+    top_hl: "어떻게 넣을까?"
+    left: {label: "나눠서", value: "28%", sub: "이긴 비율", color: down}
+    right: {label: "한 번에", value: "72%", sub: "이긴 비율", color: up}
+
+shorts:
+  - title: "910번 비교"
+    start: "1:13.0"
+    end: "1:53.0"
+    yt_title: "목돈은 나눠 사야 안전하다? 910번 비교했더니 #적립식 #분할매수 #shorts"
+    yt_desc: "1,200만 원을 한 번에 vs 1년 동안 나눠서. S&P500 1950~2025, 910번을 직접 비교한 결과. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: up, top: "목돈, 한 번에? 나눠서?", label: "S&P500 · 910번 비교", big: "한 번에 71.6% 승", sub: "나눠 사기의 진짜 역할은?"}
+  - title: "코로나 vs 2022"
+    start: "4:15.0"
+    end: "4:53.0"
+    yt_title: "폭락 직전에 목돈을 넣었다면? 2020년과 2022년, 정반대 결과 #폭락장 #적립식 #shorts"
+    yt_desc: "2020년 2월 코로나 폭락 직전 1,200만 원 → 1년 뒤 한 번에 1,548만 원 vs 나눠서 1,420만 원. 2022년엔 정반대. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: gold, top: "폭락 직전에 목돈을 넣었다면", label: "2020년 2월 · 1,200만 원 · 1년 뒤", big: "1,548만 vs 1,420만", sub: "그런데 2022년엔 정반대"}
+  - title: "손실 확률 반전"
+    start: "5:29.0"
+    end: "5:59.0"
+    yt_title: "나눠 사도 손실 확률은 똑같았다? 25.3% vs 25.9% #분할매수 #투자심리 #shorts"
+    yt_desc: "1년 뒤 손실 확률, 한 번에 25.3% vs 나눠서 25.9%. 나눠 사기는 손실을 피하는 게 아니라 얕게 만든다. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: down, top: "나눠 사면 덜 잃을까?", label: "1년 뒤 손실 확률 · S&P500", big: "25.3% vs 25.9%", sub: "한 번에 vs 나눠서 · 거의 같다"}
 
 checks:
   - {name: "비교 횟수", kind: ld_n}
