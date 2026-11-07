@@ -725,3 +725,239 @@ class Ticket(Editorial):
 
 
 TYPES.update({"poster": RisoPoster, "dotmap": DotMap, "flap": SplitFlap, "ticket": Ticket})
+
+
+# ════════════════════════════════════════════════════════════════
+# 변주 2탄 — 캡슐 숫자 · 아이소메트릭 탑 · KPI+막대 · 액자 비교 (리소 톤 유지)
+# ════════════════════════════════════════════════════════════════
+class Capsule(Editorial):
+    """가운데 큰 알약 모양 카드: 숫자 + 단위 + 강조어, 기울어진 도장. kicker 위, sub 아래"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        if sp.get("ghost"):  # 배경에 아주 큰 옅은 글자
+            g = T(sp["ghost"], 420, (self.fg if self.paper else (255, 255, 255)), "Black")
+            G.blit(f, g, (S.W / 2 + 30 - t * 10, S.H / 2), 0.06, "mm")
+        y = 230
+        if sp.get("kicker"):
+            k = T(sp["kicker"], 46, self.dim if self.paper else (200, 204, 214), "ExtraBold")
+            G.blit(f, k, (S.W / 2, y), G.appear(t, 0.0, 0.3), "mb")
+        t0 = self.line_start(sp.get("on", 1))
+        kk = G.ease_out((t - t0) / 0.45)
+        if kk > 0:
+            val = T(counter(sp["value"], (t - t0) / 0.9), sp.get("value_size", 210), NAVY, "Black")
+            unit = T(sp.get("unit", ""), 84, NAVY, "Black") if sp.get("unit") else None
+            acc = T(sp.get("accent", ""), 84, CORAL, "Black") if sp.get("accent") else None
+            w = val.width + (unit.width + 24 if unit else 0) + (acc.width + 20 if acc else 0) + 160
+            h = val.height + 70
+            k2 = 2
+            cap = Image.new("RGBA", ((w + 24) * k2, (h + 24) * k2), (0, 0, 0, 0))
+            d = ImageDraw.Draw(cap)
+            d.rounded_rectangle((18 * k2, 22 * k2, (w + 18) * k2, (h + 22) * k2), radius=h * k2 // 2, fill=(CORAL if self.paper else (10, 12, 20)) + (255,))
+            d.rounded_rectangle((0, 0, w * k2, h * k2), radius=h * k2 // 2, fill=PAPER + (255,), outline=NAVY + (255,), width=6 * k2)
+            cap = cap.resize((w + 24, h + 24), Image.LANCZOS)
+            x = 80
+            cap.alpha_composite(val, (x, (h - val.height) // 2 + 4))
+            x += val.width + 24
+            if unit:
+                cap.alpha_composite(unit, (x, (h + val.height) // 2 - unit.height - 18))
+                x += unit.width + 20
+            if acc:
+                cap.alpha_composite(acc, (x, (h + val.height) // 2 - acc.height - 18))
+            sc = 0.85 + 0.15 * kk
+            cap2 = cap.resize((int(cap.width * sc), int(cap.height * sc)), Image.BICUBIC)
+            G.blit(f, cap2, (S.W / 2, 540), kk, "mm")
+            if sp.get("badge"):
+                ks = G.clamp((t - t0 - 0.5) / 0.22)
+                if ks > 0:
+                    st = _riso_stamp(sp["badge"])
+                    s2 = 1.8 - 0.8 * G.ease_out(ks)
+                    st = st.resize((int(st.width * s2), int(st.height * s2)), Image.BICUBIC).rotate(8, expand=True, resample=Image.BICUBIC)
+                    G.blit(f, st, (S.W / 2 + cap.width / 2 - 20, 540 - cap.height / 2 + 10), min(1, ks * 1.5), "mm")
+        if sp.get("sub"):
+            o = G.appear(t, self.line_start(sp.get("sub_on", 1)) + 0.4, 0.3)
+            s = T(sp["sub"], 40, self.fg, "ExtraBold", highlight=sp.get("sub_hl", ""), hl_fill=self.acc)
+            G.blit(f, s, (S.W / 2, 770), o, "mt")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        t0 = self.line_start(self.spec.get("on", 1))
+        return [(t0, "pop", 0.4)] + ([(t0 + 0.5, "boom", 0.25)] if self.spec.get("badge") else [])
+
+
+def _riso_stamp(text):
+    tx = T(text, 54, GOLD, "Black")
+    w, h = tx.width + 60, tx.height + 34
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, w - 1, h - 1), fill=NAVY + (255,), outline=GOLD + (255,), width=6)
+    im.alpha_composite(tx, (30, 14))
+    return im
+
+
+class IsoBars(Editorial):
+    """아이소메트릭 탑(블록)이 차례로 솟는 성장 그래프. items: [{label(위), year(아래), sub, value, hl}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=sp.get("center", False))
+        items = sp["items"]
+        n = len(items)
+        vmax = max(it["value"] for it in items)
+        x0, x1, base = 260, S.W - 220, sp.get("base", 800)
+        slot = (x1 - x0) / n
+        bw = min(170, slot * 0.62)
+        dep = bw * 0.42
+        hmax = sp.get("hmax", 440)
+        t0 = self.line_start(sp.get("on", 1))
+        for i, it in enumerate(items):
+            k = G.ease_out((t - t0 - i * sp.get("step", 0.25)) / 0.5)
+            if k <= 0:
+                continue
+            cx = x0 + slot * (i + 0.5)
+            hh = max(14, hmax * (it["value"] / vmax) ** sp.get("gamma", 0.55) * k)
+            hl = it.get("hl")
+            top_c = CORAL if hl else ((92, 150, 120) if not self.paper else (120, 168, 140))
+            front = NAVY if self.paper else (40, 46, 62)
+            side = tuple(max(0, c - 18) for c in front)
+            kk = 2
+            im = Image.new("RGBA", (int((bw + dep) * kk) + 4, int((hh + dep) * kk) + 4), (0, 0, 0, 0))
+            d = ImageDraw.Draw(im)
+            fx0, fy0 = 0, dep * kk
+            d.rectangle((fx0, fy0, bw * kk, (dep + hh) * kk), fill=front + (255,))
+            d.polygon([(bw * kk, fy0), ((bw + dep) * kk, 0), ((bw + dep) * kk, hh * kk), (bw * kk, (dep + hh) * kk)], fill=side + (255,))
+            d.polygon([(0, fy0), (dep * kk, 0), ((bw + dep) * kk, 0), (bw * kk, fy0)], fill=top_c + (255,))
+            if hl:
+                d.polygon([(0, fy0), (dep * kk, 0), ((bw + dep) * kk, 0), (bw * kk, fy0)], outline=GOLD + (255,), width=4 * kk)
+            # 앞면 줄무늬(리소 결)
+            for yy in range(int(fy0 + 20 * kk), int((dep + hh) * kk), 18 * kk):
+                d.line((0, yy, bw * kk, yy), fill=(255, 255, 255, 18), width=2 * kk)
+            im = im.resize((im.width // kk, im.height // kk), Image.LANCZOS)
+            G.blit(f, im, (cx - bw / 2, base - hh - dep))
+            lab = T(it["label"], 46 if hl else 38, (CORAL if hl else self.fg), "Black")
+            G.blit(f, lab, (cx + dep / 2, base - hh - dep - 14), min(1, k * 2), "mb")
+            G.blit(f, T(str(it["year"]), 36, self.fg, "Black"), (cx, base + 20), min(1, k * 2), "mt")
+            if it.get("sub"):
+                G.blit(f, T(it["sub"], 26, self.dim, "SemiBold"), (cx, base + 64), min(1, k * 2), "mt")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        t0 = self.line_start(self.spec.get("on", 1))
+        return [(t0 + i * self.spec.get("step", 0.25), "tick", 0.25) for i in range(len(self.spec["items"]))]
+
+
+class KPI(Editorial):
+    """왼쪽: KPI 2~3개(작은 라벨 + 큰 숫자) / 오른쪽: 세로 막대(값 위에 표시, 마지막 강조)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        y = 300
+        for j, kp in enumerate(sp["kpis"]):
+            o = G.appear(t, self.line_start(kp.get("on", 1)) + 0.1, 0.35)
+            lab = T(kp["label"], 38, self.fg, "ExtraBold")
+            G.blit(f, lab, (180, y), o)
+            y += lab.height + 6
+            v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), 132, _rc(kp.get("color"), CORAL), NAVY if self.paper else (0, 0, 0), off=(5, 5))
+            G.blit(f, v, (172, y), o)
+            y += v.height + 40
+        bars = sp["bars"]
+        n = len(bars)
+        x0, x1, base, hmax = 880, S.W - 150, 720, 400
+        slot = (x1 - x0) / n
+        bw = slot * 0.74
+        vmax = sp.get("vmax") or max(b["value"] for b in bars) * 1.05
+        t0 = self.line_start(sp.get("bars_on", 1))
+        for i, b in enumerate(bars):
+            k = G.ease_out((t - t0 - i * 0.15) / 0.5)
+            if k <= 0:
+                continue
+            cx = x0 + slot * (i + 0.5)
+            hh = max(6, hmax * abs(b["value"]) / vmax * k)
+            hl = b.get("hl", i == n - 1)
+            c = GOLD if hl else ((214, 206, 188) if self.paper else (214, 218, 226))
+            bar = Image.new("RGBA", (int(bw), int(hh)), c + (255,))
+            if b["value"] < 0:
+                hh = min(hh, 110)
+                bar = Image.new("RGBA", (int(bw), int(hh)), (120, 150, 220, 255))
+                G.blit(f, bar, (cx - bw / 2, base))
+                G.blit(f, T(b.get("text", str(b["value"])), 36, (90, 120, 200), "Black"), (cx, base + hh + 8), min(1, k * 2), "mt")
+                G.blit(f, T(b["label"], 30, self.fg, "ExtraBold"), (cx, base - 12), min(1, k * 2), "mb")
+            else:
+                G.blit(f, bar, (cx - bw / 2, base - hh))
+                G.blit(f, T(b.get("text", str(b["value"])), 44 if hl else 36, self.fg, "Black"), (cx, base - hh - 12), min(1, k * 2), "mb")
+                G.blit(f, T(b["label"], 30, self.fg, "ExtraBold"), (cx, base + 18), min(1, k * 2), "mt")
+        d = ImageDraw.Draw(f)
+        d.line((x0 - 10, base, x1 + 10, base), fill=self.fg + (160,), width=3)
+        self.finish(f, t)
+
+
+@lru_cache(maxsize=2)
+def _gold_dust():
+    """어두운 배경 + 금빛 먼지(보케)"""
+    w, h = S.W, S.H
+    a = np.ones((h, w, 3), np.float32) * np.array([16, 13, 10], np.float32)
+    a = a * _vignette(w, h, 0.4) + _grain(w, h, seed=31, amt=5)[..., None]
+    im = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+    lay = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    rng = np.random.default_rng(5)
+    for _ in range(90):
+        x, y, r = rng.uniform(0, w), rng.uniform(0, h), rng.uniform(1.5, 7)
+        d.ellipse((x - r, y - r, x + r, y + r), fill=(255, 200, 110, int(rng.uniform(40, 150))))
+    im.alpha_composite(lay.filter(ImageFilter.GaussianBlur(2.2)))
+    return im
+
+
+class Frames(Editorial):
+    """미술관 액자 두 개(금테) 안에 실제 차트, 아래 캡션. panels: [{series, start, end, color, caption, hl, on}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(_gold_dust(), (0, 0))
+        if sp.get("title"):
+            tt = T(sp["title"], 56, (240, 226, 196), "ExtraBold", highlight=sp.get("highlight", ""), hl_fill=GOLD)
+            G.blit(f, tt, (S.W / 2, 150), G.appear(t, 0.0, 0.3), "mt")
+        pw, ph = 700, 400
+        xs = [S.W / 2 - pw - 40, S.W / 2 + 40]
+        for j, pn in enumerate(sp["panels"][:2]):
+            o = G.appear(t, self.line_start(pn.get("on", 1)) + 0.15, 0.45)
+            if o <= 0:
+                continue
+            x, y = xs[j], 280
+            fr = _frame_panel(pw, ph, pn.get("series", "spx"), pn.get("start"), pn.get("end"), tuple(pn.get("color", (240, 200, 120))), pn.get("log", False))
+            G.blit(f, fr, (x, y + (1 - o) * 20), o)
+            cap = T(pn["caption"], 38, (230, 216, 190), "SemiBold", highlight=pn.get("hl", ""), hl_fill=GOLD)
+            G.blit(f, cap, (x + pw / 2 + 8, y + ph + 50), o, "mt")
+            if pn.get("value"):
+                v = T(pn["value"], 64, GOLD if pn.get("good") else (130, 170, 240), "Black")
+                G.blit(f, v, (x + pw / 2 + 8, y + ph + 108), o, "mt")
+        self.finish(f, t)
+
+
+@lru_cache(maxsize=8)
+def _frame_panel(pw, ph, series_, start, end, color, log):
+    from . import data as D
+    k = 2
+    im = Image.new("RGBA", ((pw + 16) * k, (ph + 16) * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, (pw + 16) * k - 1, (ph + 16) * k - 1), fill=(150, 112, 50, 255))
+    d.rectangle((5 * k, 5 * k, (pw + 11) * k, (ph + 11) * k), outline=(240, 200, 120, 255), width=2 * k)
+    d.rectangle((8 * k, 8 * k, (pw + 8) * k, (ph + 8) * k), fill=(20, 18, 16, 255))
+    s = D.series(series_, start, end).dropna()
+    v = np.log(s.values) if log else s.values
+    xs = np.linspace(40, pw - 40, len(v)) + 8
+    lo, hi = v.min(), v.max()
+    ys = ph - 50 - (v - lo) / (hi - lo + 1e-9) * (ph - 120) + 8
+    pts = [(x * k, y * k) for x, y in zip(xs, ys)]
+    d.polygon(pts + [(xs[-1] * k, (ph - 30) * k), (xs[0] * k, (ph - 30) * k)], fill=color + (60,))
+    d.line(pts, fill=color + (255,), width=4 * k)
+    im = im.resize((pw + 16, ph + 16), Image.LANCZOS)
+    lab = T(f"{s.index[0].year} ~ {s.index[-1].year}", 26, (220, 200, 160), "SemiBold")
+    im.alpha_composite(lab, (30, 24))
+    return im
+
+
+TYPES.update({"capsule": Capsule, "isobars": IsoBars, "kpi": KPI, "frames": Frames})

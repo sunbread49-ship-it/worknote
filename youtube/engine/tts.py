@@ -119,6 +119,15 @@ def _money_words(t):
     def one(m):
         n = int(m.group(1).replace(",", ""))
         return hangul_num(n) + m.group(2)
+    # '4천8백만', '3천1백7십만' 처럼 숫자+천/백/십이 섞인 금액 → 한 덩어리 한글 (삼천백칠십만 · EP007 피드백)
+    def mixed(m):
+        v = 0
+        for d, u in re.findall(r"(\d+)([천백십])", m.group(1)):
+            v += int(d) * {"천": 1000, "백": 100, "십": 10}[u]
+        tail = re.sub(r"^(?:\d+[천백십])+", "", m.group(1))
+        v += int(tail) if tail else 0
+        return hangul_num(v) + (m.group(2) or "")
+    t = re.sub(r"(?<![\d.])((?:\d+[천백십])+\d*)(만|억)(?=[\s원이을은가도의에,.?!]|$)", mixed, t)
     t = re.sub(r"(?<![\d.])(\d[\d,]*)" + unit + r"(?=[\s원이을은가도의에만,.?!]|$)", one, t)
     t = re.sub(r"억\s+(?=[일이삼사오육칠팔구십백천]+(천만|천|만))", "억", t)  # 일억 팔천 → 일억팔천
     return t

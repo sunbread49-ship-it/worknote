@@ -148,6 +148,7 @@ checks:
   - {name: "나스닥 1월(%)", kind: month_mean, series: ndx, month: 1, y0: 1986}
   - {name: "나스닥 11월(%)", kind: month_mean, series: ndx, month: 11, y0: 1986}
   - {name: "나스닥 9월(%)", kind: month_mean, series: ndx, month: 9, y0: 1986}
+  - {name: "1960 보유(만원)", kind: ret, series: spx, start: "1950-10-31", end: "1960-10-31"}
   - {name: "2008 여름(%)", kind: ret, series: spx, start: "2008-04-30", end: "2008-10-31"}
   - {name: "1987 여름(%)", kind: ret, series: spx, start: "1987-04-30", end: "1987-10-31"}
   - {name: "2026.10.30→11.5 S&P500(%)", kind: ret, series: spx, start: "2026-10-30", end: "2026-11-05"}
@@ -378,6 +379,24 @@ scenes:
   figure: {name: bull, at: 0.9, size: 150, on: 2}
   credit: '산 모양: S&P500 로그 스케일'
   narration: ['1950년 10월에 100만 원을 넣었다고 해 볼게요.', '그리고 2026년 4월까지, 두 사람이 각자 다르게 투자했어요.']
+- type: isobars
+  chapter: 반전
+  kicker: 그냥 들고 있기 · 1950년 10월 100만 원
+  title: 10년마다 잔고를 쌓아 보면
+  highlight: 잔고
+  on: 1
+  step: 0.3
+  items:
+  - {label: '273만', year: 1960, value: 273}
+  - {label: '426만', year: 1970, value: 426}
+  - {label: '653만', year: 1980, value: 653}
+  - {label: '1,557만', year: 1990, value: 1557}
+  - {label: '7,319만', year: 2000, value: 7319}
+  - {label: '6,059만', year: 2010, value: 6059}
+  - {label: '1.67억', year: 2020, value: 16743}
+  - {label: '3.69억', year: 2026, value: 36912, hl: true, sub: '4월 말'}
+  credit: '10월 말 종가 기준 · 배당 제외'
+  narration: ['먼저 그냥 들고만 있었던 사람의 잔고를 10년마다 쌓아 보면,', '2000년대엔 한 번 주춤했지만, 결국 2026년 4월엔 3억 6천9백만 원이 돼요.']
 - type: hbars
   chapter: 반전
   kicker: 1950년 10월에 100만 원 · 2026년 4월 결과
@@ -417,14 +436,16 @@ scenes:
   items:
   - {text: "근데 쉬는 동안\n이자를 받는다면?", on: 1, size: 120, highlight: '이자', hl_color: gold}
   narration: ['근데요, 쉬는 6개월 동안 현금을 그냥 두지 않고, | 예금이나 단기 채권에 넣어서 이자를 받는다면요?']
-- type: ticket
+- type: capsule
   chapter: 반전
-  kicker: 핼러윈 매매법이 이기려면
-  title: 쉬는 동안 받아야 할 이자
-  label: '1950 ~ 2026 · 손익분기 연 이자율'
+  kicker: 핼러윈 매매법이 이기려면, 쉬는 동안 받아야 할 이자
   value: '3.1'
-  unit: '% 이상'
-  stub: "이것보다\n높으면 승\n낮으면 패"
+  unit: '%'
+  accent: '이상'
+  badge: 손익분기
+  ghost: '%'
+  sub: '연 3.1%보다 높으면 핼러윈 승, 낮으면 패'
+  sub_hl: '3.1%'
   narration: ['계산해 보니, 쉬는 동안 연 3.1%보다 높은 이자를 받았다면, 핼러윈 매매법이 이겼어요.']
 - type: versus
   chapter: 반전
@@ -466,6 +487,14 @@ scenes:
   sub: S&P500 · 같은 해 겨울 6개월 - 여름 6개월 평균 · 2020년대는 2020 ~ 2025
   source: '자료: S&P500 일간 종가 (배당 제외)'
   narration: ['연대별로 나눠 보면 더 분명해요. 1970년대엔 겨울이 여름보다 평균 9%포인트 넘게 더 벌었어요.', '그런데 2020년대엔, 처음으로 마이너스가 됐습니다. 여름이 더 벌었다는 뜻이죠.']
+- type: frames
+  chapter: 최근 10년
+  title: 같은 계절 공식, 다른 시대
+  highlight: 다른 시대
+  panels:
+  - {series: spx, start: '1970-01-01', end: '1979-12-31', color: [240, 200, 120], caption: '1970년대 · 겨울이 여름보다', value: '+9.2%p', good: true, on: 1}
+  - {series: spx, start: '2020-01-01', end: '2025-12-31', color: [150, 180, 240], caption: '2020년대 · 겨울이 여름보다', value: '-0.8%p', on: 2}
+  narration: ['오일쇼크로 출렁이던 1970년대엔, 겨울이 여름보다 9%포인트 넘게 더 벌었고,', '빅테크가 시장을 끌어올린 2020년대엔, 오히려 여름이 더 벌었어요.']
 - type: versus
   chapter: 최근 10년
   heading: S&P500 6개월 평균 · 최근 10년 (2016 ~ 2025)
@@ -563,16 +592,21 @@ scenes:
   stat: {value: '64/76', label: '수요일 → 금요일 S&P500 상승', on: 2}
   credit: '지도: us-states GeoJSON(PublicaMundi)'
   narration: ['연휴 전날인 수요일부터, 연휴 다음 날인 금요일까지 이틀.', '1950년부터 76번 중 64번, 주가가 올랐어요.']
-- type: ticket
+- type: kpi
   chapter: 추수감사절
-  kicker: 추수감사절 앞뒤 이틀 · 1950 ~ 2025
-  title: 평소 이틀의 약 9배
-  highlight: 약 9배
-  label: '수요일 → 금요일 평균'
-  value: '+0.61'
-  unit: '%'
-  stub: "아무 이틀\n평균은\n+0.07%"
-  narration: ['평균 0.61%. 아무 이틀이나 골랐을 때 평균이 0.07%니까, 약 9배예요.', '물론 이틀짜리라 금액으로는 크지 않고, 사고팔 비용을 생각하면 매매법이라기보단 재미있는 통계 정도로 보시면 돼요.', '그리고 연말의 진짜 주인공, 산타랠리는요? 12월에 따로 한 편으로 제대로 파헤쳐 드릴게요.']
+  kpis:
+  - {label: '수요일 → 금요일 · 평균 (1950 ~ 2025)', value: '+0.61%', on: 1}
+  - {label: '아무 이틀이나 골랐을 때 평균', value: '+0.07%', color: navy, on: 1}
+  bars:
+  - {label: '2021', value: -2.05, text: '-2.05%'}
+  - {label: '2022', value: 0.56, text: '+0.56%'}
+  - {label: '2023', value: 0.47, text: '+0.47%'}
+  - {label: '2024', value: 0.18, text: '+0.18%'}
+  - {label: '2025', value: 1.23, text: '+1.23%', hl: true}
+  bars_on: 2
+  vmax: 2.2
+  credit: '추수감사절 전 화요일 종가 → 다음 날 금요일 종가'
+  narration: ['평균 0.61%. 아무 이틀이나 골랐을 때 평균이 0.07%니까, 약 9배예요.', '최근 5년을 보면, 2021년엔 오미크론 변이 소식에 마이너스 2%였지만, 나머지 4번은 올랐어요.', '물론 이틀짜리라 금액으로는 크지 않고, 사고팔 비용을 생각하면 매매법이라기보단 재미있는 통계 정도로 보시면 돼요.', '그리고 연말의 진짜 주인공, 산타랠리는요? 12월에 따로 한 편으로 제대로 파헤쳐 드릴게요.']
 
 # ── 결론 ────────────────────────────────────────────
 - type: quote
