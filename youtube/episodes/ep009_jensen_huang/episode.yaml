@@ -1,0 +1,448 @@
+# EP009 · 숫자로 보는 인물 ① — 젠슨 황과 엔비디아 (빅테크 CEO 시리즈, 한 편에 1명)
+# 대본 작성 규칙: youtube/SCRIPT_STYLE.md · '발상 전환' 흐름 시범 적용 (CUDA)
+title: "식당 접시닦이 소년이 세계 1위 회사를 만들기까지 · 젠슨 황과 엔비디아"
+series_tag: "숫자로 보는 인물 · 젠슨 황"
+
+tts:
+  voice: ko-KR-Chirp3-HD-Sadaltager
+  rate: 1.12
+  say: {"NV1": "엔브이원", "CUDA": "쿠다", "GeForce": "지포스", "RIVA 128": "리바 원투에잇", "DGX-1": "디지엑스 원", "GTX 580": "지티엑스 오팔공", "GPU": "지피유", "ChatGPT": "챗지피티", "OpenAI": "오픈에이아이", "AMD": "에이엠디", "LSI": "엘에스아이"}
+
+youtube:
+  title: "접시닦이 소년이 만든 세계 1위 회사 · 젠슨 황 33년, 주가 4,975배 뒤에 숨은 -90%"
+  description: |
+    1993년, 미국의 한 패밀리 레스토랑 구석 자리에서 엔지니어 세 명이 회사를 차립니다.
+    30여 년 뒤, 그 회사는 세계 최초로 시가총액 5조 달러를 넘깁니다. 엔비디아, 그리고 젠슨 황.
+
+    ✔ 아홉 살 이민, 화장실 청소, 식당 접시닦이 소년
+    ✔ 창업 3년 만에 '30일 뒤 망하는 회사'가 된 이유
+    ✔ 모두가 반대한 10년짜리 베팅, CUDA
+    ✔ 게임 칩이 AI의 심장이 되기까지
+    ✔ 상장 첫날 100만 원 → 49.7억 원, 그런데 그사이 -90%, -85%, -66%
+
+    궁금한 인물, 종목, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+    📌 주식 악어새 구독하고 다음 이야기도 받아보세요.
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 엔비디아를 포함한 특정 종목의 매수·매도 추천이 아닙니다.
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 개별 종목은 지수보다 훨씬 크게 움직일 수 있습니다.
+
+    [자료] 엔비디아(NVDA) 수정주가(액면분할·배당 반영, 1999.1.22 상장일 종가~2026.11.6) · S&P500
+    인물·회사 연혁: 엔비디아 공식 연혁 및 주요 언론 인터뷰 등 널리 알려진 내용 기준
+  tags: [젠슨황, 엔비디아, NVIDIA, NVDA, 빅테크, CEO, AI, 반도체, 미국주식, 인물]
+  privacy: private
+
+shorts: []
+
+checks:
+  - {name: "상장일 종가→2026.11.6 배수", kind: mult, series: nvda}
+  - {name: "S&P500 1999.1.22→현재 배수", kind: ret, series: spx, start: "1999-01-22"}
+  - {name: "2002.1.3→2002.10.9(%)", kind: ret, series: nvda, start: "2002-01-03", end: "2002-10-09"}
+  - {name: "2007.10.17→2008.11.20(%)", kind: ret, series: nvda, start: "2007-10-17", end: "2008-11-20"}
+  - {name: "2018.10.1→2018.12.24(%)", kind: ret, series: nvda, start: "2018-10-01", end: "2018-12-24"}
+  - {name: "2021.11.29→2022.10.14(%)", kind: ret, series: nvda, start: "2021-11-29", end: "2022-10-14"}
+  - {name: "2022.10.14→현재 배수(%)", kind: ret, series: nvda, start: "2022-10-14"}
+  - {name: "2026.10.6 고점→현재(%)", kind: ret, series: nvda, start: "2026-10-06"}
+  - {name: "2006.11(CUDA)→2008.11.20(%)", kind: ret, series: nvda, start: "2006-11-08", end: "2008-11-20"}
+  - {name: "2002.1 고점 회복일", kind: ret, series: nvda, start: "2002-01-03", end: "2006-11-13"}
+  - {name: "2007.10 고점→2016.4.15(%)", kind: ret, series: nvda, start: "2007-10-17", end: "2016-04-15"}
+  - {name: "2021.11.29→현재 배수", kind: mult, series: nvda, start: "2021-11-29"}
+  - {name: "2006.11(CUDA)→2016.8(%)", kind: ret, series: nvda, start: "2006-11-08", end: "2016-08-15"}
+
+scenes:
+# ── 인트로 ─────────────────────────────────────────
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "1993년\n어느 식당 구석 자리", on: 1, size: 130, highlight: '식당 구석 자리'}
+  narration: ['1993년, 미국 실리콘밸리의 한 패밀리 레스토랑. | 구석 자리에 엔지니어 세 명이 앉아 있었어요.']
+  bg_word: '1993'
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "커피 한 잔 놓고\n회사를 차리기로 한다", on: 1, size: 120, highlight: '회사'}
+  narration: ['커피를 몇 번이나 리필해 가며, | 회사를 하나 차리기로 하죠.', '그 식당은 미국 어디에나 있는 24시간 패밀리 레스토랑, 데니스였어요.']
+- type: punch
+  chapter: 인트로
+  tone: gold
+  label: '30여 년 뒤 · 2025년 10월'
+  big: '시가총액 5조 달러'
+  sub: '세계 최초 · 엔비디아'
+  sub_on: 2
+  narration: ['그리고 30여 년 뒤, 그 회사는 세계 최초로 시가총액 5조 달러를 넘깁니다.', '엔비디아. 그리고 그 자리에 있던 한 사람, 젠슨 황.']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 숫자로 보는 인물 ①
+  title: "접시닦이 소년이\n세계 1위 회사를 만들기까지"
+  highlight: 세계 1위 회사
+  subtitle: 젠슨 황 33년, 그리고 엔비디아 주가의 진짜 모습
+  narration: ['오늘은 빅테크 CEO 시리즈 첫 번째, 젠슨 황이에요.', '그의 인생, 그리고 엔비디아 주가가 지나온 길을 숫자로 같이 볼게요. | 생각보다 훨씬 험했거든요.']
+- type: card
+  chapter: 인트로
+  heading: 오늘 볼 것
+  highlight: 오늘
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 34
+  bullets:
+  - {text: '아홉 살 이민 소년이 창업하기까지', on: 1}
+  - {text: '30일 뒤 망한다던 회사가 살아남은 방법', on: 2}
+  - {text: '모두가 반대한 10년 베팅, 그리고 AI', on: 3}
+  - {text: '주가 4,975배 뒤에 숨은 -90%', on: 4, highlight: '-90%', hl_color: down}
+  narration: ['오늘은 네 가지를 볼게요. 아홉 살 이민 소년이 창업하기까지,', '30일 뒤 망한다던 회사가 살아남은 방법,', '모두가 반대한 10년짜리 베팅, 그리고 AI.', '마지막으로, 주가 4,975배 뒤에 숨은 마이너스 90%까지요.']
+- type: kinetic
+  items:
+  - {text: '사라는 영상 아닙니다', on: 1, size: 110, highlight: '아닙니다', hl_color: down, sub: '특정 종목 매수 · 매도 추천이 아닙니다'}
+  narration: ['아, 먼저요. 엔비디아를 사라, 팔라는 영상은 절대 아닙니다.']
+
+# ── 소년 ────────────────────────────────────────────
+- type: timeline
+  chapter: 소년 시절
+  kicker: 젠슨 황 · 1963 ~ 1993
+  title: 창업 전 30년
+  highlight: 30년
+  ticks: [{label: '1963', sub: 대만 출생, hl: true}, {label: '1972', sub: 9살 미국행}, {label: '1978', sub: 식당 아르바이트}, {label: '1984', sub: 대학 졸업}, {label: '1985', sub: 반도체 회사}, {label: '1992', sub: 석사}, {label: '1993', sub: 창업, hl: true}]
+  bands: [{from: 0, to: 2, label: '이민 · 기숙학교', color: coral, on: 1}, {from: 3, to: 6, label: '칩 설계 엔지니어', color: [30, 42, 92], on: 2}]
+  bottom: '서른 살에 창업'
+  bottom_hl: 서른 살
+  bottom_on: 3
+  narration: ['젠슨 황은 1963년 대만에서 태어났어요. 아홉 살 때 형과 단둘이 미국으로 보내지죠.', '대학에선 전기공학을 공부했고, 반도체 회사에서 칩을 설계하는 엔지니어로 일했어요.', '그리고 서른 살에, 회사를 차립니다.']
+- type: card
+  chapter: 소년 시절
+  heading: 아홉 살 이민 소년
+  highlight: 아홉 살
+  width: 1500
+  size: 48
+  numbered: true
+  gap: 34
+  bullets:
+  - {text: '친척이 보낸 켄터키의 기숙학교, 알고 보니 문제아들이 가는 곳', on: 1}
+  - {text: '매일 맡은 일은 화장실 청소', on: 2, highlight: '화장실 청소', hl_color: down}
+  - {text: '열다섯 살, 식당에서 접시닦이 · 서빙 아르바이트', on: 3}
+  narration: ['친척이 좋은 학교라고 보낸 켄터키의 기숙학교는, 알고 보니 문제아들이 가는 곳이었어요.', '거기서 어린 젠슨 황이 매일 맡은 일은 화장실 청소였다고 해요.', '열다섯 살엔 식당에서 접시를 닦고, 서빙을 했죠. | 그런데 그 식당이, 바로 나중에 엔비디아를 창업한 그 식당 체인이었어요.']
+- type: kinetic
+  chapter: 소년 시절
+  items:
+  - {text: "\"가장 낮은 일부터\n해 봤다\"", on: 1, size: 120, highlight: '가장 낮은 일', hl_color: gold}
+  narration: ['그는 나중에 인터뷰에서, 그때 어떤 일이든 가장 잘하려고 했던 습관이 지금까지 이어졌다고 말하곤 해요.']
+- type: card
+  chapter: 소년 시절
+  heading: 창업 전 커리어
+  highlight: 커리어
+  width: 1500
+  size: 50
+  gap: 36
+  bullets:
+  - {text: '오리건 주립대 전기공학 (1984)', on: 1}
+  - {text: 'AMD · LSI 로직에서 반도체 칩 설계', on: 2}
+  - {text: '스탠퍼드 대학원 전기공학 석사 (1992)', on: 3}
+  narration: ['오리건 주립대에서 전기공학을 전공하고,', '에이엠디와 엘에스아이 로직에서 칩을 설계했어요. 엔비디아의 라이벌이 되는 바로 그 에이엠디죠.', '일하면서 스탠퍼드 대학원 석사도 마칩니다.']
+
+# ── 창업 ────────────────────────────────────────────
+- type: capsule
+  chapter: 창업
+  kicker: 1993년 4월 · 엔비디아 창업 자본금
+  value: '4'
+  unit: '만 달러'
+  badge: 공동 창업자 3명
+  ghost: '$'
+  sub: '젠슨 황 · 크리스 말라초프스키 · 커티스 프리엠'
+  sub_hl: '젠슨 황'
+  narration: ['1993년 4월, 젠슨 황은 동료 엔지니어 두 명과 함께, 4만 달러로 엔비디아를 세웁니다.', '목표는 하나였어요. 컴퓨터 게임 화면을, 전용 칩으로 훨씬 빠르게 그리는 것.']
+- type: kinetic
+  chapter: 창업
+  items:
+  - {text: "이름의 비밀\nNVIDIA = invidia", on: 1, size: 120, highlight: 'invidia', sub: '라틴어로 질투 · 부러움'}
+  narration: ['회사 이름에도 재밌는 사연이 있어요. 엔비디아는 라틴어로 질투를 뜻하는 인비디아에서 따왔어요.', '경쟁자들이 부러워할 회사를 만들겠다는 거였죠.']
+- type: kinetic
+  chapter: 창업
+  items:
+  - {text: "1990년대\n3D 게임의 시대", on: 1, size: 120, highlight: '3D 게임'}
+  narration: ['때마침 1990년대엔 PC 3D 게임이 막 뜨기 시작했어요. | 화면을 빨리 그리는 칩이 꼭 필요해진 거죠.']
+- type: kinetic
+  chapter: 창업
+  items:
+  - {text: "첫 제품 NV1\n시장에서 외면", on: 1, size: 120, highlight: '외면', hl_color: down}
+  narration: ['그런데 1995년에 낸 첫 제품, NV1은 시장에서 외면받아요. | 업계가 가는 방향과 다른 방식을 골랐거든요.']
+- type: card
+  chapter: 창업
+  heading: 1996년, 망하기 직전
+  highlight: 망하기 직전
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 36
+  bullets:
+  - {text: '게임기 회사 세가와 맺은 칩 개발 계약도 실패 위기', on: 1}
+  - {text: '"이 방식으론 못 만든다" 솔직하게 털어놓음', on: 2, highlight: '솔직하게', hl_color: gold}
+  - {text: '세가가 오히려 500만 달러를 투자 · 직원 절반 이상은 회사를 떠남', on: 3}
+  narration: ['게임기 회사 세가와 맺은 계약도 위기였죠. 이대로면 약속한 칩을 만들 수가 없었어요.', '젠슨 황은 세가 쪽에 솔직하게 털어놓아요. 이 방식으로는 못 만들겠다고요.', '그런데 세가는 오히려 500만 달러를 투자해 줍니다. | 그 돈으로 버텼지만, 직원 절반 이상은 회사를 떠나야 했어요.']
+- type: punch
+  chapter: 창업
+  tone: down
+  label: '젠슨 황이 수년간 회의를 열던 첫마디'
+  big: "\"우리 회사는\n30일 뒤 망한다\""
+  sub: '위기감을 잊지 않으려고'
+  sub_on: 2
+  narration: ['그 뒤로 젠슨 황은 수년 동안, 회의를 이런 말로 시작했다고 해요.', '우리 회사는 30일 뒤에 망한다. | 위기감을 잊지 않으려고요.']
+- type: kinetic
+  chapter: 창업
+  items:
+  - {text: "1997년 RIVA 128\n기사회생", on: 1, size: 120, highlight: '기사회생', hl_color: up}
+  narration: ['그리고 1997년, 남은 돈을 모두 걸고 만든 리바 원투에잇이 크게 팔리면서 기사회생하죠.']
+
+# ── 상장 ────────────────────────────────────────────
+- type: card
+  chapter: 상장
+  heading: 1999년, 두 개의 사건
+  highlight: 두 개의 사건
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 36
+  bullets:
+  - {text: '1월, 나스닥 상장 (공모가 12달러)', on: 1}
+  - {text: '8월, GeForce 256 출시 · "세계 최초의 GPU"라는 말을 만듦', on: 2, highlight: 'GPU', hl_color: up}
+  narration: ['1999년 1월, 엔비디아는 나스닥에 상장해요. 공모가는 12달러였죠.', '그리고 그해 지포스 256을 내놓으면서, 그래픽 처리 장치, 지피유라는 말을 처음 만들어 냅니다.']
+- type: versus
+  chapter: 상장
+  heading: 2000년, 라이벌의 몰락
+  left: {title: '3dfx', value: '파산', sub: '한때 그래픽카드 1위', color: down, on: 1}
+  right: {title: '엔비디아', value: '자산 인수', sub: '라이벌의 기술과 인재를 품다', color: up, on: 2}
+  narration: ['당시 그래픽카드 1위는 3dfx라는 회사였어요. 그런데 신제품이 계속 늦어지면서 무너지죠.', '2000년 말, 엔비디아는 그 라이벌의 기술과 자산을 사들입니다. | 창업 7년 만에 업계 1위가 된 거예요.']
+- type: isobars
+  chapter: 상장
+  kicker: 상장 첫날 종가에 100만 원 · 배당 재투자 · 2026.11.6
+  title: 100만 원이 어디까지?
+  highlight: 100만 원
+  on: 1
+  step: 0.35
+  items:
+  - {label: '600만', year: 'S&P500', sub: '같은 기간', value: 600}
+  - {label: '49.7억', year: '엔비디아', sub: '4,975배', value: 497500, hl: true}
+  gamma: 0.5
+  credit: 'NVDA 수정주가(분할·배당 반영) · S&P500 배당 제외'
+  narration: ['상장 첫날 종가에 100만 원을 넣었다면, 지금은 49억 7천만 원이에요. 4,975배.', '같은 기간 S&P500은 6배였고요. | 그런데요, 이 숫자만 보면 절대 안 돼요.']
+
+# ── 상처 ────────────────────────────────────────────
+- type: chart
+  chapter: 상처
+  chart:
+    series: nvda
+    start: '1999-01-22'
+    end: '2016-12-31'
+    log: true
+    color: [118, 185, 0]
+    title: 엔비디아 주가 · 1999 ~ 2016 (로그 스케일)
+    draw: {on: 1, dur: 2.4}
+    marks:
+    - {date: '2002-10-09', label: '-89.7%', sub: '2002', on: 2, dy: 60, dx: 60, color: down, size: 34}
+    - {date: '2008-11-20', label: '-85.1%', sub: '2008', on: 3, dy: 60, dx: 60, color: down, size: 34}
+    source: '자료: NVDA 수정주가 (분할·배당 반영)'
+  narration: ['상장 뒤 첫 17년의 주가를 보면요,', '2002년, 회계 문제와 닷컴 버블 붕괴가 겹치면서 고점 대비 89.7%가 빠져요.', '2008년 금융위기 땐 또 85.1%가 빠지고요.']
+- type: hbars
+  chapter: 상처
+  kicker: 엔비디아 · 고점 대비 최대 하락
+  bar_h: 40
+  row_gap: 22
+  title_y: 170
+  title: 4,975배 뒤에 숨은 숫자
+  highlight: 숨은 숫자
+  rows:
+  - {label: '2002년 · 닷컴 버블 + 회계 문제', value: 89.7, text: '-89.7%', on: 1}
+  - {label: '2008년 · 금융위기', value: 85.1, text: '-85.1%', on: 1, offset: 0.4}
+  - {label: '2022년 · 금리 인상', value: 66.3, text: '-66.3%', on: 1, offset: 0.8}
+  - {label: '2018년 · 코인 채굴 붐 붕괴', value: 56.0, text: '-56.0%', on: 1, offset: 1.2}
+  credit: 'NVDA 수정주가 · 각 구간 고점 → 저점'
+  narration: ['정리하면 이래요. 90% 가까이 빠진 게 한 번, 85%가 한 번, 66%가 한 번, 56%가 한 번.', '4,975배를 다 가져간 사람은, 이걸 전부 버틴 사람뿐이에요.']
+- type: card
+  chapter: 상처
+  heading: 2018년, 코인이 남긴 상처
+  highlight: 코인
+  width: 1500
+  size: 48
+  numbered: true
+  gap: 34
+  bullets:
+  - {text: '2017년 가상화폐 채굴 붐 · 그래픽카드가 동날 만큼 팔림', on: 1}
+  - {text: '2018년 코인 가격 폭락 · 채굴용 수요가 한순간에 사라짐', on: 2}
+  - {text: '창고에 쌓인 재고 · 석 달 만에 주가 -56%', on: 3, highlight: '-56%', hl_color: down}
+  narration: ['2018년 하락은 조금 특이했어요. 2017년엔 가상화폐 채굴 붐으로 그래픽카드가 동이 날 만큼 팔렸거든요.', '그런데 2018년 코인 가격이 무너지자, 채굴용 수요가 한순간에 사라져요.', '창고엔 재고가 쌓였고, 주가는 석 달 만에 56%가 빠졌죠.']
+- type: isobars
+  chapter: 상처
+  kicker: 상장 첫날 종가에 100만 원을 넣었다면
+  title: 잔고가 지나온 길
+  highlight: 지나온 길
+  on: 1
+  step: 0.28
+  gamma: 0.33
+  hmax: 470
+  items:
+  - {label: '1,457만', year: "'02.1", value: 1457}
+  - {label: '150만', year: "'02.10", value: 150}
+  - {label: '1,406만', year: "'06.11", value: 1406}
+  - {label: '360만', year: "'08.11", value: 360}
+  - {label: '4,111만', year: "'16.8", value: 4111}
+  - {label: '8.9억', year: "'21.11", value: 88572}
+  - {label: '3.0억', year: "'22.10", value: 29818}
+  - {label: '49.7억', year: "'26.11", value: 497481, hl: true}
+  credit: 'NVDA 수정주가(분할·배당 반영) · 높이는 압축 표시'
+  narration: ['100만 원이 지나온 길을 보면 이래요. 3년 만에 1,457만 원이 됐다가, 9개월 만에 150만 원으로 쪼그라들어요.', '다시 1,406만 원까지 갔다가 금융위기에 360만 원. | 2021년엔 8억 9천만 원이었다가, 1년도 안 돼 3억 원이 되죠.']
+- type: capsule
+  chapter: 상처
+  kicker: 2007년 10월 고점을 다시 넘기까지
+  value: '8.5'
+  unit: '년'
+  badge: 2016년 4월에야
+  sub: '고점에 샀다면 8년 반을 물려 있었다'
+  sub_hl: '8년 반'
+  narration: ['특히 2007년 고점에 샀던 사람은요, 그 가격을 다시 보기까지 8년 반이 걸렸어요. 2016년 4월에야 회복했거든요.']
+- type: punch
+  chapter: 상처
+  tone: down
+  label: '100만 원이 10만 원이 되는 순간'
+  big: '-89.7%'
+  sub: '2002년 · 이걸 버틸 수 있었을까?'
+  sub_on: 2
+  narration: ['마이너스 89.7%면, 100만 원이 10만 원이 되는 거예요.', '솔직히, 이걸 버틸 수 있는 사람이 몇이나 될까요?']
+
+# ── 발상 전환 ───────────────────────────────────────
+- type: flap
+  chapter: 발상 전환
+  word: "CUDA"
+  hl_chars: "C"
+  sub: "2006년, 모두가 반대한 베팅"
+  highlight: 모두가 반대한
+  narration: ['그리고 2006년, 젠슨 황은 회사의 운명을 바꾸는 결정을 해요. 쿠다.']
+- type: versus
+  chapter: 발상 전환
+  heading: GPU를 보는 눈을 바꾸다
+  left: {title: '그전까지', value: '게임 그래픽', sub: '화면을 빨리 그리는 칩', color: neutral, on: 1}
+  right: {title: 'CUDA 이후', value: '모든 계산', sub: '과학 · 금융 · 그리고 AI', color: up, on: 2}
+  narration: ['그전까지 지피유는 게임 화면을 그리는 칩이었죠.', '쿠다는 그 칩을, 누구나 아무 계산에나 쓸 수 있게 만든 도구예요. | 수천 개의 작은 계산기를 동시에 돌리는 거죠.']
+- type: card
+  chapter: 발상 전환
+  heading: 왜 다들 반대했나
+  highlight: 반대
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 36
+  bullets:
+  - {text: '모든 칩에 기능을 넣느라 비용 증가 → 이익 감소', on: 1}
+  - {text: '당장 쓰는 고객이 거의 없었다', on: 2}
+  - {text: '2006년 → 2008년 말, 주가 -74%', on: 3, highlight: '-74%', hl_color: down}
+  narration: ['문제는 돈이었어요. 게임용 칩에까지 이 기능을 다 넣다 보니 비용이 늘고, 이익은 줄었죠.', '정작 그걸 쓰는 고객은 거의 없었고요.', '쿠다를 내놓은 2006년 11월부터 2008년 말까지, 주가는 74%가 빠집니다.']
+- type: kinetic
+  chapter: 발상 전환
+  items:
+  - {text: "그래도\n10년을 밀어붙였다", on: 1, size: 130, highlight: '10년', hl_color: gold}
+  narration: ['주주들의 불만이 쏟아졌지만, 젠슨 황은 쿠다를 놓지 않았어요. | 거의 10년을요.', '그는 이런 걸 0달러짜리 시장이라고 불러요. 아직 존재하지 않는 시장이요. | 아무도 없을 때 먼저 가 있어야, 시장이 생겼을 때 1등이 된다는 거죠.']
+- type: timeline
+  chapter: 발상 전환
+  kicker: 게임 칩이 AI의 심장이 되기까지
+  title: 10년 베팅이 터진 순간들
+  highlight: 터진 순간
+  ticks: [{label: '2006', sub: CUDA, hl: true}, {label: '2012', sub: AlexNet}, {label: '2016', sub: OpenAI에 서버}, {label: '2022', sub: ChatGPT}, {label: '2025', sub: '5조 달러', hl: true}]
+  bands: [{from: 0, to: 1, label: '아무도 몰라준 6년', color: [150, 140, 120], on: 1}, {from: 1, to: 4, label: 'AI 시대', color: coral, on: 2}]
+  narration: ['그러다 2012년, 토론토 대학 연구팀이 엔비디아 게임용 그래픽카드 두 장으로 학습시킨 AI가 이미지 인식 대회에서 압도적으로 우승해요.', '딥러닝 시대가 열린 거죠. 2016년엔 젠슨 황이 첫 AI 서버를 직접 들고 가서, 막 생긴 오픈에이아이에 전달하기도 했고요.']
+- type: chart
+  chapter: 발상 전환
+  chart:
+    series: nvda
+    start: '2021-06-01'
+    end: '2026-11-06'
+    color: [118, 185, 0]
+    title: 엔비디아 주가 · 2021 ~ 2026
+    draw: {on: 1, dur: 2.2}
+    marks:
+    - {date: '2022-10-14', label: '-66.3%', sub: '2022.10 바닥', on: 1, offset: 1.4, dy: 60, dx: 60, color: down, size: 34}
+    - {date: '2022-11-30', label: 'ChatGPT 공개', sub: '2022.11', on: 2, dy: -90, dx: -40, color: gold}
+    - {date: '2026-10-06', label: '사상 최고', on: 3, dy: -60, dx: -90, color: up}
+    source: '자료: NVDA 수정주가 (분할·배당 반영)'
+  narration: ['2022년 10월, 금리 인상에 주가는 고점 대비 66%가 빠져 있었어요.', '그런데 바로 다음 달, 챗지피티가 세상에 나옵니다. | 그리고 세상 모든 AI 회사가 엔비디아 칩을 사려고 줄을 서죠.', '그 바닥에서 지금까지, 주가는 16.7배가 올랐어요.', '시가총액은 2023년 5월 1조 달러를 시작으로, 2025년엔 세계 최초로 4조, 그리고 5조 달러를 차례로 넘깁니다.']
+- type: punch
+  chapter: 발상 전환
+  tone: up
+  label: '2022년 10월 바닥 → 2026년 11월'
+  big: '16.7배'
+  sub: '2006년 CUDA 베팅이 16년 만에'
+  sub_on: 2
+  narration: ['16.7배.', '2006년에 시작한 베팅이, 16년 만에 터진 거예요.']
+
+# ── 리더십 ──────────────────────────────────────────
+- type: card
+  chapter: 리더십
+  heading: 젠슨 황 스타일
+  highlight: 스타일
+  width: 1500
+  size: 48
+  numbered: true
+  gap: 32
+  bullets:
+  - {text: '창업 이후 33년째 CEO · 빅테크에서 가장 오래', on: 1}
+  - {text: '직속 보고 임원 수십 명 · 1대1 면담 대신 모두 함께', on: 2}
+  - {text: '트레이드마크 검은 가죽 재킷', on: 3}
+  narration: ['젠슨 황은 창업 이후 33년째 CEO예요. 빅테크 창업자 중에서도 가장 오래 회사를 이끌고 있죠.', '수십 명의 임원에게 직접 보고를 받고, 정보를 모두에게 한꺼번에 공유하는 걸로 유명해요.', '그리고 늘 입는 검은 가죽 재킷까지요.']
+- type: quote
+  chapter: 리더십
+  original: "I wish upon you ample doses of pain and suffering."
+  text: 여러분에게 충분한 고통과 시련이 함께하길 바랍니다.
+  highlight: 고통과 시련
+  source: 젠슨 황 · 2024년 스탠퍼드 경영대학원 강연
+  narration: ['2024년 스탠퍼드 강연에서, 그는 학생들에게 이런 말을 했어요.', '여러분에게 충분한 고통과 시련이 함께하길 바랍니다. | 위대함은 똑똑함이 아니라, 시련을 견딘 성격에서 나온다는 뜻이었죠.']
+
+# ── 결론 ────────────────────────────────────────────
+- type: versus
+  chapter: 결론
+  heading: '2021년 11월 고점에 샀다면 · 지금'
+  left: {title: '1년 뒤 (2022.10)', value: '-66.3%', sub: '반 토막도 넘게', color: down, on: 1}
+  right: {title: '지금 (2026.11)', value: '5.6배', sub: 'AI라는 큰 행운 덕분에', color: up, on: 2}
+  narration: ['재밌는 건, 2021년 11월 꼭대기에 샀던 사람도 1년 뒤엔 66% 손실이었지만,', '지금은 5.6배가 돼 있다는 거예요. | 다만 이건 AI라는, 누구도 예측 못 한 큰 행운이 있었기 때문이에요.']
+- type: versus
+  chapter: 결론
+  heading: 1999년 1월 ~ 2026년 11월
+  left: {title: '엔비디아 한 종목', value: '4,975배', sub: '최대 하락 -89.7%', color: up, on: 1}
+  right: {title: 'S&P500 지수', value: '6배', sub: '배당 제외', color: neutral, on: 2}
+  narration: ['엔비디아 한 종목은 4,975배, S&P500 지수는 6배.', '하지만 그 4,975배의 길에 서 있던 수많은 주주 중에, 끝까지 들고 있던 사람은 아주 드물었을 거예요.']
+- type: card
+  chapter: 결론
+  heading: 숫자로 본 젠슨 황
+  highlight: 숫자
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 38
+  bullets:
+  - {text: '망하기 직전까지 간 회사가, 세계 최초 5조 달러 회사로', on: 1}
+  - {text: '그 과정에서 주가는 -90% · -85% · -66%', on: 2, highlight: '-90%', hl_color: down}
+  - {text: '좋은 회사와 편한 주식은 다르다', on: 3, highlight: '편한 주식', hl_color: gold}
+  narration: ['정리하면요. 30일 뒤 망한다던 회사가, 세계 최초 5조 달러 회사가 됐어요.', '하지만 그 과정에서 주가는 90%, 85%, 66%씩 빠졌죠.', '그래서 꼭 기억할 건, 좋은 회사와 편하게 들고 있을 수 있는 주식은 다르다는 거예요. | 지금도 엔비디아는 지난달 고점보다 22% 아래에 있어요.']
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: 오늘의 결론, on: 1, size: 140}
+  narration: ['자, 오늘 이야기 정리해 볼게요.']
+  bg_word: CHECK
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '상장 첫날 100만 원', on: 1, size: 110}
+  narration: ['상장 첫날 100만 원은 지금 49억 7천만 원.']
+  stamp: {text: '4,975배', color: up, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '그사이 최대 하락', on: 1, size: 110}
+  narration: ['그사이 가장 크게 빠진 건 마이너스 89.7%였습니다.']
+  stamp: {text: '-89.7%', color: down, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: outro
+  heading: "위대한 회사도\n주가는 90% 빠졌다"
+  highlight: 90% 빠졌다
+  sub: 다음 인물, 댓글로 추천해 주세요
+  disclaimer: "본 영상은 투자 교육 목적이며, 엔비디아를 포함한 특정 종목의 매수·매도 추천이 아닙니다.\n과거 데이터는 미래 수익을 보장하지 않습니다."
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['위대한 회사도, 주가는 90% 빠질 수 있었어요. 그걸 아는 게 투자의 시작이죠.', '다음엔 어떤 빅테크 CEO가 궁금하세요? | 사티아 나델라, 일론 머스크, 팀 쿡, 누구든 댓글로 추천해 주세요. 숫자로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']

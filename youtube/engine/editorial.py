@@ -309,13 +309,13 @@ class HBars(Editorial):
             y += lab.height + 10
             bw = max(8, int(wmax * abs(r["value"]) / vmax * k))
             if k > 0:
-                G.blit(f, Image.new("RGBA", (bw, 58), c + (255,)), (x0, y))
+                G.blit(f, Image.new("RGBA", (bw, sp.get("bar_h", 58)), c + (255,)), (x0, y))
                 txt = T(counter(r.get("text", str(r["value"])), (t - t0) / 0.7), 64, self.acc if hl else self.fg, "Black")
                 if bw + txt.width + 30 < wmax + 220:
-                    shadow(f, txt, (x0 + bw + 24, y + 29), "lm", min(1, k * 2), alpha=0 if self.paper else 0.6)
+                    shadow(f, txt, (x0 + bw + 24, y + sp.get("bar_h", 58) / 2), "lm", min(1, k * 2), alpha=0 if self.paper else 0.6)
                 else:
                     shadow(f, txt, (x0 + bw, y - 8), "rb", min(1, k * 2), alpha=0 if self.paper else 0.6)
-            y += 58 + 40
+            y += sp.get("bar_h", 58) + sp.get("row_gap", 40)
         self.finish(f, t)
 
 

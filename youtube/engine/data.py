@@ -227,7 +227,7 @@ def series(name: str, start=None, end=None) -> pd.Series:
         s = _vix()
     elif name in ("strat_mid2pres", "strat_pres2mid"):
         s = _cycle_strategy(name)
-    elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx"):
+    elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd"):
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()

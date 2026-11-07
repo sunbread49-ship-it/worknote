@@ -60,6 +60,10 @@ DATA = {
     "data/qqq_daily.csv": DAILY.format("QQQ"),
     "data/ndx_daily.csv": DAILY.format("%5ENDX"),
     "data/spx_daily.csv": DAILY.format("%5EGSPC"),
+    "data/nvda_daily.csv": DAILY.format("NVDA"),
+    "data/msft_daily.csv": DAILY.format("MSFT"),
+    "data/aapl_daily.csv": DAILY.format("AAPL"),
+    "data/amd_daily.csv": DAILY.format("AMD"),
     # S&P500 월평균 지수 1871~ (Robert Shiller 데이터 기반, 매월 갱신)
     # 지도 (공개 GeoJSON)
     "geo/us_states.json": "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json",
