@@ -332,7 +332,7 @@ SCENES = [
     {"draw": s_hook, "min": 3.5, "narr": ["같은 높이에서, 공 세 개를 동시에 놓습니다.",
                                          "직선, 둥근 길, 그리고 이상하게 휜 길. | 어느 공이 가장 먼저 도착할까요?"]},
     {"draw": s_race, "min": 5.2, "sfx": [(0.6, "pop", 0.4)], "narr": ["가장 짧은 건 당연히 직선이죠.", "그런데 1등은, 이 휜 길입니다."]},
-    {"draw": s_times, "min": 3.0, "narr": ["높이 2미터면, 휜 길 1초, 둥근 길 1.03초, 직선 1.19초."]},
+    {"draw": s_times, "min": 3.0, "narr": ["높이 2미터면, 휜 길은 1초. | 둥근 길은 1.03초. | 직선은 1.19초예요."]},
     {"draw": s_why, "min": 4.2, "narr": ["비밀은 출발에 있어요. | 처음에 가파르게 떨어지면서 속도를 먼저 붙이고,", "그 빠른 속도로 남은 길을 달려 나가는 거죠."]},
     {"draw": s_wheel, "min": 4.0, "narr": ["이 곡선의 이름은 사이클로이드.", "굴러가는 바퀴 위의 한 점이 그리는 곡선이에요."]},
     {"draw": s_history, "min": 3.0, "narr": ["1696년, 요한 베르누이가 이 문제를 공개적으로 냈는데,",
@@ -401,7 +401,12 @@ _subc = {}
 
 def subtitle(f, text):
     if text not in _subc:
-        _subc[text] = T(text, 62, (255, 255, 255), "Bold", max_w=940, align="center", stroke=5, stroke_fill=(0, 0, 0), line_gap=1.25)
+        tx = T(text, 62, (14, 16, 24), "Bold", max_w=920, align="center", line_gap=1.25)
+        px, py = 34, 16
+        box = Image.new("RGBA", (tx.width + px * 2, tx.height + py * 2), (0, 0, 0, 0))
+        ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), radius=18, fill=(255, 255, 255, 232))
+        box.alpha_composite(tx, (px, py))
+        _subc[text] = box
     G.blit(f, _subc[text], (W / 2, 1420), 1, "mt")
 
 
