@@ -31,7 +31,85 @@ youtube:
   tags: [젠슨황, 엔비디아, NVIDIA, NVDA, 빅테크, CEO, AI, 반도체, 미국주식, 인물]
   privacy: private
 
-shorts: []
+thumbs:
+  - template: calc
+    tag: "엔비디아 상장 첫날 100만 원"
+    lcd_label: "2026년 11월"
+    value: "49.7억"
+    lines:
+      - {text: "접시닦이 소년이", size: 120}
+      - {text: "만든 회사", size: 150, color: yellow}
+      - {text: "그런데 -90%?", size: 120}
+  - template: receipt
+    tag: "젠슨 황 · 엔비디아 33년"
+    lines:
+      - {text: "엔비디아", size: 150}
+      - {text: "주주의", size: 120}
+      - {text: "영수증", size: 170, color: yellow}
+    receipt_sub: "1999.1 상장 ~ 2026.11"
+    rows:
+      - {k: "100만 원 →", v: "49.7억", color: up}
+      - {k: "2002년", v: "-89.7%", color: down}
+      - {k: "2008년", v: "-85.1%", color: down}
+      - {k: "2022년", v: "-66.3%", color: down}
+    total: "버틸 수 있었을까?"
+    total_color: [30, 30, 30]
+  - template: clipping
+    tag: "1993년 어느 식당"
+    masthead: "THE DAILY MARKET"
+    date: "1996년 · 실리콘밸리"
+    headline: "그래픽 칩 스타트업, 30일 뒤 파산 위기"
+    stamp: {text: "5조 달러", sub: "30년 뒤", size: 150, color: [220, 40, 40], pos: [760, 720]}
+    lines:
+      - {text: "망하기 직전", size: 150}
+      - {text: "회사가", size: 150, color: yellow}
+      - {text: "세계 1위로", size: 150}
+  - template: diagonal
+    ant: false
+    a: {label: "2002년 · 고점 대비", value: "-89.7%", color: red, chart: {series: nvda, start: "2001-06-01", end: "2002-12-31", color: [255, 140, 140]}}
+    b: {label: "상장 첫날 → 지금", value: "4,975배", color: teal, chart: {series: nvda, start: "1999-01-22", end: "2026-11-06", log: true, color: [170, 255, 240]}}
+    center: "젠슨 황 · 엔비디아"
+    bottom: "버틸 수 있었을까?"
+  - template: question
+    lines:
+      - {text: "엔비디아에", size: 120}
+      - {text: "100만 원 넣었으면", size: 110}
+      - {text: "49.7억", size: 160, color: up}
+      - {text: "이라는데", size: 110}
+      - {text: "진짜일까?", size: 190, color: yellow}
+  - template: big_number
+    glow: [20, 110, 40]
+    lines:
+      - {text: "접시닦이 소년이 만든 회사", size: 100}
+      - {text: "4,975배", size: 250, color: up}
+      - {text: "그 뒤에 숨은 -89.7%", size: 100, color: yellow, hl: "-89.7%", hl_color: down}
+    props:
+      - {kind: chart, series: nvda, start: "2016-01-01", end: "2026-11-06", color: [118, 185, 0], w: 640, h: 480, pos: [1580, 640]}
+  - template: vs_numbers
+    top: "엔비디아 상장 첫날 100만 원"
+    top_hl: "100만 원"
+    left: {label: "최대 하락", value: "-90%", sub: "2002년", color: down}
+    right: {label: "지금", value: "49.7억", sub: "2026년 11월", color: up}
+
+shorts:
+  - title: "30일 뒤 망한다"
+    start: "2:15.0"
+    end: "2:54.0"
+    yt_title: "회의 첫마디가 '우리 회사는 30일 뒤 망한다'였던 CEO #젠슨황 #엔비디아 #shorts"
+    yt_desc: "첫 제품 실패, 세가 계약 위기, 직원 절반 이상이 떠난 1996년. 망하기 직전의 엔비디아를 살린 건? 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 특정 종목 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: down, top: "엔비디아 1996년", label: "젠슨 황의 회의 첫마디", big: "30일 뒤 망한다", sub: "그 회사가 세계 1위가 되기까지"}
+  - title: "4,975배 뒤의 -90%"
+    start: "3:21.0"
+    end: "4:13.0"
+    yt_title: "엔비디아 상장 첫날 100만 원 → 49.7억, 그런데 -90%를 버텼어야 했다 #엔비디아 #NVDA #shorts"
+    yt_desc: "1999년 상장 첫날 종가 100만 원이 지금 49.7억 원. 하지만 그사이 -89.7%, -85.1%, -66.3%, -56%. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 특정 종목 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: up, top: "엔비디아 상장 첫날 100만 원", label: "1999.1 → 2026.11", big: "49.7억", sub: "그사이 최대 -89.7%"}
+  - title: "CUDA 10년 베팅"
+    start: "4:45.0"
+    end: "5:47.0"
+    yt_title: "모두가 반대했던 엔비디아의 10년 베팅, CUDA #젠슨황 #AI #shorts"
+    yt_desc: "2006년 게임 칩을 '모든 계산'의 칩으로 바꾼 결정. 주가는 2년 만에 -74%, 그래도 10년을 밀어붙인 결과. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 특정 종목 매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: gold, top: "모두가 반대한 베팅", label: "2006년 · 엔비디아", big: "CUDA", sub: "게임 칩이 AI의 심장이 되기까지"}
 
 checks:
   - {name: "상장일 종가→2026.11.6 배수", kind: mult, series: nvda}
