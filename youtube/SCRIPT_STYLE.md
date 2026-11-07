@@ -56,5 +56,7 @@
 - 배경 `bg`: `{kind: chart, series, start, end, log}`(실제 차트를 어둡게 깐 배경) · `{kind: grain, tone: navy|ink|rust|olive|plum}` · `{kind: calendar, hl: [NOV, ...]}`
 - 공통: `kicker`(노란 작은 글씨) + `title`(흰 큰 제목, `highlight` 노랑) + `credit`(오른쪽 위 출처)
 - `knockout` 거대한 단어 안에 차트가 비침 · `timeline` 눈금+구간 강조+태그 · `grid` N칸 중 K칸 색칠(연도·사람 아이콘) · `hbars` 가로 막대 비교 · `profile` 곡선 일부 구간 노랗게 · `infobox` 노란 띠 정보 박스
+- `poster` 컬러 포스터(tone: rust|teal|mustard|navy|plum|sage) + 캔들 무늬 띠 + 실제 지수 흐름으로 만든 검은 산 실루엣 + `pin`(점선 라벨) + `figure`(이모지를 검은 실루엣으로: turkey, bull, bear, eagle, runner, pumpkin, capitol…)
+- `usmap` 미국 지도(주별 색칠 `states`, 아래 제목, 오른쪽 아래 대비 막대 `bars`)
 - 에피소드에 `series_tag: "..."` → 로고 옆 주제 태그
 - 기존 남색 슬라이드와 섞어 쓰기: 한 편에 에디토리얼 8~12장 + 펀치 3~6장 + 나머지 기존 슬라이드

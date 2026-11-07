@@ -447,3 +447,239 @@ class Profile(Editorial):
 
 
 TYPES = {"infobox": InfoBox, "knockout": Knockout, "timeline": Timeline, "grid": Grid, "hbars": HBars, "profile": Profile}
+
+
+# ── 포스터형: 컬러 배경 + 무늬 띠 + 실제 차트로 만든 검은 '산' 실루엣 ─────────
+POSTER = {"rust": ((214, 112, 52), (176, 78, 30)), "teal": ((40, 150, 150), (18, 96, 104)),
+          "mustard": ((232, 178, 52), (196, 132, 24)), "navy": ((52, 86, 160), (26, 46, 100)),
+          "plum": ((150, 70, 120), (96, 36, 80)), "sage": ((128, 160, 110), (80, 112, 70))}
+
+
+@lru_cache(maxsize=8)
+def _poster_bg(tone):
+    w, h = S.W, S.H
+    c1, c2 = POSTER.get(tone, POSTER["rust"])
+    y, x = np.ogrid[-1:1:h * 1j, -1:1:w * 1j]
+    r = np.clip(np.sqrt(x * x * 0.6 + (y + 0.1) ** 2) / 1.3, 0, 1)[..., None]
+    a = np.array(c1, np.float32) * (1 - r) + np.array(c2, np.float32) * r
+    a += _grain(w, h, seed=11, amt=7)[..., None]
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+
+
+@lru_cache(maxsize=4)
+def _band(color=(26, 20, 18), w=S.W):
+    """무늬 띠: 작은 캔들(양봉·음봉) 반복 — 주식 채널 고유 패턴"""
+    k = 2
+    h = 44
+    im = Image.new("RGBA", (w * k, h * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.line((0, 3 * k, w * k, 3 * k), fill=color + (255,), width=3 * k)
+    d.line((0, (h - 4) * k, w * k, (h - 4) * k), fill=color + (255,), width=3 * k)
+    x, i = 14, 0
+    pat = [(10, 30), (16, 26), (8, 22), (14, 34), (12, 24), (18, 30)]
+    while x < w:
+        t, b = pat[i % len(pat)]
+        cx = x * k
+        d.line((cx, (t - 4) * k, cx, (b + 4) * k), fill=color + (255,), width=2 * k)
+        if i % 2 == 0:
+            d.rectangle((cx - 5 * k, t * k, cx + 5 * k, b * k), fill=color + (255,))
+        else:
+            d.rectangle((cx - 5 * k, t * k, cx + 5 * k, b * k), outline=color + (255,), width=2 * k)
+        x += 28
+        i += 1
+    return im.resize((w, h), Image.LANCZOS)
+
+
+@lru_cache(maxsize=16)
+def silhouette(name, h, color=(26, 20, 18)):
+    """Fluent 3D 이모지 → 단색 실루엣"""
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[1] / "assets/emoji" / f"{name}.png"
+    im = Image.open(p).convert("RGBA")
+    im = im.crop(im.getbbox())
+    a = im.getchannel("A").resize((int(im.width * h / im.height), h), Image.LANCZOS)
+    a = a.filter(ImageFilter.GaussianBlur(1.2)).point(lambda v: 255 if v > 110 else int(v * 2.3 * (v > 40)))
+    out = Image.new("RGBA", a.size, color + (255,))
+    out.putalpha(a)
+    return out
+
+
+class Poster(Editorial):
+    """tone, kicker, title(검은 글씨, highlight 흰색), ridge: {series, start, end, log} 실루엣,
+    pin: {at(0~1), label, on}, figure: {name, at(0~1), size, on}"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(_poster_bg(sp.get("tone", "rust")), (0, 0))
+        dark = (26, 20, 18)
+        band = _band(dark)
+        G.blit(f, band, (0, 200), 0.95)
+        G.blit(f, band, (0, 860), 0.95)
+        y = 268
+        if sp.get("kicker"):
+            k = T(sp["kicker"], 40, dark, "ExtraBold")
+            G.blit(f, k, (S.W / 2, y), G.appear(t, 0.0, 0.3), "mt")
+            y += k.height + 4
+        if sp.get("title"):
+            tt = T(sp["title"], 76, dark, "Black", highlight=sp.get("highlight", ""), hl_fill=(255, 255, 255), align="center")
+            kk = G.ease_out(t / 0.4)
+            G.blit(f, tt, (S.W / 2, y + (1 - kk) * 20), kk, "mt")
+        # 능선: 실제 지수 흐름을 평평한 '산'으로
+        rg = sp.get("ridge")
+        x0, x1, base = 140, S.W - 140, 845
+        if rg:
+            from . import data as D
+            s = D.series(rg["series"], rg.get("start"), rg.get("end")).dropna()
+            v = np.log(s.values) if rg.get("log") else s.values
+            n = 220
+            v = np.interp(np.linspace(0, len(v) - 1, n), np.arange(len(v)), v)
+            v = np.convolve(np.pad(v, 2, mode="edge"), np.ones(5) / 5, mode="valid")
+            lo, hi = v.min(), v.max()
+            hh = rg.get("height", 250)
+            xs = np.linspace(x0, x1, n)
+            nv = (v - lo) / (hi - lo + 1e-9)
+            nv = 0.12 + 0.88 * nv                       # 낮은 곳도 살짝 언덕으로
+            taper = np.clip(np.minimum(np.linspace(0, 1, n), np.linspace(1, 0, n)) / 0.07, 0, 1) ** 0.7
+            ys = base - 14 - nv * taper * hh
+            kd = G.ease_out((t - 0.15) / 0.9)
+            m = max(2, int(n * kd))
+            k = 2
+            lay = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
+            d = ImageDraw.Draw(lay)
+            pts = [(x * k, y * k) for x, y in zip(xs[:m], ys[:m])]
+            d.polygon(pts + [(xs[m - 1] * k, base * k), (x0 * k, base * k)], fill=dark + (255,))
+            d.rectangle((x0 * k, (base - 14) * k, xs[m - 1] * k, base * k), fill=dark + (255,))
+            f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
+            self._ridge = (xs, ys)
+        pin = sp.get("pin")
+        if pin and rg:
+            o = G.appear(t, self.line_start(pin.get("on", 1)) + 0.3, 0.3)
+            xs, ys = self._ridge
+            i = int(pin.get("at", 0.3) * (len(xs) - 1))
+            px, top = xs[i], max(ys[i] - 120, 470)
+            d = ImageDraw.Draw(f)
+            if o > 0:
+                for yy in range(int(top + 40), int(ys[i]), 14):
+                    d.line((px, yy, px, yy + 7), fill=dark + (int(255 * o),), width=3)
+                lb = G.pill(pin["label"], "ExtraBold", 34, (255, 255, 255), dark, pad=(18, 8), radius=2)
+                G.blit(f, lb, (px, top + 34), o, "mb")
+        fg = sp.get("figure")
+        if fg and rg:
+            o = G.appear(t, self.line_start(fg.get("on", 1)) + 0.2, 0.4)
+            xs, ys = self._ridge
+            i = int(fg.get("at", 0.7) * (len(xs) - 1))
+            im = silhouette(fg["name"], int(min(fg.get("size", 150), ys[i] + 8 - 440)), dark)
+            if fg.get("flip"):
+                im = im.transpose(Image.FLIP_LEFT_RIGHT)
+            G.blit(f, im, (xs[i], ys[i] + 8 + (1 - o) * 30), o, "mb")
+        self.finish(f, t)
+
+
+# ── 지도: 미국 주 / 세계 ─────────────────────────────────────────
+def _albers(lon, lat, lon0=-96, lat0=37.5, p1=29.5, p2=45.5):
+    import math
+    r = math.radians
+    n = (math.sin(r(p1)) + math.sin(r(p2))) / 2
+    C = math.cos(r(p1)) ** 2 + 2 * n * math.sin(r(p1))
+    rho0 = math.sqrt(C - 2 * n * math.sin(r(lat0))) / n
+    th = n * r(lon - lon0)
+    rho = math.sqrt(C - 2 * n * math.sin(r(lat))) / n
+    return rho * math.sin(th), rho0 - rho * math.cos(th)
+
+
+@lru_cache(maxsize=2)
+def _us_shapes():
+    import json
+    from pathlib import Path
+    g = json.load(open(Path(__file__).resolve().parents[1] / "assets/geo/us_states.json"))
+    out = {}
+    for ft in g["features"]:
+        nm = ft["properties"]["name"]
+        if nm in ("Alaska", "Hawaii", "Puerto Rico"):
+            continue
+        geom = ft["geometry"]
+        polys = geom["coordinates"] if geom["type"] == "MultiPolygon" else [geom["coordinates"]]
+        out[nm] = [[_albers(x, y) for x, y in poly[0]] for poly in polys]
+    return out
+
+
+class USMap(Editorial):
+    """미국 지도. fill: 기본 주 색, states: {주 이름: 색}, kicker/title 왼쪽 아래, bars: 오른쪽 아래 막대
+    bars: [{label, left, right, left_color, right_color, mid}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(_poster_bg(sp.get("tone", "teal")), (0, 0))
+        f.alpha_composite(Image.new("RGBA", f.size, (0, 20, 30, 120)))
+        shapes = _us_shapes()
+        allp = [p for polys in shapes.values() for poly in polys for p in poly]
+        xs_, ys_ = [p[0] for p in allp], [p[1] for p in allp]
+        mnx, mxx, mny, mxy = min(xs_), max(xs_), min(ys_), max(ys_)
+        W, H = 1240, 700
+        ox, oy = (S.W - W) / 2 + 140, 150
+        sc = min(W / (mxx - mnx), H / (mxy - mny))
+
+        def P(p):
+            return (ox + (p[0] - mnx) * sc) * 2, (oy + (mxy - p[1]) * sc) * 2
+
+        k = 2
+        base = sp.get("fill", [44, 70, 150])
+        lay = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
+        d = ImageDraw.Draw(lay)
+        order = list(shapes.keys())
+        kk = G.ease_out(t / 0.8)
+        hl = sp.get("states", {})
+        for j, nm in enumerate(order):
+            c = tuple(hl.get(nm, base)) if t >= self.line_start(sp.get("states_on", 1)) + 0.2 else tuple(base)
+            for poly in shapes[nm]:
+                d.polygon([P(p) for p in poly], fill=c + (255,), outline=(240, 236, 220, 255), width=2 * k)
+        lay = lay.resize((S.W, S.H), Image.LANCZOS)
+        # 입체감: 그림자 + 질감
+        a = lay.getchannel("A")
+        sh = Image.new("RGBA", f.size, (0, 0, 0, 0))
+        sh.putalpha(a.point(lambda v: int(v * 0.55)))
+        G.blit(f, sh.filter(ImageFilter.GaussianBlur(12)), (10, 16), kk)
+        arr = np.array(lay).astype(np.float32)
+        arr[..., :3] += _grain(S.W, S.H, seed=5, amt=14)[..., None]
+        lay = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGBA")
+        G.blit(f, lay, (0, (1 - kk) * 20), kk)
+        # 아래쪽 어둡게 + 제목
+        grad = np.linspace(0, 1, 360)[:, None] ** 1.6 * 220
+        g = Image.fromarray(np.repeat(grad, S.W, 1).astype(np.uint8), "L")
+        dk = Image.new("RGBA", (S.W, 360), (6, 10, 18, 255))
+        dk.putalpha(g)
+        f.alpha_composite(dk, (0, S.H - 360))
+        y = 760
+        if sp.get("kicker"):
+            kt = T(sp["kicker"], 40, Y, "ExtraBold")
+            G.blit(f, kt, (200, y), G.appear(t, 0.2, 0.3))
+            y += kt.height + 4
+        if sp.get("title"):
+            tt = T(sp["title"], 72, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y)
+            shadow(f, tt, (200, y), "lt", G.appear(t, 0.3, 0.35))
+        bx, by = 1180, 760
+        for b in sp.get("bars", []):
+            o = G.ease_out((t - self.line_start(b.get("on", 1)) - 0.2) / 0.6)
+            if o <= 0:
+                continue
+            tot = b["left"] + b["right"] + b.get("mid", 0)
+            bw = 540
+            G.blit(f, T(b["label"], 34, S.FG, "ExtraBold"), (bx - 30, by + 6), o, "rt")
+            lw = int(bw * b["left"] / tot * o)
+            rw = int(bw * b["right"] / tot * o)
+            lc, rc = _col(b.get("left_color"), (60, 120, 230)), _col(b.get("right_color"), (226, 70, 60))
+            G.blit(f, Image.new("RGBA", (bw, 30), (70, 74, 86, 255)), (bx, by + 8), o)
+            if lw:
+                G.blit(f, Image.new("RGBA", (lw, 30), lc + (255,)), (bx, by + 8))
+            if rw:
+                G.blit(f, Image.new("RGBA", (rw, 30), rc + (255,)), (bx + bw - rw, by + 8))
+            G.blit(f, Image.new("RGBA", (3, 44), (255, 255, 255, 230)), (bx + bw // 2, by + 1), o)
+            G.blit(f, T(str(b["left"]), 52, tuple(min(255, c + 50) for c in lc), "Black"), (bx, by + 44), o)
+            G.blit(f, T(str(b["right"]), 52, tuple(min(255, c + 40) for c in rc), "Black"), (bx + bw, by + 44), o, "rt")
+            if b.get("note"):
+                G.blit(f, T(b["note"], 24, (210, 214, 224), "SemiBold"), (bx + bw / 2, by + 60), o, "mt")
+            by += 130
+        self.finish(f, t)
+
+
+TYPES.update({"poster": Poster, "usmap": USMap})

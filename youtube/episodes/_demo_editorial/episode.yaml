@@ -65,3 +65,32 @@ scenes:
   box_sub: '평균 +0.61% · 평소 이틀의 약 8배'
   credit: '1950~2025 · 추수감사절 전 화요일 종가 → 다음 날 금요일 종가'
   narration: ['그리고 11월엔 추수감사절이 있죠. 그 앞뒤 이틀, 76번 중 64번 올랐어요.']
+- type: poster
+  tone: rust
+  kicker: 11월 넷째 목요일
+  title: 추수감사절엔 시장도 쉬어 간다?
+  highlight: 쉬어 간다?
+  ridge: {series: spx, start: '2025-06-01', end: '2025-12-31'}
+  pin: {at: 0.69, label: '11월 추수감사절', on: 1}
+  figure: {name: turkey, at: 0.86, size: 140, on: 1}
+  credit: '능선: S&P500 2025.6~12 실제 흐름'
+  narration: ['11월 넷째 목요일, 미국은 추수감사절이에요. 시장도 쉬어 갈까요?']
+- type: poster
+  tone: teal
+  kicker: S&P500 · 1950 ~ 2025
+  title: 76년 동안 오른 산
+  highlight: 76년
+  ridge: {series: spx, start: '1950-01-01', end: '2025-12-31', log: true, height: 280}
+  pin: {at: 0.03, label: '1950년 100만 원', on: 1}
+  figure: {name: bull, at: 0.88, size: 150, on: 1}
+  credit: '능선: S&P500 로그 스케일'
+  narration: ['76년 동안, 이 산을 그냥 올라탄 사람이 가장 많이 벌었어요.']
+- type: usmap
+  tone: teal
+  fill: [44, 72, 160]
+  states: {Texas: [226, 70, 60], California: [60, 130, 240], 'New York': [255, 204, 40]}
+  kicker: 11월 넷째 목요일
+  title: 미국 전체가 쉬는 날
+  highlight: 쉬는 날
+  credit: '지도: PublicaMundi us-states GeoJSON'
+  narration: ['미국 전체가 쉬는 날이죠.']

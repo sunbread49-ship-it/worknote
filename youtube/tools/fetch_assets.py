@@ -33,6 +33,10 @@ EMOJI = {
     "point_up": "Index pointing up*", "thumbsup": "Thumbs up*", "megaphone": "Megaphone", "receipt": "Receipt",
     "cityscape": "Cityscape", "bulb": "Light bulb", "seedling": "Seedling", "turtle": "Turtle", "chart": "Bar chart",
     "coin": "Coin", "abacus": "Abacus", "sparkles": "Sparkles",
+    # 포스터 실루엣용 (검게 칠해서 씀)
+    "turkey": "Turkey", "pumpkin": "Jack-o-lantern", "runner": "Person running*", "eagle": "Eagle",
+    "bull": "Water buffalo", "flag_us": "Flag: United States", "capitol": "Classical building", "santa": "Santa Claus*",
+    "rabbit": "Rabbit", "sailboat": "Sailboat", "mountain": "Mountain", "wave": "Water wave", "anchor": "Anchor",
 }
 
 
@@ -57,6 +61,9 @@ DATA = {
     "data/ndx_daily.csv": DAILY.format("%5ENDX"),
     "data/spx_daily.csv": DAILY.format("%5EGSPC"),
     # S&P500 월평균 지수 1871~ (Robert Shiller 데이터 기반, 매월 갱신)
+    # 지도 (공개 GeoJSON)
+    "geo/us_states.json": "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json",
+    "geo/world.json": "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json",
     "data/sp500_monthly.csv": "https://raw.githubusercontent.com/datasets/s-and-p-500/main/data/data.csv",
     # CBOE VIX 일간 1990~
     "data/vix_daily.csv": "https://raw.githubusercontent.com/datasets/finance-vix/main/data/vix-daily.csv",
