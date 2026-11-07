@@ -36,8 +36,9 @@ BLUE = (96, 168, 255)
 MINT = (120, 230, 190)
 
 # 애니메이션 좌표: 물리 (x∈[0,π], y∈[-2,0]) → 화면
-SX = 290.0
-OX, OY = (W - math.pi * SX) / 2, 560
+# 쇼츠 안전 영역: 아래 ~1480부터 채널명·제목, 오른쪽 x>930 · y 900~1700은 좋아요·댓글 버튼
+SX = 262.0
+OX, OY = 95, 560
 
 
 def to_px(x, y, s=SX, ox=None, oy=None):
@@ -119,7 +120,7 @@ def draw_paths(f, prog=1.0, which=(0, 1, 2), alpha=255, labels=True):
     d2.line((ax - 40, ay, ax + 40, ay), fill=CREAM + (200,), width=4)
     d2.line((bx - 50, by + 26, bx + 50, by + 26), fill=CREAM + (200,), width=4)
     G.blit(f, T("출발", 42, CREAM, "ExtraBold"), (ax + 10, ay - 60), 1, "mb")
-    G.blit(f, T("도착", 42, CREAM, "ExtraBold"), (bx, by + 40), 1, "mt")
+    G.blit(f, T("도착", 40, CREAM, "ExtraBold"), (bx - 26, by + 4), 1, "rm")
     if labels:
         for i, (fr, dx, dy) in zip(which, ((0.62, 40, -42), (0.42, 0, 46), (0.58, -10, -44))):
             p = PATHS[i]
@@ -167,7 +168,7 @@ def finish_badges(f, tt):
         if tt >= p["t"][-1]:
             o = G.appear(tt, p["t"][-1], 0.08)
             lab = G.pill(f"{rank + 1}등", "Black", 40, BG2, p["color"], pad=(14, 6), radius=8)
-            G.blit(f, lab, (bx - 60, by - 250 + rank * 66), o, "lm")
+            G.blit(f, lab, (bx - 30, by - 250 + rank * 66), o, "rm")
 
 
 # ── 장면 ────────────────────────────────────────────────────────
@@ -195,7 +196,7 @@ def s_race(f, t, sc):
 def s_times(f, t, sc):
     race_frame(f, 9.0, trails=False)
     order = sorted(range(3), key=lambda i: PATHS[i]["t"][-1])
-    y = 1215
+    y = 1140
     G.blit(f, T("높이 2m · 가로 3.14m · 마찰 없음", 32, DIM, "SemiBold"), (110, y - 50), G.appear(t, 0.1))
     for rank, i in enumerate(order):
         p = PATHS[i]
@@ -203,28 +204,28 @@ def s_times(f, t, sc):
         if o <= 0:
             continue
         bw = int(560 * (p["t"][-1] / 1.25) * o)
-        bw = int(bw * 0.68)
-        G.blit(f, T(f"{rank + 1}. {p['name']}", 42, p["color"], "ExtraBold"), (110, y), o)
-        bar = Image.new("RGBA", (max(4, bw), 30), p["color"] + (255,))
-        G.blit(f, bar, (440, y + 12), o)
-        G.blit(f, T(f"{p['t'][-1]:.2f}초", 44, CREAM, "Black"), (440 + bw + 16, y + 2), o)
-        y += 60
+        bw = int(bw * 0.55)
+        G.blit(f, T(f"{rank + 1}. {p['name']}", 36, p["color"], "ExtraBold"), (110, y), o)
+        bar = Image.new("RGBA", (max(4, bw), 24), p["color"] + (255,))
+        G.blit(f, bar, (400, y + 10), o)
+        G.blit(f, T(f"{p['t'][-1]:.2f}초", 38, CREAM, "Black"), (400 + bw + 14, y + 2), o)
+        y += 48
 
 
 def s_why(f, t, sc):
     tt = (t % 4.2) / SLOW * 1.0 if t > 0.3 else 0
     tt = min(tt, 1.2)
     race_frame(f, tt, trails=True)
-    y = 1190
+    y = 1140
     for i in (2, 0):
         p = PATHS[i]
         v = speed_at(p, tt)
-        G.blit(f, T(p["name"], 42, p["color"], "ExtraBold"), (110, y))
-        bw = int(v / 6.3 * 440)
-        G.blit(f, Image.new("RGBA", (max(4, bw), 30), p["color"] + (255,)), (440, y + 12))
-        G.blit(f, T(f"{v * 3.6:0.0f}km/h", 42, CREAM, "Black"), (440 + bw + 14, y + 2))
-        y += 66
-    G.blit(f, T("속도", 32, DIM, "SemiBold"), (110, 1140))
+        G.blit(f, T(p["name"], 36, p["color"], "ExtraBold"), (110, y))
+        bw = int(v / 6.3 * 360)
+        G.blit(f, Image.new("RGBA", (max(4, bw), 24), p["color"] + (255,)), (400, y + 10))
+        G.blit(f, T(f"{v * 3.6:0.0f}km/h", 36, CREAM, "Black"), (400 + bw + 14, y + 2))
+        y += 50
+    G.blit(f, T("속도", 32, DIM, "SemiBold"), (110, 1092))
     # 출발 직후 '가파른 낙하' 강조
     if t > sc["L"][0] + 0.3:
         o = G.appear(t, sc["L"][0] + 0.3, 0.3)
@@ -258,8 +259,8 @@ def s_wheel(f, t, sc):
     d.ellipse((px - 16, py - 16, px + 16, py + 16), fill=CORAL + (255,), outline=CREAM + (255,), width=4)
     if t > sc["L"][-1]:
         o = G.appear(t, sc["L"][-1], 0.4)
-        G.blit(f, T("사이클로이드", 72, CORAL, "Black"), (W / 2, 1170), o, "mt")
-        G.blit(f, T("x = R(θ − sin θ),  y = −R(1 − cos θ)", 40, DIM, "SemiBold"), (W / 2, 1265), o, "mt")
+        G.blit(f, T("사이클로이드", 72, CORAL, "Black"), (W / 2, 1090), o, "mt")
+        G.blit(f, T("x = R(θ − sin θ),  y = −R(1 − cos θ)", 40, DIM, "SemiBold"), (W / 2, 1180), o, "mt")
 
 
 def _card(name, role, year, color, w=860, h=170):
@@ -312,10 +313,10 @@ def s_tauto(f, t, sc):
         px, py = np.interp(u, tm, cx), np.interp(u, tm, cy)
         ball(f, px, py, col, r=20, s=TS, ox=TOX, oy=TOY)
         arrived = tt >= tm[-1]
-    G.blit(f, T(f"{tt:0.2f}초", 52, CREAM, "Black"), (W - 110, 1080), 1, "rt")
+    G.blit(f, T(f"{tt:0.2f}초", 52, CREAM, "Black"), (W - 160, 1000), 1, "rt")
     if arrived:
         o = G.appear(tt, 1.0029, 0.1)
-        G.blit(f, G.pill("4개 모두 동시 도착!", "Black", 52, BG2, MINT, pad=(30, 14), radius=40), (W / 2, 1170), o, "mt")
+        G.blit(f, G.pill("4개 모두 동시 도착!", "Black", 52, BG2, MINT, pad=(30, 14), radius=40), (W / 2, 1060), o, "mt")
 
 
 def s_end(f, t, sc):
@@ -325,7 +326,7 @@ def s_end(f, t, sc):
     thick_line(ImageDraw.Draw(lay), [to_px(a, b) for a, b in zip(x[::4], y[::4])], CORAL + (255,), 7)
     f.alpha_composite(lay.resize((W, H), Image.LANCZOS))
     G.blit(f, T("가장 빠른 길은\n가장 짧은 길이 아니었다", 64, CREAM, "Black", highlight="가장 짧은 길", hl_fill=CORAL, align="center", line_gap=1.2),
-           (W / 2, 1170), G.appear(t, 0.1, 0.4), "mt")
+           (W / 2, 1080), G.appear(t, 0.1, 0.4), "mt")
 
 
 SCENES = [
@@ -401,13 +402,13 @@ _subc = {}
 
 def subtitle(f, text):
     if text not in _subc:
-        tx = T(text, 62, (14, 16, 24), "Bold", max_w=920, align="center", line_gap=1.25)
+        tx = T(text, 56, (14, 16, 24), "Bold", max_w=830, align="center", line_gap=1.25)
         px, py = 34, 16
         box = Image.new("RGBA", (tx.width + px * 2, tx.height + py * 2), (0, 0, 0, 0))
         ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), radius=18, fill=(255, 255, 255, 232))
         box.alpha_composite(tx, (px, py))
         _subc[text] = box
-    G.blit(f, _subc[text], (W / 2, 1420), 1, "mt")
+    G.blit(f, _subc[text], (W / 2 - 30, 1295), 1, "mt")  # 하단 UI·오른쪽 버튼 피해서
 
 
 def frame(t, subs):
