@@ -35,7 +35,7 @@ thumbs:
   - template: calc
     tag: "목돈 1,200만 원"
     lcd_label: "한 번에 넣은 쪽 승률"
-    value: "71.6%"
+    value: "??%"
     lines:
       - {text: "나눠 사면", size: 150}
       - {text: "손해였다?", size: 150, color: yellow}
@@ -48,10 +48,10 @@ thumbs:
       - {text: "영수증", size: 170, color: yellow}
     receipt_sub: "1,200만 원 · 1년 뒤"
     rows:
-      - {k: "한 번에 승률", v: "71.6%", color: up}
-      - {k: "평균 차이", v: "+4.4%p", color: up}
-      - {k: "최악(한 번에)", v: "-44.8%", color: down}
-      - {k: "손실 확률", v: "거의 같음"}
+      - {k: "한 번에 승률", v: "??%", color: up}
+      - {k: "나눠서 승률", v: "??%"}
+      - {k: "최고치에 넣으면", v: "???", color: down}
+      - {k: "손실 확률", v: "반전?"}
     total: "어떻게 넣을까?"
     total_color: [30, 30, 30]
   - template: clipping
@@ -59,17 +59,17 @@ thumbs:
     masthead: "THE DAILY MARKET"
     date: "S&P500 · 1950 ~ 2026"
     headline: "나눠 사는 게 안전하다는 믿음, 숫자로 확인"
-    stamp: {text: "71.6%", sub: "한 번에 승", size: 170, color: [220, 40, 40], pos: [760, 720]}
+    stamp: {text: "?", sub: "910번 검증", size: 230, color: [220, 40, 40], pos: [760, 720]}
     lines:
       - {text: "목돈 생기면", size: 150}
-      - {text: "한 번에 넣어라?", size: 140, color: yellow}
+      - {text: "한 번에? 나눠서?", size: 130, color: yellow}
       - {text: "다 알려준다", size: 150}
   - template: diagonal
     ant: false
-    a: {label: "나눠서 · 1년 뒤 평균", value: "+5.0%", color: red, chart: {series: spx, start: "2008-01-01", end: "2009-12-31", color: [255, 140, 140]}}
-    b: {label: "한 번에 · 1년 뒤 평균", value: "+9.4%", color: teal, chart: {series: spx, start: "2016-11-01", end: "2018-01-31", color: [170, 255, 240]}}
+    a: {label: "나눠서 넣은 사람", value: "?", color: red, chart: {series: spx, start: "2008-01-01", end: "2009-12-31", color: [255, 140, 140]}}
+    b: {label: "한 번에 넣은 사람", value: "?", color: teal, chart: {series: spx, start: "2016-11-01", end: "2018-01-31", color: [170, 255, 240]}}
     center: "목돈 1,200만 원"
-    bottom: "어떻게 넣을까?"
+    bottom: "누가 이겼을까?"
   - template: question
     lines:
       - {text: "목돈은", size: 120}
@@ -81,15 +81,32 @@ thumbs:
     glow: [150, 20, 40]
     lines:
       - {text: "한 번에 vs 나눠서 · 910번", size: 100}
-      - {text: "71.6%", size: 270, color: up}
-      - {text: "그런데 손실 확률은 같았다", size: 100, color: yellow, hl: "같았다", hl_color: down}
+      - {text: "??%", size: 280, color: up}
+      - {text: "이긴 쪽은 의외로…", size: 100, color: yellow}
     props:
       - {kind: chart, series: spx, start: "2016-01-01", end: "2026-10-31", color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
   - template: vs_numbers
     top: "목돈 1,200만 원, 어떻게 넣을까?"
     top_hl: "어떻게 넣을까?"
-    left: {label: "나눠서", value: "28%", sub: "이긴 비율", color: down}
-    right: {label: "한 번에", value: "72%", sub: "이긴 비율", color: up}
+    left: {label: "나눠서", value: "?%", sub: "이긴 비율", color: down}
+    right: {label: "한 번에", value: "?%", sub: "이긴 비율", color: up}
+  - template: silhouette
+    figure: moneybag
+    fig_h: 640
+    fig_x: 1460
+    fig_y: 960
+    mark_at: 0.42
+    rim: [255, 200, 60]
+    glow: [90, 70, 10]
+    mark: "?"
+    mark_size: 300
+    hint: {emoji: coin, size: 200, color: [255, 210, 80], pos: [1050, 330]}
+    tag: "목돈 1,200만 원이 생겼다"
+    lines:
+      - {text: "오늘 한 번에?", size: 120}
+      - {text: "1년 동안 나눠서?", size: 120}
+      - {text: "76년 정답은", size: 150, color: yellow}
+      - {text: "의외였다", size: 170, color: yellow}
 
 shorts:
   - title: "910번 비교"

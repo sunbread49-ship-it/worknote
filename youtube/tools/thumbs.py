@@ -11,6 +11,8 @@
   question    "~였다는데" + 초대형 "진짜일까?" + 큰 물음표
   big_number  큰 숫자 + 강조 문구 + 차트
   vs_numbers  숫자 대비
+  silhouette  인물(상반신) 또는 사물 실루엣 + 테두리 빛 + 큰 물음표 + 힌트 아이콘(칩 · 이모지 실루엣)
+※ 답(결과 숫자)은 비워 두거나 ???로 가린다 — 궁금증 유발 (EP009 피드백)
 ※ 다른 채널 썸네일의 구도·배색·소품 배치를 그대로 옮기지 않는다(레퍼런스는 '문구 공식'만 참고).
 
 문구 공식: "~해라!", "~였다는데 진짜일까?", "~ 다 알려준다", "~ 따라만 해라", "~ 미쳤다…!"
@@ -495,10 +497,104 @@ TEMPLATES = {"calc": t_calc, "receipt": t_receipt, "clipping": t_clipping, "diag
 
 
 
+# ── 실루엣 (인물 · 사물) ─────────────────────────────────────────
+def person_bust(h=900, jacket=True, color=(8, 9, 14)):
+    """정면 상반신 실루엣(얼굴 없음). 가죽 재킷 깃 옵션"""
+    k = 2
+    w = int(h * 0.9)
+    im = Image.new("RGBA", (w * k, h * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    cx = w * k / 2
+    hr = h * k * 0.14                                     # 머리 반지름
+    hy = h * k * 0.26
+    d.ellipse((cx - hr * 0.86, hy - hr * 1.08, cx + hr * 0.86, hy + hr * 1.08), fill=color + (255,))
+    # 머리카락 볼륨
+    d.ellipse((cx - hr * 0.95, hy - hr * 1.2, cx + hr * 0.95, hy + hr * 0.2), fill=color + (255,))
+    d.rectangle((cx - hr * 0.42, hy + hr * 0.6, cx + hr * 0.42, hy + hr * 1.6), fill=color + (255,))   # 목
+    top = hy + hr * 1.35
+    d.polygon([(cx - hr * 0.55, top - 4), (cx + hr * 0.55, top - 4), (cx + w * k * 0.33, top + h * k * 0.08),
+               (cx - w * k * 0.33, top + h * k * 0.08)], fill=color + (255,))
+    d.rounded_rectangle((cx - w * k * 0.49, top + h * k * 0.05, cx + w * k * 0.49, h * k + w * k * 0.3), radius=int(w * k * 0.2), fill=color + (255,))
+    if jacket:  # 재킷 깃 하이라이트(아주 옅게)
+        hl = (40, 42, 52, 255)
+        d.polygon([(cx - hr * 0.5, top + 10), (cx - hr * 1.5, top + h * k * 0.32), (cx - hr * 0.2, top + h * k * 0.2)], fill=hl)
+        d.polygon([(cx + hr * 0.5, top + 10), (cx + hr * 1.5, top + h * k * 0.32), (cx + hr * 0.2, top + h * k * 0.2)], fill=hl)
+    return im.resize((w, h), Image.LANCZOS)
+
+
+def chip_icon(size=300, glow=(118, 185, 0)):
+    """반도체 칩 아이콘(특정 회사 로고 아님)"""
+    k = 2
+    S2 = size * k
+    im = Image.new("RGBA", (S2, S2), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    m = S2 * 0.18
+    for i in range(6):
+        p = m + (S2 - 2 * m) * (i + 0.5) / 6
+        for a, b in (((p - 8, 0), (p + 8, m)), ((p - 8, S2 - m), (p + 8, S2)), ((0, p - 8), (m, p + 8)), ((S2 - m, p - 8), (S2, p + 8))):
+            d.rectangle((a, b), fill=(200, 205, 215, 255))
+    d.rounded_rectangle((m, m, S2 - m, S2 - m), radius=24, fill=(24, 26, 34, 255), outline=glow + (255,), width=10)
+    d.rounded_rectangle((S2 * 0.34, S2 * 0.34, S2 * 0.66, S2 * 0.66), radius=12, fill=glow + (255,))
+    return im.resize((size, size), Image.LANCZOS)
+
+
+def rim(im, color, blur=26, grow=1.04):
+    """실루엣 뒤 테두리 빛"""
+    a = im.getchannel("A").resize((int(im.width * grow), int(im.height * grow)))
+    pad = blur * 3
+    big = Image.new("L", (a.width + pad * 2, a.height + pad * 2), 0)
+    big.paste(a, (pad, pad))
+    g = Image.new("RGBA", big.size, color + (0,))
+    g.putalpha(big.filter(ImageFilter.GaussianBlur(blur)))
+    return g
+
+
+def t_silhouette(sp):
+    rc = C(sp.get("rim", "gold"))
+    f = bg_dark(sp.get("glow", (40, 50, 90)), (0.72, 0.55))
+    fig = sp.get("figure", "person")
+    if fig == "person":
+        im = person_bust(sp.get("fig_h", 960))
+    else:
+        from engine.editorial import silhouette
+        im = silhouette(fig, sp.get("fig_h", 700), (8, 9, 14))
+    x, y = sp.get("fig_x", W - 520), sp.get("fig_y", H + 20)
+    gl = rim(im, rc)
+    gx, gy = int(x - gl.width / 2), int(y - gl.height + 10 + 26 * 3)
+    G.blit(f, gl, (gx, gy))
+    G.blit(f, gl, (gx, gy), 0.6)
+    G.blit(f, im, (x, y), 1, "mb")
+    if sp.get("mark", "?"):
+        q = T(sp.get("mark", "?"), sp.get("mark_size", 300), "yellow", stroke=14)
+        shadowed(f, q, (x, y - im.height * sp.get("mark_at", 0.74)), "mm")
+    hint = sp.get("hint")
+    if hint:
+        if hint.get("kind") == "chip":
+            hi = chip_icon(hint.get("size", 260), C(hint.get("color"), (118, 185, 0)))
+        else:
+            from engine.editorial import silhouette
+            hi = silhouette(hint["emoji"], hint.get("size", 240), C(hint.get("color"), YELLOW))
+        hg = rim(hi, C(hint.get("color"), (118, 185, 0)), blur=30, grow=1.15)
+        hx, hy = hint.get("pos", [x - 470, 300])
+        G.blit(f, hg, (hx, hy), 0.9, "mm")
+        hi = hi.rotate(hint.get("rot", -10), expand=True, resample=Image.BICUBIC)
+        G.blit(f, hi, (hx, hy), 1, "mm")
+    yy = 90
+    if sp.get("tag"):
+        tg = tag(sp["tag"])
+        G.blit(f, tg, (90, yy))
+        yy += tg.height + 30
+    lines_block(f, sp["lines"], yy, x=80, maxw=sp.get("text_w", 1000), gap=sp.get("gap", -4))
+    return f
+
+
 def render(sp, out):
     f = TEMPLATES[sp["template"]](sp)
     f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(out)
     return out
+
+
+TEMPLATES["silhouette"] = t_silhouette
 
 
 def main(argv):

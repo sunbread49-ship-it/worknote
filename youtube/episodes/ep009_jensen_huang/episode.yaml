@@ -35,11 +35,11 @@ thumbs:
   - template: calc
     tag: "엔비디아 상장 첫날 100만 원"
     lcd_label: "2026년 11월"
-    value: "49.7억"
+    value: "???"
     lines:
       - {text: "접시닦이 소년이", size: 120}
       - {text: "만든 회사", size: 150, color: yellow}
-      - {text: "그런데 -90%?", size: 120}
+      - {text: "지금은 얼마?", size: 120}
   - template: receipt
     tag: "젠슨 황 · 엔비디아 33년"
     lines:
@@ -48,48 +48,58 @@ thumbs:
       - {text: "영수증", size: 170, color: yellow}
     receipt_sub: "1999.1 상장 ~ 2026.11"
     rows:
-      - {k: "100만 원 →", v: "49.7억", color: up}
-      - {k: "2002년", v: "-89.7%", color: down}
-      - {k: "2008년", v: "-85.1%", color: down}
-      - {k: "2022년", v: "-66.3%", color: down}
+      - {k: "100만 원 →", v: "???", color: up}
+      - {k: "2002년", v: "-??%", color: down}
+      - {k: "2008년", v: "-??%", color: down}
+      - {k: "2022년", v: "-??%", color: down}
     total: "버틸 수 있었을까?"
     total_color: [30, 30, 30]
   - template: clipping
-    tag: "1993년 어느 식당"
+    tag: "1996년 실리콘밸리"
     masthead: "THE DAILY MARKET"
     date: "1996년 · 실리콘밸리"
     headline: "그래픽 칩 스타트업, 30일 뒤 파산 위기"
-    stamp: {text: "5조 달러", sub: "30년 뒤", size: 150, color: [220, 40, 40], pos: [760, 720]}
+    stamp: {text: "?", sub: "30년 뒤", size: 230, color: [220, 40, 40], pos: [760, 720]}
     lines:
-      - {text: "망하기 직전", size: 150}
-      - {text: "회사가", size: 150, color: yellow}
-      - {text: "세계 1위로", size: 150}
+      - {text: "망하기 30일 전", size: 140}
+      - {text: "그 회사는", size: 150, color: yellow}
+      - {text: "지금 어디에?", size: 140}
   - template: diagonal
     ant: false
-    a: {label: "2002년 · 고점 대비", value: "-89.7%", color: red, chart: {series: nvda, start: "2001-06-01", end: "2002-12-31", color: [255, 140, 140]}}
-    b: {label: "상장 첫날 → 지금", value: "4,975배", color: teal, chart: {series: nvda, start: "1999-01-22", end: "2026-11-06", log: true, color: [170, 255, 240]}}
+    a: {label: "2002년 · 고점 대비", value: "-??%", color: red, chart: {series: nvda, start: "2001-06-01", end: "2002-12-31", color: [255, 140, 140]}}
+    b: {label: "상장 첫날 → 지금", value: "?배", color: teal, chart: {series: nvda, start: "1999-01-22", end: "2026-11-06", log: true, color: [170, 255, 240]}}
     center: "젠슨 황 · 엔비디아"
     bottom: "버틸 수 있었을까?"
   - template: question
     lines:
-      - {text: "엔비디아에", size: 120}
+      - {text: "엔비디아 상장 첫날", size: 110}
       - {text: "100만 원 넣었으면", size: 110}
-      - {text: "49.7억", size: 160, color: up}
-      - {text: "이라는데", size: 110}
-      - {text: "진짜일까?", size: 190, color: yellow}
+      - {text: "지금 ???", size: 160, color: up}
+      - {text: "그런데 그사이에…", size: 100}
+      - {text: "버틸 수 있었을까?", size: 150, color: yellow}
   - template: big_number
     glow: [20, 110, 40]
     lines:
       - {text: "접시닦이 소년이 만든 회사", size: 100}
-      - {text: "4,975배", size: 250, color: up}
-      - {text: "그 뒤에 숨은 -89.7%", size: 100, color: yellow, hl: "-89.7%", hl_color: down}
+      - {text: "?,???배", size: 250, color: up}
+      - {text: "그 뒤에 숨은 숫자는?", size: 100, color: yellow}
     props:
       - {kind: chart, series: nvda, start: "2016-01-01", end: "2026-11-06", color: [118, 185, 0], w: 640, h: 480, pos: [1580, 640]}
   - template: vs_numbers
     top: "엔비디아 상장 첫날 100만 원"
     top_hl: "100만 원"
-    left: {label: "최대 하락", value: "-90%", sub: "2002년", color: down}
-    right: {label: "지금", value: "49.7억", sub: "2026년 11월", color: up}
+    left: {label: "최대 하락", value: "-??%", sub: "2002년", color: down}
+    right: {label: "지금", value: "??억", sub: "2026년 11월", color: up}
+  - template: silhouette
+    figure: person
+    rim: gold
+    glow: [20, 90, 40]
+    hint: {kind: chip, color: [118, 185, 0], pos: [860, 700]}
+    tag: "숫자로 보는 인물 ①"
+    lines:
+      - {text: "식당 접시닦이 소년", size: 96}
+      - {text: "망하기 30일 전 회사가", size: 96}
+      - {text: "지금은?", size: 200, color: yellow}
 
 shorts:
   - title: "30일 뒤 망한다"

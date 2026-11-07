@@ -37,43 +37,43 @@ youtube:
 # 클릭 유도형 썸네일 (tools/thumbs.py) 7종
 thumbs:
   - template: calc
-    tag: "핼러윈 매매법 76년"
-    lcd_label: "1950년 100만 원"
-    value: "3.69억"
+    tag: "11월에 사서 5월에 팔면"
+    lcd_label: "76년 뒤 잔고"
+    value: "???"
     lines:
-      - {text: "5월에 팔면", size: 150}
-      - {text: "1.17억", size: 160, color: yellow}
-      - {text: "진짜일까?", size: 130}
+      - {text: "핼러윈", size: 150}
+      - {text: "매매법", size: 150, color: yellow}
+      - {text: "결과는?", size: 130}
   - template: receipt
-    tag: "11월에 사서 5월에 팔았다면"
+    tag: "S&P500 76년 백테스트"
     lines:
-      - {text: "핼러윈", size: 140}
-      - {text: "매매법", size: 140}
+      - {text: "5월에 판 사람", size: 120}
+      - {text: "vs 버틴 사람", size: 120}
       - {text: "영수증", size: 170, color: yellow}
-    receipt_sub: "S&P500 · 1950 ~ 2026"
+    receipt_sub: "1950년 100만 원 · 2026년"
     rows:
-      - {k: "11월 성적", v: "12달 중 1등", color: up}
-      - {k: "겨울 평균", v: "+6.95%", color: up}
-      - {k: "여름 평균", v: "+2.08%"}
-      - {k: "76년 뒤", v: "들고 있기의 1/3", color: down}
-    total: "5월에 팔까?"
+      - {k: "11월 성적", v: "12달 중 ?등", color: up}
+      - {k: "5월에 팔면", v: "???", color: down}
+      - {k: "그냥 버티면", v: "???", color: up}
+      - {k: "최근 10년", v: "반전?"}
+    total: "누가 이겼을까?"
     total_color: [30, 30, 30]
   - template: clipping
     tag: "Sell in May"
     masthead: "THE DAILY MARKET"
     date: "월가 100년 격언"
     headline: "5월엔 팔고 떠나라, 11월에 돌아오라"
-    stamp: {text: "반전 2번", sub: "76년 백테스트", size: 150, color: [220, 40, 40], pos: [760, 720]}
+    stamp: {text: "?", sub: "76년 검증", size: 230, color: [220, 40, 40], pos: [760, 720]}
     lines:
-      - {text: "11월에 사서", size: 150}
-      - {text: "5월에 팔아라", size: 150, color: yellow}
-      - {text: "따라만 하면?", size: 150}
+      - {text: "100년 격언", size: 150}
+      - {text: "따라 했더니", size: 150, color: yellow}
+      - {text: "이렇게 됐다", size: 150}
   - template: diagonal
     ant: false
-    a: {label: "5월에 팔고 쉬면", value: "1.17억", color: red, chart: {series: halloween_spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [255, 140, 140]}}
-    b: {label: "그냥 들고 있으면", value: "3.69억", color: teal, chart: {series: spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [170, 255, 240]}}
+    a: {label: "5월에 팔고 쉬면", value: "?억", color: red, chart: {series: halloween_spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [255, 140, 140]}}
+    b: {label: "그냥 들고 있으면", value: "?억", color: teal, chart: {series: spx, start: "1950-10-31", end: "2026-04-30", log: true, color: [170, 255, 240]}}
     center: "1950년 100만 원"
-    bottom: "5월에 팔아라?"
+    bottom: "누가 더 벌었을까?"
   - template: question
     lines:
       - {text: "11월에 사서", size: 120}
@@ -84,16 +84,33 @@ thumbs:
   - template: big_number
     glow: [150, 20, 40]
     lines:
-      - {text: "1년 12달 중 1등", size: 110}
-      - {text: "11월", size: 270, color: up}
-      - {text: "그런데 5월에 팔면 손해?", size: 100, color: yellow, hl: "손해?", hl_color: down}
+      - {text: "1년 12달 중 1등은", size: 120}
+      - {text: "?월", size: 300, color: up}
+      - {text: "5월에 팔면 정말 이득일까?", size: 90, color: yellow, hl: "정말 이득일까?", hl_color: down}
     props:
       - {kind: chart, series: spx, start: "2025-10-31", end: "2026-04-30", color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
   - template: vs_numbers
     top: "11월에 사서 5월에 팔았다면?"
     top_hl: "5월에 팔았다면?"
-    left: {label: "핼러윈 매매법", value: "1.17억", sub: "1950년 100만 원", color: down}
-    right: {label: "그냥 들고 있기", value: "3.69억", sub: "2026년 4월", color: up}
+    left: {label: "핼러윈 매매법", value: "?억", sub: "1950년 100만 원", color: down}
+    right: {label: "그냥 들고 있기", value: "?억", sub: "2026년 4월", color: up}
+  - template: silhouette
+    figure: pumpkin
+    fig_h: 620
+    fig_x: 1460
+    fig_y: 960
+    mark_at: 0.45
+    rim: [255, 140, 40]
+    glow: [120, 50, 10]
+    mark: "?"
+    mark_size: 300
+    hint: {emoji: turkey, size: 230, color: [255, 200, 80], pos: [1060, 330]}
+    tag: "핼러윈 → 추수감사절"
+    lines:
+      - {text: "10월 말에 사서", size: 110}
+      - {text: "4월 말에 팔면", size: 110}
+      - {text: "76년 뒤", size: 150, color: yellow}
+      - {text: "얼마?", size: 200, color: yellow}
 
 shorts:
   - title: "11월 1등"
