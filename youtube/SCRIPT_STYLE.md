@@ -51,3 +51,10 @@
 - tone: up(빨강·좋은 결과) / down(파랑·나쁜 결과) / gold(노랑·반전·의외의 사실)
 - `{type: punch, tone: up, label: "버블기 제외 · 1년 뒤", big: "14번 중 14번", sub: "평균 +46.9%", narration: [...]}`
 - 쇼츠 커버도 같은 디자인: `cover: {style: punch, tone, top, label, big, sub}` → 쇼츠마다 다른 색·숫자로 차별화
+
+## 에디토리얼 장면 (engine/editorial.py) — 다큐·PPT 느낌의 변주
+- 배경 `bg`: `{kind: chart, series, start, end, log}`(실제 차트를 어둡게 깐 배경) · `{kind: grain, tone: navy|ink|rust|olive|plum}` · `{kind: calendar, hl: [NOV, ...]}`
+- 공통: `kicker`(노란 작은 글씨) + `title`(흰 큰 제목, `highlight` 노랑) + `credit`(오른쪽 위 출처)
+- `knockout` 거대한 단어 안에 차트가 비침 · `timeline` 눈금+구간 강조+태그 · `grid` N칸 중 K칸 색칠(연도·사람 아이콘) · `hbars` 가로 막대 비교 · `profile` 곡선 일부 구간 노랗게 · `infobox` 노란 띠 정보 박스
+- 에피소드에 `series_tag: "..."` → 로고 옆 주제 태그
+- 기존 남색 슬라이드와 섞어 쓰기: 한 편에 에디토리얼 8~12장 + 펀치 3~6장 + 나머지 기존 슬라이드

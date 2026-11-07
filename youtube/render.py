@@ -47,6 +47,8 @@ def read_yaml(path):
 def load(ep_dir):
     ep = read_yaml(ep_dir / "episode.yaml")
     channel = read_yaml(ROOT / "channel.yaml")
+    if ep.get("series_tag"):
+        channel["_series_tag"] = ep["series_tag"]
     return ep, channel
 
 
