@@ -544,33 +544,34 @@ def riso_credit(f, sp):
 
 
 class RisoPoster(Editorial):
-    """종이 포스터: 왼쪽 위 제목, 해(금색 원), 실제 지수로 만든 산(남색 + 코랄 어긋난 판 + 가로 결),
-    pin: {at, label, on} 동그란 표식 + 말풍선, figure: {name, at, size, on} 실루엣"""
+    """종이 포스터: 왼쪽 위 제목 + 실제 지수로 만든 산(남색 + 코랄 어긋난 판 + 가로 결).
+    해 · 동물 실루엣은 쓰지 않음(사용자 요청). 대신 모션:
+      산이 왼→오른쪽으로 그려지며 맨 앞에 빛나는 점(파동) · 줄무늬가 천천히 흐름 · 산이 살짝 솟아오름
+    ridge: {series, start, end, log, height, draw(그리는 시간 초), money(시작 금액, 만 원 → 앞 점에 잔고 표시)}
+    pin: {at, label, on} 동그란 표식 + 말풍선"""
 
     def draw(self, f, t):
         sp = self.spec
         f.paste(paper_bg(), (0, 0))
-        sun = sp.get("sun", [1500, 360, 170])
-        ks = G.ease_out(t / 0.8)
-        if sun:
-            r = sun[2] * (0.7 + 0.3 * ks)
-            s_im = Image.new("RGBA", (int(r * 2) + 4, int(r * 2) + 4), (0, 0, 0, 0))
-            ImageDraw.Draw(s_im).ellipse((2, 2, 2 + r * 2, 2 + r * 2), fill=_rc(sp.get("sun_color"), GOLD) + (255,))
-            G.blit(f, s_im, (sun[0], sun[1]), ks, "mm")
         riso_header(f, sp, t)
         rg = sp["ridge"]
         from . import data as D
         s = D.series(rg["series"], rg.get("start"), rg.get("end")).dropna()
-        v = np.log(s.values) if rg.get("log") else s.values
+        raw = s.values
+        v = np.log(raw) if rg.get("log") else raw
         n = 240
-        v = np.interp(np.linspace(0, len(v) - 1, n), np.arange(len(v)), v)
+        idx = np.linspace(0, len(v) - 1, n)
+        v = np.interp(idx, np.arange(len(v)), v)
         v = np.convolve(np.pad(v, 3, mode="edge"), np.ones(7) / 7, mode="valid")
         lo, hi = v.min(), v.max()
         nv = 0.15 + 0.85 * (v - lo) / (hi - lo + 1e-9)
-        x0, x1, base, hh = 0, S.W, 1000, rg.get("height", 420)
+        rise = (1 - G.ease_out(t / 0.9)) * 60
+        x0, x1, base, hh = 0, S.W, 1000 + rise, rg.get("height", 420)
         xs = np.linspace(x0, x1, n)
         ys = base - nv * hh
-        kd = G.ease_out((t - 0.1) / 1.0)
+        dur = rg.get("draw", 2.6)
+        u = G.clamp((t - 0.15) / dur)
+        kd = u * u * (3 - 2 * u)
         m = max(2, int(n * kd))
         k = 2
         main = _rc(sp.get("ridge_color"), NAVY)
@@ -581,40 +582,45 @@ class RisoPoster(Editorial):
             d.polygon(pts + [((xs[m - 1] + dx) * k, S.H * k), ((x0 + dx) * k, S.H * k)], fill=col_ + (255,))
             lay = lay.resize((S.W, S.H), Image.LANCZOS)
             f.alpha_composite(G.with_opacity(lay, op))
-        # 산 안쪽 가로 결(인쇄 줄무늬)
+        # 산 안쪽 가로 결(인쇄 줄무늬) — 천천히 아래로 흐름
         hatch = Image.new("RGBA", f.size, (0, 0, 0, 0))
         hd = ImageDraw.Draw(hatch)
-        for yy in range(int(ys.min()) + 30, S.H, 18):
+        off = (t * 14) % 18
+        for yy in np.arange(int(ys.min()) + 12 + off, S.H, 18):
             hd.line((0, yy, S.W, yy), fill=PAPER + (34,), width=3)
         mask = Image.new("L", f.size, 0)
         ImageDraw.Draw(mask).polygon([(x, y + 24) for x, y in zip(xs[:m], ys[:m])] + [(xs[m - 1], S.H), (0, S.H)], fill=255)
         hatch.putalpha(Image.fromarray(np.minimum(np.array(hatch.getchannel("A")), np.array(mask))))
         f.alpha_composite(hatch)
+        # 맨 앞 빛나는 점 + 파동 (+ 잔고)
+        hx, hy = min(xs[m - 1], S.W - 30), ys[m - 1]
+        d = ImageDraw.Draw(f)
+        ph = (t * 0.9) % 1.0
+        rr = 14 + 40 * ph
+        ring = Image.new("RGBA", f.size, (0, 0, 0, 0))
+        ImageDraw.Draw(ring).ellipse((hx - rr, hy - rr, hx + rr, hy + rr), outline=GOLD + (int(220 * (1 - ph)),), width=5)
+        f.alpha_composite(ring)
+        d.ellipse((hx - 18, hy - 18, hx + 18, hy + 18), fill=PAPER + (255,))
+        d.ellipse((hx - 12, hy - 12, hx + 12, hy + 12), fill=GOLD + (255,))
+        if rg.get("money"):
+            j = int(idx[m - 1])
+            val = rg["money"] * raw[j] / raw[0]
+            txt = f"{val / 10000:,.1f}억 원" if val >= 10000 else f"{val:,.0f}만 원"
+            lb = G.pill(txt, "Black", 40, PAPER, CORAL, pad=(22, 10), radius=26)
+            G.blit(f, lb, (min(hx, S.W - 40 - lb.width / 2), hy - 34), 1, "mb")
         pin = sp.get("pin")
         if pin:
             o = G.appear(t, self.line_start(pin.get("on", 1)) + 0.3, 0.3)
             i = int(pin.get("at", 0.3) * (n - 1))
-            px, py = xs[i], ys[i]
-            if o > 0:
-                d = ImageDraw.Draw(f)
+            if o > 0 and i < m:
+                px, py = xs[i], ys[i]
                 r = 16
                 d.ellipse((px - r - 6, py - r - 6, px + r + 6, py + r + 6), fill=PAPER + (int(255 * o),))
                 d.ellipse((px - r, py - r, px + r, py + r), fill=GOLD + (int(255 * o),))
-                ty = py - 130
+                ty = py - 130 - (1 - o) * 20
                 d.line((px, py - r - 6, px, ty + 40), fill=NAVY + (int(255 * o),), width=4)
                 lb = G.pill(pin["label"], "ExtraBold", 36, PAPER, NAVY, pad=(22, 10), radius=26)
                 G.blit(f, lb, (min(max(px, 60 + lb.width / 2), S.W - 60 - lb.width / 2), ty + 40), o, "mb")
-        fg = sp.get("figure")
-        if fg:
-            o = G.appear(t, self.line_start(fg.get("on", 1)) + 0.2, 0.4)
-            i = int(fg.get("at", 0.7) * (n - 1))
-            size = fg.get("size", 170)
-            a = silhouette(fg["name"], size, CORAL)
-            b = silhouette(fg["name"], size, _rc(fg.get("color"), GOLD))
-            if fg.get("flip"):
-                a, b = a.transpose(Image.FLIP_LEFT_RIGHT), b.transpose(Image.FLIP_LEFT_RIGHT)
-            G.blit(f, a, (xs[i] + 8, ys[i] + 14 + (1 - o) * 30), o * 0.9, "mb")
-            G.blit(f, b, (xs[i], ys[i] + 8 + (1 - o) * 30), o, "mb")
         riso_credit(f, sp)
         self.draw_common(f, t)
 

@@ -22,7 +22,7 @@ scenes:
   title: "76년 동안\n오른 산"
   highlight: 76년
   sun: [1560, 330, 150]
-  ridge: {series: spx, start: '1950-01-01', end: '2025-12-31', log: true, height: 470}
+  ridge: {series: spx, start: '1950-01-01', end: '2025-12-31', log: true, height: 470, money: 100}
   pin: {at: 0.04, label: '1950년 100만 원', on: 1}
   figure: {name: bull, at: 0.93, size: 150, on: 1}
   credit: '산 모양: S&P500 로그 스케일'
