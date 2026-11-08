@@ -1997,11 +1997,10 @@ class Matrix(Editorial):
                                                            fill=(255, 204, 40, 40) if tot else (255, 255, 255, 24))
                     G.blit(f, pane, (x0 - 10, y), 1)
                     lab = T(r["label"], int(fs * 0.84), Y if tot else S.FG, "Black")
-                    if r.get("sub"):
-                        G.blit(f, lab, (x0 + 16, y + (rh - 12) / 2 - 2), 1, "lb")
-                        G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (x0 + 18, y + (rh - 12) / 2 + 6), 1, "lt")
-                    else:
-                        G.blit(f, lab, (x0 + 16, y + (rh - 12) / 2), 1, "lm")
+                    cym = y + (rh - 12) / 2
+                    G.blit(f, lab, (x0 + 16, cym), 1, "lm")
+                    if r.get("sub"):  # 작은 설명은 같은 줄 오른쪽에 (두 줄로 쌓지 않음)
+                        G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (x0 + 30 + lab.width, cym + 2), 1, "lm")
                 if oj <= 0:
                     continue
                 win = i == best

@@ -492,10 +492,10 @@ scenes:
   title: 5년 뒤 · 차감 계산서
   highlight: 5년 뒤
   best: false
-  top: 385
-  row_h: 80
-  font: 40
-  label_w: 430
+  top: 490
+  row_h: 64
+  font: 38
+  label_w: 520
   head_font: 38
   cols:
   - label: 실거주
@@ -600,10 +600,10 @@ scenes:
   title: 10년 뒤 · 차감 계산서
   highlight: 10년 뒤
   best: false
-  top: 385
-  row_h: 80
-  font: 40
-  label_w: 430
+  top: 490
+  row_h: 64
+  font: 38
+  label_w: 520
   head_font: 38
   cols:
   - label: 실거주
@@ -708,10 +708,10 @@ scenes:
   title: 20년 뒤 · 차감 계산서
   highlight: 20년 뒤
   best: false
-  top: 385
-  row_h: 80
-  font: 40
-  label_w: 430
+  top: 490
+  row_h: 64
+  font: 38
+  label_w: 520
   head_font: 38
   cols:
   - label: 실거주
