@@ -71,8 +71,8 @@ thumbs:
   hook_size: 200
   cols:
   - {photo: apgujeong_hyundai, label: 서울 아파트, value: '?억', color: yellow, focus: [0.5, 0.45], dark: 0.3}
-  - {photo: yeouido_night, label: 코스피, value: '?억', color: white, focus: [0.55, 0.5], dark: 0.2}
-  - {photo: nyse_floor, label: 미국 주식, value: '?억', color: up, focus: [0.5, 0.4], dark: 0.3}
+  - {photo: yeouido_night, label: 코스피, value: '?억', color: yellow, focus: [0.55, 0.5], dark: 0.2}
+  - {photo: nyse_floor, label: 미국 주식, value: '?억', color: yellow, focus: [0.5, 0.4], dark: 0.3}
 - template: vs_numbers
   top: 1990년 1억, 지금 얼마?
   top_hl: 지금 얼마?
