@@ -121,6 +121,83 @@ def bg_split(left=(150, 30, 30), right=(20, 110, 110)):
     return f
 
 
+# ── 사진 배경 (위키미디어) + 고급 마감 ───────────────────────────
+def _photo_src(name):
+    import json
+    m = json.loads((ROOT / "assets" / "photos" / f"{name}.json").read_text())
+    return Image.open(ROOT / "assets" / "photos" / m["file"]).convert("RGB")
+
+
+def grade(im, dark=0.35, gray=0.35, sh=(10, 18, 44), hi=(255, 214, 168), split=0.32, contrast=1.08):
+    """시네마틱 색보정: 채도 낮추고 그림자는 남색 · 밝은 곳은 따뜻하게(split toning)"""
+    import numpy as np
+    a = np.asarray(im.convert("RGB"), np.float32) / 255
+    lum = (a * [0.299, 0.587, 0.114]).sum(-1, keepdims=True)
+    a = a * (1 - gray) + lum * gray
+    a = np.clip((a - 0.5) * contrast + 0.5, 0, 1)
+    tone = np.array(sh, np.float32) / 255 * (1 - lum) + np.array(hi, np.float32) / 255 * lum
+    a = a * (1 - split) + tone * a * 2 * split
+    a = a * (1 - dark)
+    return Image.fromarray((np.clip(a, 0, 1) * 255).astype("uint8"), "RGB").convert("RGBA")
+
+
+def photo_fill(name, w, h, focus=(0.5, 0.5), dark=0.35, blur=0, gray=0.35, tint=None, tint_amt=0.0, mirror=False):
+    im = _photo_src(name)
+    if mirror:
+        im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    sc = max(w / im.width, h / im.height)
+    im = im.resize((int(im.width * sc) + 1, int(im.height * sc) + 1), Image.LANCZOS)
+    x0, y0 = int((im.width - w) * focus[0]), int((im.height - h) * focus[1])
+    im = im.crop((x0, y0, x0 + w, y0 + h))
+    if blur:
+        im = im.filter(ImageFilter.GaussianBlur(blur))
+    out = grade(im, dark=dark, gray=gray)
+    if tint is not None and tint_amt > 0:
+        out = Image.blend(out, Image.new("RGBA", out.size, C(tint) + (255,)), tint_amt)
+    return out
+
+
+def photo_bg(ph, shade=None):
+    """ph: 파일명 또는 {file, focus, dark, blur, gray, tint, tint_amt}. shade: left|right|bottom 글자 쪽을 더 어둡게"""
+    if isinstance(ph, str):
+        ph = {"file": ph}
+    f = photo_fill(ph["file"], W, H, tuple(ph.get("focus", (0.5, 0.5))), ph.get("dark", 0.35), ph.get("blur", 0),
+                   ph.get("gray", 0.35), ph.get("tint"), ph.get("tint_amt", 0.0), ph.get("mirror", False))
+    shade = ph.get("shade", shade)
+    if shade:
+        import numpy as np
+        if shade in ("left", "right"):
+            g = np.linspace(1, 0, W) if shade == "left" else np.linspace(0, 1, W)
+            g = np.clip(g * 1.5 - 0.25, 0, 1) ** 1.3
+            a = np.tile(g[None, :], (H, 1))
+        else:
+            g = np.clip(np.linspace(-0.4, 1, H), 0, 1) ** 1.2
+            a = np.tile(g[:, None], (1, W))
+        lay = Image.new("RGBA", (W, H), (6, 8, 16, 0))
+        lay.putalpha(Image.fromarray((a * 215).astype("uint8")))
+        f.alpha_composite(lay)
+    return f
+
+
+def finish(f, frame=True):
+    """고급 마감: 비네팅 · 필름 그레인 · 얇은 금색 안쪽 테두리"""
+    import numpy as np
+    yy, xx = np.mgrid[0:H, 0:W]
+    r = np.sqrt(((xx - W / 2) / (W / 2)) ** 2 + ((yy - H / 2) / (H / 2)) ** 2)
+    v = np.clip((r - 0.75) / 0.75, 0, 1) ** 1.5
+    vg = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    vg.putalpha(Image.fromarray((v * 150).astype("uint8")))
+    f.alpha_composite(vg)
+    n = np.random.default_rng(7).normal(0, 1, (H // 2, W // 2))
+    gr = Image.fromarray(((n * 0.5 + 0.5).clip(0, 1) * 255).astype("uint8"), "L").resize((W, H), Image.BILINEAR)
+    lay = Image.new("RGBA", (W, H), (255, 255, 255, 0))
+    lay.putalpha(gr.point(lambda x: int(abs(x - 128) * 0.14)))
+    f.alpha_composite(lay)
+    if frame:
+        ImageDraw.Draw(f).rectangle((26, 26, W - 27, H - 27), outline=(232, 196, 120, 120), width=3)
+    return f
+
+
 # ── 소품 ─────────────────────────────────────────────────────────
 def big_arrow(w=420, h=300, color=WHITE):
     k = 3
@@ -286,7 +363,7 @@ def tag(text, color=S.GOLD, fg=NAVY, size=44):
 
 def t_calc(sp):
     """계산기 LCD에 결과 숫자. 오른쪽에 헤드라인 + 개미"""
-    f = bg_brand(sp.get("glow", S.GOLD), (0.25, 0.5))
+    f = photo_bg(sp["photo"], "right") if sp.get("photo") else bg_brand(sp.get("glow", S.GOLD), (0.25, 0.5))
     k = 2
     bw, bh = 1040, 1180
     body = Image.new("RGBA", (bw * k, bh * k), (0, 0, 0, 0))
@@ -340,7 +417,7 @@ def _zigzag(im, top=True, bottom=True, tooth=26):
 
 def t_receipt(sp):
     """영수증에 매매 결과를 항목별로. 왼쪽 헤드라인"""
-    f = bg_brand(sp.get("glow", S.UP), (0.75, 0.5))
+    f = photo_bg(sp["photo"], "left") if sp.get("photo") else bg_brand(sp.get("glow", S.UP), (0.75, 0.5))
     rw = 820
     rows = sp["rows"]
     rh = 210 + len(rows) * 104 + 170
@@ -378,7 +455,7 @@ def t_receipt(sp):
 
 def t_clipping(sp):
     """오래된 신문 스크랩 + 큰 도장. 오른쪽 헤드라인 (가상 신문, 실제 매체 아님)"""
-    f = bg_brand(sp.get("glow", S.GOLD), (0.3, 0.5))
+    f = photo_bg(sp["photo"], "right") if sp.get("photo") else bg_brand(sp.get("glow", S.GOLD), (0.3, 0.5))
     pw, ph = 860, 900
     pap = Image.new("RGBA", (pw, ph), (236, 226, 196, 255))
     d = ImageDraw.Draw(pap)
@@ -433,8 +510,11 @@ def t_clipping(sp):
 def t_diagonal(sp):
     """대각선 분할: 왼쪽 위 vs 오른쪽 아래, 가운데 개미"""
     a, b = C(sp.get("a_color"), (120, 20, 30)), C(sp.get("b_color"), (16, 110, 100))
-    f = Image.new("RGBA", (W, H), b + (255,))
-    top = Image.new("RGBA", (W, H), a + (255,))
+    A_, B_ = sp["a"], sp["b"]
+    f = (photo_fill(B_["photo"], W, H, tuple(B_.get("focus", (0.5, 0.5))), B_.get("dark", 0.3), 0, 0.5, b, B_.get("tint_amt", 0.45))
+         if B_.get("photo") else Image.new("RGBA", (W, H), b + (255,)))
+    top = (photo_fill(A_["photo"], W, H, tuple(A_.get("focus", (0.5, 0.5))), A_.get("dark", 0.3), 0, 0.5, a, A_.get("tint_amt", 0.45))
+           if A_.get("photo") else Image.new("RGBA", (W, H), a + (255,)))
     m = Image.new("L", (W, H), 0)
     ImageDraw.Draw(m).polygon([(0, 0), (W * 0.72, 0), (W * 0.28, H), (0, H)], fill=255)
     f = Image.composite(top, f, m)
@@ -463,7 +543,7 @@ def t_diagonal(sp):
 
 
 def t_question(sp):
-    f = bg_dark(sp.get("glow", (40, 60, 160)), (0.72, 0.5))
+    f = photo_bg(sp["photo"], "left") if sp.get("photo") else bg_dark(sp.get("glow", (40, 60, 160)), (0.72, 0.5))
     q = T("?", 900, "yellow", stroke=24)
     G.blit(f, q.rotate(-12, resample=Image.BICUBIC, expand=True), (W - 380, H / 2 + 40), 0.95, "mm")
     place_props(f, sp.get("props"))
@@ -472,7 +552,7 @@ def t_question(sp):
 
 
 def t_big_number(sp):
-    f = bg_dark(sp.get("glow", (150, 20, 40)), (0.8, 0.5))
+    f = photo_bg(sp["photo"], "left") if sp.get("photo") else bg_dark(sp.get("glow", (150, 20, 40)), (0.8, 0.5))
     place_props(f, sp.get("props"))
     lines_block(f, sp["lines"], 80, x=90, maxw=1100, gap=-10)
     return f
@@ -480,6 +560,13 @@ def t_big_number(sp):
 
 def t_vs_numbers(sp):
     f = bg_split(C(sp.get("left_color"), (150, 30, 30)), C(sp.get("right_color"), (20, 50, 150)))
+    for side, x0, colk, dflt in (("left", 0, "left_color", (150, 30, 30)), ("right", W // 2, "right_color", (20, 50, 150))):
+        c = sp[side]
+        if c.get("photo"):
+            im = photo_fill(c["photo"], W // 2, H, tuple(c.get("focus", (0.5, 0.5))), c.get("dark", 0.4), 0, 0.5,
+                            C(sp.get(colk), dflt), c.get("tint_amt", 0.4))
+            f.alpha_composite(im, (x0, 0))
+    ImageDraw.Draw(f).line((W / 2, 0, W / 2, H), fill=(232, 196, 120, 255), width=6)
     if sp.get("top"):
         shadowed(f, fit(sp["top"], 96, 1800, hl=sp.get("top_hl", ""), hl_color="yellow"), (W / 2, 40), "mt")
     for side, x in (("left", W * 0.25), ("right", W * 0.75)):
@@ -551,7 +638,7 @@ def rim(im, color, blur=26, grow=1.04):
 
 def t_silhouette(sp):
     rc = C(sp.get("rim", "gold"))
-    f = bg_dark(sp.get("glow", (40, 50, 90)), (0.72, 0.55))
+    f = photo_bg(sp["photo"], "left") if sp.get("photo") else bg_dark(sp.get("glow", (40, 50, 90)), (0.72, 0.55))
     fig = sp.get("figure", "person")
     if str(fig).endswith(".png"):  # 실제 사진에서 따낸 실루엣 (assets/people/*.png)
         im = Image.open(ROOT / "assets" / fig).convert("RGBA")
@@ -598,6 +685,8 @@ def t_silhouette(sp):
 
 def render(sp, out):
     f = TEMPLATES[sp["template"]](sp)
+    if sp.get("finish", True):
+        f = finish(f, sp.get("frame", True))
     f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(out)
     return out
 

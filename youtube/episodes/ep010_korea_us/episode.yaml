@@ -53,23 +53,19 @@ youtube:
     외국인 순매도 규모는 언론 보도(11.2~11.6) 기준
 
 
-    [그림 · 사진] 아서 래컴 「켄싱턴 공원의 피터 팬」 삽화(1906, 퍼블릭 도메인) · Giles Laurent, 혹등고래(CC BY-SA 4.0) · Sean Murray, 체리새우(CC BY-SA 2.0) · Bryan Dorrough, 여의도 야경(CC BY 2.0) — 위키미디어 공용
+    [그림 · 사진] 아서 래컴 「켄싱턴 공원의 피터 팬」 삽화(1906, 퍼블릭 도메인) · Giles Laurent, 혹등고래(CC BY-SA 4.0) · Sean Murray, 체리새우(CC BY-SA 2.0) · Bryan Dorrough, 여의도 야경(CC BY 2.0) · hyolee2, 한국거래소(CC BY-SA 3.0) · Thomas J. O'Halloran, 뉴욕증권거래소(퍼블릭 도메인) — 위키미디어 공용
 
     '
   tags: [코스피, 한국증시, 미국증시, 나스닥, 상관관계, 서킷브레이커, 폭락장, 외국인매도, 백테스트, 디커플링]
   privacy: private
 thumbs:
 - template: clipping
+  photo: {file: yeouido_night, focus: [0.5, 0.5], dark: 0.3}
   tag: 고래 싸움에 새우 등?
   masthead: THE DAILY MARKET
   date: 코스피 · 1990 ~ 2026
   headline: 코스피 일주일 -11.7%, 서킷브레이커까지
-  stamp:
-    text: '?'
-    sub: 36년 검증
-    size: 230
-    color: [220, 40, 40]
-    pos: [760, 720]
+  stamp: {text: '?', sub: 36년 검증, size: 230, color: [220, 40, 40], pos: [760, 720]}
   lines:
   - {text: 코스피는, size: 150}
   - {text: '미국의 그림자?', size: 140, color: yellow}
@@ -77,18 +73,23 @@ thumbs:
 - template: diagonal
   ant: false
   a:
+    photo: nyse_floor
+    focus: [0.5, 0.4]
     label: 나스닥 · 11.5
     value: -6.4%
     color: teal
     chart: {series: ndx, start: '2026-06-01', end: '2026-11-05', color: [170, 255, 240]}
   b:
+    photo: yeouido_night
+    focus: [0.5, 0.5]
     label: 다음 날 코스피
     value: '?'
     color: red
     chart: {series: kospi, start: '2026-06-01', end: '2026-11-06', color: [255, 140, 140]}
   center: 미국이 기침하면
-  bottom: 한국은 감기?
+  bottom: '한국은 감기?'
 - template: question
+  photo: {file: whale_breach, focus: [0.7, 0.4], dark: 0.35, mirror: true}
   lines:
   - {text: 미국이, size: 130}
   - {text: 기침하면, size: 130}
@@ -96,13 +97,60 @@ thumbs:
   - {text: 라던데, size: 110}
   - {text: '진짜일까?', size: 190, color: yellow}
 - template: big_number
-  glow: [150, 20, 40]
+  photo: {file: yeouido_night, focus: [0.8, 0.5], dark: 0.45}
   lines:
   - {text: 코스피 한 주 -10% 폭락 · 16번, size: 100}
   - {text: '3년 뒤 ??%', size: 230, color: up}
   - {text: 결과는 의외로…, size: 100, color: yellow}
   props:
   - {kind: chart, series: kospi, start: '2026-01-02', end: '2026-11-06', color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
+- template: calc
+  photo: {file: krx_building, focus: [0.5, 0.4], dark: 0.4}
+  tag: 나스닥 하룻밤 -5%
+  lcd_label: 다음 날 코스피 하락 확률
+  value: ??%
+  ant: false
+  lines:
+  - {text: 미국이 빠지면, size: 130}
+  - {text: '한국은?', size: 170, color: yellow}
+  - {text: 54번 계산, size: 120}
+- template: receipt
+  photo: {file: yeouido_night, focus: [0.3, 0.5], dark: 0.35}
+  tag: 코스피 vs 미국 · 36년
+  lines:
+  - {text: 코스피, size: 160}
+  - {text: 미국 따라가기, size: 120}
+  - {text: 영수증, size: 170, color: yellow}
+  receipt_sub: 1990 ~ 2026 · 전날 밤 기준
+  rows:
+  - {k: 미국 -5% 다음 날, v: '??%', color: down}
+  - {k: 내릴 때 따라감, v: '?배', color: down}
+  - {k: 오를 때 따라감, v: '?배', color: up}
+  - {k: 한 주 -10% 3년 뒤, v: '반전?'}
+  total: 그림자일까?
+  total_color: [30, 30, 30]
+- template: vs_numbers
+  top: 미국이 내린 날 vs 오른 날, 코스피는?
+  top_hl: 코스피는?
+  left_color: [30, 60, 160]
+  right_color: [160, 30, 40]
+  left: {photo: nyse_floor, label: 미국이 내린 날, value: '?배', sub: 따라 내린 정도, color: down}
+  right: {photo: yeouido_night, label: 미국이 오른 날, value: '?배', sub: 따라 오른 정도, color: up}
+- template: silhouette
+  photo: {file: yeouido_night, focus: [0.5, 0.6], dark: 0.5, blur: 6}
+  figure: people/whale_cut.png
+  fig_h: 820
+  fig_x: 1580
+  fig_y: 1040
+  mark_at: 0.62
+  rim: [120, 200, 255]
+  mark: '?'
+  mark_size: 330
+  tag: 고래 싸움에 새우 등 터진다
+  lines:
+  - {text: 미국이라는 고래, size: 120}
+  - {text: 한국 증시는, size: 130}
+  - {text: '새우일까?', size: 190, color: yellow}
 shorts:
 - title: 나스닥 -5% 다음 날
   start: '2:20.0'
