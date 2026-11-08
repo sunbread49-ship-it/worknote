@@ -707,3 +707,48 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+
+
+# ── 3자 대결 (EP011) — 화두 크게 + 세 칸 나란히 ─────────────────────────
+def t_versus3(sp):
+    """hook: 위 큰 화두(예: '1990년에 1억을 넣었다면') · cols: [{photo, label, value, color, focus}] 3칸 · bottom: 아래 한 줄"""
+    f = Image.new("RGBA", (W, H), (8, 10, 18, 255))
+    cols = sp["cols"]
+    n = len(cols)
+    top_h = sp.get("top_h", 330)
+    cw = W // n
+    for i, c in enumerate(cols):
+        x0 = i * cw
+        if c.get("photo"):
+            im = photo_fill(c["photo"], cw, H - top_h, tuple(c.get("focus", (0.5, 0.5))), c.get("dark", 0.45), 0, 0.5,
+                            C(c.get("tint"), (20, 24, 40)), c.get("tint_amt", 0.25))
+            f.alpha_composite(im, (x0, top_h))
+        # 아래 그라데이션
+        import numpy as np
+        g = np.clip(np.linspace(-0.2, 1, H - top_h), 0, 1) ** 1.4
+        lay = Image.new("RGBA", (cw, H - top_h), (6, 8, 16, 0))
+        lay.putalpha(Image.fromarray((np.tile(g[:, None], (1, cw)) * 200).astype("uint8")))
+        f.alpha_composite(lay, (x0, top_h))
+        cx = x0 + cw / 2
+        shadowed(f, fit(c["label"], sp.get("label_size", 104), cw - 60), (cx, top_h + 60), "mt", blur=16)
+        shadowed(f, fit(c["value"], sp.get("value_size", 230), cw - 50, color=c.get("color", "yellow")), (cx, H - 120), "mb", blur=18)
+        if i:
+            ImageDraw.Draw(f).line((x0, top_h, x0, H), fill=(232, 196, 120, 255), width=6)
+    # VS 배지
+    for i in range(1, n):
+        x = i * cw
+        b = Image.new("RGBA", (130, 130), (0, 0, 0, 0))
+        ImageDraw.Draw(b).ellipse((0, 0, 129, 129), fill=(232, 196, 120, 255))
+        vs = T("VS", 58, (16, 18, 28), weight="Black")
+        b.alpha_composite(vs, (65 - vs.width // 2, 65 - vs.height // 2 - 4))
+        G.blit(f, b, (x, top_h + (H - top_h) * 0.47), 1, "mm")
+    # 위 화두 띠
+    band = Image.new("RGBA", (W, top_h), (12, 14, 24, 255))
+    ImageDraw.Draw(band).line((0, top_h - 4, W, top_h - 4), fill=(232, 196, 120, 255), width=8)
+    f.alpha_composite(band, (0, 0))
+    hk = fit(sp["hook"], sp.get("hook_size", 190), W - 120, hl=sp.get("hook_hl", ""), hl_color="yellow")
+    shadowed(f, hk, (W / 2, top_h / 2 + 6), "mm", blur=16)
+    return f
+
+
+TEMPLATES["versus3"] = t_versus3

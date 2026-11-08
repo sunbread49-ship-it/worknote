@@ -1814,3 +1814,130 @@ class DepthPhoto(Editorial):
 
 
 TYPES.update({"depthphoto": DepthPhoto})
+
+
+# ── 새 비교 템플릿 (EP011): 순위표 · 폭포형 손익 ─────────────────────────
+class Leaderboard(Editorial):
+    """순위표: 결과가 큰 순서로 1·2·3·4위 줄이 차례로 올라오고, 메달 원 + 가로 막대 + 금액.
+    rows: [{label, sub, value, text, color}] (자동 정렬), on(첫 줄 등장 문장), step(줄 간격 초), unit_note"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        yy = self.hdr(f, t, y=sp.get("title_y", 150), center=False)
+        rows = sorted(sp["rows"], key=lambda r: -float(r["value"]))
+        vmax = max(float(r["value"]) for r in rows) * 1.08
+        t0 = self.line_start(sp.get("on", 1))
+        step = sp.get("step", 0.45)
+        x0, y0, rh, bw = S.SAFE_X + 40, sp.get("top", 330), sp.get("row_h", 132), 860
+        medal = [(255, 204, 40), (210, 214, 224), (205, 140, 80), (120, 128, 150), (100, 108, 128)]
+        n = len(rows)
+        for i, r in enumerate(rows):
+            # 꼴찌부터 차례로 등장 → 1위가 마지막에 '쾅'
+            ti = t0 + (n - 1 - i) * step
+            k = G.ease_out((t - ti) / 0.5)
+            if k <= 0:
+                continue
+            y = y0 + i * rh + (1 - k) * 40
+            c = _col(r.get("color"), S.FG)
+            # 줄 배경 (얇은 유리판)
+            pane = Image.new("RGBA", (S.W - 2 * S.SAFE_X, rh - 22), (255, 255, 255, 0))
+            ImageDraw.Draw(pane).rounded_rectangle((0, 0, pane.width - 1, pane.height - 1), 22,
+                                                   fill=(255, 255, 255, 30 if i else 46),
+                                                   outline=(255, 214, 120, 150) if i == 0 else (255, 255, 255, 40), width=2)
+            G.blit(f, pane, (S.SAFE_X, y), k)
+            # 메달
+            cx, cy, rr = x0 + 30, y + (rh - 22) / 2, 40
+            md = Image.new("RGBA", (rr * 2 + 8, rr * 2 + 8), (0, 0, 0, 0))
+            ImageDraw.Draw(md).ellipse((4, 4, rr * 2 + 4, rr * 2 + 4), fill=medal[min(i, 4)] + (255,))
+            num = T(str(i + 1), 46, (20, 22, 30), "Black")
+            md.alpha_composite(num, (md.width // 2 - num.width // 2, md.height // 2 - num.height // 2 - 2))
+            G.blit(f, md, (cx, cy), k, "mm")
+            lab = T(r["label"], 44, S.FG, "Black")
+            G.blit(f, lab, (x0 + 100, cy - 6), k, "lb")
+            if r.get("sub"):
+                G.blit(f, T(r["sub"], 26, (190, 196, 212), "SemiBold"), (x0 + 102, cy + 6), k, "lt")
+            # 막대 + 금액 (세어 올라감)
+            kb = G.ease_out((t - ti - 0.15) / 0.7)
+            w = int(bw * float(r["value"]) / vmax * max(kb, 0))
+            bx = x0 + 500
+            if w > 4:
+                bar = Image.new("RGBA", (w, 34), (0, 0, 0, 0))
+                bd = ImageDraw.Draw(bar)
+                for yb in range(34):
+                    cc = tuple(min(255, int(v * (1.15 - yb / 34 * 0.4))) for v in c)
+                    bd.line((0, yb, w, yb), fill=cc + (255,))
+                m = Image.new("L", bar.size, 0)
+                ImageDraw.Draw(m).rounded_rectangle((0, 0, w - 1, 33), 17, fill=255)
+                bar.putalpha(m)
+                G.blit(f, bar, (bx, cy - 17), 1)
+            txt = T(counter(r["text"], max(kb, 0)), 52, c if i == 0 else S.FG, "Black")
+            G.blit(f, txt, (bx + max(w, 0) + 22, cy), min(1, kb * 2), "lm")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W - S.SAFE_X, S.H - 170), 1, "rb")
+        self.finish(f, t)
+
+
+class Waterfall(Editorial):
+    """폭포형 손익: 출발 금액 → +/- 항목들 → 최종(순이익). steps: [{label, value(+/-), text, on}] , start: {label, value, text}, end: {label, text}"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=False)
+        items = [dict(sp["start"], kind="start")] + [dict(s_, kind="step") for s_ in sp["steps"]]
+        tot = float(sp["start"]["value"])
+        levels = []
+        cur = tot
+        for it in items[1:]:
+            a = cur
+            cur += float(it["value"])
+            levels.append((a, cur))
+        items.append(dict(sp["end"], kind="end", value=cur))
+        hi = max([float(sp["start"]["value"])] + [max(a, b) for a, b in levels]) * 1.12
+        n = len(items)
+        x0, x1 = S.SAFE_X + 40, S.W - S.SAFE_X - 40
+        base, H = sp.get("base", 790), sp.get("height", 420)
+        slot = (x1 - x0) / n
+        bw = slot * 0.56
+        yv = lambda v: base - H * v / hi
+        d = ImageDraw.Draw(f)
+        d.line((x0 - 20, base, x1 + 20, base), fill=(255, 255, 255, 70), width=2)
+        prev_top = None
+        for i, it in enumerate(items):
+            on = it.get("on", 1 if i == 0 else None)
+            ti = self.line_start(on) + 0.1 if on else self.line_start(sp.get("on", 1)) + 0.35 * i
+            k = G.ease_out((t - ti) / 0.5)
+            if k <= 0:
+                continue
+            cx = x0 + slot * (i + 0.5)
+            if it["kind"] == "start":
+                a, b, col = 0, float(it["value"]), (150, 160, 190)
+            elif it["kind"] == "end":
+                a, b, col = 0, float(it["value"]), Y
+            else:
+                a, b = levels[i - 1]
+                col = (90, 200, 140) if b >= a else (236, 96, 82)
+            top, bot = yv(max(a, b)), yv(min(a, b))
+            hh = max(4, (bot - top) * k)
+            blk = Image.new("RGBA", (int(bw), int(hh)), col + (255,))
+            sh = Image.new("RGBA", (int(bw), int(hh)), (255, 255, 255, 0))
+            ImageDraw.Draw(sh).rectangle((0, 0, int(bw) - 1, int(hh * 0.18)), fill=(255, 255, 255, 46))
+            blk.alpha_composite(sh)
+            ybar = bot - hh if (it["kind"] != "step" or b >= a) else top
+            G.blit(f, blk, (cx - bw / 2, ybar), 1)
+            # 연결선
+            if i > 0 and prev_top is not None:
+                d.line((cx - slot + bw / 2, yv(prev_top), cx - bw / 2, yv(prev_top)), fill=(255, 255, 255, 90), width=2)
+            prev_top = b if it["kind"] != "start" else b
+            if it["kind"] == "end":
+                prev_top = b
+            vt = T(it["text"], 46 if it["kind"] != "end" else 58, col if it["kind"] != "start" else S.FG, "Black")
+            G.blit(f, vt, (cx, yv(max(a, b)) - 14), min(1, k * 2), "mb")
+            G.blit(f, T(it["label"], 30, S.FG, "ExtraBold", max_w=int(slot - 10), align="center"), (cx, base + 16), k, "mt")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W - S.SAFE_X, S.H - 170), 1, "rb")
+        self.finish(f, t)
+
+
+TYPES.update({"leaderboard": Leaderboard, "waterfall": Waterfall})

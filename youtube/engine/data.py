@@ -282,6 +282,10 @@ def house_lev(t0, ltv=0.6, eq=1.0, col="서울"):
 
 
 def series(name: str, start=None, end=None) -> pd.Series:
+    if name in ("kb_jr", "kb_conv"):  # 서울 아파트 전세가율(%) · 전월세전환율(%)
+        df = pd.read_csv(DATA / "kb_seoul_extra.csv")
+        s = df.assign(m=pd.to_datetime(df["month"])).set_index("m")[{"kb_jr": "jeonse_ratio", "kb_conv": "conv_rate"}[name]]
+        return pd.to_numeric(s, errors="coerce").dropna().loc[start:end]
     if name in ("kb_seoul", "kb_gangnam11", "kb_total"):
         s = _kb({"kb_seoul": "서울", "kb_gangnam11": "강남11개구", "kb_total": "전국"}[name])
         return s.loc[start:end]
