@@ -1,0 +1,71 @@
+# EP011 (초안 · 오프닝 시범) · 집 vs 주식 — 깊이감(2.5D) 다큐 장면 테스트
+# 스토리: 암스테르담 헤렌흐라흐트 350년(오프닝) → 이카로스(대출) → 항산항심(결말)
+title: '1억, 서울 아파트 vs 코스피 vs 미국 주식 (오프닝 시범)'
+series_tag: 집 vs 주식
+tts:
+  voice: ko-KR-Chirp3-HD-Sadaltager
+  rate: 1.12
+  say:
+    1637년: 천육백삼십칠 년
+    1628년부터: 천육백이십팔 년부터
+    1973년까지: 천구백칠십삼 년까지
+    0.25%: 영쩜이오 퍼센트
+youtube: {title: 시범, description: 시범, tags: [], privacy: private}
+scenes:
+- type: depthphoto
+  chapter: 인트로
+  photo: tulip_satire
+  move: {zoom: 0.14, dx: 0.03, dy: 0.0}
+  focus: [0.5, 0.5]
+  dark: 0.2
+  pos: bottom
+  kicker: 1637년, 네덜란드
+  title: "튤립 한 송이가\n집 한 채 값"
+  highlight: 집 한 채 값
+  caption: 얀 브뤼헐 2세 「튤립 투기 풍자」 (1640년경)
+  narration: ['1637년 네덜란드. | 튤립 구근 하나가, 운하 옆 집 한 채 값에 팔렸다는 이야기가 전해져요.', '그리고 몇 주 만에, 그 값은 휴지 조각이 됐죠. | 역사상 첫 투기 거품이라고 불리는, 튤립 파동이에요.']
+- type: depthphoto
+  chapter: 인트로
+  photo: tulip_bosschaert
+  move: {zoom: 0.18, dx: -0.02, dy: -0.01}
+  focus: [0.5, 0.45]
+  dark: 0.25
+  pos: center
+  title: "튤립은 시들었다\n그럼 집은?"
+  highlight: 집은?
+  caption: 암브로시우스 보스샤르트 「꽃 정물」 (1614년경)
+  narration: ['튤립은 시들었어요. | 그런데 그 튤립과 맞바꿀 뻔했던, 집은 어떻게 됐을까요?']
+- type: depthphoto
+  chapter: 인트로
+  photo: herengracht_1672
+  move: {zoom: 0.12, dx: 0.035, dy: -0.005}
+  focus: [0.5, 0.55]
+  dark: 0.2
+  pos: bottom
+  kicker: 암스테르담 헤렌흐라흐트 · 1672년
+  title: "350년 동안\n집값을 기록한 거리"
+  highlight: 350년
+  caption: 헤릿 베르크헤이더 「헤렌흐라흐트의 굽이」 (1671~72)
+  chips:
+  - {text: '1628 ~ 1973년 거래 기록', on: 2}
+  - {text: 경제학자 피트 아이히홀츠 · 1997년, on: 3}
+  narration: ['암스테르담의 부촌, 헤렌흐라흐트 운하. | 그림 속 바로 이 거리예요.', '이 거리의 집들은, 1628년부터 1973년까지 350년 동안의 거래 기록이 남아 있어요.', '네덜란드 경제학자 피트 아이히홀츠가, 이 기록으로 350년짜리 집값 지수를 만들었죠.']
+- type: capsule
+  chapter: 인트로
+  kicker: 헤렌흐라흐트 집값 · 물가를 뺀 실질 가격 · 1628 → 1973
+  value: '2'
+  unit: 배
+  accent: 350년 동안
+  ghost: '350'
+  badge: 연 0.25% 정도
+  sub: 거북이처럼 느렸지만, 거의 쉬지 않았다
+  sub_hl: 거의 쉬지 않았다
+  narration: ['결과는 의외였어요. 물가를 빼고 보면, 350년 동안 집값은 겨우 두 배 정도.', '1년에 0.25% 정도씩, 거북이처럼 느리게 올랐어요. | 대신 튤립처럼 하루아침에 사라지지도 않았죠.']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "1억, 서울 아파트 vs\n코스피 vs 미국 주식"
+  highlight: 1억
+  subtitle: 그런데 서울은 달랐다 · 대출이라는 날개를 달면?
+  narration: ['그런데 서울은 달랐어요. | 그리고 우리에겐, 대출이라는 날개도 있죠.', '오늘은 1억을 서울 아파트, 코스피, 미국 주식에 넣었다면 어땠을지, | 대출과 이자까지 넣어서 현실적으로 따져 볼게요.']

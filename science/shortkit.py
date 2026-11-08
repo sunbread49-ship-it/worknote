@@ -332,3 +332,25 @@ def glow_line(f, p0, p1, color, width=6, glow=18):
     ImageDraw.Draw(lay).line((p0, p1), fill=color + (200,), width=width + glow)
     f.alpha_composite(lay.filter(ImageFilter.GaussianBlur(glow / 2)))
     ImageDraw.Draw(f).line((p0, p1), fill=color + (255,), width=width)
+
+
+# ── 깊이감(2.5D 패럴랙스) 사진 띠 ───────────────────────────────
+_px = {}
+
+
+def pband(f, name, t, dur, y0=380, h=880, move=None, focus=(0.5, 0.5), dark=0.35, fade=160):
+    """사진을 깊이 지도로 입체화해 카메라가 천천히 움직이는 띠 (engine/depth.py)"""
+    from engine import depth as DP
+    key = (name, h, repr(move), tuple(focus))
+    if key not in _px:
+        _px[key] = DP.Parallax(name, W, h, move=move, focus=focus)
+    im = _px[key].at(t / max(dur, 0.1))
+    if dark:
+        im = _IE.Brightness(im.convert("RGB")).enhance(1 - dark).convert("RGBA")
+    a = np.ones((h, W), np.float32)
+    if fade:
+        ramp = np.linspace(0, 1, fade)
+        a[:fade] *= ramp[:, None]
+        a[-fade:] *= ramp[::-1][:, None]
+    im.putalpha(Image.fromarray((a * 255).astype(np.uint8)))
+    f.alpha_composite(im, (0, y0))

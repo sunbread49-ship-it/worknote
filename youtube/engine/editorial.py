@@ -1749,3 +1749,68 @@ class PhotoLine(Editorial):
 
 
 TYPES.update({"photoline": PhotoLine})
+
+
+class DepthPhoto(Editorial):
+    """사진 · 명화를 깊이 지도로 입체화 → 카메라가 천천히 파고드는 다큐 장면 (engine/depth.py).
+    photo, move: {zoom, dx, dy, strength}, focus, dark(0~1), gray(0~1),
+    kicker/title/highlight (pos: bottom|center|top), caption(작품 설명 · 왼쪽 아래 작은 글씨), chips: [{text, on}]"""
+
+    def prepare(self):
+        from . import depth as DP
+        sp = self.spec
+        self.clip = DP.Parallax(sp["photo"], S.W, S.H, move=sp.get("move"), focus=tuple(sp.get("focus", (0.5, 0.5))))
+        yy, xx = np.mgrid[0:S.H, 0:S.W].astype(np.float32)
+        r = np.sqrt(((xx - S.W / 2) / (S.W / 2)) ** 2 + ((yy - S.H / 2) / (S.H / 2)) ** 2)
+        vg = 1 - 0.55 * np.clip((r - 0.6) / 0.8, 0, 1) ** 1.4
+        pos = sp.get("pos", "bottom")
+        if pos == "bottom":
+            grad = 1 - 0.65 * np.clip((yy / S.H - 0.45) / 0.55, 0, 1) ** 1.3
+        elif pos == "top":
+            grad = 1 - 0.6 * np.clip((0.5 - yy / S.H) / 0.5, 0, 1) ** 1.3
+        else:
+            grad = 1 - 0.35 * np.exp(-((yy / S.H - 0.5) / 0.22) ** 2)
+        self.mul = (vg * grad * (1 - sp.get("dark", 0.25)))[..., None]
+        import json
+        from pathlib import Path
+        meta = json.loads((Path(__file__).resolve().parents[1] / "assets" / "photos" / f"{sp['photo']}.json").read_text())
+        sp.setdefault("credit", meta["credit"])
+
+    def draw(self, f, t):
+        sp = self.spec
+        im = np.asarray(self.clip.at(t / max(self.dur, 0.1)).convert("RGB"), np.float32)
+        g = sp.get("gray", 0.15)
+        if g:
+            lum = (im * [0.299, 0.587, 0.114]).sum(-1, keepdims=True)
+            im = im * (1 - g) + lum * g
+        im = np.clip(im * self.mul, 0, 255).astype(np.uint8)
+        f.paste(Image.fromarray(im, "RGB").convert("RGBA"), (0, 0))
+        self.fg, self.acc, self.dim = S.FG, Y, (210, 212, 222)
+        pos = sp.get("pos", "bottom")
+        if sp.get("title"):
+            o = G.appear(t, self.line_start(sp.get("title_on", 1)) + 0.2, 0.5)
+            tt = T(sp["title"], sp.get("title_size", 96), S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y,
+                   align="center" if pos == "center" else "left", line_gap=1.12)
+            kk = T(sp["kicker"], 40, Y, "ExtraBold") if sp.get("kicker") else None
+            if pos == "center":
+                y = S.H / 2 - tt.height / 2
+                if kk:
+                    G.blit(f, kk, (S.W / 2, y - 70 + (1 - o) * 14), o, "mt")
+                G.blit(f, tt, (S.W / 2, y + (1 - o) * 20), o, "mt")
+            else:
+                y = (S.H - 250 - tt.height) if pos == "bottom" else 170
+                x = S.SAFE_X + 20
+                if kk:
+                    G.blit(f, kk, (x, y - 64 + (1 - o) * 14), o, "lt")
+                G.blit(f, tt, (x, y + (1 - o) * 20), o, "lt")
+        for i, ch in enumerate(sp.get("chips", [])):
+            o = G.appear(t, self.line_start(ch.get("on", 1)) + 0.3, 0.3)
+            p = G.pill(ch["text"], "ExtraBold", 34, (14, 16, 24), _col(ch.get("color"), Y), pad=(22, 10))
+            G.blit(f, p, (S.W - S.SAFE_X - 20, 200 + i * 70), o, "rt")
+        if sp.get("caption"):
+            G.blit(f, T(sp["caption"], 26, (225, 222, 210), "SemiBold"), (S.SAFE_X + 20, S.H - 190), 0.9, "lb")
+        credit(f, sp)
+        self.draw_common(f, t)
+
+
+TYPES.update({"depthphoto": DepthPhoto})
