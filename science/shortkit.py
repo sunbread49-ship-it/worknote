@@ -28,6 +28,8 @@ BLUE = (96, 168, 255)
 MINT = (120, 230, 190)
 GOLD = (255, 200, 80)
 CTA = "더 재밌고 신기한 지식은, 채널 구독하고 우리 함께 봐요!"
+# 마지막 '봐요'를 힘차게: 쉼표로 끊고 느낌표 두 개 (자막은 그대로)
+CTA_SAY = {"채널 구독하고 우리 함께 봐요!": "채널 구독하고, 우리 함께 봐요!!"}
 
 
 def _bg():
@@ -71,6 +73,7 @@ def pcm(path):
 
 
 def plan(scenes, out, say):
+    say = {**CTA_SAY, **say}
     cache = out / "tts_cache"
     t, clips, cues = 0.0, [], []
     for sc in scenes:
