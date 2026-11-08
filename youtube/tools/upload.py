@@ -40,14 +40,18 @@ API = "https://www.googleapis.com"
 
 
 # ── 인증 ─────────────────────────────────────────────────────────
+CHANNEL = os.environ.get("YT_CHANNEL", "")  # "" = 주식 악어새, "SCIENCE" = 악어새 지식창고 (--channel science)
+
+
 def access_token():
-    need = ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN"]
+    rt = "YT_REFRESH_TOKEN" + (f"_{CHANNEL}" if CHANNEL else "")
+    need = ["YT_CLIENT_ID", "YT_CLIENT_SECRET", rt]
     miss = [k for k in need if not os.environ.get(k)]
     if miss:
         raise SystemExit(f"환경 변수가 없습니다: {', '.join(miss)} (youtube/UPLOAD_SETUP.md 참고)")
     body = urllib.parse.urlencode({
         "client_id": os.environ["YT_CLIENT_ID"], "client_secret": os.environ["YT_CLIENT_SECRET"],
-        "refresh_token": os.environ["YT_REFRESH_TOKEN"], "grant_type": "refresh_token"}).encode()
+        "refresh_token": os.environ[rt], "grant_type": "refresh_token"}).encode()
     try:
         with urllib.request.urlopen("https://oauth2.googleapis.com/token", body, timeout=30) as r:
             return json.loads(r.read())["access_token"]
@@ -181,7 +185,20 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="이미 올린 것도 다시 올리기")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--channel", default="", help="science = 악어새 지식창고 (환경 변수 YT_REFRESH_TOKEN_SCIENCE)")
+    ap.add_argument("--file", help="단일 영상 업로드(지식창고 쇼츠 등)")
+    ap.add_argument("--title")
+    ap.add_argument("--desc-file")
     a = ap.parse_args()
+    global CHANNEL
+    CHANNEL = a.channel.upper()
+    if a.file:
+        when = dt.datetime.fromisoformat(a.publish_at).replace(tzinfo=KST) if a.publish_at else None
+        desc = Path(a.desc_file).read_text(encoding="utf-8") if a.desc_file else ""
+        tok = access_token()
+        vid, privacy = upload_video(tok, a.file, a.title, desc, [], when)
+        print(f"  ✔ 업로드 → https://youtu.be/{vid} ({privacy})")
+        return
 
     if a.check:
         tok = access_token()
