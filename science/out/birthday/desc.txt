@@ -1,0 +1,11 @@
+1년은 365일. 그런데 생일이 같은 사람이 있을 확률이 50%를 넘으려면 단 23명이면 충분합니다.
+
+핵심은 '나와 같은 생일'이 아니라 '아무 두 사람이나' 같으면 된다는 것. 23명이면 둘씩 짝짓는 경우가 253쌍입니다.
+모두 생일이 다를 확률 = 365/365 × 364/365 × … × 343/365 ≈ 49.3% → 같은 생일이 한 쌍 이상 있을 확률 ≈ 50.7%
+57명이면 약 99%. 한 반 50명이던 시절이라면 같은 생일 친구가 있을 확률은 약 97%였습니다. (윤년과 계절별 출생 차이는 무시한 계산입니다.)
+
+사진 출처 (Wikimedia Commons): Francesca Cesa Bianchi, Milano, birthday cake with candles (CC BY-SA 3.0 it) · Skotywa at en.wikipedia, SoundersFC vs FC Barcelona teams lineup (CC BY-SA 3.0)
+
+더 재밌고 신기한 지식은 @악어새지식창고 구독하고 함께 봐요!
+
+#과학 #수학 #확률 #생일문제 #지식 #shorts
