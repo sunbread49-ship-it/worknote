@@ -82,6 +82,7 @@ class Parallax:
         sc = max(W / src.width, H / src.height)
         sw, sh = int(src.width * sc) + 1, int(src.height * sc) + 1
         x0, y0 = int((sw - W) * focus[0]), int((sh - H) * focus[1])
+        self._geo = (src.width, src.height, sc, x0, y0)
         img = src.resize((sw, sh), Image.LANCZOS).crop((x0, y0, x0 + W, y0 + H))
         if grade:
             img = grade(img)
@@ -92,6 +93,24 @@ class Parallax:
         self.W, self.H = W, H
         yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
         self.xx, self.yy = xx, yy
+
+    def project(self, fx, fy, k):
+        """원본 사진의 비율 좌표(fx, fy) → 진행 k일 때 화면 좌표 (지시 표시용)"""
+        sw0, sh0, sc, x0, y0 = self._geo
+        x, y = fx * sw0 * sc - x0, fy * sh0 * sc - y0
+        mv = self.mv
+        k = float(np.clip(k, 0, 1))
+        if mv.get("ease", True):
+            k = k * k * (3 - 2 * k)
+        st = mv.get("strength", 1.0)
+        d = float(self.dep[int(np.clip(y, 0, self.H - 1)), int(np.clip(x, 0, self.W - 1))])
+        z = 1 + mv["zoom"] * k
+        dz = 1 + (z - 1) * (0.35 + 0.65 * d * st)
+        sx = mv["dx"] * k * self.W * (0.25 + 0.75 * d * st)
+        sy = mv["dy"] * k * self.H * (0.25 + 0.75 * d * st)
+        cx, cy = self.W / 2, self.H / 2
+        X, Y = (x + sx - cx) * dz + cx, (y + sy - cy) * dz + cy
+        return X - (self.W - self.w) // 2, Y - (self.H - self.h) // 2
 
     def at(self, k):
         import cv2

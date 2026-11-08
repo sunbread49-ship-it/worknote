@@ -1809,6 +1809,29 @@ class DepthPhoto(Editorial):
             G.blit(f, p, (S.W - S.SAFE_X - 20, 200 + i * 70), o, "rt")
         if sp.get("caption"):
             G.blit(f, T(sp["caption"], 26, (225, 222, 210), "SemiBold"), (S.SAFE_X + 20, S.H - 190), 0.9, "lb")
+        pt = sp.get("pointer")  # {at: [원본 비율 x, y], on, label} → 깜빡이는 원 + 화살표
+        if pt:
+            o = G.appear(t, self.line_start(pt.get("on", 1)) + 0.2, 0.3)
+            if o > 0:
+                px, py = self.clip.project(pt["at"][0], pt["at"][1], t / max(self.dur, 0.1))
+                ph = (t * 1.1) % 1.0
+                lay = Image.new("RGBA", f.size, (0, 0, 0, 0))
+                dl = ImageDraw.Draw(lay)
+                r0 = pt.get("r", 70)
+                dl.ellipse((px - r0, py - r0, px + r0, py + r0), outline=Y + (int(255 * o),), width=7)
+                rr = r0 + 40 * ph
+                dl.ellipse((px - rr, py - rr, px + rr, py + rr), outline=Y + (int(200 * o * (1 - ph)),), width=4)
+                ax, ay = px - r0 - 150, py - r0 - 120   # 왼쪽 위에서 가리키는 화살표
+                dl.line((ax, ay, px - r0 * 0.75, py - r0 * 0.75), fill=Y + (int(255 * o),), width=8)
+                import math as _m
+                ang = _m.atan2((py - r0 * 0.75) - ay, (px - r0 * 0.75) - ax)
+                tip = (px - r0 * 0.75, py - r0 * 0.75)
+                for da in (2.6, -2.6):
+                    dl.line((tip, (tip[0] + 34 * _m.cos(ang + da), tip[1] + 34 * _m.sin(ang + da))), fill=Y + (int(255 * o),), width=8)
+                f.alpha_composite(lay)
+                if pt.get("label"):
+                    lb = G.pill(pt["label"], "Black", 36, (14, 16, 24), Y, pad=(20, 8))
+                    G.blit(f, lb, (ax, ay - 10), o, "mb")
         credit(f, sp)
         self.draw_common(f, t)
 
@@ -1941,3 +1964,49 @@ class Waterfall(Editorial):
 
 
 TYPES.update({"leaderboard": Leaderboard, "waterfall": Waterfall})
+
+
+
+class Matrix(Editorial):
+    """비교표: 열(5년 · 10년 · 20년 등)이 차례로 채워지고, 열마다 1위 칸이 금색으로 빛남.
+    cols: [{label, on}], rows: [{label, sub, values: [..], texts: [..]}], note"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=False)
+        cols, rows = sp["cols"], sp["rows"]
+        x0, y0 = S.SAFE_X + 20, sp.get("top", 340)
+        lw = sp.get("label_w", 520)
+        cw = (S.W - 2 * S.SAFE_X - 40 - lw) / len(cols)
+        rh = sp.get("row_h", 118)
+        d = ImageDraw.Draw(f)
+        for j, c in enumerate(cols):
+            oj = G.appear(t, self.line_start(c.get("on", 1)) + 0.1, 0.35)
+            cx = x0 + lw + cw * (j + 0.5)
+            G.blit(f, T(c["label"], 40, Y, "Black"), (cx, y0 - 20), max(oj, 0.35), "mb")
+            vals = [float(r["values"][j]) for r in rows]
+            best = max(range(len(rows)), key=lambda i: vals[i])
+            for i, r in enumerate(rows):
+                y = y0 + i * rh
+                if j == 0:
+                    pane = Image.new("RGBA", (int(S.W - 2 * S.SAFE_X - 20), rh - 16), (255, 255, 255, 26))
+                    G.blit(f, pane, (x0 - 10, y), 1)
+                    G.blit(f, T(r["label"], 42, S.FG, "Black"), (x0 + 16, y + (rh - 16) / 2 - 4), 1, "lb")
+                    if r.get("sub"):
+                        G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (x0 + 18, y + (rh - 16) / 2 + 6), 1, "lt")
+                if oj <= 0:
+                    continue
+                win = i == best
+                if win:
+                    cell = Image.new("RGBA", (int(cw - 20), rh - 30), (0, 0, 0, 0))
+                    ImageDraw.Draw(cell).rounded_rectangle((0, 0, cell.width - 1, cell.height - 1), 16, fill=Y + (235,))
+                    G.blit(f, cell, (cx - cell.width / 2, y + 7), oj)
+                txt = T(counter(r["texts"][j], oj), 50, (16, 18, 28) if win else S.FG, "Black")
+                G.blit(f, txt, (cx, y + (rh - 16) / 2), oj, "mm")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W - S.SAFE_X, S.H - 170), 1, "rb")
+        self.finish(f, t)
+
+
+TYPES.update({"matrix": Matrix})
