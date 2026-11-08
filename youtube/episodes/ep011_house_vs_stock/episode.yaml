@@ -72,14 +72,14 @@ thumbs:
   cols:
   - {photo: apgujeong_hyundai, label: 서울 아파트, value: '?억', color: yellow, focus: [0.5, 0.45], dark: 0.3}
   - {photo: yeouido_night, label: 코스피, value: '?억', color: white, focus: [0.55, 0.5], dark: 0.2}
-  - {photo: nyse_floor, label: 미국 주식, value: '??억', color: up, focus: [0.5, 0.4], dark: 0.3}
+  - {photo: nyse_floor, label: 미국 주식, value: '?억', color: up, focus: [0.5, 0.4], dark: 0.3}
 - template: vs_numbers
   top: 1990년 1억, 지금 얼마?
   top_hl: 지금 얼마?
   left_color: [150, 110, 30]
   right_color: [30, 60, 160]
   left: {photo: apgujeong_hyundai, label: 서울 아파트, value: '?억', sub: 대출 없이, color: yellow}
-  right: {photo: nyse_floor, label: 미국 주식, value: '??억', sub: 원화 기준, color: up}
+  right: {photo: nyse_floor, label: 미국 주식, value: '?억', sub: 원화 기준, color: up}
 - template: diagonal
   ant: false
   label_size: 110
@@ -144,7 +144,7 @@ thumbs:
   rows:
   - {k: 서울 아파트, v: '?억', color: up}
   - {k: 코스피, v: '?억'}
-  - {k: 미국 주식, v: '??억', color: up}
+  - {k: 미국 주식, v: '?억'}
   - {k: 대출 60%면, v: '반전?'}
   total: 누가 이겼을까?
   total_color: [30, 30, 30]
