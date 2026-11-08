@@ -14,6 +14,7 @@ tts:
     '0.41': 영쩜사일
     '0.30': 영쩜삼영
     '5,060': 오천육십
+    11월 6일엔: 십일월육일엔
     1개월 뒤엔: 일개월 뒤엔
     1990년대 초엔: 천구백구십년대초엔
     '0.16': 영쩜일육
@@ -163,7 +164,7 @@ shorts:
   yt_desc: '2000년 이후 나스닥100이 하룻밤 -5% 넘게 빠진 54번, 다음 날 코스피는 평균 -2.4%, 80%가 하락. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
 
     ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
-  cover: {style: punch, tone: down, top: '나스닥 하룻밤 -5%, 다음 날 코스피는?', label: 2000 ~ 2026 · 54번, big: 80% 하락, sub: 평균 -2.4%}
+  cover: {style: punch, photo: nyse_floor, tone: down, top: '나스닥 하룻밤 -5%, 다음 날 코스피는?', label: 2000 ~ 2026 · 54번, big: 80% 하락, sub: 평균 -2.4%}
 - title: 내릴 땐 더, 오를 땐 덜
   start: '3:24.0'
   end: '4:00.8'
@@ -171,7 +172,7 @@ shorts:
   yt_desc: '미국이 내린 날 코스피는 0.49배, 오른 날은 0.36배만 따라갔다. 2000~2026 데이터. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
 
     ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
-  cover: {style: punch, tone: gold, top: 코스피는 미국을 얼마나 따라갈까, label: 2000 ~ 2026 · 전날 밤 미국 대비, big: '내릴 땐 더, 오를 땐 덜', sub: 0.49배 vs 0.36배}
+  cover: {style: punch, photo: whale_breach, tone: gold, top: 코스피는 미국을 얼마나 따라갈까, label: 2000 ~ 2026 · 전날 밤 미국 대비, big: '내릴 땐 더, 오를 땐 덜', sub: 0.49배 vs 0.36배}
 - title: 한 주 -10%, 3년 뒤
   start: '5:47.0'
   end: '6:31.8'
@@ -179,7 +180,7 @@ shorts:
   yt_desc: '코스피가 한 주에 10% 넘게 빠진 16번. 1년 뒤엔 반반, 3년 뒤엔 14번 중 11번이 플러스. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
 
     ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
-  cover: {style: punch, tone: up, top: 코스피 한 주 -10% 폭락, label: 1990 ~ 2026 · 3년 뒤, big: 14번 중 11번 플러스, sub: 1년 뒤엔 반반이었는데}
+  cover: {style: punch, photo: seorak_pano, tone: up, top: 코스피 한 주 -10% 폭락, label: 1990 ~ 2026 · 3년 뒤, big: 14번 중 11번 플러스, sub: 1년 뒤엔 반반이었는데}
 checks:
 - {name: 이번 주 코스피(%), kind: ret, series: kospi, start: '2026-10-30', end: '2026-11-06'}
 - {name: 고점 대비(%), kind: ret, series: kospi, start: '2026-06-22', end: '2026-11-06'}
@@ -364,6 +365,7 @@ scenes:
 - type: punch
   chapter: 미국이 빠진 다음 날
   tone: down
+  photo: {file: nyse_floor, focus: [0.5, 0.4], dark: 0.45}
   label: 나스닥 하룻밤 -5% · 다음 날 코스피
   big: 80% 하락
   sub: 평균 -2.4%
@@ -411,6 +413,7 @@ scenes:
 - type: punch
   chapter: 내릴 땐 더, 오를 땐 덜
   tone: gold
+  photo: {file: whale_breach, focus: [0.5, 0.4], dark: 0.5}
   label: 코스피 · 전날 밤 미국 대비
   big: 내릴 땐 더, 오를 땐 덜
   sub: 0.49배 vs 0.36배
@@ -570,6 +573,7 @@ scenes:
 - type: punch
   chapter: 폭락 이후
   tone: up
+  photo: {file: seorak_pano, focus: [0.5, 0.4], dark: 0.5}
   label: 코스피 한 주 -10% 폭락 · 3년 뒤
   big: 14번 중 11번 플러스
   sub: 1년 뒤엔 반반이었는데

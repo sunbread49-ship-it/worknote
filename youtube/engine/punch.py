@@ -52,6 +52,33 @@ def background(w, h, tone="up"):
     return im
 
 
+@lru_cache(maxsize=8)
+def photo_background(w, h, tone, file, focus=(0.5, 0.5), dark=0.5):
+    """위키미디어 사진 + 시네마틱 색보정 + 톤 색 살짝 + 비네팅 (EP010 피드백: 롱폼 톤앤매너 유지)"""
+    import json
+    from .style import ROOT
+    m = json.loads((ROOT / "assets" / "photos" / f"{file}.json").read_text())
+    im = Image.open(ROOT / "assets" / "photos" / m["file"]).convert("RGB")
+    sc = max(w / im.width, h / im.height)
+    im = im.resize((int(im.width * sc) + 1, int(im.height * sc) + 1), Image.LANCZOS)
+    x0, y0 = int((im.width - w) * focus[0]), int((im.height - h) * focus[1])
+    a = np.asarray(im.crop((x0, y0, x0 + w, y0 + h)), np.float32) / 255
+    lum = (a * [0.299, 0.587, 0.114]).sum(-1, keepdims=True)
+    a = a * 0.45 + lum * 0.55                      # 채도 낮추기
+    top = np.array(TONES.get(tone, TONES["up"])[0], np.float32) / 255
+    a = a * (1 - 0.18) + (a * top * 1.6) * 0.18     # 톤 색을 살짝 입힘
+    a = a * (1 - dark)
+    yy, xx = np.mgrid[0:h, 0:w]
+    r = np.sqrt(((xx - w / 2) / (w / 2)) ** 2 + ((yy - h / 2) / (h / 2)) ** 2)
+    a = a * (1 - 0.55 * np.clip((r - 0.55) / 0.8, 0, 1) ** 1.4)[..., None]
+    # 가운데 가로 띠를 한 번 더 어둡게 → 큰 글자 가독성
+    band = np.exp(-((yy / h - (0.44 if h > w else 0.47)) / 0.16) ** 2)
+    a = a * (1 - 0.45 * band)[..., None]
+    out = Image.fromarray((np.clip(a, 0, 1) * 255).astype(np.uint8), "RGB").convert("RGBA")
+    ImageDraw.Draw(out).rectangle((26, 26, w - 27, h - 27), outline=(232, 196, 120, 110), width=3)
+    return out
+
+
 @lru_cache(maxsize=4)
 def _mascot(h):
     from .character import croc_bird
@@ -70,16 +97,34 @@ def compose(w, h, sp, k=1.0, k_sub=1.0, k_m=1.0, vertical=False):
     """k: 큰 글자 등장 진행(0~1), k_sub: 아래 줄, k_m: 마스코트"""
     tone = sp.get("tone", "up")
     _, _, fg, fg2 = TONES.get(tone, TONES["up"])
-    f = background(w, h, tone).copy()
-    dark = tone == "gold"
+    ph = sp.get("photo")
+    if ph:
+        if isinstance(ph, str):
+            ph = {"file": ph}
+        f = photo_background(w, h, tone, ph["file"], tuple(ph.get("focus", (0.5, 0.5))), ph.get("dark", 0.5)).copy()
+        fg, fg2 = (255, 255, 255), (226, 230, 240)
+        sp = {**sp, "mascot": sp.get("mascot", False)}
+    else:
+        f = background(w, h, tone).copy()
+    dark = tone == "gold" and not ph
     shadow = (0, 0, 0) if not dark else (255, 236, 180)
     cy = h * (0.44 if vertical else 0.47)
     big = _fit(sp["big"], sp.get("size", 300 if not vertical else 230), w - (160 if vertical else 260), fg)
+    if ph:  # 큰 글자 아래쪽에 톤 색 형광펜 띠 → 직관적이고 진하게
+        acc = {"up": (214, 48, 62), "down": (44, 108, 232), "gold": (214, 140, 20)}.get(tone, (214, 48, 62))
+        bar = Image.new("RGBA", (int(big.width * 1.04), int(big.height * 0.36)), acc + (235,))
+        kb = G.ease_out(min(1, k * 1.3))
+        if kb > 0:
+            bw_ = max(1, int(bar.width * kb))
+            G.blit(f, bar.crop((0, 0, bw_, bar.height)), (w / 2 - bar.width / 2, cy + big.height * 0.12), 1, "lt")
     lab = None
     if sp.get("label"):
-        lab = G.pill(sp["label"], "Black", 64 if not vertical else 72,  # 쇼츠 썸네일로 쓰일 때 읽히도록 크게
-                     (20, 24, 40) if not dark else (255, 255, 255), (255, 255, 255) if not dark else (20, 24, 40),
-                     pad=(36, 16))
+        if ph:
+            lab = G.pill(sp["label"], "Black", 60 if not vertical else 68, (20, 22, 30), (236, 200, 120), pad=(34, 14))
+        else:
+            lab = G.pill(sp["label"], "Black", 64 if not vertical else 72,  # 쇼츠 썸네일로 쓰일 때 읽히도록 크게
+                         (20, 24, 40) if not dark else (255, 255, 255), (255, 255, 255) if not dark else (20, 24, 40),
+                         pad=(36, 16))
     if vertical and sp.get("top"):
         top = _fit(sp["top"], 96, w - 120, fg)
         G.blit(f, top, (w / 2, h * 0.17), 1, "mt")
