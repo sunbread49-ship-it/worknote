@@ -1968,8 +1968,9 @@ TYPES.update({"leaderboard": Leaderboard, "waterfall": Waterfall})
 
 
 class Matrix(Editorial):
-    """비교표: 열(5년 · 10년 · 20년 등)이 차례로 채워지고, 열마다 1위 칸이 금색으로 빛남.
-    cols: [{label, on}], rows: [{label, sub, values: [..], texts: [..]}], note"""
+    """비교표: 열이 차례로 채워짐. 기본은 열마다 최댓값 칸을 금색으로(best: true).
+    cols: [{label, on}], rows: [{label, sub, values, texts, subs(칸 아래 작은 글씨), total(true면 합계 줄)}]
+    font(칸 글자 크기) · row_h · top · label_w · best(false면 열 최댓값 강조 안 함) · note"""
 
     def draw(self, f, t):
         sp = self.spec
@@ -1980,30 +1981,43 @@ class Matrix(Editorial):
         lw = sp.get("label_w", 520)
         cw = (S.W - 2 * S.SAFE_X - 40 - lw) / len(cols)
         rh = sp.get("row_h", 118)
-        d = ImageDraw.Draw(f)
+        fs = sp.get("font", 50)
         for j, c in enumerate(cols):
             oj = G.appear(t, self.line_start(c.get("on", 1)) + 0.1, 0.35)
             cx = x0 + lw + cw * (j + 0.5)
-            G.blit(f, T(c["label"], 40, Y, "Black"), (cx, y0 - 20), max(oj, 0.35), "mb")
+            G.blit(f, T(c["label"], sp.get("head_font", 40), Y, "Black"), (cx, y0 - 16), max(oj, 0.35), "mb")
             vals = [float(r["values"][j]) for r in rows]
-            best = max(range(len(rows)), key=lambda i: vals[i])
+            best = max(range(len(rows)), key=lambda i: vals[i]) if sp.get("best", True) else -1
             for i, r in enumerate(rows):
                 y = y0 + i * rh
+                tot = r.get("total")
                 if j == 0:
-                    pane = Image.new("RGBA", (int(S.W - 2 * S.SAFE_X - 20), rh - 16), (255, 255, 255, 26))
+                    pane = Image.new("RGBA", (int(S.W - 2 * S.SAFE_X - 20), rh - 12), (255, 255, 255, 0))
+                    ImageDraw.Draw(pane).rounded_rectangle((0, 0, pane.width - 1, pane.height - 1), 14,
+                                                           fill=(255, 204, 40, 40) if tot else (255, 255, 255, 24))
                     G.blit(f, pane, (x0 - 10, y), 1)
-                    G.blit(f, T(r["label"], 42, S.FG, "Black"), (x0 + 16, y + (rh - 16) / 2 - 4), 1, "lb")
+                    lab = T(r["label"], int(fs * 0.84), Y if tot else S.FG, "Black")
                     if r.get("sub"):
-                        G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (x0 + 18, y + (rh - 16) / 2 + 6), 1, "lt")
+                        G.blit(f, lab, (x0 + 16, y + (rh - 12) / 2 - 2), 1, "lb")
+                        G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (x0 + 18, y + (rh - 12) / 2 + 6), 1, "lt")
+                    else:
+                        G.blit(f, lab, (x0 + 16, y + (rh - 12) / 2), 1, "lm")
                 if oj <= 0:
                     continue
                 win = i == best
                 if win:
-                    cell = Image.new("RGBA", (int(cw - 20), rh - 30), (0, 0, 0, 0))
+                    cell = Image.new("RGBA", (int(cw - 20), rh - 26), (0, 0, 0, 0))
                     ImageDraw.Draw(cell).rounded_rectangle((0, 0, cell.width - 1, cell.height - 1), 16, fill=Y + (235,))
                     G.blit(f, cell, (cx - cell.width / 2, y + 7), oj)
-                txt = T(counter(r["texts"][j], oj), 50, (16, 18, 28) if win else S.FG, "Black")
-                G.blit(f, txt, (cx, y + (rh - 16) / 2), oj, "mm")
+                txt_s = str(r["texts"][j])
+                col = (16, 18, 28) if win else (Y if tot else ((255, 140, 130) if txt_s.startswith("-") else S.FG))
+                txt = T(counter(txt_s, oj), fs if not tot else int(fs * 1.1), col, "Black")
+                cy = y + (rh - 12) / 2
+                if r.get("subs"):
+                    G.blit(f, txt, (cx, cy - 2), oj, "mb")
+                    G.blit(f, T(r["subs"][j], 24, (16, 18, 28) if win else (190, 196, 212), "SemiBold"), (cx, cy + 4), oj, "mt")
+                else:
+                    G.blit(f, txt, (cx, cy), oj, "mm")
         if sp.get("note"):
             G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W - S.SAFE_X, S.H - 170), 1, "rb")
         self.finish(f, t)
