@@ -705,9 +705,6 @@ def main(argv):
         print("썸네일 →", render(sp, od / f"thumb{i}_{sp['template']}.png"))
 
 
-if __name__ == "__main__":
-    main(sys.argv[1:])
-
 
 # ── 3자 대결 (EP011) — 화두 크게 + 세 칸 나란히 ─────────────────────────
 def t_versus3(sp):
@@ -752,3 +749,7 @@ def t_versus3(sp):
 
 
 TEMPLATES["versus3"] = t_versus3
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
