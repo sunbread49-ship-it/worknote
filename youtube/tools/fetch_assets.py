@@ -84,6 +84,23 @@ def get(rel, url, force=False):
         dst.write_bytes(r.read())
 
 
+def kospi(force=False):
+    """코스피 일별(1990~) — 네이버 차트 데이터 (환경 허용 호스트: fchart.stock.naver.com)"""
+    import json
+    dst = ASSETS / "data" / "kospi_daily.csv"
+    if dst.exists() and not force:
+        return
+    print("받는 중: data/kospi_daily.csv")
+    u = ("https://fchart.stock.naver.com/siseJson.nhn?symbol=KOSPI&requestType=1"
+         "&startTime=19800101&endTime=20991231&timeframe=day")
+    txt = urllib.request.urlopen(u, timeout=60).read().decode("utf-8", "ignore")
+    rows = [json.loads(l.strip().rstrip(",")) for l in txt.splitlines() if l.strip().startswith('["')]
+    with open(dst, "w") as f:
+        f.write("date,open,high,low,close,volume,foreign_ratio\n")
+        for p in rows:
+            f.write(f"{p[0][:4]}-{p[0][4:6]}-{p[0][6:]},{p[1]},{p[2]},{p[3]},{p[4]},{p[5]},{p[6]}\n")
+
+
 def main():
     force_data = "--data" in sys.argv
     for rel, url in FONTS.items():
@@ -95,6 +112,10 @@ def main():
             print("  실패:", rel, e)
     for rel, url in DATA.items():
         get(rel, url, force=force_data)
+    try:
+        kospi(force_data)
+    except Exception as e:
+        print("  실패: 코스피", e)
     print("완료 →", ASSETS)
 
 
