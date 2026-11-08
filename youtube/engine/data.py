@@ -245,7 +245,48 @@ def kr_us_nightly(us="spx", y0="2000"):
     return df.loc[str(y0):]
 
 
+# ── 한국 아파트(KB) · 환율 · 물가 (EP011) ───────────────────────────
+@lru_cache(maxsize=None)
+def _kb(col):
+    df = pd.read_csv(DATA / "kb_apt_monthly.csv")
+    return df.assign(m=pd.to_datetime(df["month"])).set_index("m")[col].astype(float).dropna()
+
+
+@lru_cache(maxsize=None)
+def _fred(sid):
+    s = pd.read_csv(DATA / "fred" / f"{sid}.csv", parse_dates=[0], index_col=0).iloc[:, 0]
+    return pd.to_numeric(s, errors="coerce").dropna()
+
+
+def _spx_krw():
+    fx = _fred("DEXKOUS")
+    s = _daily("spx")
+    fx = fx.reindex(s.index).ffill()
+    return (s * fx).dropna()
+
+
+def kr_rate():
+    """주택담보대출 금리 근사: 3개월 은행간 금리 + 1.5%p (월별)"""
+    return (_fred("IR3TIB01KRM156N") + 1.5).resample("MS").ffill()
+
+
+def house_lev(t0, ltv=0.6, eq=1.0, col="서울"):
+    """서울 아파트를 자기자본 eq(억) + 대출(LTV)로 샀을 때 → (현재 자기자본, 낸 이자 합, 자기자본 최저, 최저 시점)"""
+    H = _kb(col).loc[:"2026-10-01"]
+    t0 = pd.Timestamp(t0)
+    price = eq / (1 - ltv)
+    loan = price - eq
+    path = price * H.loc[t0:] / H.loc[t0] - loan
+    r = kr_rate().reindex(H.loc[t0:].index[1:]).ffill()
+    return float(path.iloc[-1]), float((loan * r / 100 / 12).sum()), float(path.min()), path.idxmin()
+
+
 def series(name: str, start=None, end=None) -> pd.Series:
+    if name in ("kb_seoul", "kb_gangnam11", "kb_total"):
+        s = _kb({"kb_seoul": "서울", "kb_gangnam11": "강남11개구", "kb_total": "전국"}[name])
+        return s.loc[start:end]
+    if name == "spx_krw":
+        return _spx_krw().loc[start:end]
     if name == "sp500":
         s = _sp500()
     elif name == "sp500_drawdown":
@@ -294,6 +335,15 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind.startswith("hl_"):  # 대출로 산 서울 아파트: hl_eq / hl_int / hl_min (t0, ltv)
+        v = house_lev(kw["t0"], kw.get("ltv", 0.6), 1.0, kw.get("col", "서울"))
+        return {"hl_eq": v[0], "hl_int": v[1], "hl_min": v[2]}[kind]
+    if kind == "mult_m":  # 월평균 기준 배수 (series, start, end)
+        p = series(kw["series"]).resample("MS").mean()
+        return float(p.loc[:str(kw["end"])].iloc[-1] / p.loc[str(kw["start"]):].iloc[0])
+    if kind == "mdd":  # 월평균 기준 최대 낙폭(%)
+        p = series(kw["series"]).resample("MS").mean().loc[str(kw.get("start", "1990")):str(kw.get("end", "2026-10"))]
+        return float((p / p.cummax() - 1).min() * 100)
     if kind.startswith("kr_"):
         if kind.startswith("kr_wk_"):  # kr_wk_n / kr_wk_up / kr_wk_med / kr_wk_mean / kr_wk_cnt (h: 1m|3m|1y|3y)
             ev = kr_weekly_drops(kw.get("th", -0.10))
