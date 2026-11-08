@@ -192,3 +192,101 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
     pr.stdin.close()
     pr.wait()
     print("완료 →", out / "short.mp4")
+
+
+# ── 사진 · 입체감 도구 ─────────────────────────────────────────────
+import json as _json
+from functools import lru_cache as _lru
+from PIL import ImageEnhance as _IE
+
+PHOTOS = HERE.parent / "youtube" / "assets" / "photos"
+
+
+@_lru(maxsize=32)
+def photo(name, w, h, focus=(0.5, 0.5), dark=0.0, blur=0, sat=1.0, radius=0):
+    """위키미디어 사진을 w×h로 채워 자르기 (+어둡게 · 흐리게 · 둥근 모서리)"""
+    meta = _json.loads((PHOTOS / f"{name}.json").read_text())
+    im = Image.open(PHOTOS / meta["file"]).convert("RGB")
+    sc = max(w / im.width, h / im.height)
+    im = im.resize((int(im.width * sc) + 1, int(im.height * sc) + 1), Image.LANCZOS)
+    x0, y0 = int((im.width - w) * focus[0]), int((im.height - h) * focus[1])
+    im = im.crop((x0, y0, x0 + w, y0 + h))
+    if sat != 1.0:
+        im = _IE.Color(im).enhance(sat)
+    if blur:
+        im = im.filter(ImageFilter.GaussianBlur(blur))
+    if dark:
+        im = _IE.Brightness(im).enhance(1 - dark)
+    im = im.convert("RGBA")
+    if radius:
+        m = Image.new("L", (w, h), 0)
+        ImageDraw.Draw(m).rounded_rectangle((0, 0, w - 1, h - 1), radius=radius, fill=255)
+        im.putalpha(m)
+    return im
+
+
+def credit_of(*names):
+    out = []
+    for n in names:
+        m = _json.loads((PHOTOS / f"{n}.json").read_text())
+        out.append(f"{m['artist'][:28]}, {m['license']}")
+    return "사진: " + " · ".join(out) + " (Wikimedia Commons)"
+
+
+def credit(f, text):
+    G.blit(f, T(text, 20, (170, 178, 200), "SemiBold", max_w=900), (60, 1262), 0.85, "lb")
+
+
+def band(f, name, y0=380, h=880, focus=(0.5, 0.5), dark=0.6, sat=0.8, blur=0):
+    """콘텐츠 영역(제목 아래~자막 위)에 사진 띠를 깔고 위아래를 배경색으로 녹임"""
+    im = photo(name, W, h, focus, dark, blur, sat)
+    a = np.ones((h, W), np.float32)
+    ramp = np.linspace(0, 1, 160)
+    a[:160] *= ramp[:, None]
+    a[-160:] *= ramp[::-1][:, None]
+    im = im.copy()
+    im.putalpha(Image.fromarray((a * 255).astype(np.uint8)))
+    f.alpha_composite(im, (0, y0))
+
+
+def shadow_of(im, blur=24, alpha=0.6, off=(10, 18)):
+    sh = Image.new("RGBA", (im.width + blur * 4, im.height + blur * 4), (0, 0, 0, 0))
+    a = im.getchannel("A").point(lambda v: int(v * alpha))
+    sh.paste((0, 0, 0, 255), (blur * 2, blur * 2), a)
+    return sh.filter(ImageFilter.GaussianBlur(blur)), (off[0] - blur * 2, off[1] - blur * 2)
+
+
+def drop(f, im, xy, anchor="mm", op=1.0, blur=24, alpha=0.6):
+    x, y = xy
+    ax = {"l": 0, "m": im.width / 2, "r": im.width}[anchor[0]]
+    ay = {"t": 0, "m": im.height / 2, "b": im.height}[anchor[1]]
+    sh, (dx, dy) = shadow_of(im, blur, alpha)
+    G.blit(f, sh, (x - ax + dx, y - ay + dy), op)
+    G.blit(f, im, (x - ax, y - ay), op)
+
+
+@_lru(maxsize=8)
+def globe(r, name="bluemarble_east", light=(-0.45, -0.5)):
+    """실제 지구 사진을 원으로 잘라 빛 · 그림자 · 대기 테두리를 입힌 구"""
+    d = 2 * r
+    im = photo(name, d, d, (0.5, 0.5)).copy()
+    yy, xx = np.mgrid[-1:1:d * 1j, -1:1:d * 1j]
+    rr = np.sqrt(xx ** 2 + yy ** 2)
+    shade = np.clip(1.05 - 0.75 * np.clip((xx - light[0]) ** 2 + (yy - light[1]) ** 2, 0, 2) / 2, 0.25, 1.1)
+    a = np.array(im, np.float32)
+    a[..., :3] *= shade[..., None]
+    a[..., 3] = np.where(rr <= 1, 255, 0)
+    out = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
+    pad = 40
+    g = Image.new("RGBA", (d + pad * 2, d + pad * 2), (0, 0, 0, 0))
+    ImageDraw.Draw(g).ellipse((pad - 6, pad - 6, pad + d + 6, pad + d + 6), fill=(110, 170, 255, 120))
+    g = g.filter(ImageFilter.GaussianBlur(14))
+    g.alpha_composite(out, (pad, pad))
+    return g
+
+
+def glow_line(f, p0, p1, color, width=6, glow=18):
+    lay = Image.new("RGBA", f.size, (0, 0, 0, 0))
+    ImageDraw.Draw(lay).line((p0, p1), fill=color + (200,), width=width + glow)
+    f.alpha_composite(lay.filter(ImageFilter.GaussianBlur(glow / 2)))
+    ImageDraw.Draw(f).line((p0, p1), fill=color + (255,), width=width)
