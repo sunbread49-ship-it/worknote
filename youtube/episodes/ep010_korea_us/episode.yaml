@@ -1,0 +1,615 @@
+# EP010 · 주식 궁금증, 숫자로 풀기 — 코스피는 미국의 그림자일까
+# 다큐 장치: "고래 싸움에 새우 등 터진다"(오프닝) · 『피터 팬』의 그림자(디커플링) · 3억 년 살아남은 새우(결말)
+title: 코스피 일주일 -11.7%, 미국 따라 무너진 걸까? 36년 데이터로 본 한·미 증시
+series_tag: 한국 vs 미국
+tts:
+  voice: ko-KR-Chirp3-HD-Sadaltager
+  rate: 1.12
+  say:
+    '0.49배': 영쩜사구 배
+    '0.36배': 영쩜삼육 배
+    '0.15': 영쩜일오
+    '0.35': 영쩜삼오
+    '0.41': 영쩜사일
+    '0.30': 영쩜삼영
+    '0.16': 영쩜일육
+    '0.34': 영쩜삼사
+youtube:
+  title: 코스피 일주일 -11.7%, 정말 미국 따라 무너진 걸까? 36년 데이터로 본 한·미 증시
+  description: '고래 싸움에 새우 등 터진다. 이번 주 코스피가 딱 그랬습니다.
+
+    미국 AI주가 흔들리자 일주일 만에 -11.7%, 서킷브레이커까지.
+
+    그런데 한국 증시는 정말 미국의 그림자일까요? 1990년부터 36년 치 데이터로 확인했습니다.
+
+
+    ✔ 미국이 기침하면 한국은 감기에 걸릴까? (상관계수 0.15 → 0.41)
+
+    ✔ 나스닥이 하룻밤 -5% 빠지면, 다음 날 코스피는?
+
+    ✔ 내릴 땐 더 따라가고, 오를 땐 덜 따라간다
+
+    ✔ 그림자가 떨어져 나간 해: 1997년, 2024년, 2025년
+
+    ✔ 한 주 -10% 폭락 16번, 그 뒤 1년과 3년
+
+    ✔ 고점 대비 -40% 하락 다섯 번, 회복까지 걸린 시간
+
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
+
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 배당·세금·수수료·환율은 반영하지 않았습니다. 투자 판단과 책임은 본인에게 있습니다.
+
+
+    [자료] 코스피 일간 종가(1990.1~2026.11.6) · S&P500 · 나스닥100 일간 종가(~2026.11.5) · 배당 제외
+
+    전날 밤 = 코스피 거래일 직전의 미국 거래일 · 한 주 = 금요일 종가 기준 · 8주 안에 이어진 하락은 한 번으로 묶음
+
+    외국인 순매도 규모는 언론 보도(11.2~11.6) 기준
+
+
+    [그림 · 사진] 아서 래컴 「켄싱턴 공원의 피터 팬」 삽화(1906, 퍼블릭 도메인) · Giles Laurent, 혹등고래(CC BY-SA 4.0) · Sean Murray, 체리새우(CC BY-SA 2.0) · Bryan Dorrough, 여의도 야경(CC BY 2.0) — 위키미디어 공용
+
+    '
+  tags: [코스피, 한국증시, 미국증시, 나스닥, 상관관계, 서킷브레이커, 폭락장, 외국인매도, 백테스트, 디커플링]
+  privacy: private
+thumbs:
+- template: clipping
+  tag: 고래 싸움에 새우 등?
+  masthead: THE DAILY MARKET
+  date: 코스피 · 1990 ~ 2026
+  headline: 코스피 일주일 -11.7%, 서킷브레이커까지
+  stamp:
+    text: '?'
+    sub: 36년 검증
+    size: 230
+    color: [220, 40, 40]
+    pos: [760, 720]
+  lines:
+  - {text: 코스피는, size: 150}
+  - {text: '미국의 그림자?', size: 140, color: yellow}
+  - {text: 숫자로 확인, size: 140}
+- template: diagonal
+  ant: false
+  a:
+    label: 나스닥 · 11.5
+    value: -6.4%
+    color: teal
+    chart: {series: ndx, start: '2026-06-01', end: '2026-11-05', color: [170, 255, 240]}
+  b:
+    label: 다음 날 코스피
+    value: '?'
+    color: red
+    chart: {series: kospi, start: '2026-06-01', end: '2026-11-06', color: [255, 140, 140]}
+  center: 미국이 기침하면
+  bottom: 한국은 감기?
+- template: question
+  lines:
+  - {text: 미국이, size: 130}
+  - {text: 기침하면, size: 130}
+  - {text: 한국은 감기, size: 150, color: up}
+  - {text: 라던데, size: 110}
+  - {text: '진짜일까?', size: 190, color: yellow}
+- template: big_number
+  glow: [150, 20, 40]
+  lines:
+  - {text: 코스피 한 주 -10% 폭락 · 16번, size: 100}
+  - {text: '3년 뒤 ??%', size: 230, color: up}
+  - {text: 결과는 의외로…, size: 100, color: yellow}
+  props:
+  - {kind: chart, series: kospi, start: '2026-01-02', end: '2026-11-06', color: [255, 90, 90], w: 640, h: 480, pos: [1580, 640]}
+shorts:
+- title: 나스닥 -5% 다음 날
+  start: '1:40.0'
+  end: '2:30.0'
+  yt_title: '나스닥이 하룻밤 -5% 빠지면, 다음 날 코스피는? 54번 확인 #코스피 #나스닥 #shorts'
+  yt_desc: '2000년 이후 나스닥100이 하룻밤 -5% 넘게 빠진 54번, 다음 날 코스피는 평균 -2.4%, 80%가 하락. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
+
+    ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
+  cover: {style: punch, tone: down, top: '나스닥 하룻밤 -5%, 다음 날 코스피는?', label: 2000 ~ 2026 · 54번, big: 80% 하락, sub: 평균 -2.4%}
+- title: 내릴 땐 더, 오를 땐 덜
+  start: '2:50.0'
+  end: '3:40.0'
+  yt_title: '코스피는 미국이 내릴 땐 더, 오를 땐 덜 따라간다? #코스피 #미국증시 #shorts'
+  yt_desc: '미국이 내린 날 코스피는 0.49배, 오른 날은 0.36배만 따라갔다. 2000~2026 데이터. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
+
+    ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
+  cover: {style: punch, tone: gold, top: 코스피는 미국을 얼마나 따라갈까, label: 2000 ~ 2026 · 전날 밤 미국 대비, big: '내릴 땐 더, 오를 땐 덜', sub: 0.49배 vs 0.36배}
+- title: 한 주 -10%, 3년 뒤
+  start: '6:00.0'
+  end: '6:50.0'
+  yt_title: '코스피 한 주 -10% 폭락, 3년 뒤엔 어땠을까? 1990년 이후 16번 #코스피 #폭락장 #shorts'
+  yt_desc: '코스피가 한 주에 10% 넘게 빠진 16번. 1년 뒤엔 반반, 3년 뒤엔 14번 중 11번이 플러스. 전체 영상은 ''주식 악어새'' 채널에서 확인하세요.
+
+    ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
+  cover: {style: punch, tone: up, top: 코스피 한 주 -10% 폭락, label: 1990 ~ 2026 · 3년 뒤, big: 14번 중 11번 플러스, sub: 1년 뒤엔 반반이었는데}
+checks:
+- {name: 이번 주 코스피(%), kind: ret, series: kospi, start: '2026-10-30', end: '2026-11-06'}
+- {name: 고점 대비(%), kind: ret, series: kospi, start: '2026-06-22', end: '2026-11-06'}
+- {name: 한 주 -10% 사건 수, kind: kr_wk_n}
+- {name: 1년 뒤 표본, kind: kr_wk_cnt, h: 1y}
+- {name: 1년 뒤 플러스, kind: kr_wk_up, h: 1y}
+- {name: 1년 뒤 중간값(%), kind: kr_wk_med, h: 1y}
+- {name: 3년 뒤 표본, kind: kr_wk_cnt, h: 3y}
+- {name: 3년 뒤 플러스, kind: kr_wk_up, h: 3y}
+- {name: 3년 뒤 중간값(%), kind: kr_wk_med, h: 3y}
+- {name: 1개월 뒤 승률(%), kind: kr_wk_win, h: 1m}
+- {name: 상관 1990년대, kind: kr_corr, y0: 1990, y1: 1999}
+- {name: 상관 2000년대, kind: kr_corr, y0: 2000, y1: 2009}
+- {name: 상관 2010년대, kind: kr_corr, y0: 2010, y1: 2019}
+- {name: 상관 2020년대, kind: kr_corr, y0: 2020, y1: 2026}
+- {name: 나스닥 -5% 밤 횟수, kind: kr_night_n, lo: -1, hi: -0.05}
+- {name: 나스닥 -5% 다음 날 하락(%), kind: kr_night_down, lo: -1, hi: -0.05}
+- {name: 나스닥 -5% 다음 날 평균(%), kind: kr_night_mean, lo: -1, hi: -0.05}
+- {name: 나스닥 +3% 밤 횟수, kind: kr_night_n, lo: 0.03, hi: 1}
+- {name: 나스닥 +3% 다음 날 상승(%), kind: kr_night_up, lo: 0.03, hi: 1}
+- {name: 나스닥 +3% 다음 날 평균(%), kind: kr_night_mean, lo: 0.03, hi: 1}
+- {name: 하락일 베타, kind: kr_beta, side: down}
+- {name: 상승일 베타, kind: kr_beta, side: up}
+- {name: 같은 방향 해(1991~2026), kind: kr_same_years}
+- {name: 1997 코스피, kind: kr_year, y: 1997}
+- {name: 1997 S&P, kind: kr_year, y: 1997, series: spx}
+- {name: 2024 코스피, kind: kr_year, y: 2024}
+- {name: 2024 S&P, kind: kr_year, y: 2024, series: spx}
+- {name: 2025 코스피, kind: kr_year, y: 2025}
+- {name: 2025 S&P, kind: kr_year, y: 2025, series: spx}
+scenes:
+# ── 인트로: 고래 싸움에 새우 등 ─────────────────────────────
+- type: photo_title
+  chapter: 인트로
+  bg: {kind: photo, file: whale_breach, dark: 0.55, focus: [0.45, 0.4]}
+  title: "고래 싸움에\n새우 등 터진다"
+  highlight: 새우 등
+  narration: ['고래 싸움에 새우 등 터진다. | 이번 주 한국 증시가 딱 그랬어요.']
+- type: chart
+  chapter: 인트로
+  chart:
+    series: kospi
+    start: '2026-01-02'
+    end: '2026-11-06'
+    color: [240, 84, 84]
+    title: 코스피 · 2026년
+    draw: {on: 1, dur: 2.2}
+    marks:
+    - {date: '2026-06-22', label: '9,115', sub: '6.22 사상 최고', on: 1, offset: 1.4, dy: -70, dx: -80, color: gold}
+    - {date: '2026-11-06', label: '5,060', sub: 고점 대비 -44.5%, on: 2, dy: 60, dx: -110, color: down, size: 36}
+    source: '자료: 코스피 일간 종가 (11.6 기준)'
+  narration: ['6월에 9,115로 사상 최고치를 찍었던 코스피가,', '지금은 5,060. | 고점에서 44.5%가 빠졌어요.']
+- type: news
+  chapter: 인트로
+  tag: 이번 주
+  headline: 코스피 일주일 -11.7%
+  sub: 11.6 장중 -8% · 서킷브레이커 발동 · 외국인 10조 원 순매도
+  ticker: ['나스닥100 11.5 하루 -6.4%', 'AI 데이터센터 규제 우려', '미국 중간선거 이후 기술주 급락', '코스피 5,060 마감']
+  narration: ['특히 이번 주는, 일주일 만에 11.7%. | 금요일엔 장중 8% 넘게 빠지면서 서킷브레이커까지 걸렸죠.', '외국인은 일주일 동안 10조 원 넘게 팔고 나갔고요.']
+- type: split
+  chapter: 인트로
+  left: {photo: whale_breach, label: 고래, sub: '미국 AI 주식 · 외국인 자금', focus: [0.45, 0.4]}
+  right: {photo: shrimp_cherry, kicker: 그 사이에서, title: '새우?', sub: 한국 증시, focus: [0.5, 0.5]}
+  sub_on: 3
+  narration: ['원래 이 속담은, 강대국 사이에 낀 한반도의 처지를 빗댈 때 자주 쓰였는데요. | 요즘은 주식 시장에서 더 자주 듣게 되죠.', '이번 주 고래는 미국이에요. 미국 AI 주식이 흔들리고, 큰손 외국인 자금이 움직이니까,', '그 사이에 낀 새우, 한국 증시가 등이 터진 거죠.']
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "미국이 기침하면\n한국은 감기?", on: 1, size: 130, highlight: '감기?', hl_color: up}
+  narration: ['증권가엔 이런 말도 있어요. 미국이 기침하면, 한국은 감기에 걸린다. | 진짜 그럴까요?']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "코스피는\n미국의 그림자일까?"
+  highlight: 그림자일까?
+  subtitle: 1990년부터 36년, 코스피와 미국 증시를 하루하루 붙여 봤습니다
+  narration: ['그래서 오늘은 1990년부터 36년 동안, 코스피와 미국 증시를 하루하루 붙여 봤어요.', '얼마나 같이 움직였는지, 미국이 크게 빠진 다음 날엔 어땠는지, | 그리고 이런 폭락 뒤에 코스피는 어떻게 됐는지까지요.']
+- type: card
+  chapter: 인트로
+  heading: 오늘 볼 것
+  highlight: 오늘
+  numbered: true
+  size: 50
+  gap: 34
+  width: 1500
+  bullets:
+  - {text: '미국이 빠진 다음 날, 코스피는?', on: 1}
+  - {text: '내릴 땐 더, 오를 땐 덜', on: 1}
+  - {text: 그림자가 떨어져 나간 해, on: 2}
+  - {text: '한 주 -10% 폭락 16번, 그 뒤', highlight: 16번, hl_color: down, on: 2}
+  narration: ['순서대로 볼게요.', '그리고 마지막엔, 새우 얘기로 다시 돌아옵니다.']
+# ── 규칙 ────────────────────────────────────────────────
+- type: timeline
+  chapter: 규칙
+  kicker: 왜 '전날 밤'일까
+  title: 미국 장이 끝나야, 한국 장이 열린다
+  highlight: 전날 밤
+  ticks:
+  - {label: 밤 11시 30분, sub: 미국 개장, hl: true}
+  - {label: 새벽 6시, sub: 미국 마감}
+  - {label: 아침 9시, sub: 한국 개장, hl: true}
+  - {label: 오후 3시 30분, sub: 한국 마감}
+  bands:
+  - {from: 0, to: 1, label: 미국 장, color: navy, on: 1}
+  - {from: 2, to: 3, label: 한국 장, color: coral, on: 2}
+  bottom: 코스피 하루 = 전날 밤 미국 성적을 보고 시작
+  bottom_hl: 전날 밤
+  bottom_on: 3
+  narration: ['먼저 규칙 하나. 미국 장은 우리 시간으로 밤에 열려서 새벽에 끝나요.', '그리고 아침 9시에 한국 장이 열리죠.', '그러니까 코스피의 하루는, 전날 밤 미국 성적표를 보고 시작하는 거예요. | 그래서 오늘은 코스피를 전날 밤 미국과 짝지어 비교했어요.']
+- type: kpi
+  chapter: 규칙
+  kpis:
+  - {label: '같은 날 미국과 · 상관계수', value: '0.16', on: 1, color: navy}
+  - {label: '전날 밤 미국과 · 상관계수', value: '0.34', on: 2}
+  bars:
+  - {label: 같은 날, value: 0.16, text: '0.16', hl: false}
+  - {label: 전날 밤, value: 0.34, text: '0.34', hl: true}
+  bars_on: 2
+  vmax: 0.4
+  credit: 코스피 · S&P500 일간 · 2000 ~ 2026
+  narration: ['실제로 코스피를 같은 날짜의 미국과 비교하면, 상관계수가 0.16밖에 안 돼요.', '그런데 전날 밤 미국과 짝지으면 0.34로, 두 배 넘게 올라가요. | 한국 증시는 미국을 하루 늦게 따라가는 거죠.']
+# ── 얼마나 같이 움직일까 ──────────────────────────────────
+- type: yearbars
+  chapter: 얼마나 같이?
+  items:
+  - [1990년대, 0.15]
+  - [2000년대, 0.35]
+  - [2010년대, 0.41]
+  - [2020년대, 0.30]
+  mark: {2010년대: 가장 높음}
+  mark_on: 2
+  fmt: '{:.2f}'
+  val_size: 40
+  vmax: 0.5
+  'on': 1
+  step: 0.25
+  heading: 코스피 vs 전날 밤 S&P500 · 상관계수
+  sub: 1이면 똑같이 움직임 · 0이면 서로 상관없음
+  source: '자료: 코스피 · S&P500 일간 종가 (2020년대는 2026.11까지)'
+  narration: ['같이 움직이는 정도를 숫자로 재는 게 상관계수인데요. | 1이면 똑같이 움직이고, 0이면 서로 상관이 없다는 뜻이에요.', '1990년대엔 0.15. 거의 따로 놀았어요. | 그런데 2000년대 0.35, 2010년대엔 0.41까지 올라갔죠.', '2020년대는 0.30. | 시장이 활짝 열리면서, 한국 증시는 점점 미국과 한 몸이 돼 온 거예요.']
+- type: chart
+  chapter: 얼마나 같이?
+  chart:
+    lines:
+    - {series: spx, color: up, label: S&P500}
+    - {series: kospi, color: gold, label: 코스피}
+    start: '1990-01-04'
+    end: '2026-11-06'
+    base: 100
+    unit: won
+    log: true
+    end_labels: true
+    rect: [170, 200, 1440, 620]
+    title: 1990년 초 100만 원 · 지수만 (배당 제외)
+    draw: {on: 1, dur: 3.0}
+    source: '자료: 코스피 · S&P500 일간 종가 (S&P500은 11.5까지)'
+  narration: ['참고로 같이 움직인다고, 성적까지 같았던 건 아니에요. | 1990년 초에 100만 원씩 넣었다면,', '배당을 빼고 지수만 봐도, 코스피는 545만 원, S&P500은 2,068만 원이 됐어요.', '하루하루의 방향은 닮아 가는데, 긴 시간의 성적표는 꽤 달랐던 거죠.']
+- type: kinetic
+  chapter: 얼마나 같이?
+  items:
+  - {text: "0.41이면\n얼마나 같은 걸까?", on: 1, size: 120, highlight: '0.41'}
+  narration: ['다시 하루하루로 돌아가 볼게요. 근데 0.41이라고 하면 감이 잘 안 오죠. | 그래서 더 확실한 장면만 골라 봤어요.']
+- type: photo_title
+  chapter: 미국이 빠진 다음 날
+  bg: {kind: photo, file: yeouido_night, dark: 0.6, focus: [0.5, 0.5]}
+  title: "나스닥이 하룻밤\n-5% 빠지면?"
+  highlight: -5%
+  narration: ['나스닥100이 하룻밤에 5% 넘게 빠지면, | 다음 날 아침 코스피는 어떻게 될까요?']
+- type: grid
+  chapter: 미국이 빠진 다음 날
+  kicker: 2000 ~ 2026 · 나스닥100 하룻밤 -5% 이상 · 54번
+  title: 다음 날 코스피가 내린 횟수
+  highlight: 내린 횟수
+  n: 54
+  k: 43
+  cols: 18
+  cell: 56
+  headline: 54번 중 43번 하락
+  headline_hl: 43번
+  narration: ['2000년 이후 나스닥100이 하룻밤에 5% 넘게 빠진 날은 54번.', '다음 날 코스피는, 54번 중 43번 내렸어요.']
+- type: punch
+  chapter: 미국이 빠진 다음 날
+  tone: down
+  label: 나스닥 하룻밤 -5% · 다음 날 코스피
+  big: 80% 하락
+  sub: 평균 -2.4%
+  sub_on: 2
+  narration: ['다음 날 코스피, 80%가 하락.', '평균으로는 -2.4%였어요.']
+- type: kpi
+  chapter: 미국이 빠진 다음 날
+  kpis:
+  - {label: '나스닥 11.5 · 하루', value: -6.4%, on: 1}
+  - {label: '코스피 11.6 · 하루', value: -6.0%, on: 1, color: navy}
+  bars:
+  - {label: 나스닥100, value: 6.4, text: -6.4%, hl: false}
+  - {label: 코스피, value: 6.0, text: -6.0%, hl: true}
+  bars_on: 2
+  vmax: 7
+  credit: 코스피 · 나스닥100 일간 종가
+  narration: ['이번 주가 딱 그 장면이에요. | 목요일 밤 나스닥이 6.4% 빠지고,', '다음 날 금요일, 코스피가 6.0% 빠졌죠.']
+- type: duel
+  chapter: 미국이 빠진 다음 날
+  heading: 그런데 이번 주가 전부 그랬던 건 아니다
+  left: {title: '11.2 (월)', value: +2.2%, sub: '전날 밤 나스닥 -3.5%인데 코스피 상승', color: up, on: 1}
+  right: {title: '11.5 (목)', value: -5.3%, sub: '전날 밤 나스닥 +0.7%인데 코스피 급락', color: down, on: 2}
+  narration: ['근데 재밌는 건, 이번 주가 전부 미국을 따라간 건 아니라는 거예요. | 월요일엔 전날 밤 나스닥이 3.5% 빠졌는데, 코스피는 오히려 2.2% 올랐어요.', '반대로 목요일엔 전날 밤 나스닥이 올랐는데, 코스피가 혼자 5.3% 빠졌고요. | 고래만 탓할 수는 없는 한 주였던 거죠.']
+# ── 내릴 땐 더, 오를 땐 덜 ─────────────────────────────────
+- type: kinetic
+  chapter: 내릴 땐 더, 오를 땐 덜
+  items:
+  - {text: "그럼 오를 때도\n똑같이 따라갈까?", on: 1, size: 120, highlight: 오를 때도}
+  narration: ['그럼 반대로, 미국이 크게 오른 다음 날엔 어떨까요? | 똑같이 따라 올라갈까요?']
+- type: hbars
+  chapter: 내릴 땐 더, 오를 땐 덜
+  kicker: 2000 ~ 2026 · 나스닥100 전날 밤 기준 · 다음 날 코스피
+  title: 따라간 비율
+  highlight: 따라간 비율
+  rows:
+  - {label: '나스닥 -5% 이하 → 코스피 하락', value: 79.6, text: 79.6%, hl: true, on: 1}
+  - {label: '나스닥 +3% 이상 → 코스피 상승', value: 76.8, text: 76.8%, on: 2, offset: 0.4}
+  narration: ['코스피는 나스닥이 하룻밤 3% 넘게 오른 233번 중엔 76.8%가 따라 올랐어요.', '빠질 때 따라 내린 79.6%보다 조금 낮죠. | 근데 진짜 차이는 횟수가 아니라, 크기에 있었어요.']
+- type: duel
+  chapter: 내릴 땐 더, 오를 땐 덜
+  heading: 코스피는 S&P500이 1% 움직일 때 얼마나 따라갔나 · 2000 ~ 2026
+  left: {title: 미국이 내린 날, value: 0.49배, sub: '-1%면 코스피 약 -0.5%', color: down, on: 1}
+  right: {title: 미국이 오른 날, value: 0.36배, sub: '+1%면 코스피 약 +0.36%', color: up, on: 2}
+  narration: ['코스피는 미국이 내린 날엔 0.49배를 따라 내렸어요. | S&P500이 1% 빠지면, 코스피는 0.5% 가까이 빠진 거죠.', '그런데 미국이 오른 날엔 0.36배만 따라 올랐어요.']
+- type: punch
+  chapter: 내릴 땐 더, 오를 땐 덜
+  tone: gold
+  label: 코스피 · 전날 밤 미국 대비
+  big: 내릴 땐 더, 오를 땐 덜
+  sub: 0.49배 vs 0.36배
+  sub_on: 2
+  narration: ['내릴 땐 더, 오를 땐 덜.', '같이 움직이긴 하는데, 손해 보는 쪽으로 기울어 있는 거예요.']
+- type: checklist
+  chapter: 내릴 땐 더, 오를 땐 덜
+  kicker: 왜 그럴까?
+  title: 내릴 때 더 따라가는 이유
+  title_size: 96
+  icon: photo:krx_building
+  icon_on: 1
+  icon_x: 1500
+  items:
+  - {text: 겁나면 신흥국부터 판다, on: 1}
+  - {text: '반도체 · 수출 비중이 크다', on: 2}
+  - {text: 원화도 같이 약해진다, on: 3, highlight: 원화}
+  narration: ['이유는 여러 가지로 설명되는데요. 겁이 날 때 외국인은 한국 같은 신흥국 주식부터 파는 경향이 있고,', '한국 증시는 반도체, 수출 기업 비중이 커서 미국 경기에 민감해요.', '거기다 이런 날엔 원화도 같이 약해지니까, | 달러로 투자한 외국인 입장에선 손실이 더 커지죠.']
+# ── 피터 팬의 그림자 ─────────────────────────────────────
+- type: portrait
+  chapter: 그림자
+  photo: peterpan_flew
+  focus: [0.5, 0.4]
+  kicker: J. M. 배리 · 1904년 연극, 1911년 소설
+  name: 피터 팬의 그림자
+  line: 늘 붙어 다니다가, 어느 날 떨어져 나갔다
+  line_hl: 떨어져 나갔다
+  chips:
+  - {text: 그림자는 주인을 따라간다, on: 1}
+  - {text: 그런데 도망친 그림자, on: 2}
+  narration: ['피터 팬 이야기 아시죠? | 피터 팬의 그림자는 늘 피터를 따라다니는데,', '어느 날 웬디네 집에서 떨어져 나가 혼자 도망쳐 버려요. | 웬디가 바늘로 꿰매 붙여 주죠.']
+- type: kinetic
+  chapter: 그림자
+  items:
+  - {text: "코스피도\n떨어져 나간 해가 있었다", on: 1, size: 120, highlight: 떨어져 나간 해}
+  narration: ['코스피도 대체로 미국의 그림자처럼 움직였지만, | 그림자가 떨어져 나간 해들이 있었어요.']
+- type: grid
+  chapter: 그림자
+  kicker: 1991 ~ 2026 · 연간 수익률 방향
+  title: 코스피와 S&P500이 같은 방향이었던 해
+  highlight: 같은 방향
+  n: 36
+  k: 27
+  cols: 12
+  cell: 80
+  headline: 36년 중 27년, 같은 방향
+  headline_hl: 27년
+  narration: ['1991년부터 36년 동안, 한 해를 끝냈을 때 둘이 같은 방향이었던 해는 27년.', '나머지 9년은, 하나는 오르고 하나는 내렸어요.']
+- type: isobars
+  chapter: 그림자
+  kicker: 그림자가 떨어져 나간 해 · 연간 수익률
+  title: 1997년 · 2024년 · 2025년
+  highlight: 떨어져 나간
+  credit: 코스피 · S&P500 연말 종가 · 배당 제외
+  gamma: 1.0
+  'on': 1
+  step: 0.3
+  items:
+  - {year: '1997', label: '+31.0%', sub: S&P500, value: 31}
+  - {year: '1997', label: '-42.2%', sub: 코스피 · IMF, value: 42.2, hl: true}
+  - {year: '2024', label: '+23.3%', sub: S&P500, value: 23.3}
+  - {year: '2024', label: '-9.6%', sub: 코스피, value: 9.6, hl: true}
+  - {year: '2025', label: '+16.4%', sub: S&P500, value: 16.4}
+  - {year: '2025', label: '+75.6%', sub: 코스피, value: 75.6, hl: true}
+  narration: ['1997년 IMF 외환위기 때, 미국은 31% 올랐는데 코스피는 42% 빠졌어요.', '2024년에도 미국은 23% 올랐는데, 코스피는 마이너스였고요.', '그리고 반대 방향으로 떨어져 나간 해도 있죠. | 바로 작년, 2025년. 미국이 16% 오를 때, 코스피는 75.6%가 올랐어요.']
+- type: frames
+  chapter: 그림자
+  title: 그림자가 앞서 달린 해 vs 뒤처진 해
+  highlight: 그림자
+  panels:
+  - {series: kospi, start: '2025-01-02', end: '2025-12-30', color: [240, 200, 120], caption: 2025년 · 코스피, value: +75.6%, good: true, on: 1}
+  - {series: kospi, start: '2024-01-02', end: '2024-12-30', color: [150, 180, 240], caption: 2024년 · 코스피, value: -9.6%, on: 2}
+  narration: ['그러니까 코스피는, 길게 보면 미국과 같은 방향일 때가 많지만,', '한 해 단위로 보면 한국만의 이유로 크게 앞서거나 뒤처지기도 했던 거예요. | 그림자는, 늘 주인 발밑에만 있는 건 아니었죠.']
+# ── 폭락 이후 ──────────────────────────────────────────
+- type: chart
+  chapter: 그림자
+  chart:
+    lines:
+    - {series: kospi, color: gold, label: 코스피}
+    - {series: spx, color: up, label: S&P500}
+    start: '2023-12-28'
+    end: '2026-11-06'
+    base: 100
+    unit: won
+    end_labels: true
+    rect: [170, 200, 1440, 620]
+    title: 2024년 초 100만 원 · 최근 3년
+    draw: {on: 1, dur: 3.0}
+    marks:
+    - {date: '2026-06-22', label: 343만 원, sub: 코스피 고점, on: 2, dy: -60, dx: -110, color: gold, size: 34}
+    source: '자료: 코스피 · S&P500 일간 종가 (배당 제외)'
+  narration: ['최근 3년을 보면 이게 더 잘 보여요. 2024년 초에 100만 원씩 넣었다면, | 2024년 말엔 코스피가 90만 원, 미국이 123만 원.', '그런데 올해 6월엔 코스피가 343만 원까지 치솟았어요. | 그림자가 주인을 한참 앞질러 날아간 거죠.', '그리고 지금은 191만 원. 미국은 154만 원이고요. | 앞질러 날아갔던 그림자가, 다시 빠르게 내려오는 중이에요.']
+- type: kinetic
+  chapter: 폭락 이후
+  items:
+  - {text: "그럼 이번 같은 폭락,\n그 뒤엔?", on: 1, size: 120, highlight: '그 뒤엔?'}
+  narration: ['이제 가장 궁금한 질문으로 가 볼게요. | 이번처럼 한 주에 10% 넘게 빠진 다음엔, 어떻게 됐을까요?']
+- type: timeline
+  chapter: 폭락 이후
+  kicker: 1990 ~ 2026 · 코스피 한 주 -10% 이상
+  title: 16번의 폭락 주간
+  highlight: 16번
+  ticks:
+  - {label: '1991'}
+  - {label: '1997', sub: IMF, hl: true}
+  - {label: 1999 ~ 2001, sub: 닷컴 · 9.11}
+  - {label: '2008', sub: 금융위기, hl: true}
+  - {label: '2020', sub: 코로나}
+  - {label: '2026', sub: 3월 · 10월, hl: true}
+  bands:
+  - {from: 1, to: 3, label: 1997 ~ 2001년에만 9번, color: coral, on: 2}
+  bottom: 8주 안에 이어진 하락은 한 번으로 셈 · 이번 주는 10월 사건에 포함
+  bottom_hl: 한 번으로
+  bottom_on: 3
+  narration: ['코스피가 1990년 이후 한 주에 10% 넘게 빠진 건, 따로 떨어진 사건으로 세면 16번이에요.', 'IMF부터 닷컴 버블, 9.11 테러까지, 1997년부터 2001년 사이에만 9번이 몰려 있고요.', '올해 3월과 10월도 들어가요. | 이번 주는 10월부터 이어진 하락의 연장선이라, 10월 사건에 같이 묶었어요.']
+- type: bars
+  chapter: 폭락 이후
+  heading: 코스피 한 주 -10% 폭락, 그 뒤 플러스였던 비율
+  subheading: 금요일 종가 기준 · 아직 기간이 안 지난 사건은 빼고 계산
+  subheading_on: 1
+  bars:
+    unit: '%'
+    rect: [200, 330, 1520, 430]
+    source: '자료: 코스피 주간 종가 (배당 제외)'
+    groups:
+    - label: 1개월 뒤
+      'on': 1
+      vmax: 100
+      bars:
+      - {label: 플러스, color: neutral, stat: {kind: kr_wk_win, h: 1m}}
+    - label: 1년 뒤
+      'on': 2
+      vmax: 100
+      bars:
+      - {label: 플러스, color: down, stat: {kind: kr_wk_win, h: 1y}}
+    - label: 3년 뒤
+      'on': 3
+      vmax: 100
+      bars:
+      - {label: 플러스, color: up, stat: {kind: kr_wk_win, h: 3y}}
+  narration: ['결과는요. 1개월 뒤엔 절반 정도만 플러스였어요. | 동전 던지기죠.', '1년 뒤도 14번 중 6번만 플러스. 중간값은 오히려 -2.7%였어요.', '그런데 3년 뒤로 늘리면, 14번 중 11번이 플러스. | 중간값은 +24.6%였습니다.']
+- type: punch
+  chapter: 폭락 이후
+  tone: up
+  label: 코스피 한 주 -10% 폭락 · 3년 뒤
+  big: 14번 중 11번 플러스
+  sub: 1년 뒤엔 반반이었는데
+  sub_on: 2
+  narration: ['코스피 한 주 -10% 폭락, 3년 뒤엔 14번 중 11번 플러스.', '1년 뒤엔 반반이었는데 말이죠.']
+- type: chart
+  chapter: 폭락 이후
+  chart:
+    series: kospi
+    start: '1997-06-02'
+    end: '2001-12-28'
+    color: [240, 84, 84]
+    title: 코스피 · 1997 ~ 2001
+    draw: {on: 1, dur: 2.0}
+    marks:
+    - {date: '1997-10-31', label: '한 주 -17.5%', sub: '1997.10', on: 1, offset: 1.0, dy: 60, dx: 100, color: down}
+    - {date: '1998-06-16', label: '280', sub: 바닥, on: 2, dy: 60, dx: 80, color: down, size: 36}
+    - {date: '1999-12-28', label: '1,028', sub: 1999년 말, on: 3, dy: -60, dx: -80, color: up, size: 36}
+    source: '자료: 코스피 일간 종가 (배당 제외)'
+  narration: ['물론 바로 회복된 건 아니에요. 1997년 10월, 한 주에 17.5%가 빠진 뒤에도,', '코스피는 이듬해 6월 280까지 더 떨어졌어요.', '그리고 1년 반 뒤엔 1,000을 넘었죠. | 폭락 직후의 1년은, 이렇게 롤러코스터인 경우가 많았어요.']
+- type: frames
+  chapter: 폭락 이후
+  title: 2008년 금융위기 vs 2020년 코로나
+  highlight: 2008년
+  panels:
+  - {series: kospi, start: '2008-07-01', end: '2009-10-30', color: [150, 180, 240], caption: '2008.10 한 주 -12.6% → 1년 뒤', value: +32.6%, good: true, on: 1}
+  - {series: kospi, start: '2020-01-02', end: '2021-03-31', color: [240, 200, 120], caption: '2020.3 한 주 -13.2% → 1년 뒤', value: +72.4%, good: true, on: 2}
+  narration: ['반대로 빨리 돌아온 경우도 있었어요. 2008년 10월 금융위기 때 한 주에 12.6%가 빠진 뒤, 1년 뒤엔 32.6% 플러스.', '2020년 3월 코로나 때는 한 주 13.2% 하락 뒤, 1년 만에 72.4%가 올랐어요. | 같은 폭락이라도, 그 뒤의 길은 이렇게 달랐습니다.']
+- type: capsule
+  chapter: 폭락 이후
+  kicker: 3년 뒤 마이너스였던 3번
+  value: '3'
+  unit: 번
+  accent: 모두 1999 ~ 2000년
+  ghost: '2000'
+  badge: 닷컴 버블 붕괴
+  sub: 버블이 꺼지는 한복판에서 맞은 폭락은 3년을 기다려도 마이너스
+  sub_hl: 버블이 꺼지는 한복판
+  narration: ['3년 뒤에도 마이너스였던 3번은, 전부 1999년과 2000년이었어요.', '닷컴 버블이 꺼지는 한복판에서 맞은 폭락은, | 3년을 기다려도 회복이 안 됐던 거죠.']
+# ── 고점 대비 -40% ──────────────────────────────────────
+- type: poster
+  chapter: 고점 대비 -40%
+  kicker: 코스피 · 1990 ~ 2026.11 (로그 스케일)
+  title: "36년, 다섯 번의\n큰 하락"
+  highlight: 다섯 번
+  ridge: {series: kospi, start: '1990-01-04', end: '2026-11-06', log: true, height: 470, draw: 3.0}
+  pin: {at: 0.22, label: 'IMF · -75%', on: 2}
+  credit: '산 모양: 코스피 실제 흐름 (로그 스케일)'
+  narration: ['조금 더 길게 볼게요. 코스피는 36년 동안, 고점에서 40% 넘게 빠진 적이 이번까지 다섯 번 있어요.', '가장 깊었던 건 IMF 때. 고점 대비 75%가 빠졌죠.']
+- type: hbars
+  chapter: 고점 대비 -40%
+  kicker: 코스피 · 고점 대비 -40% 이상 하락 · 고점 회복까지
+  title: 다시 고점까지 걸린 시간
+  highlight: 걸린 시간
+  title_y: 160
+  bar_h: 46
+  row_gap: 30
+  rows:
+  - {label: '1990 ~ 92 · -51%', value: 4.1, text: 4.1년, on: 1}
+  - {label: '1994 ~ 98 IMF · -75%', value: 10.8, text: 10.8년, hl: true, on: 1, offset: 0.3}
+  - {label: '2007 ~ 08 금융위기 · -55%', value: 3.2, text: 3.2년, on: 2}
+  - {label: '2018 ~ 20 코로나 · -44%', value: 2.8, text: 2.8년, on: 2, offset: 0.3}
+  narration: ['다시 고점을 되찾기까지 걸린 시간은요. 1990년대 초엔 4.1년, IMF 때는 무려 10.8년이 걸렸어요.', '금융위기 땐 3.2년, 코로나 땐 2.8년.', '그리고 지금이 다섯 번째. 고점 대비 -44.5%, 아직 진행 중이에요.']
+- type: ticket
+  chapter: 고점 대비 -40%
+  kicker: 앞의 네 번
+  title: 결국 고점을 되찾았다
+  highlight: 되찾았다
+  label: 고점 대비 -40% 이상 · 고점 회복
+  value: '4'
+  unit: 번 중 4번
+  stub: "가장 빨랐던 2.8년\n가장 느렸던 10.8년\n이번은?"
+  narration: ['앞의 네 번은, 결국 모두 고점을 되찾았어요. | 빠르면 3년이 안 걸렸고, 느리면 10년이 넘게 걸렸죠.', '이번이 어느 쪽일지는, 데이터도 알려 주지 않아요.']
+# ── 정리: 다시 새우 ─────────────────────────────────────
+- type: card
+  chapter: 정리
+  heading: 오늘의 숫자
+  highlight: 숫자
+  numbered: true
+  size: 48
+  gap: 30
+  width: 1500
+  bullets:
+  - {text: '코스피 vs 미국 상관계수 0.15 → 0.41 → 0.30', on: 1}
+  - {text: '나스닥 하룻밤 -5% → 다음 날 코스피 80% 하락', on: 1}
+  - {text: '내릴 땐 0.49배, 오를 땐 0.36배', on: 2}
+  - {text: '한 주 -10% 폭락 → 1년 뒤 반반, 3년 뒤 11/14 플러스', highlight: 3년 뒤, hl_color: up, on: 2}
+  narration: ['정리해 볼게요. 코스피는 시간이 갈수록 미국과 더 같이 움직였고, 미국이 크게 빠진 다음 날엔 대부분 따라 빠졌어요.', '내릴 땐 더, 오를 땐 덜 따라갔고요. | 한 주 -10% 폭락 뒤 1년은 반반이었지만, 3년 뒤엔 대부분 플러스였습니다.']
+- type: photo_title
+  chapter: 정리
+  bg: {kind: photo, file: shrimp_cherry, dark: 0.45, focus: [0.5, 0.5]}
+  title: "새우는 3억 년을\n살아남았다"
+  highlight: 3억 년
+  narration: ['처음에 했던 얘기로 돌아가 볼게요. 고래 싸움에 등이 터지는 새우.', '그런데 새우는요, 고래보다 훨씬 먼저 바다에 나타나서, | 3억 년 넘게 살아남은 동물이에요.']
+- type: kinetic
+  chapter: 정리
+  items:
+  - {text: "작다고 약한 게 아니라\n버티는 방법이 다를 뿐", on: 1, size: 110, highlight: 버티는 방법}
+  narration: ['작다고 약한 게 아니라, 버티는 방법이 다를 뿐이죠.', '한국 증시도 고래 싸움에 몇 번이나 등이 터졌지만, | 그때마다 다시 고점을 찾아왔어요. | 물론 얼마나 걸릴지는, 매번 달랐고요.']
+- type: outro
+  heading: "미국의 그림자여도\n버티는 건 내 몫"
+  highlight: 버티는 건 내 몫
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아닙니다.
+
+    과거 데이터는 미래 수익을 보장하지 않으며 배당·세금·수수료·환율은 반영하지 않았습니다.'
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['미국의 그림자처럼 움직이는 시장이라도, 그 안에서 버티는 방법은 각자 정할 수 있어요.', '여러분은 이번 주 어떻게 보내셨어요? 그리고 다음엔 어떤 걸 숫자로 확인해 볼까요? | 궁금한 주제나 종목, 매매법을 댓글로 남겨 주세요.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']

@@ -35,7 +35,7 @@ def _vix() -> pd.Series:
 def _daily(name: str) -> pd.Series:
     df = pd.read_csv(DATA / f"{name}_daily.csv")
     df.columns = [c.lower().replace(" ", "_") for c in df.columns]
-    col = "adj_close" if name not in ("ndx", "spx") else "close"
+    col = "adj_close" if name not in ("ndx", "spx", "kospi") else "close"
     s = df.assign(date=pd.to_datetime(df["date"])).set_index("date")[col].astype(float)
     return s[s > 0].dropna()
 
@@ -217,6 +217,34 @@ def _cycle_strategy(name):
     return eq.loc[str(election_day(1950).date()):]
 
 
+# ── 한국(코스피) · 한·미 연동 ─────────────────────────────────────
+def kr_weekly_drops(th=-0.10, gap_days=56):
+    """금요일 종가 기준 한 주 th 이하 하락. gap_days 안에 이어진 하락은 한 사건으로 묶음(첫 주 기준).
+    반환: [(주, 하락%, 4주 뒤%, 13주 뒤%, 52주 뒤%, 156주 뒤%)]"""
+    w = _daily("kospi").resample("W-FRI").last().dropna()
+    r = w.pct_change()
+    out, last = [], None
+    for dt, v in r[r <= th].items():
+        if last is not None and (dt - last).days < gap_days:
+            last = dt
+            continue
+        last = dt
+        i = w.index.get_loc(dt)
+        g = lambda h: (w.iloc[i + h] / w.iloc[i] - 1) * 100 if i + h < len(w) else np.nan
+        out.append((dt, v * 100, g(4), g(13), g(52), g(156)))
+    return out
+
+
+def kr_us_nightly(us="spx", y0="2000"):
+    """코스피 일간 수익률 vs 직전 미국 거래일(전날 밤) 수익률 (소수)"""
+    k = _daily("kospi").pct_change().dropna()
+    u = _daily(us).pct_change().dropna()
+    idx = u.index.searchsorted(k.index, side="left") - 1
+    prev = pd.Series([u.iloc[i] if i >= 0 else np.nan for i in idx], index=k.index)
+    df = pd.DataFrame({"k": k, "u": prev}).dropna()
+    return df.loc[str(y0):]
+
+
 def series(name: str, start=None, end=None) -> pd.Series:
     if name == "sp500":
         s = _sp500()
@@ -227,7 +255,7 @@ def series(name: str, start=None, end=None) -> pd.Series:
         s = _vix()
     elif name in ("strat_mid2pres", "strat_pres2mid"):
         s = _cycle_strategy(name)
-    elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd"):
+    elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd", "kospi"):
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()
@@ -240,7 +268,7 @@ def series(name: str, start=None, end=None) -> pd.Series:
         held &= r.index >= pd.Timestamp("1950-11-01")
         s = (1 + r.where(held, 0)).cumprod()
         s = s / s.loc[:"1950-10-31"].iloc[-1] if name == "halloween_spx" else s / s.loc[:"1985-10-31"].iloc[-1]
-    elif name.endswith("_drawdown") and name[:-9] in ("tqqq", "sqqq", "qqq", "ndx", "sim3x_ndx"):
+    elif name.endswith("_drawdown") and name[:-9] in ("tqqq", "sqqq", "qqq", "ndx", "sim3x_ndx", "kospi", "spx"):
         p = series(name[:-9])
         s = (p / p.cummax() - 1) * 100
     else:
@@ -266,6 +294,32 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind.startswith("kr_"):
+        if kind.startswith("kr_wk_"):  # kr_wk_n / kr_wk_up / kr_wk_med / kr_wk_mean / kr_wk_cnt (h: 1m|3m|1y|3y)
+            ev = kr_weekly_drops(kw.get("th", -0.10))
+            if kind == "kr_wk_n":
+                return float(len(ev))
+            j = {"1m": 2, "3m": 3, "1y": 4, "3y": 5}[kw.get("h", "1y")]
+            v = np.array([e[j] for e in ev if not np.isnan(e[j])])
+            return float({"kr_wk_cnt": len(v), "kr_wk_up": (v > 0).sum(), "kr_wk_win": (v > 0).mean() * 100,
+                          "kr_wk_med": np.median(v), "kr_wk_mean": v.mean()}[kind])
+        if kind == "kr_corr":  # 코스피 vs 전날 밤 미국 일간 상관계수 (y0~y1)
+            df = kr_us_nightly(kw.get("us", "spx"), str(kw.get("y0", 1990))).loc[:str(kw.get("y1", 2026))]
+            return float(df.k.corr(df.u))
+        if kind.startswith("kr_night_"):  # 전날 밤 미국 lo < 수익률 <= hi 일 때 코스피: kr_night_n / _mean / _down / _up
+            df = kr_us_nightly(kw.get("us", "ndx"), str(kw.get("y0", 2000)))
+            m = df[(df.u > kw.get("lo", -1)) & (df.u <= kw.get("hi", 1))]
+            return float({"kr_night_n": len(m), "kr_night_mean": m.k.mean() * 100, "kr_night_down": (m.k < 0).mean() * 100,
+                          "kr_night_up": (m.k > 0).mean() * 100}[kind])
+        if kind == "kr_beta":  # side: down|up
+            df = kr_us_nightly(kw.get("us", "spx"), str(kw.get("y0", 2000)))
+            m = df[df.u < 0] if kw.get("side") == "down" else df[df.u > 0]
+            return float(np.polyfit(m.u, m.k, 1)[0])
+        if kind == "kr_year":  # 연간 수익률 (series: kospi|spx)
+            return year_ret(kw["y"], kw.get("series", "kospi"))
+        if kind == "kr_same_years":  # y0~y1 중 코스피 · S&P500 연간 방향이 같은 해 수
+            ys = range(kw.get("y0", 1991), kw.get("y1", 2026) + 1)
+            return float(sum(np.sign(year_ret(y, "kospi")) == np.sign(year_ret(y, "spx")) for y in ys))
     if kind == "ath_days":
         p = series(kw.get("series", "spx")).loc[str(kw.get("y0", 1950)):]
         return float((p >= p.cummax()).sum())
