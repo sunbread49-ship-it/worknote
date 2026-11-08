@@ -686,6 +686,8 @@ def t_silhouette(sp):
 
 def render(sp, out):
     f = TEMPLATES[sp["template"]](sp)
+    if sp.get("stickers") and sp["template"] != "hook":
+        place_stickers(f, sp["stickers"])
     if sp.get("finish", True):
         f = finish(f, sp.get("frame", True))
     f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(out)
@@ -749,6 +751,67 @@ def t_versus3(sp):
 
 
 TEMPLATES["versus3"] = t_versus3
+
+
+
+# ── 스티커 (사진에서 오린 대상 + 흰 테두리 → 귀여운 스티커) · 말풍선 ─────────
+def sticker(png, h, outline=10, rot=0, flip=False):
+    im = Image.open(ROOT / "assets" / png).convert("RGBA")
+    im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
+    if flip:
+        im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    pad = outline * 2
+    a = Image.new("L", (im.width + pad * 2, im.height + pad * 2), 0)
+    a.paste(im.getchannel("A"), (pad, pad))
+    ring = a.filter(ImageFilter.MaxFilter(outline * 2 + 1)).point(lambda v: 255 if v > 40 else 0)
+    out = Image.new("RGBA", a.size, (255, 255, 255, 0))
+    out.putalpha(ring)
+    white = Image.new("RGBA", a.size, (255, 255, 255, 255))
+    out = Image.composite(white, out, ring)
+    out.alpha_composite(im, (pad, pad))
+    if rot:
+        out = out.rotate(rot, expand=True, resample=Image.BICUBIC)
+    return out
+
+
+def bubble(text, size=44, fill=(255, 255, 255), fg=(20, 22, 30)):
+    t = T(text, size, fg) if False else G.text_img(text, "Black", size, fg)
+    w, h = t.width + 50, t.height + 34
+    im = Image.new("RGBA", (w + 10, h + 34), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle((0, 0, w, h), radius=h // 2, fill=fill + (255,), outline=(20, 22, 30, 255), width=4)
+    d.polygon([(w * 0.3, h - 2), (w * 0.3 + 30, h - 2), (w * 0.3 - 6, h + 30)], fill=fill + (255,), outline=(20, 22, 30, 255))
+    d.line((w * 0.3 + 2, h - 3, w * 0.3 + 28, h - 3), fill=fill + (255,), width=6)
+    im.alpha_composite(t, (25, 17))
+    return im
+
+
+def place_stickers(f, items):
+    for it in items or []:
+        if it.get("png"):
+            st = sticker(it["png"], it.get("h", 300), it.get("outline", 10), it.get("rot", 0), it.get("flip", False))
+            shadowed(f, st, tuple(it["pos"]), it.get("anchor", "mm"), blur=14, off=(8, 12), alpha=0.6)
+        elif it.get("bubble"):
+            b = bubble(it["bubble"], it.get("size", 44))
+            if it.get("rot"):
+                b = b.rotate(it["rot"], expand=True, resample=Image.BICUBIC)
+            shadowed(f, b, tuple(it["pos"]), it.get("anchor", "mm"), blur=10, off=(6, 8), alpha=0.5)
+
+
+def t_hook(sp):
+    """화두 크게(왼쪽) + 사진 배경 + 모서리 스티커. lines · tag · photo · stickers"""
+    f = photo_bg(sp["photo"], "left") if sp.get("photo") else bg_dark(sp.get("glow", (40, 50, 90)))
+    place_stickers(f, sp.get("stickers"))
+    y = 90
+    if sp.get("tag"):
+        tg = tag(sp["tag"])
+        G.blit(f, tg, (90, y))
+        y += tg.height + 30
+    lines_block(f, sp["lines"], y, x=80, maxw=sp.get("text_w", 1150), gap=sp.get("gap", -4))
+    return f
+
+
+TEMPLATES["hook"] = t_hook
 
 
 if __name__ == "__main__":
