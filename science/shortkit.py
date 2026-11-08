@@ -91,18 +91,55 @@ def plan(scenes, out, say):
     return t, buf, cues
 
 
+SUB_SIZE, SUB_MAXW, SUB_Y = 54, 900, 1365
+SHIFT = 70  # 영상 내용을 위 고정 제목에서 조금 떼기
+
+
+def _fits(text):
+    from engine import style as St
+    return St.font("Bold", SUB_SIZE).getlength(text) <= SUB_MAXW
+
+
 def sub_frames(cues):
+    """자막은 항상 한 줄: 구두점 → 단어 단위로 잘라 한 줄 폭에 맞게 여러 번 나눠 보여 줌"""
     out = []
     for s, e, txt in cues:
         parts = [p.strip() for p in txt.replace("? ", "?|").replace(". ", ".|").replace(", ", ",|").split("|") if p.strip()]
         chunks, cur = [], ""
         for p in parts:
-            if len(cur) + len(p) > 24 and cur:
+            cand = (cur + " " + p).strip()
+            if _fits(cand) and (not cur or len(cur) < 8):
+                cur = cand
+                continue
+            if cur:
                 chunks.append(cur)
+                cur = ""
+            if _fits(p):
                 cur = p
-            else:
-                cur = (cur + " " + p).strip()
-        chunks.append(cur)
+                continue
+            # 한 구절이 한 줄보다 길면 → 단어 단위로 고르게(균형) 나눔
+            words = p.split(" ")
+            from engine import style as St
+            fnt = St.font("Bold", SUB_SIZE)
+            k = 2
+            while True:
+                target = fnt.getlength(p) / k
+                groups, g = [], ""
+                for w_ in words:
+                    c2 = (g + " " + w_).strip()
+                    if g and fnt.getlength(c2) > target * 1.08 and len(groups) < k - 1:
+                        groups.append(g)
+                        g = w_
+                    else:
+                        g = c2
+                groups.append(g)
+                if all(_fits(x) for x in groups) or k > 6:
+                    break
+                k += 1
+            chunks.extend(groups[:-1])
+            cur = groups[-1]
+        if cur:
+            chunks.append(cur)
         n = sum(len(c) for c in chunks)
         tt = s
         for c in chunks:
@@ -117,13 +154,13 @@ _subc = {}
 
 def subtitle(f, text):
     if text not in _subc:
-        tx = T(text, 56, (14, 16, 24), "Bold", max_w=830, align="center", line_gap=1.25)
+        tx = T(text, SUB_SIZE, (14, 16, 24), "Bold")
         px, py = 34, 16
         box = Image.new("RGBA", (tx.width + px * 2, tx.height + py * 2), (0, 0, 0, 0))
         ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), radius=18, fill=(255, 255, 255, 232))
         box.alpha_composite(tx, (px, py))
         _subc[text] = box
-    G.blit(f, _subc[text], (W / 2 - 30, 1295), 1, "mt")
+    G.blit(f, _subc[text], (W / 2, SUB_Y), 1, "mt")
 
 
 def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
@@ -137,11 +174,13 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
     print(f"길이 {total:.1f}초 · 장면 {len(scenes)}개")
 
     def frame(t):
-        f = BG.copy()
-        header(f, head)
         sc = next((s for s in scenes if s["start"] <= t < s["start"] + s["dur"]), scenes[-1])
         lt = t - sc["start"]
-        sc["draw"](f, lt, sc)
+        g = BG.copy()
+        sc["draw"](g, lt, sc)
+        f = BG.copy()
+        f.alpha_composite(g.crop((0, 0, W, H - SHIFT)), (0, SHIFT))
+        header(f, head)
         if lt < 0.18 and sc is not scenes[0]:
             f.alpha_composite(Image.new("RGBA", (W, H), BG2 + (int(200 * (1 - lt / 0.18)),)))
             header(f, head)

@@ -14,6 +14,8 @@ character: "사용자 제공 일러스트 사용 (직접 생성하지 않음)"
 # 쇼츠 화면 규칙 (첫 업로드 피드백 반영)
 layout:
   bottom_ui_from_y: 1480     # 채널명 · 제목 · 홍보 버튼이 덮는 영역 (1080x1920 기준)
-  right_ui: [930, 900, 1080, 1700]   # 좋아요 · 댓글 · 공유 버튼 열
-  subtitle: {y: 1295, size: 56, max_w: 830, center_x: 510, box: "흰색 92% 불투명 · 검은 글씨"}
-  content_bottom: 1280       # 그림 · 표는 이 위까지
+  centered: true             # 오른쪽 버튼 피해 왼쪽으로 옮기지 않음 — 정상 가운데 배치
+  content_shift: 70          # 장면 내용 전체를 70px 내려 상단 고정 제목과 간격 확보
+  subtitle: {y: 1365, size: 54, max_w: 900, center_x: 540, one_line: true, box: "흰색 92% 불투명 · 검은 글씨"}
+  # 자막은 절대 두 줄 금지 — 길면 구절/단어 단위로 고르게 나눠 여러 번 짧게
+  content_bottom: 1350       # 그림 · 표는 이 위까지 (내린 뒤 기준)

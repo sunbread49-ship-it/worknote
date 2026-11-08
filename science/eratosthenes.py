@@ -17,7 +17,7 @@ from shortkit import G, T, W, CREAM, DIM, CORAL, BLUE, MINT, GOLD
 OUT = K.HERE / "out" / "eratosthenes"
 HEAD = {"kicker": "기원전 240년, 이집트", "title": "막대기 하나로\n지구 크기를 잰 남자", "highlight": "지구 크기"}
 SAY = {"5,000 스타디온": "오천 스타디온", "25만 스타디온": "이십오만 스타디온", "157.5미터": "백오십칠 점 오 미터"}
-CX = W / 2 - 30  # 오른쪽 버튼 피해서 살짝 왼쪽
+CX = W / 2
 
 
 def s_hook(f, t, sc):
