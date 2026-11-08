@@ -77,9 +77,9 @@ def compose(w, h, sp, k=1.0, k_sub=1.0, k_m=1.0, vertical=False):
     big = _fit(sp["big"], sp.get("size", 300 if not vertical else 230), w - (160 if vertical else 260), fg)
     lab = None
     if sp.get("label"):
-        lab = G.pill(sp["label"], "ExtraBold", 46 if not vertical else 52,
+        lab = G.pill(sp["label"], "Black", 64 if not vertical else 72,  # 쇼츠 썸네일로 쓰일 때 읽히도록 크게
                      (20, 24, 40) if not dark else (255, 255, 255), (255, 255, 255) if not dark else (20, 24, 40),
-                     pad=(30, 12))
+                     pad=(36, 16))
     if vertical and sp.get("top"):
         top = _fit(sp["top"], 96, w - 120, fg)
         G.blit(f, top, (w / 2, h * 0.17), 1, "mt")
