@@ -1665,3 +1665,87 @@ class People(Editorial):
 
 
 TYPES.update({"photo_title": PhotoTitle, "split": Split, "checklist": Checklist, "portrait": Portrait, "people": People})
+
+
+class PhotoLine(Editorial):
+    """실제 사진(산 · 도시 등) 위에 실제 지수 선이 그려지는 모션 차트.
+    bg: {kind: photo, file, dark}, kicker/title/highlight, line: {series, start, end, log, color, draw},
+    rect: [x, y, w, h], pins: [{date, label, sub, on, color, dy}], fill: true(선 아래 반투명)"""
+
+    def prepare(self):
+        from . import data as D
+        ln = self.spec["line"]
+        s = D.series(ln["series"], ln.get("start"), ln.get("end")).dropna()
+        self.s = s
+        v = np.log(s.values) if ln.get("log") else s.values.astype(float)
+        self.v = v
+        self.lo, self.hi = v.min(), v.max()
+
+    def _xy(self, i):
+        x, y, w, h = self.spec.get("rect", [140, 330, 1640, 560])
+        n = len(self.v)
+        return x + w * i / (n - 1), y + h - h * (self.v[i] - self.lo) / (self.hi - self.lo + 1e-9)
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        x, y, w, h = sp.get("rect", [140, 330, 1640, 560])
+        # 아래쪽을 살짝 어둡게 (선 · 글자 가독성)
+        sh = Image.new("RGBA", f.size, (0, 0, 0, 0))
+        sd = ImageDraw.Draw(sh)
+        for yy in range(0, S.H, 6):
+            sd.rectangle((0, yy, S.W, yy + 6), fill=(4, 6, 14, int(150 * max(0, (yy - 200) / (S.H - 200)) ** 1.2)))
+        f.alpha_composite(sh)
+        self.hdr(f, t, y=sp.get("title_y", 120), center=False)
+        ln = sp["line"]
+        col = _col(ln.get("color"), Y)
+        dur = ln.get("draw", 3.0)
+        u = G.clamp((t - 0.3) / dur)
+        kd = u * u * (3 - 2 * u)
+        n = len(self.v)
+        step = max(1, n // 900)
+        m = max(2, int((n - 1) * kd) + 1)
+        pts = [self._xy(i) for i in range(0, m, step)] + [self._xy(m - 1)]
+        k = 2
+        if sp.get("fill", True) and len(pts) > 1:
+            lay = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
+            ImageDraw.Draw(lay).polygon([(px * k, py * k) for px, py in pts] + [(pts[-1][0] * k, (y + h) * k), (pts[0][0] * k, (y + h) * k)],
+                                        fill=col + (46,))
+            f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
+        glow = Image.new("RGBA", f.size, (0, 0, 0, 0))
+        ImageDraw.Draw(glow).line(pts, fill=col + (170,), width=16, joint="curve")
+        f.alpha_composite(glow.filter(ImageFilter.GaussianBlur(10)))
+        lay = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
+        ImageDraw.Draw(lay).line([(px * k, py * k) for px, py in pts], fill=col + (255,), width=5 * k, joint="curve")
+        f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
+        hx, hy = pts[-1]
+        ph = (t * 0.9) % 1.0
+        rr = 12 + 36 * ph
+        ring = Image.new("RGBA", f.size, (0, 0, 0, 0))
+        ImageDraw.Draw(ring).ellipse((hx - rr, hy - rr, hx + rr, hy + rr), outline=col + (int(230 * (1 - ph)),), width=4)
+        f.alpha_composite(ring)
+        d = ImageDraw.Draw(f)
+        d.ellipse((hx - 12, hy - 12, hx + 12, hy + 12), fill=(255, 255, 255, 255))
+        d.ellipse((hx - 7, hy - 7, hx + 7, hy + 7), fill=col + (255,))
+        for pn in sp.get("pins", []):
+            i = int(np.argmin(np.abs((self.s.index - np.datetime64(pn["date"])).days)))
+            if i > m - 1:
+                continue
+            o = G.appear(t, self.line_start(pn.get("on", 1)) + 0.2, 0.3)
+            if o <= 0:
+                continue
+            px, py = self._xy(i)
+            pc = _col(pn.get("color"), Y)
+            d.ellipse((px - 11, py - 11, px + 11, py + 11), fill=pc + (int(255 * o),), outline=(255, 255, 255, int(255 * o)), width=3)
+            dy = pn.get("dy", 70)
+            lb = G.pill(pn["label"], "Black", 36, (14, 16, 24), pc, pad=(20, 8))
+            ty = py + dy
+            d.line((px, py + (14 if dy > 0 else -14), px, ty), fill=pc + (int(220 * o),), width=3)
+            G.blit(f, lb, (px, ty), o, "mt" if dy > 0 else "mb")
+            if pn.get("sub"):
+                st = T(pn["sub"], 26, (230, 232, 240), "SemiBold")
+                G.blit(f, st, (px, ty + (lb.height + 6 if dy > 0 else 6)), o, "mt")
+        self.finish(f, t)
+
+
+TYPES.update({"photoline": PhotoLine})

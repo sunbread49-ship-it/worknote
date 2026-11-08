@@ -527,18 +527,19 @@ def t_diagonal(sp):
     d = ImageDraw.Draw(f)
     d.line([(W * 0.72, 0), (W * 0.28, H)], fill=(255, 255, 255, 255), width=14)
     A, B = sp["a"], sp["b"]
-    shadowed(f, fit(A["label"], 70, 820), (80, 70), "lt")
-    shadowed(f, fit(A["value"], 260, 880, color=A.get("color", "red")), (70, 160), "lt")
-    shadowed(f, fit(B["label"], 70, 820), (W - 80, H - 450), "rt")
-    shadowed(f, fit(B["value"], 260, 880, color=B.get("color", "teal")), (W - 70, H - 60), "rb")
+    # EP010 피드백: 대각선 안 문구는 더 크고 직관적으로 (라벨 110 · 숫자 300 · 위/아래 문구 120)
+    shadowed(f, fit(A["label"], sp.get("label_size", 110), 900), (80, 60), "lt", blur=18)
+    shadowed(f, fit(A["value"], sp.get("value_size", 300), 900, color=A.get("color", "red")), (70, 190), "lt", blur=18)
+    shadowed(f, fit(B["label"], sp.get("label_size", 110), 900), (W - 80, H - 600), "rt", blur=18)
+    shadowed(f, fit(B["value"], sp.get("value_size", 300), 900, color=B.get("color", "teal")), (W - 70, H - 60), "rb", blur=18)
     if sp.get("ant", True):
         from engine.character import croc_bird
         an = croc_bird(300)
         shadowed(f, an, (W / 2 + 30, H / 2 + 30), "mm", blur=16, alpha=0.5)
     if sp.get("center"):
-        shadowed(f, fit(sp["center"], 80, 700, color="yellow"), (W - 80, 60), "rt")
+        shadowed(f, fit(sp["center"], sp.get("center_size", 120), 820, color="yellow"), (W - 80, 60), "rt", blur=18)
     if sp.get("bottom"):
-        shadowed(f, fit(sp["bottom"], 80, 760, color="white"), (80, H - 60), "lb")
+        shadowed(f, fit(sp["bottom"], sp.get("bottom_size", 120), 860, color="white"), (80, H - 60), "lb", blur=18)
     return f
 
 

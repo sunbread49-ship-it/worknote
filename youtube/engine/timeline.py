@@ -147,11 +147,8 @@ def _check(scenes, log):
 
 
 # ── 자막 ─────────────────────────────────────────────────────────
-def chunks(text, max_chars=32):
-    """긴 문장을 자막 조각으로 나눈다. 가운데에 가까운 쉼표·마침표 뒤를 우선.
-    대본에 ' | '를 넣으면 그 위치에서 직접 끊는다(녹음 대본에서는 지워짐)."""
-    if "|" in text:
-        return [p.strip() for p in text.split("|") if p.strip()]
+def _split_words(text, max_chars):
+    """한 덩어리가 너무 길 때만: 가운데 가까운 쉼표 뒤 → 단어 경계"""
     if len(text) <= max_chars:
         return [text]
     words = text.split(" ")
@@ -162,14 +159,48 @@ def chunks(text, max_chars=32):
         score = abs(acc - total / 2)
         prev, nxt = words[i - 1], words[i]
         if prev[-1:] in ",.?!":
-            score -= total * 0.15  # 문장부호 뒤에서 끊는 걸 선호
+            score -= total * 0.15
         if prev[-1:] in "%" or prev[-1:].isdigit() or nxt[:1].isdigit():
-            score += total * 0.2   # '20% | 이상', '2026년 | 9월' 같은 숫자 덩어리는 붙여두기
+            score += total * 0.2   # 숫자 덩어리는 붙여두기
         if min(acc, total - acc) < 9:
-            score += total          # 너무 짧은 조각 방지
+            score += total
         if score < best_score:
             best, best_score = i, score
-    return chunks(" ".join(words[:best]), max_chars) + chunks(" ".join(words[best:]), max_chars)
+    return _split_words(" ".join(words[:best]), max_chars) + _split_words(" ".join(words[best:]), max_chars)
+
+
+def chunks(text, max_chars=36):
+    """자막 조각: 한 문장(한 맥락)은 가능하면 한 줄로.
+    1) ' | ' 위치에서 직접 끊고  2) 문장(. ? !) 단위로 나눈 뒤
+    3) 문장이 한 줄(max_chars)을 넘을 때만 쉼표 절 단위로 묶고  4) 그래도 길면 단어 경계에서 나눈다.
+    짧은 문장 여러 개는 한 줄에 들어가면 합친다."""
+    import re
+    if "|" in text:
+        return [c for p in text.split("|") if p.strip() for c in chunks(p.strip(), max_chars)]
+    sents = [x for x in re.split(r"(?<=[.?!])\s+", text.strip()) if x]
+    out = []
+    for snt in sents:
+        if len(snt) <= max_chars:
+            out.append(snt)
+            continue
+        clauses = [x for x in re.split(r"(?<=,)\s+", snt) if x]
+        cur = ""
+        for cl in clauses:
+            cand = (cur + " " + cl).strip()
+            if cur and len(cand) > max_chars:
+                out.extend(_split_words(cur, max_chars))
+                cur = cl
+            else:
+                cur = cand
+        if cur:
+            out.extend(_split_words(cur, max_chars))
+    merged = []
+    for c in out:  # 아주 짧은 조각은 앞 조각과 합치기(한 줄에 들어갈 때)
+        if merged and (len(c) < 8 or len(merged[-1]) < 8) and len(merged[-1]) + 1 + len(c) <= max_chars:
+            merged[-1] = merged[-1] + " " + c
+        else:
+            merged.append(c)
+    return merged
 
 
 def cues(scenes):

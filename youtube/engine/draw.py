@@ -104,7 +104,14 @@ def text_img(text: str, weight: str, size: int, fill=S.FG, max_w: int = 0,
     return im
 
 
+def _lum(c):
+    return 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
+
+
 def pill(text, weight="SemiBold", size=30, fg=S.FG, bg=S.PANEL, pad=(22, 10), radius=None):
+    # 밝은(노랑 · 크림) 알약 안의 밝은 글씨는 안 보임 → 자동으로 검정 글씨 (EP010 피드백)
+    if isinstance(bg, tuple) and len(bg) >= 3 and _lum(bg) > 150 and _lum(fg) > 150:
+        fg = (14, 16, 24)
     t = text_img(text, weight, size, fg)
     w, h = t.width + pad[0] * 2, t.height + pad[1] * 2
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))

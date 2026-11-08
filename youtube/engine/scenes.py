@@ -804,7 +804,7 @@ class YearBars(Scene):
             cx = x0 + slot * (idx + 0.5)
             v = self.items[idx][1]
             G.blit(f, G.pill(lab, "Bold", 26, (16, 20, 32), S.GOLD, pad=(14, 6)),
-                   (cx, base - min(abs(v), vmax) / vmax * hmax - 50) if v >= 0 else (cx, base - 50), o, "mb")
+                   (cx, base - min(abs(v), vmax) / vmax * hmax - sp.get("val_size", 26) - 40) if v >= 0 else (cx, base - 50), o, "mb")
         G.blit(f, G.text_img(sp.get("source", "자료: S&P500 지수(배당 제외) · 선거일 종가 → 1년 뒤"), "Regular", 20, S.MUTED),
                (x0 + w, (label_y or base + max([min(abs(v), vmax) / vmax * hmax for _, v in self.items if v < 0] or [0]) + (40 if any(v < 0 for _, v in self.items) else 0)) + 60), 1, "rt")
         self.draw_common(f, t)
