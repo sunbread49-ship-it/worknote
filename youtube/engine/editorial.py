@@ -16,6 +16,8 @@
 """
 from functools import lru_cache
 
+import json
+
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
@@ -2152,15 +2154,17 @@ class XPost(Editorial):
         if sp.get("big"):
             bt = T(sp["big"], 96, S.FG, "Black")
             card.alpha_composite(bt, (60, y)); y += bt.height + 10
-        if sp.get("en"):
+        plain = sp.get("plain", False)  # plain: 원문 문장 · '번역' 표시 없이 한글 한 줄만 크게 (EP013 피드백)
+        if sp.get("en") and not plain:
             en = T(sp["en"], 34, (210, 214, 226), "Medium", max_w=cw - 120, line_gap=1.35)
             card.alpha_composite(en, (60, y)); y += en.height + 24
         ok = G.appear(t, self.line_start(sp.get("ko_on", 1)) + 0.15, 0.35)
         if sp.get("ko") and ok > 0:
-            lab = G.pill("번역", "ExtraBold", 24, (14, 16, 24), Y, pad=(12, 4), radius=8)
-            card.alpha_composite(lab, (60, y))
-            ko = _hl_text(sp["ko"], sp.get("ko_size", 52), max_w=cw - 120, align="left")
-            card.alpha_composite(G.with_opacity(ko, ok), (60, y + 44))
+            if not plain:
+                lab = G.pill("번역", "ExtraBold", 24, (14, 16, 24), Y, pad=(12, 4), radius=8)
+                card.alpha_composite(lab, (60, y))
+            ko = _hl_text(sp["ko"], sp.get("ko_size", 76 if plain else 52), max_w=cw - 120, align="left")
+            card.alpha_composite(G.with_opacity(ko, ok), (60, y + (10 if plain else 44)))
         card = card.rotate((1 - k) * 3, resample=Image.BICUBIC, expand=True)
         G.blit(f, card, (S.W / 2, sp.get("y", 470) + (1 - k) * 40), k, "mm")
         credit(f, sp)
@@ -2269,3 +2273,193 @@ class DropCards(Editorial):
 
 
 TYPES.update({"dropcards": DropCards})
+
+
+
+# ── 문답 (EP013 피드백): Q 질문 → A 답 ─────────────────────────────
+class QA(Editorial):
+    """문답 카드. q(질문, **강조**), a(답, **노랑** !!빨강!!), a_on(답 등장 문장), sub(답 아래 작은 설명), kicker"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        x = 230
+        y = sp.get("top", 250)
+        if sp.get("kicker"):
+            G.blit(f, T(sp["kicker"], 40, (190, 196, 210), "ExtraBold"), (x, y - 80), G.appear(t, 0.0, 0.3))
+        k = G.ease_out(t / 0.4)
+        qb = _badge("Q", Y, (14, 16, 24))
+        G.blit(f, qb, (x, y + (1 - k) * 30), k)
+        q = _hl_text(sp["q"], sp.get("q_size", 92), max_w=1380, align="left")
+        shadow(f, q, (x + 150, y + 6 + (1 - k) * 30), "lt", k)
+        y2 = y + max(q.height, 120) + 70
+        a0 = self.line_start(sp.get("a_on", 2))
+        ka = G.ease_out((t - a0) / 0.4)
+        if ka > 0:
+            ab = _badge("A", (90, 220, 170), (10, 30, 24))
+            G.blit(f, ab, (x, y2 + (1 - ka) * 30), ka)
+            a = _hl_text(sp["a"], sp.get("a_size", 80), max_w=1380, align="left")
+            shadow(f, a, (x + 150, y2 + 6 + (1 - ka) * 30), "lt", ka)
+            if sp.get("sub"):
+                ks = G.appear(t, a0 + 0.6, 0.4)
+                G.blit(f, T(sp["sub"], 42, (200, 206, 220), "SemiBold", max_w=1380), (x + 150, y2 + a.height + 40), ks)
+        self.finish(f, t)
+
+
+def _badge(ch, bg, fg, s=118):
+    k = 3
+    im = Image.new("RGBA", (s * k, s * k), (0, 0, 0, 0))
+    ImageDraw.Draw(im).rounded_rectangle((0, 0, s * k - 1, s * k - 1), 28 * k, fill=bg + (255,))
+    im = im.resize((s, s), Image.LANCZOS)
+    G.blit(im, T(ch, 84, fg, "Black"), (s / 2, s / 2 - 4), 1, "mm")
+    return im
+
+
+# ── 원리 도식 (EP013 피드백): 노드(입체 블록) 사이로 전기가 흐르는 그림 + 아래 수요 그래프 ──────
+def _iso_box(d, cx, by, w, dp, h, top, left, right, k=2):
+    """cx, by = 바닥 앞 꼭짓점. w(오른쪽 방향 길이) · dp(왼쪽 방향 길이) · h(높이)"""
+    c, sn = 0.866, 0.5
+    A = (cx, by)
+    B = (cx + w * c, by - w * sn)
+    D = (cx - dp * c, by - dp * sn)
+    Cc = (B[0] - dp * c, B[1] - dp * sn)
+    up = lambda p: (p[0], p[1] - h)
+    d.polygon([D, A, up(A), up(D)], fill=left)
+    d.polygon([A, B, up(B), up(A)], fill=right)
+    d.polygon([up(A), up(B), up(Cc), up(D)], fill=top)
+    return A, B, Cc, D
+
+
+@lru_cache(maxsize=4)
+def _flow_layer(key):
+    nodes = json.loads(key)
+    k = 2
+    L = Image.new("RGBA", (S.W * k, S.H * k), (0, 0, 0, 0))
+    d = ImageDraw.Draw(L)
+    for n in nodes:
+        cx, by = n["x"] * k, n.get("y", 560) * k
+        kind = n["kind"]
+        if kind == "grid":  # 발전소 + 송전탑
+            _iso_box(d, cx - 40 * k, by, 150 * k, 120 * k, 70 * k, (120, 130, 150), (70, 78, 96), (92, 100, 120))
+            _iso_box(d, cx + 40 * k, by - 120 * k, 40 * k, 40 * k, 120 * k, (150, 156, 170), (90, 96, 112), (110, 116, 132))
+            px, py = cx - 150 * k, by - 40 * k  # 송전탑
+            for a, b in (((px - 40 * k, py), (px, py - 210 * k)), ((px + 40 * k, py), (px, py - 210 * k)),
+                         ((px - 70 * k, py - 150 * k), (px + 70 * k, py - 150 * k)), ((px - 55 * k, py - 110 * k), (px + 55 * k, py - 110 * k))):
+                d.line([a, b], fill=(200, 205, 215), width=6 * k)
+            bolt = [(cx + 10 * k, by - 200 * k), (cx - 30 * k, by - 120 * k), (cx + 5 * k, by - 120 * k), (cx - 25 * k, by - 50 * k), (cx + 45 * k, by - 140 * k), (cx + 10 * k, by - 140 * k)]
+            d.polygon(bolt, fill=Y + (255,))
+        elif kind == "battery":  # ESS 컨테이너 2개
+            for i, off in enumerate((-150, 20)):
+                A, B, Cc, D = _iso_box(d, cx + off * k, by - i * 10 * k, 170 * k, 80 * k, 100 * k,
+                                       (226, 232, 240), (150, 160, 176), (190, 198, 212))
+                for j in range(6):  # 옆면 줄무늬
+                    t0 = (j + 1) / 7
+                    xa = A[0] + (B[0] - A[0]) * t0
+                    ya = A[1] + (B[1] - A[1]) * t0
+                    d.line([(xa, ya - 12 * k), (xa, ya - 98 * k)], fill=(150, 160, 176), width=3 * k)
+            bx, byy = cx - 10 * k, by - 235 * k  # 배터리 기호
+            d.rounded_rectangle((bx - 70 * k, byy - 34 * k, bx + 70 * k, byy + 34 * k), 12 * k, outline=(90, 220, 170), width=7 * k)
+            d.rectangle((bx + 72 * k, byy - 14 * k, bx + 84 * k, byy + 14 * k), fill=(90, 220, 170))
+            d.rectangle((bx - 58 * k, byy - 22 * k, bx + 30 * k, byy + 22 * k), fill=(90, 220, 170))
+        elif kind == "datacenter":  # 서버 랙 3개
+            for i in range(3):
+                A, B, Cc, D = _iso_box(d, cx - 100 * k + i * 75 * k, by - i * 30 * k, 55 * k, 80 * k, 170 * k,
+                                       (70, 80, 110), (30, 36, 56), (44, 52, 78))
+                for j in range(7):
+                    yy = A[1] - 20 * k - j * 21 * k
+                    d.line([(A[0] + 8 * k, yy - 4 * k), (B[0] - 8 * k, yy - 4 * k - (B[1] - A[1]) * -0.0)], fill=(60, 70, 96), width=2 * k)
+                    d.ellipse((A[0] + 10 * k, yy - 10 * k, A[0] + 18 * k, yy - 2 * k), fill=(90, 220, 170) if (i + j) % 3 else Y)
+    return L.resize((S.W, S.H), Image.LANCZOS)
+
+
+class Flow(Editorial):
+    """원리 도식. nodes: [{kind: grid|battery|datacenter, x, y, label, sub, on}], links: [{a, b, label, on, color}]
+    chart: {on, limit, label_over, label_under, title} — 아래에 '전기 수요(출렁임) vs 전력망 한도' 그래프, 넘치는 부분은 배터리가 메움"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 120))
+        nodes = sp["nodes"]
+        key = json.dumps([{kk: n[kk] for kk in ("kind", "x", "y") if kk in n} for n in nodes])
+        lay = _flow_layer(key)
+        # 노드별 등장: 해당 영역만 잘라 보이기
+        for n in nodes:
+            o = G.ease_out((t - self.line_start(n.get("on", 1)) - n.get("offset", 0)) / 0.45)
+            if o <= 0:
+                continue
+            x0, y0 = int(n["x"] - 260), int(n.get("y", 560) - 330)
+            crop = lay.crop((x0, y0, x0 + 520, y0 + 400))
+            G.blit(f, crop, (x0, y0 + (1 - o) * 30), o)
+            lb = G.pill(n["label"], "Black", 44, (14, 16, 24), Y if n.get("hl") else (236, 240, 248), pad=(22, 8), radius=12)
+            G.blit(f, lb, (n["x"], n.get("y", 560) + 50), o, "mt")
+            if n.get("sub"):
+                G.blit(f, T(n["sub"], 32, (200, 206, 220), "SemiBold"), (n["x"], n.get("y", 560) + 125), o, "mt")
+        for ln in sp.get("links", []):
+            o = G.ease_out((t - self.line_start(ln.get("on", 1)) - ln.get("offset", 0)) / 0.4)
+            if o <= 0:
+                continue
+            a = next(n for n in nodes if n["label"] == ln["a"])
+            b = next(n for n in nodes if n["label"] == ln["b"])
+            xa, xb = a["x"] + ln.get("pad_a", 190), b["x"] - ln.get("pad_b", 200)
+            yy = (a.get("y", 560) + b.get("y", 560)) / 2 - ln.get("dy", 60)
+            col = _col(ln.get("color"), (90, 220, 170))
+            ov = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+            dd = ImageDraw.Draw(ov)
+            xe = xa + (xb - xa) * o
+            dd.line([(xa, yy), (xe, yy)], fill=col + (120,), width=6)
+            if o >= 1:
+                dd.polygon([(xb, yy), (xb - 28, yy - 18), (xb - 28, yy + 18)], fill=col + (255,))
+                for j in range(4):  # 흐르는 전기
+                    ph = ((t * 0.7 + j / 4) % 1.0)
+                    px = xa + (xb - xa - 30) * ph
+                    dd.ellipse((px - 11, yy - 11, px + 11, yy + 11), fill=col + (255,))
+            f.alpha_composite(ov)
+            if ln.get("label"):
+                G.blit(f, T(ln["label"], 34, col, "ExtraBold"), ((xa + xb) / 2, yy - 24), o, "mb")
+        ch = sp.get("chart")
+        if ch:
+            self._chart(f, t, ch)
+        self.finish(f, t)
+
+    def _chart(self, f, t, ch):
+        t0 = self.line_start(ch.get("on", 3))
+        o = G.ease_out((t - t0) / 0.5)
+        if o <= 0:
+            return
+        x0, y0, w, h = 300, ch.get("y", 790), 1320, ch.get("h", 130)
+        n = 240
+        rng = np.random.default_rng(7)
+        xs = np.linspace(0, 1, n)
+        v = 0.42 + 0.06 * np.sin(xs * 9) + 0.03 * np.sin(xs * 37)
+        for c in (0.15, 0.38, 0.62, 0.85):  # AI 계산이 몰리는 순간
+            v += 0.48 * np.exp(-((xs - c) / 0.03) ** 2)
+        v = np.clip(v, 0.2, 0.97)
+        lim = ch.get("limit", 0.66)
+        kk = min(1, max(0, (t - t0) / ch.get("dur", 2.4)))
+        m = max(2, int(n * kk))
+        X = x0 + xs * w
+        Yv = y0 + h - v * h
+        ly = y0 + h - lim * h
+        ov = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        d = ImageDraw.Draw(ov)
+        d.rectangle((x0 - 20, y0 - 64, x0 + w + 20, y0 + h + 16), fill=(10, 14, 26, 190))
+        for i in range(m - 1):
+            if v[i] > lim:
+                d.polygon([(X[i], ly), (X[i], Yv[i]), (X[i + 1], Yv[i + 1]), (X[i + 1], ly)], fill=(90, 220, 170, 200))
+            else:
+                d.polygon([(X[i], Yv[i]), (X[i], ly), (X[i + 1], ly), (X[i + 1], Yv[i + 1])], fill=Y + (45,))
+        d.line([(x0, ly), (x0 + w, ly)], fill=(240, 84, 84, 255), width=4)
+        d.line(list(zip(X[:m], Yv[:m])), fill=(236, 240, 248, 255), width=5, joint="curve")
+        f.alpha_composite(G.with_opacity(ov, o))
+        G.blit(f, T(ch.get("title", "AI 데이터센터 전기 사용량"), 34, S.FG, "Black"), (x0, y0 - 50), o)
+        G.blit(f, T(ch.get("limit_label", "전력망 한도"), 28, (240, 84, 84), "ExtraBold"), (x0 + 6, ly - 6), o, "lb")
+        if kk > 0.6:
+            o2 = G.appear(t, t0 + ch.get("dur", 2.4) * 0.6, 0.4)
+            p1 = G.pill(ch.get("label_over", "넘치는 순간 → 배터리가 메움"), "Black", 30, (10, 30, 24), (90, 220, 170), pad=(14, 5), radius=10)
+            p2 = G.pill(ch.get("label_under", "남는 전기 → 배터리 충전"), "Black", 30, (14, 16, 24), Y, pad=(14, 5), radius=10)
+            G.blit(f, p2, (x0 + w, y0 - 52), o2, "rt")
+            G.blit(f, p1, (x0 + w - p2.width - 16, y0 - 52), o2, "rt")
+
+
+TYPES.update({"qa": QA, "flow": Flow})

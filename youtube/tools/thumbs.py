@@ -919,14 +919,18 @@ def t_bold_q(sp):
         G.blit(f, tg, (sp.get("x", 80), y))
         y += tg.height + 24
     lines_block(f, sp["lines"], y, x=sp.get("x", 80), maxw=sp.get("text_w", 1200), gap=sp.get("gap", -14))
-    st = sp.get("stamp")
-    if st:
+    for st in ([sp["stamp"]] if sp.get("stamp") else []) + sp.get("stamps", []):
         col = C(st.get("color", "red"))
-        t = G.text_img(st["text"], "Black", st.get("size", 120), (255, 255, 255))
+        t = G.text_img(st["text"], "Black", st.get("size", 120), C(st.get("fg", "white")))
+        sub = G.text_img(st["sub"], "Black", st.get("sub_size", 54), C(st.get("fg", "white"))) if st.get("sub") else None
         pad = 34
-        box = Image.new("RGBA", (t.width + pad * 2, t.height + pad), (0, 0, 0, 0))
-        ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 20, fill=col + (255,), outline=(255, 255, 255, 255), width=8)
-        box.alpha_composite(t, (pad, pad // 2))
+        bw = max(t.width, sub.width if sub else 0) + pad * 2
+        bh = t.height + pad + (sub.height + 6 if sub else 0)
+        box = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
+        ImageDraw.Draw(box).rounded_rectangle((0, 0, bw - 1, bh - 1), 20, fill=col + (255,), outline=(255, 255, 255, 255), width=8)
+        box.alpha_composite(t, ((bw - t.width) // 2, pad // 2))
+        if sub:
+            box.alpha_composite(sub, ((bw - sub.width) // 2, pad // 2 + t.height + 2))
         box = box.rotate(st.get("rot", -8), expand=True, resample=Image.BICUBIC)
         shadowed(f, box, (st["x"], st["y"]), "mm", blur=16)
     return f
