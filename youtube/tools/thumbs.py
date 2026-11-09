@@ -814,5 +814,54 @@ def t_hook(sp):
 TEMPLATES["hook"] = t_hook
 
 
+
+# ── 인물 인용형 (EP012 벤치마킹): 얼굴 사진 + 따옴표 한 줄 + 등락 배지 ───────────
+def t_face_quote(sp):
+    """faces: [{photo, focus, name}] 1~2명 오른쪽 · quote(따옴표 문구, 여러 줄, **강조**) 왼쪽 · badge: {label, value, dir:down|up} · tag"""
+    f = Image.new("RGBA", (W, H), (10, 12, 20, 255))
+    faces = sp.get("faces", [])
+    n = len(faces)
+    fw = 760 if n == 1 else 520
+    x = W - fw * n
+    for fc in faces:
+        im = photo_fill(fc["photo"], fw, H, tuple(fc.get("focus", (0.5, 0.25))), fc.get("dark", 0.1), 0, fc.get("gray", 0.15))
+        f.alpha_composite(im, (x, 0))
+        if fc.get("name"):
+            nm = G.pill(fc["name"], "Black", 40, (16, 18, 28), (255, 210, 60), pad=(18, 8), radius=10)
+            G.blit(f, nm, (x + 30, 40))
+        x += fw
+    import numpy as np
+    # 왼쪽 → 오른쪽 어둡게 전환
+    g = np.clip((np.linspace(0, 1, W) - (1 - (fw * n) / W) + 0.18) / 0.3, 0, 1)
+    a = (1 - g) * 245
+    lay = Image.new("RGBA", (W, H), (10, 12, 20, 0))
+    lay.putalpha(Image.fromarray(np.tile(a[None, :], (H, 1)).astype("uint8")))
+    f.alpha_composite(lay)
+    y = 90
+    if sp.get("tag"):
+        tg = tag(sp["tag"])
+        G.blit(f, tg, (80, y))
+        y += tg.height + 34
+    from engine.editorial import _hl_text
+    q = _hl_text(sp["quote"], sp.get("quote_size", 150), max_w=1200, align="left", line_gap=1.12)
+    shadowed(f, q, (70, y), "lt", blur=16)
+    b = sp.get("badge")
+    if b:
+        col = (60, 130, 255) if b.get("dir", "down") == "down" else (240, 70, 70)
+        arrow = "▼" if b.get("dir", "down") == "down" else "▲"
+        lab = G.text_img(b["label"], "Black", 58, (255, 255, 255))
+        val = G.text_img(f"{arrow}{b['value']}", "Black", 82, col)
+        bw_, bh_ = lab.width + val.width + 90, max(lab.height, val.height) + 40
+        box = Image.new("RGBA", (bw_, bh_), (0, 0, 0, 0))
+        ImageDraw.Draw(box).rounded_rectangle((0, 0, bw_ - 1, bh_ - 1), 18, fill=(20, 24, 36, 240), outline=(90, 100, 130, 255), width=3)
+        box.alpha_composite(lab, (30, (bh_ - lab.height) // 2))
+        box.alpha_composite(val, (60 + lab.width, (bh_ - val.height) // 2))
+        shadowed(f, box, (70, H - 70), "lb", blur=14)
+    return f
+
+
+TEMPLATES["face_quote"] = t_face_quote
+
+
 if __name__ == "__main__":
     main(sys.argv[1:])

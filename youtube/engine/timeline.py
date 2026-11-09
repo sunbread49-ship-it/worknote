@@ -203,12 +203,28 @@ def chunks(text, max_chars=36):
     return merged
 
 
+def _balance(parts):
+    """자막 조각 사이에서 끊긴 강조 표시(**, !!)를 이어 붙임"""
+    out, open_ = [], {"**": False, "!!": False}
+    for p in parts:
+        pre = "".join(m for m, o in open_.items() if o)
+        p = pre + p
+        for m in open_:
+            if p.count(m) % 2:
+                p = p + m
+                open_[m] = True
+            else:
+                open_[m] = False if not pre.count(m) else open_[m] and (p.count(m) % 2 == 1)
+        out.append(p)
+    return out
+
+
 def cues(scenes):
     """[(global_start, global_end, text)]"""
     out = []
     for sc in scenes:
         for (s, e), text in zip(sc.lines, sc.narration):
-            parts = chunks(text)
+            parts = _balance(chunks(text))
             w = [max(1, syllables(p)) for p in parts]
             tot, acc = sum(w), s
             for p, wi in zip(parts, w):

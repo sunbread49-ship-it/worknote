@@ -110,7 +110,7 @@ scenes:
 - type: kinetic
   chapter: 인트로
   items:
-  - {text: "반도체,\n이대로 끝일까?", on: 1, size: 150, highlight: 끝일까?, hl_color: up}
+  - {text: "반도체,\n이대로 끝일까?", on: 1, size: 150, highlight: '끝일까?', hl_color: up}
   narration: ['삼성전자, SK하이닉스 들고 계신 분들, 요즘 잠 못 주무시죠. | 반도체, 이대로 끝일까요?']
 - type: title
   skyline: true
@@ -162,9 +162,9 @@ scenes:
 - type: checklist
   chapter: 불안 둘
   kicker: 네오클라우드가 뭐길래?
-  title: 빚으로 칩을 사서 빌려주는 회사
+  title: 빚으로 칩 사서 빌려주는 회사
   highlight: 빚으로
-  title_size: 84
+  title_size: 72
   icon: photo:musk
   icon_on: 1
   icon_x: 1620
@@ -177,7 +177,7 @@ scenes:
   chapter: 불안 셋
   kpis:
   - {label: '외국인 순매도 · 삼성전자 + SK하이닉스 · 11.2~6', value: 7.5조 원, on: 1}
-  - {label: '삼성전자 외국인 보유율', value: 17년 만에 최저, on: 2, color: navy}
+  - {label: '삼성전자 외국인 보유율 · 17년 만에', value: 최저, on: 2, color: navy}
   bars:
   - {label: SK하이닉스, value: 5.3, text: 5.3조, hl: true}
   - {label: 삼성전자, value: 2.2, text: 2.2조, hl: false}
@@ -251,7 +251,7 @@ scenes:
 - type: kinetic
   chapter: CEO들의 말
   items:
-  - {text: "그래서 수요는\n진짜일까?", on: 1, size: 140, highlight: 진짜일까?}
+  - {text: "그래서 수요는\n진짜일까?", on: 1, size: 140, highlight: '진짜일까?'}
   narration: ['그래서 이 산업을 움직이는 사람들에게 물어봤어요. | 정확히는, 그들이 최근 공개적으로 한 말을 모아 봤어요.']
 - type: saying
   chapter: CEO들의 말

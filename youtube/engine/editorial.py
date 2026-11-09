@@ -2032,7 +2032,7 @@ def _hl_text(text, size, weight="Black", fg=None, max_w=1500, align="center", li
     import re
     fg = fg or S.FG
     fnt = S.font(weight, size)
-    lines = text.split("\n")
+    lines = text.replace("\\n", "\n").split("\n")
     rows = []
     for ln in lines:
         segs = []
@@ -2110,12 +2110,12 @@ class QuoteCard(DepthPhoto):
         if sp.get("name"):
             face, _ = _person_crop(sp.get("face", sp["photo"]), tuple(sp.get("face_focus", (0.5, 0.3))), sp.get("face_zoom", 1.6))
             c = _circle(face, 92, Y, 4)
-            G.blit(f, c, (S.SAFE_X - 40, 120), o)
-            G.blit(f, T(sp["name"], 46, S.FG, "Black"), (S.SAFE_X + 80, 130), o)
+            G.blit(f, c, (S.SAFE_X - 40, 190), o)
+            G.blit(f, T(sp["name"], 50, S.FG, "Black"), (S.SAFE_X + 80, 196), o)
             if sp.get("role"):
-                G.blit(f, G.pill(sp["role"], "ExtraBold", 26, (14, 16, 24), Y, pad=(14, 5), radius=8), (S.SAFE_X + 82, 190), o)
+                G.blit(f, G.pill(sp["role"], "ExtraBold", 26, (14, 16, 24), Y, pad=(14, 5), radius=8), (S.SAFE_X + 82, 262), o)
         if sp.get("source"):
-            G.blit(f, T(sp["source"], 24, (215, 218, 228), "SemiBold"), (S.SAFE_X + 82, 232), o)
+            G.blit(f, T(sp["source"], 24, (215, 218, 228), "SemiBold"), (S.SAFE_X + 82, 306), o)
         # 원문 (작게, 기울임 느낌)
         ok = G.appear(t, self.line_start(sp.get("ko_on", 1)) + 0.1, 0.4)
         if sp.get("en"):
@@ -2168,39 +2168,48 @@ class XPost(Editorial):
 
 
 class Domino(Editorial):
-    """도미노: 막대가 문장마다 하나씩 쓰러지며 아래에 하락률. items: [{label, text, on}], headline"""
+    """도미노: 막대가 문장마다 하나씩 오른쪽으로 쓰러지며 아래에 하락률. items: [{label, text, on, delay}], headline"""
 
     def draw(self, f, t):
+        import math
         sp = self.spec
         self.base(f)
         if sp.get("headline"):
-            G.blit(f, T(sp["headline"], 48, S.FG, "Black"), (S.W / 2, 150), 1, "mt")
+            G.blit(f, T(sp["headline"], 52, S.FG, "Black"), (S.W / 2, 150), 1, "mt")
         items = sp["items"]
         n = len(items)
-        gap = sp.get("gap", 300)
+        gap = sp.get("gap", 330)
         x0 = S.W / 2 - gap * (n - 1) / 2
-        base = sp.get("base", 640)
-        bw, bh = 74, 300
-        d = ImageDraw.Draw(f)
-        d.line((x0 - 160, base, x0 + gap * (n - 1) + 160, base), fill=(255, 255, 255, 90), width=3)
+        base = sp.get("base", 700)
+        bw, bh = 90, 340
+        k2 = 2
+        lay = Image.new("RGBA", (S.W * k2, S.H * k2), (0, 0, 0, 0))
+        d = ImageDraw.Draw(lay)
+        d.line(((x0 - 200) * k2, base * k2, (x0 + gap * (n - 1) + 260) * k2, base * k2), fill=(255, 255, 255, 90), width=3 * k2)
+        texts = []
         for i, it in enumerate(items):
             ti = self.line_start(it.get("on", 1)) + it.get("delay", 0.0)
             k = G.clamp((t - ti) / 0.55)
             k = k * k * (3 - 2 * k)
-            ang = -62 * k   # 오른쪽으로 쓰러짐
-            fallen = k > 0.02
-            col = (236, 96, 96) if fallen else (210, 214, 226)
-            bar = Image.new("RGBA", (bw * 2, bh * 2), (0, 0, 0, 0))
-            bd = ImageDraw.Draw(bar)
-            bd.rounded_rectangle((bw // 2, 0, bw // 2 + bw, bh), 10, fill=col + (255,))
-            bd.rectangle((bw // 2, 0, bw // 2 + bw * 0.28, bh), fill=tuple(min(255, c + 30) for c in col) + (255,))
-            # 회전 축 = 아래 오른쪽 모서리
-            bar = bar.rotate(ang, center=(bw // 2 + bw, bh), resample=Image.BICUBIC)
+            th = math.radians(68 * k)
             cx = x0 + gap * i
-            f.alpha_composite(bar, (int(cx - bw), int(base - bh)))
-            G.blit(f, T(it["label"], 40, S.FG, "ExtraBold"), (cx, base + 22), 1, "mt")
-            if fallen:
-                G.blit(f, T(it["text"], 66, (255, 96, 96), "Black"), (cx, base + 80), min(1, k * 2), "mt")
+            px, py = cx + bw / 2, base   # 오른쪽 아래 모서리가 축
+            col = (236, 96, 96) if k > 0.02 else (214, 218, 230)
+            pts = []
+            for (x, y) in ((-bw, 0), (0, 0), (0, -bh), (-bw, -bh)):
+                xr = x * math.cos(th) - y * math.sin(th)
+                yr = x * math.sin(th) + y * math.cos(th)
+                pts.append(((px + xr) * k2, (py + yr) * k2))
+            d.polygon(pts, fill=col + (255,))
+            hl = [pts[3], pts[2], ((pts[2][0] * 0.75 + pts[1][0] * 0.25), (pts[2][1] * 0.75 + pts[1][1] * 0.25)),
+                  ((pts[3][0] * 0.75 + pts[0][0] * 0.25), (pts[3][1] * 0.75 + pts[0][1] * 0.25))]
+            d.polygon(hl, fill=(255, 255, 255, 60))
+            texts.append((cx, it, k))
+        f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
+        for cx, it, k in texts:
+            G.blit(f, T(it["label"], 44, S.FG, "ExtraBold"), (cx, base + 24), 1, "mt")
+            if k > 0.02:
+                G.blit(f, T(it["text"], 76, (255, 96, 96), "Black"), (cx, base + 88), min(1, k * 2), "mt")
         credit(f, sp)
         self.draw_common(f, t)
 
