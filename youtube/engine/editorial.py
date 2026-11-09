@@ -2146,7 +2146,8 @@ class XPost(Editorial):
         card.alpha_composite(_circle(face, 96, (60, 64, 80), 2), (44, 40))
         card.alpha_composite(T(sp["name"], 40, S.FG, "Black"), (164, 46))
         card.alpha_composite(T(f"{sp.get('handle', '')} · {sp.get('date', '')}", 28, (140, 146, 164), "SemiBold"), (166, 100))
-        card.alpha_composite(T("𝕏" if False else "X", 40, (230, 232, 240), "Black"), (cw - 80, 44))
+        pf = T(sp.get("platform", "X"), 40 if sp.get("platform", "X") == "X" else 28, (230, 232, 240), "Black")
+        card.alpha_composite(pf, (cw - 50 - pf.width, 50))
         y = 180
         if sp.get("big"):
             bt = T(sp["big"], 96, S.FG, "Black")
@@ -2162,8 +2163,6 @@ class XPost(Editorial):
             card.alpha_composite(G.with_opacity(ko, ok), (60, y + 44))
         card = card.rotate((1 - k) * 3, resample=Image.BICUBIC, expand=True)
         G.blit(f, card, (S.W / 2, sp.get("y", 470) + (1 - k) * 40), k, "mm")
-        if sp.get("note"):
-            G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W / 2, sp.get("y", 470) + ch / 2 + 40), k, "mt")
         credit(f, sp)
         self.draw_common(f, t)
 
