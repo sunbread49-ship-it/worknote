@@ -31,11 +31,16 @@ def _vix() -> pd.Series:
     return df.set_index("DATE")["CLOSE"].astype(float)
 
 
+# 네이버 차트 일별 종가 (tools/fetch_assets.naver_stock)
+KR_NAVER = ("kodex200", "kodex_lev", "kodex_inv2x", "bat_kodex", "bat_lev_kodex", "bat_lev_tiger",
+            "lges", "ecopro", "ecopro_bm", "hanwha_aero")
+
+
 @lru_cache(maxsize=None)
 def _daily(name: str) -> pd.Series:
     df = pd.read_csv(DATA / f"{name}_daily.csv")
     df.columns = [c.lower().replace(" ", "_") for c in df.columns]
-    col = "adj_close" if name not in ("ndx", "spx", "kospi", "skhynix", "samsung") else "close"
+    col = "adj_close" if name not in ("ndx", "spx", "kospi", "skhynix", "samsung") + KR_NAVER else "close"
     s = df.assign(date=pd.to_datetime(df["date"])).set_index("date")[col].astype(float)
     return s[s > 0].dropna()
 
@@ -301,7 +306,7 @@ def series(name: str, start=None, end=None) -> pd.Series:
     elif name in ("strat_mid2pres", "strat_pres2mid"):
         s = _cycle_strategy(name)
     elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd", "kospi",
-                  "smh", "soxx", "intc", "mu", "tsm", "skhynix", "samsung"):
+                  "smh", "soxx", "intc", "mu", "tsm", "skhynix", "samsung") + KR_NAVER:
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()

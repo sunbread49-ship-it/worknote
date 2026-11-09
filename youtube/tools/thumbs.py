@@ -863,5 +863,77 @@ def t_face_quote(sp):
 TEMPLATES["face_quote"] = t_face_quote
 
 
+# ── 회의형 큰 질문 (EP013): 화면 절반 넘게 차지하는 질문 + 거의 방전된 배터리 아이콘 ──────
+def battery_icon(w=520, h=260, pct=0.04, color=(240, 60, 60), label="", label_size=110, frost=False):
+    """가로 배터리 아이콘(특정 제품 아님). pct = 남은 칸 비율"""
+    k = 2
+    W2, H2 = w * k, h * k
+    im = Image.new("RGBA", (W2 + 60 * k, H2), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    lw = 18 * k
+    body = (lw // 2, lw // 2, W2 - lw // 2, H2 - lw // 2)
+    d.rounded_rectangle(body, radius=40 * k, fill=(16, 18, 26, 235), outline=(235, 238, 245, 255), width=lw)
+    d.rounded_rectangle((W2 + 6 * k, H2 * 0.32, W2 + 46 * k, H2 * 0.68), radius=10 * k, fill=(235, 238, 245, 255))
+    inner = (lw * 2, lw * 2, W2 - lw * 2, H2 - lw * 2)
+    fw = max(int((inner[2] - inner[0]) * pct), 22 * k)
+    d.rounded_rectangle((inner[0], inner[1], inner[0] + fw, inner[3]), radius=18 * k, fill=color + (255,))
+    if frost:  # 얼음 낀 느낌: 위쪽 흰 결정
+        for i in range(14):
+            x = inner[0] + (inner[2] - inner[0]) * (i + 0.5) / 14
+            d.polygon([(x - 26 * k, inner[1]), (x + 26 * k, inner[1]), (x, inner[1] + (40 + (i * 37) % 50) * k)], fill=(200, 230, 255, 200))
+    im = im.resize((im.width // k, im.height // k), Image.LANCZOS)
+    if label:
+        t = G.text_img(label, "Black", label_size, color, stroke=8, stroke_fill=(0, 0, 0))
+        G.blit(im, t, (w * 0.58, h / 2), 1, "mm")
+    return im
+
+
+def t_bold_q(sp):
+    """lines(큰 질문, 왼쪽) · bg: dark|photo · battery: {pct, label, frost, x, y, rot, scale} · chip: {x, y, size, label}
+    stamp: {text, x, y, rot, color} · tag · split: true면 왼쪽 따뜻(AI) / 오른쪽 차갑게(배터리)"""
+    if sp.get("photo"):
+        f = photo_bg(sp["photo"], "left")
+    elif sp.get("split"):
+        f = bg_split(left=tuple(sp.get("left_glow", (20, 90, 60))), right=tuple(sp.get("right_glow", (30, 70, 140))))
+    else:
+        f = bg_dark(sp.get("glow", (40, 60, 120)), (0.75, 0.55))
+    ch = sp.get("chip")
+    if ch:
+        ic = chip_icon(ch.get("size", 300), tuple(ch.get("glow", (90, 230, 160))))
+        f.alpha_composite(rim(ic, tuple(ch.get("glow", (90, 230, 160))), 30), (ch["x"] - 90, ch["y"] - 90))
+        G.blit(f, ic, (ch["x"], ch["y"]))
+        if ch.get("label"):
+            t = G.text_img(ch["label"], "Black", ch.get("label_size", 110), (255, 255, 255), stroke=8, stroke_fill=(0, 0, 0))
+            G.blit(f, t, (ch["x"] + ic.width / 2, ch["y"] + ic.height / 2), 1, "mm")
+    b = sp.get("battery")
+    if b:
+        bi = battery_icon(int(520 * b.get("scale", 1)), int(260 * b.get("scale", 1)), b.get("pct", 0.04),
+                          tuple(b.get("color", (240, 60, 60))), b.get("label", ""), b.get("label_size", 110), b.get("frost", False))
+        if b.get("rot"):
+            bi = bi.rotate(b["rot"], expand=True, resample=Image.BICUBIC)
+        f.alpha_composite(rim(bi, tuple(b.get("rim", (240, 60, 60))), 34), (b["x"] - 100, b["y"] - 100))
+        G.blit(f, bi, (b["x"], b["y"]))
+    y = sp.get("y", 80)
+    if sp.get("tag"):
+        tg = tag(sp["tag"], size=sp.get("tag_size", 52))
+        G.blit(f, tg, (sp.get("x", 80), y))
+        y += tg.height + 24
+    lines_block(f, sp["lines"], y, x=sp.get("x", 80), maxw=sp.get("text_w", 1200), gap=sp.get("gap", -14))
+    st = sp.get("stamp")
+    if st:
+        col = C(st.get("color", "red"))
+        t = G.text_img(st["text"], "Black", st.get("size", 120), (255, 255, 255))
+        pad = 34
+        box = Image.new("RGBA", (t.width + pad * 2, t.height + pad), (0, 0, 0, 0))
+        ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 20, fill=col + (255,), outline=(255, 255, 255, 255), width=8)
+        box.alpha_composite(t, (pad, pad // 2))
+        box = box.rotate(st.get("rot", -8), expand=True, resample=Image.BICUBIC)
+        shadowed(f, box, (st["x"], st["y"]), "mm", blur=16)
+    return f
+
+
+TEMPLATES["bold_q"] = t_bold_q
+
+
 if __name__ == "__main__":
     main(sys.argv[1:])

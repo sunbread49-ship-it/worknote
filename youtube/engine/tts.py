@@ -214,11 +214,14 @@ def plan(scenes, cfg, work_dir: Path, log=print):
         for text in sc.narration:
             clean = speakable(text, cfg.get("say"))
             mp3 = synth(clean, voice, rate, cfg.get("pitch", 0.0), cache)
-            if text.lstrip().startswith("[낮게]"):  # 차분하고 낮게: 음 높이 -1.2음 · 속도 6% 느리게 (EP012 피드백)
-                low = mp3.with_suffix(".low.wav")
+            if text.lstrip().startswith("[낮게]"):
+                # soft(기본): 음 높이는 그대로, 5% 느리게 · 살짝 작게 → 기계음 없음 (EP013 피드백)
+                # pitch: 음 높이 -1.2음 + 6% 느리게 (EP012에서 사용, rubberband 특유의 기계음이 남)
+                mode = cfg.get("low", "soft")
+                low = mp3.with_suffix(".low.wav" if mode == "pitch" else ".soft.wav")
+                af = "rubberband=pitch=0.93:formant=preserved,atempo=0.94" if mode == "pitch" else "atempo=0.95,volume=0.9"
                 if not low.exists():
-                    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-af",
-                                    "rubberband=pitch=0.93:formant=preserved,atempo=0.94", str(low)], check=True)
+                    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-af", af, str(low)], check=True)
                 mp3 = low
             pcm = _pcm(mp3)
             # 앞뒤 무음 다듬기

@@ -6,6 +6,7 @@ series_tag: 반도체 급락
 tts:
   voice: ko-KR-Chirp3-HD-Sadaltager
   rate: 1.12
+  low: pitch
   say:
     AMD: 에이엠디
     HBM: 에이치비엠
