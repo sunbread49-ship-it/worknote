@@ -2276,33 +2276,69 @@ TYPES.update({"dropcards": DropCards})
 
 
 
-# ── 문답 (EP013 피드백): Q 질문 → A 답 ─────────────────────────────
+# ── 문답 (EP013 피드백 v2): 화보형 — 왼쪽 인물(누끼 · 듀오톤) + 오른쪽 QUESTION / ANSWER + 작은 도식 ──────
+@lru_cache(maxsize=8)
+def _figure(name, h, warm=(214, 172, 96), cool=(16, 22, 44)):
+    from pathlib import Path
+    im = Image.open(Path(__file__).resolve().parents[1] / "assets/people" / f"{name}.png").convert("RGBA")
+    im = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
+    g = np.asarray(im.convert("L"), np.float32) / 255
+    g = np.clip((g - 0.08) / 0.8, 0, 1) ** 0.85
+    c0, c1 = np.array(cool, np.float32), np.array(warm, np.float32)
+    rgb = (c0[None, None] * (1 - g[..., None]) + c1[None, None] * g[..., None]).astype(np.uint8)
+    out = Image.fromarray(rgb, "RGB").convert("RGBA")
+    out.putalpha(im.getchannel("A"))
+    return out
+
+
 class QA(Editorial):
-    """문답 카드. q(질문, **강조**), a(답, **노랑** !!빨강!!), a_on(답 등장 문장), sub(답 아래 작은 설명), kicker"""
+    """문답(화보형). figure(assets/people/*.png 누끼, 기본 thinker_cut), q, a(**노랑** !!빨강!!), a_on, sub,
+    compare: [{label, value, text, color}] (답 아래 가로 막대 도식), vmax"""
 
     def draw(self, f, t):
         sp = self.spec
         self.base(f)
-        x = 230
-        y = sp.get("top", 250)
-        if sp.get("kicker"):
-            G.blit(f, T(sp["kicker"], 40, (190, 196, 210), "ExtraBold"), (x, y - 80), G.appear(t, 0.0, 0.3))
-        k = G.ease_out(t / 0.4)
-        qb = _badge("Q", Y, (14, 16, 24))
-        G.blit(f, qb, (x, y + (1 - k) * 30), k)
-        q = _hl_text(sp["q"], sp.get("q_size", 92), max_w=1380, align="left")
-        shadow(f, q, (x + 150, y + 6 + (1 - k) * 30), "lt", k)
-        y2 = y + max(q.height, 120) + 70
+        # 스포트라이트
+        gl = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        ImageDraw.Draw(gl).ellipse((-120, 160, 980, 1200), fill=(214, 172, 96, 46))
+        f.alpha_composite(gl.filter(ImageFilter.GaussianBlur(160)))
+        k = G.ease_out(t / 0.6)
+        fig = _figure(sp.get("figure", "thinker_cut"), sp.get("figure_h", 900))
+        G.blit(f, fig, (430 - (1 - k) * 40, S.H + 10), k, "mb")
+        x, y = 880, sp.get("top", 170)
+        lw = 860
+        G.blit(f, T("QUESTION", 30, (214, 172, 96), "ExtraBold"), (x, y), k)
+        ImageDraw.Draw(f).line((x + 190, y + 18, x + 190 + 120 * k, y + 18), fill=(214, 172, 96, 255), width=2)
+        q = _hl_text(sp["q"], sp.get("q_size", 74), max_w=lw, align="left", line_gap=1.22)
+        shadow(f, q, (x, y + 60 + (1 - k) * 20), "lt", k)
+        y2 = y + 60 + q.height + 70
         a0 = self.line_start(sp.get("a_on", 2))
-        ka = G.ease_out((t - a0) / 0.4)
+        ka = G.ease_out((t - a0) / 0.5)
         if ka > 0:
-            ab = _badge("A", (90, 220, 170), (10, 30, 24))
-            G.blit(f, ab, (x, y2 + (1 - ka) * 30), ka)
-            a = _hl_text(sp["a"], sp.get("a_size", 80), max_w=1380, align="left")
-            shadow(f, a, (x + 150, y2 + 6 + (1 - ka) * 30), "lt", ka)
+            ImageDraw.Draw(f).line((x, y2 - 30, x + lw * ka, y2 - 30), fill=(70, 78, 100, 255), width=2)
+            G.blit(f, T("ANSWER", 30, (110, 214, 176), "ExtraBold"), (x, y2), ka)
+            a = _hl_text(sp["a"], sp.get("a_size", 64), max_w=lw, align="left", line_gap=1.22)
+            shadow(f, a, (x, y2 + 56 + (1 - ka) * 20), "lt", ka)
+            yy = y2 + 56 + a.height + 34
             if sp.get("sub"):
-                ks = G.appear(t, a0 + 0.6, 0.4)
-                G.blit(f, T(sp["sub"], 42, (200, 206, 220), "SemiBold", max_w=1380), (x + 150, y2 + a.height + 40), ks)
+                st = T(sp["sub"], 36, (190, 196, 210), "Medium", max_w=lw)
+                G.blit(f, st, (x, yy), G.appear(t, a0 + 0.4, 0.4))
+                yy += st.height + 30
+            cmp_ = sp.get("compare")
+            if cmp_:
+                vmax = sp.get("vmax") or max(abs(c["value"]) for c in cmp_)
+                for n, c in enumerate(cmp_):
+                    kc = G.ease_out((t - a0 - 0.5 - n * 0.35) / 0.6)
+                    if kc <= 0:
+                        continue
+                    col = _col(c.get("color"), (190, 196, 210))
+                    G.blit(f, T(c["label"], 32, (200, 206, 220), "SemiBold"), (x, yy), kc)
+                    bw = int((lw - 220) * abs(c["value"]) / vmax * kc)
+                    ImageDraw.Draw(f).rounded_rectangle((x, yy + 44, x + max(bw, 6), yy + 44 + 26), 6, fill=col + (255,))
+                    G.blit(f, T(c.get("text", ""), 40, col, "Black"), (x + max(bw, 6) + 18, yy + 57), kc, "lm")
+                    yy += 88
+        if sp.get("figure_credit", True):
+            self.spec.setdefault("credit", "조각: 오귀스트 로댕 '생각하는 사람' · 사진 AndrewHorne, Public domain (Wikimedia Commons)")
         self.finish(f, t)
 
 
