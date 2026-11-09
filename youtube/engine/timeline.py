@@ -224,7 +224,7 @@ def cues(scenes):
     out = []
     for sc in scenes:
         for (s, e), text in zip(sc.lines, sc.narration):
-            parts = _balance(chunks(text))
+            parts = _balance(chunks(text.replace("[낮게]", "").strip()))
             w = [max(1, syllables(p)) for p in parts]
             tot, acc = sum(w), s
             for p, wi in zip(parts, w):

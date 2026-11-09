@@ -175,7 +175,7 @@ def _numbers_ko(t):
 def speakable(text, extra=None):
     """TTS가 어색하게 읽는 표현을 소리 내기 좋은 형태로 바꾼다."""
     import re
-    t = text.replace(" | ", " ").replace("|", "").replace("**", "").replace("!!", "")  # 자막 강조 표시 제거
+    t = text.replace("[낮게]", "").replace(" | ", " ").replace("|", "").replace("**", "").replace("!!", "")  # 자막 강조 표시 제거
     # 소수 끝자리 0은 읽지 않음: 2.60억 → 2.6억, 3.70억 → 3.7억, 1.0억 → 1억 (EP011 피드백)
     t = re.sub(r"(\d+\.\d*?[1-9])0+(?=\s?억)", r"\1", t)
     t = re.sub(r"(\d+)\.0+(?=\s?억)", r"\1", t)
@@ -213,7 +213,14 @@ def plan(scenes, cfg, work_dir: Path, log=print):
         cur, lines = lead, []
         for text in sc.narration:
             clean = speakable(text, cfg.get("say"))
-            pcm = _pcm(synth(clean, voice, rate, cfg.get("pitch", 0.0), cache))
+            mp3 = synth(clean, voice, rate, cfg.get("pitch", 0.0), cache)
+            if text.lstrip().startswith("[낮게]"):  # 차분하고 낮게: 음 높이 -1.2음 · 속도 6% 느리게 (EP012 피드백)
+                low = mp3.with_suffix(".low.wav")
+                if not low.exists():
+                    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-af",
+                                    "rubberband=pitch=0.93:formant=preserved,atempo=0.94", str(low)], check=True)
+                mp3 = low
+            pcm = _pcm(mp3)
             # 앞뒤 무음 다듬기
             nz = np.where(np.abs(pcm) > 0.01)[0]
             if len(nz):

@@ -701,7 +701,7 @@ class Kinetic(Scene):
         return out
 
     def extra_sfx(self):
-        return [(self.line_start(it.get("on", 1)) + it.get("offset", 0), it.get("sfx", "whoosh"), 0.35)
+        return [(self.line_start(it.get("on", 1)) + it.get("offset", 0), it.get("sfx", "whoosh"), 0.18)
                 for it in self.spec["items"] if it.get("sfx", "whoosh") != "none"]
 
 
@@ -869,7 +869,7 @@ def _sub_segments(text):
 def _sub_img(text):
     if text not in _subs:
         segs = _sub_segments(text)
-        fnt = S.font("Bold", 50)
+        fnt = S.font("Bold", 62)   # 자막 크게 (EP012 피드백)
         w = int(sum(fnt.getlength(t) for t, _ in segs)) + 4
         asc, desc = fnt.getmetrics()
         tx = Image.new("RGBA", (w, asc + desc + 4), (0, 0, 0, 0))

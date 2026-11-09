@@ -15,10 +15,14 @@ tts:
     '291만 9천 원': 이백구십일만 구천 원
     '115만 2천 원': 백십오만 이천 원
     '29만 2천 원': 이십구만 이천 원
+    DDR5: 디디알 파이브
+    TrendForce: 트렌드포스
     1년 만에: 일년 만에
     '104.6조': 백사쩜육조
     3조~4조 달러: 삼조에서 사조 달러
     X: 엑스
+    40여 년: 사십여년
+    두 배.: 두배.
 youtube:
   title: '하이닉스 고점 대비 -60%, 반도체 이대로 끝일까? 26년 급락 데이터와 CEO들의 말'
   description: '인텔 하루 -28.6%, 반도체 ETF -8%, SK하이닉스 고점 대비 -60%. 반도체가 줄줄이 넘어졌습니다.
@@ -88,16 +92,16 @@ checks:
 - {name: 2002~ 중간값, kind: dropev_med, series: smh, th: -0.07, y0: 2002}
 scenes:
 # ── 콜드 오픈 ─────────────────────────────────────────────
-- type: domino
+- type: dropcards
   chapter: 인트로
   headline: 2026년 10월 30일, 하루 성적
   items:
-  - {label: 인텔, text: -28.6%, on: 1}
-  - {label: AMD, text: -10.9%, on: 2}
-  - {label: SK하이닉스, text: -8.2%, on: 2, delay: 0.5}
-  - {label: 반도체 ETF, text: -8.2%, on: 3}
+  - {label: 인텔, value: -28.6, text: -28.6%, on: 1}
+  - {label: AMD, value: -10.9, text: -10.9%, on: 2}
+  - {label: SK하이닉스, value: -8.2, text: -8.2%, on: 2, delay: 0.5}
+  - {label: 반도체 ETF, value: -8.2, text: -8.2%, on: 3}
   credit: '자료: 각 종목 일간 종가 · 반도체 ETF = SOXX'
-  narration: ['10월 30일, 인텔이 하루에 !!-28.6%!!. | **40여 년 만에 최악의 하루**였어요.', '도미노처럼 같은 날 AMD가 넘어지고, 한국에선 SK하이닉스가 넘어졌죠.', '미국 반도체 ETF도 하루에 !!-8%!! 넘게 빠졌어요.']
+  narration: ['10월 30일, 인텔이 하루에 !!-28.6%!!. | **40여 년 만에 최악의 하루**였어요.', '같은 날 AMD가 줄줄이 떨어지고, 한국에선 SK하이닉스가 떨어졌죠.', '미국 반도체 ETF도 하루에 !!-8%!! 넘게 빠졌어요.']
 - type: punch
   chapter: 인트로
   tone: down
@@ -105,8 +109,9 @@ scenes:
   label: SK하이닉스 · 2026.6.22 → 11.9
   big: 고점 대비 -60%
   sub: 291만 9천 원 → 115만 2천 원
-  sub_on: 2
-  narration: ['그리고 오늘, SK하이닉스는 고점 대비 !!-60%!!.', '291만 9천 원이던 주가가 115만 2천 원이 됐어요.']
+  'on': 2
+  sub_on: 3
+  narration: ['그리고.', '[낮게]오늘, SK하이닉스는 고점 대비 !!-60%!!.', '291만 9천 원이던 주가가 115만 2천 원이 됐어요.']
 - type: kinetic
   chapter: 인트로
   items:
@@ -247,6 +252,72 @@ scenes:
   - {label: 'SK하이닉스 · 2021 ~ 22년', value: 49.5, text: '-49.5% · 회복 3년', on: 2, offset: 0.6}
   - {label: 'SK하이닉스 · 지금', value: 60.5, text: '-60.5% · 진행 중', on: 3}
   narration: ['결국 질문은 이거예요. 지금이 2000년일까, 2022년일까? | 2000년 닷컴 버블 땐 미국 반도체 ETF가 !!-85.9%!!까지 빠졌고, 고점을 되찾는 데 17년이 걸렸어요.', '2022년 금리 인상 땐 -45.3%, 회복까지 1년 반. SK하이닉스는 그때 -49.5%에서 3년 만에 돌아왔고요.', '그리고 지금 SK하이닉스는 -60.5%. | 어느 쪽에 가까운지는, 결국 수요가 진짜냐에 달려 있어요.']
+# ── 메모리 사이클 ─────────────────────────────────────────
+- type: kinetic
+  chapter: 메모리 사이클
+  items:
+  - {text: "메모리는 왜\n이렇게 출렁일까?", on: 1, size: 140, highlight: '출렁일까?'}
+  narration: ['그런데 SK하이닉스와 삼성전자는, 왜 유독 이렇게 크게 출렁일까요? | 답은 메모리라는 물건에 있어요.']
+- type: timeline
+  chapter: 메모리 사이클
+  kicker: 반도체 메모리의 4계절
+  title: 모자라면 짓고, 넘치면 무너진다
+  highlight: 넘치면
+  ticks:
+  - {label: 모자람, sub: 가격 급등, hl: true}
+  - {label: 증설, sub: 공장을 짓는다}
+  - {label: 넘침, sub: 가격 폭락, hl: true}
+  - {label: 감산, sub: 공장을 멈춘다}
+  bands:
+  - {from: 0, to: 1, label: 봄 · 여름, color: coral, on: 2}
+  - {from: 2, to: 3, label: 가을 · 겨울, color: navy, on: 3}
+  bottom: 공장 하나 짓는 데 2~3년 · 그래서 늘 한 박자 늦는다
+  bottom_hl: 한 박자 늦는다
+  bottom_on: 4
+  narration: ['메모리는 모양이 거의 똑같은 상품이라, 값이 수요와 공급으로만 정해져요.', '모자라면 값이 치솟고, 회사들은 앞다퉈 공장을 지어요.', '그런데 공장이 다 지어질 즈음엔 물건이 넘쳐서, 값이 폭락하죠. 그럼 공장을 멈추는 감산이 시작되고요.', '공장 하나 짓는 데 2~3년이 걸리니까, | 공급은 늘 한 박자 늦어요. 이게 메모리 사이클이에요.']
+- type: hbars
+  chapter: 메모리 사이클
+  kicker: D램 가격 · 분기 기준 (TrendForce 집계 · 보도)
+  title: 겨울엔 이만큼 떨어졌다
+  highlight: 겨울
+  title_y: 150
+  bar_h: 46
+  row_gap: 30
+  rows:
+  - {label: '2019년 1분기 · D램 계약가', value: 30, text: '약 -30% · 2011년 이후 최대', on: 1}
+  - {label: '2022년 4분기 · D램 평균가', value: 23, text: '-18 ~ -23%', on: 2, offset: 0.3}
+  - {label: '2026년 · DDR5 가격', value: 100, text: '+100% 넘게', hl: true, on: 3}
+  narration: ['실제로 2019년 1분기엔 D램 계약 가격이 한 분기에 30% 가까이 빠졌어요. | 2011년 이후 가장 큰 하락이었죠.', '2022년 4분기에도 한 분기에 20% 안팎이 빠졌고요.', '반대로 올해는, DDR5 메모리 가격이 100% 넘게 올랐어요. | 지금은 한여름인 거죠.']
+- type: hbars
+  chapter: 메모리 사이클
+  kicker: SK하이닉스 · 사이클마다 고점 → 바닥
+  title: 주가는 겨울을 미리 탄다
+  highlight: 미리
+  title_y: 150
+  bar_h: 46
+  row_gap: 30
+  rows:
+  - {label: '2018.5 → 2019.1', value: 39.5, text: -39.5%, on: 1}
+  - {label: '2021.2 → 2022.12', value: 49.5, text: -49.5%, on: 1, offset: 0.3}
+  - {label: '2024.7 → 2024.9', value: 36.6, text: -36.6%, on: 2}
+  - {label: '2026.6 → 지금', value: 60.5, text: -60.5%, hl: true, on: 3}
+  narration: ['SK하이닉스 주가는 이 사이클을 그대로 탔어요. | 2018년엔 -39.5%, 2021년부터는 -49.5%.', '2024년 여름엔 두 달 만에 -36.6%가 빠지기도 했고요.', '재밌는 건, 주가가 메모리 가격보다 먼저 움직였다는 거예요. | 가격이 꺾이기도 전에, 시장은 겨울을 미리 걱정한 거죠.']
+- type: xpost
+  chapter: 메모리 사이클
+  photo: micron_ceo
+  face_focus: [0.5, 0.3]
+  platform: 실적 발표
+  name: 산제이 메로트라
+  handle: 마이크론 CEO
+  date: '2026.9.30'
+  big: tighter in 2027 & 2028
+  en: 'Expects supply-demand conditions to be tighter in 2027 and 2028 than in 2026, with no visibility into when supply will catch up.'
+  ko: '2027 · 2028년 공급은 올해보다 **더 빠듯**할 것.\n공급이 언제 따라잡을지는 **알 수 없다.**'
+  ko_on: 2
+  card_h: 640
+  y: 490
+  note: 실적 발표 내용을 전한 언론 보도 기준 (The Register · Northeast Times)
+  narration: ['그럼 지금은 겨울의 문턱일까요? 메모리 3등 업체, 마이크론의 CEO는 정반대로 말해요.', '내년과 내후년 공급이 올해보다 **더 빠듯**할 거라고. | 언제 공급이 수요를 따라잡을지 알 수 없다고요.']
 # ── CEO들의 말 (희망 셋) ───────────────────────────────────
 - type: kinetic
   chapter: CEO들의 말
@@ -265,7 +336,7 @@ scenes:
   en: 'The market can be short-sighted, but it is what it is.'
   ko: '시장은 **근시안적**일 수 있죠.\n하지만 어쩔 수 없어요.'
   ko_on: 1
-  narration: ['먼저 AMD의 리사 수. 급락 직후 인터뷰에서 이렇게 말했어요. | 시장은 **근시안적**일 수 있다. 하지만 어쩔 수 없다.', '그리고 숫자로 답했죠. | 내년 서버 매출은 **두 배**, 데이터센터 AI 매출은 두 배 넘게 늘 거라고요.']
+  narration: ['먼저 AMD의 리사 수. 급락 직후 인터뷰에서 이렇게 말했어요. | 시장은 **근시안적**일 수 있다. 하지만 어쩔 수 없다.', '그리고 숫자로 답했죠. | 내년 서버 매출은 **두 배**.', '데이터센터 AI 매출은, 그보다 더 크게 늘 거라고요.']
 - type: kpi
   chapter: CEO들의 말
   kpis:
@@ -289,6 +360,22 @@ scenes:
   ko: '이번 10년이 끝날 무렵,\nAI 인프라 투자는 **3조~4조 달러**'
   ko_on: 1
   narration: ['엔비디아의 젠슨 황은, 여러 자리에서 같은 숫자를 반복해 왔어요.', '이번 10년이 끝날 무렵, AI 인프라 투자는 **3조~4조 달러**가 될 거라고요.']
+- type: xpost
+  chapter: CEO들의 말
+  photo: trump
+  face_focus: [0.5, 0.3]
+  platform: Truth Social
+  name: 도널드 트럼프
+  handle: 미국 대통령 · Truth Social
+  date: '2026.11.6'
+  big: Data centers = GOLD
+  en: '"100% in favor of Super Intelligence (SI)" · data centers are "GOLD"'
+  ko: '나는 초지능에 **100% 찬성**.\n데이터센터는 **금**이다.'
+  ko_on: 2
+  card_h: 600
+  y: 480
+  note: 같은 주 중간선거 주민투표 50건 중 46건에선 데이터센터 건설 제한에 찬성 (Ballotpedia 집계 · 보도)
+  narration: ['정치도 한마디 보탰어요. 급락이 이어지던 11월 6일, 트럼프 대통령은 이렇게 썼어요.', '초지능에 **100% 찬성**하고, 데이터센터는 **금**이라고요.', '다만 같은 주, 미국 주민투표 50건 중 46건에선 데이터센터 건설을 제한하자는 쪽이 이겼어요. | 정치의 바람은, 아직 양쪽으로 불고 있는 거죠.']
 - type: duel
   chapter: CEO들의 말
   heading: 같은 원인, 다른 결과 · 메모리 값

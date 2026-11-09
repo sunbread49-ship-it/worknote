@@ -2101,7 +2101,7 @@ class QuoteCard(DepthPhoto):
         sp["title"], sp["pointer"] = title, ptr
         # 아래쪽 어둡게
         import numpy as np
-        g = np.clip((np.arange(S.H) / S.H - 0.45) / 0.55, 0, 1) ** 1.2
+        g = np.clip((np.arange(S.H) / S.H - 0.3) / 0.55, 0, 1) ** 1.1
         lay = Image.new("RGBA", f.size, (4, 6, 14, 0))
         lay.putalpha(Image.fromarray((np.tile(g[:, None], (1, S.W)) * 225).astype("uint8")))
         f.alpha_composite(lay)
@@ -2118,12 +2118,13 @@ class QuoteCard(DepthPhoto):
             G.blit(f, T(sp["source"], 24, (215, 218, 228), "SemiBold"), (S.SAFE_X + 82, 306), o)
         # 원문 (작게, 기울임 느낌)
         ok = G.appear(t, self.line_start(sp.get("ko_on", 1)) + 0.1, 0.4)
-        if sp.get("en"):
-            en = T("“" + sp["en"] + "”", 30, (225, 228, 236), "Medium", max_w=1500, align="center")
-            G.blit(f, en, (S.W / 2, S.H - 370), max(o * 0.9, 0), "mb")
         if sp.get("ko"):
-            ko = _hl_text(sp["ko"], sp.get("ko_size", 64), max_w=1600)
-            G.blit(f, ko, (S.W / 2, S.H - 350 + (1 - ok) * 20), ok, "mt")
+            ko = _hl_text(sp["ko"], sp.get("ko_size", 100), max_w=1700, line_gap=1.12)
+            ky = S.H - 190 - ko.height
+            if sp.get("en"):
+                en = T("“" + sp["en"] + "”", 40, (232, 234, 240), "SemiBold", max_w=1600, align="center")
+                G.blit(f, en, (S.W / 2, ky - 26), max(o * 0.95, 0), "mb")
+            G.blit(f, ko, (S.W / 2, ky + (1 - ok) * 20), ok, "mt")
         self.draw_common(f, t)
 
 
@@ -2215,3 +2216,57 @@ class Domino(Editorial):
 
 
 TYPES.update({"saying": QuoteCard, "xpost": XPost, "domino": Domino})
+
+
+
+class DropCards(Editorial):
+    """급락 카드: 종목 카드가 문장마다 아래로 '툭' 떨어지며 빨간 화살표와 하락률이 세어 내려감.
+    items: [{label, value(음수 %), text, on, delay}], headline, scale(낙폭 픽셀 배율)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        if sp.get("headline"):
+            G.blit(f, T(sp["headline"], 56, S.FG, "Black"), (S.W / 2, 140), 1, "mt")
+        items = sp["items"]
+        n = len(items)
+        cw, ch, gap = 330, 300, 40
+        x0 = S.W / 2 - (n * cw + (n - 1) * gap) / 2
+        top = sp.get("top", 270)
+        scale = sp.get("scale", 9)
+        for i, it in enumerate(items):
+            ti = self.line_start(it.get("on", 1)) + it.get("delay", 0.0)
+            k = G.ease_out(G.clamp((t - ti) / 0.6))
+            hit = k > 0.01
+            drop = min(abs(float(it["value"])) * scale, 300) * k
+            x = x0 + i * (cw + gap)
+            y = top + drop
+            card = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+            d = ImageDraw.Draw(card)
+            edge = (236, 96, 96) if hit else (90, 100, 130)
+            d.rounded_rectangle((0, 0, cw - 1, ch - 1), 26, fill=(22, 26, 40, 245), outline=edge + (255,), width=4)
+            nm = T(it["label"], 46, S.FG, "Black")
+            card.alpha_composite(nm, ((cw - nm.width) // 2, 34))
+            # 화살표 + 숫자
+            if hit:
+                ar = Image.new("RGBA", (90, 90), (0, 0, 0, 0))
+                ImageDraw.Draw(ar).polygon([(10, 20), (80, 20), (45, 80)], fill=(236, 96, 96, 255))
+                card.alpha_composite(ar, ((cw - 90) // 2, 104))
+                val = counter(it["text"], k)
+                vt = T(val, 70, (255, 110, 110), "Black")
+                card.alpha_composite(vt, ((cw - vt.width) // 2, 196))
+            else:
+                dash = T("—", 70, (120, 128, 150), "Black")
+                card.alpha_composite(dash, ((cw - dash.width) // 2, 150))
+            # 원래 자리 점선
+            if hit:
+                gd = ImageDraw.Draw(f)
+                for xx in range(int(x), int(x + cw), 22):
+                    gd.line((xx, top, xx + 10, top), fill=(255, 255, 255, 80), width=3)
+            sh, (dx, dy) = None, (0, 0)
+            G.blit(f, card, (x, y), 1)
+        credit(f, sp)
+        self.draw_common(f, t)
+
+
+TYPES.update({"dropcards": DropCards})

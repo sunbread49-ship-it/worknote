@@ -308,7 +308,7 @@ def sfx_events(c):
     ev = []
     for sc in c.scenes:
         if sc.idx > 1 and sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "whoosh")):
-            ev.append((sc.start - 0.18, sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "whoosh")), 0.5))
+            ev.append((sc.start - 0.18, sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "whoosh")), 0.25))  # 전환음 절반 (EP012 피드백)
         ev += [(sc.start + t, n, v) for t, n, v in sc.sfx_events()]
     return ev
 
