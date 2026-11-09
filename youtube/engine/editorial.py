@@ -2023,3 +2023,186 @@ class Matrix(Editorial):
 
 
 TYPES.update({"matrix": Matrix})
+
+
+
+# ── EP012 벤치마킹: 인용 카드 · X 게시물 카드 · 도미노 ───────────────────
+def _hl_text(text, size, weight="Black", fg=None, max_w=1500, align="center", line_gap=1.2):
+    """'**노랑**' · '!!빨강!!' 강조가 들어간 여러 줄 텍스트"""
+    import re
+    fg = fg or S.FG
+    fnt = S.font(weight, size)
+    lines = text.split("\n")
+    rows = []
+    for ln in lines:
+        segs = []
+        for part in re.split(r"(\*\*.+?\*\*|!!.+?!!)", ln):
+            if not part:
+                continue
+            if part.startswith("**"):
+                segs.append((part[2:-2], Y))
+            elif part.startswith("!!"):
+                segs.append((part[2:-2], (255, 96, 96)))
+            else:
+                segs.append((part, fg))
+        rows.append(segs)
+    lh = int(size * line_gap)
+    asc, desc = fnt.getmetrics()
+    widths = [sum(fnt.getlength(t) for t, _ in r) for r in rows]
+    W_ = int(max(widths)) + 8
+    im = Image.new("RGBA", (W_, lh * (len(rows) - 1) + asc + desc + 8), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    for i, (r, w) in enumerate(zip(rows, widths)):
+        x = 4 if align == "left" else (W_ - w) / 2
+        for t_, c in r:
+            d.text((x, 4 + i * lh), t_, font=fnt, fill=c)
+            x += fnt.getlength(t_)
+    return im
+
+
+def _circle(img, d, ring=Y, rw=6):
+    img = img.resize((d, d), Image.LANCZOS).convert("RGBA")
+    m = Image.new("L", (d, d), 0)
+    ImageDraw.Draw(m).ellipse((0, 0, d - 1, d - 1), fill=255)
+    img.putalpha(m)
+    out = Image.new("RGBA", (d + rw * 2, d + rw * 2), (0, 0, 0, 0))
+    ImageDraw.Draw(out).ellipse((0, 0, d + rw * 2 - 1, d + rw * 2 - 1), fill=ring + (255,))
+    out.alpha_composite(img, (rw, rw))
+    return out
+
+
+def _person_crop(name, focus=(0.5, 0.3), zoom=1.0):
+    import json
+    from pathlib import Path
+    base = Path(__file__).resolve().parents[1] / "assets" / "photos"
+    m = json.loads((base / f"{name}.json").read_text())
+    im = Image.open(base / m["file"]).convert("RGB")
+    s_ = int(min(im.size) / zoom)
+    cx, cy = int(im.width * focus[0]), int(im.height * focus[1])
+    x0 = max(0, min(im.width - s_, cx - s_ // 2))
+    y0 = max(0, min(im.height - s_, cy - s_ // 2))
+    return im.crop((x0, y0, x0 + s_, y0 + s_)), m["credit"]
+
+
+class QuoteCard(DepthPhoto):
+    """인물 발언 인용 (원본 영상 대신, 자유 이용 사진 + 문장).
+    photo(인물 사진 · 깊이감), name, role, source(어디서 · 언제), en(원문), ko(번역 · **강조** !!빨강!!), ko_on"""
+
+    def prepare(self):
+        self.spec.setdefault("pos", "none")
+        self.spec.setdefault("dark", 0.35)
+        super().prepare()
+
+    def draw(self, f, t):
+        sp = self.spec
+        title, sp["title"] = sp.get("title"), None
+        ptr, sp["pointer"] = sp.get("pointer"), None
+        super().draw(f, t)
+        sp["title"], sp["pointer"] = title, ptr
+        # 아래쪽 어둡게
+        import numpy as np
+        g = np.clip((np.arange(S.H) / S.H - 0.45) / 0.55, 0, 1) ** 1.2
+        lay = Image.new("RGBA", f.size, (4, 6, 14, 0))
+        lay.putalpha(Image.fromarray((np.tile(g[:, None], (1, S.W)) * 225).astype("uint8")))
+        f.alpha_composite(lay)
+        # 이름표 (왼쪽 위)
+        o = G.appear(t, 0.15, 0.35)
+        if sp.get("name"):
+            face, _ = _person_crop(sp.get("face", sp["photo"]), tuple(sp.get("face_focus", (0.5, 0.3))), sp.get("face_zoom", 1.6))
+            c = _circle(face, 92, Y, 4)
+            G.blit(f, c, (S.SAFE_X - 40, 120), o)
+            G.blit(f, T(sp["name"], 46, S.FG, "Black"), (S.SAFE_X + 80, 130), o)
+            if sp.get("role"):
+                G.blit(f, G.pill(sp["role"], "ExtraBold", 26, (14, 16, 24), Y, pad=(14, 5), radius=8), (S.SAFE_X + 82, 190), o)
+        if sp.get("source"):
+            G.blit(f, T(sp["source"], 24, (215, 218, 228), "SemiBold"), (S.SAFE_X + 82, 232), o)
+        # 원문 (작게, 기울임 느낌)
+        ok = G.appear(t, self.line_start(sp.get("ko_on", 1)) + 0.1, 0.4)
+        if sp.get("en"):
+            en = T("“" + sp["en"] + "”", 30, (225, 228, 236), "Medium", max_w=1500, align="center")
+            G.blit(f, en, (S.W / 2, S.H - 370), max(o * 0.9, 0), "mb")
+        if sp.get("ko"):
+            ko = _hl_text(sp["ko"], sp.get("ko_size", 64), max_w=1600)
+            G.blit(f, ko, (S.W / 2, S.H - 350 + (1 - ok) * 20), ok, "mt")
+        self.draw_common(f, t)
+
+
+class XPost(Editorial):
+    """X(트위터) 게시물 인용 카드 — 원문 재현 + 한글 번역 강조. 실제 화면 캡처가 아니라 우리 디자인 카드.
+    photo(아바타용 자유 이용 사진), name, handle, date, en(원문), ko(번역), big(원문 중 핵심 단어 크게), big_ko"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        bg = sp.get("bg") or {"kind": "photo", "file": sp["photo"], "dark": 0.78, "blur": 18, "gray": 0.6}
+        self.spec["bg"] = bg
+        self.base(f)
+        k = G.ease_out(t / 0.45)
+        cw, ch = 1320, sp.get("card_h", 600)
+        card = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+        d = ImageDraw.Draw(card)
+        d.rounded_rectangle((0, 0, cw - 1, ch - 1), 30, fill=(16, 18, 26, 240), outline=(70, 76, 96, 255), width=2)
+        face, _ = _person_crop(sp.get("face", sp["photo"]), tuple(sp.get("face_focus", (0.5, 0.3))), sp.get("face_zoom", 1.6))
+        card.alpha_composite(_circle(face, 96, (60, 64, 80), 2), (44, 40))
+        card.alpha_composite(T(sp["name"], 40, S.FG, "Black"), (164, 46))
+        card.alpha_composite(T(f"{sp.get('handle', '')} · {sp.get('date', '')}", 28, (140, 146, 164), "SemiBold"), (166, 100))
+        card.alpha_composite(T("𝕏" if False else "X", 40, (230, 232, 240), "Black"), (cw - 80, 44))
+        y = 180
+        if sp.get("big"):
+            bt = T(sp["big"], 96, S.FG, "Black")
+            card.alpha_composite(bt, (60, y)); y += bt.height + 10
+        if sp.get("en"):
+            en = T(sp["en"], 34, (210, 214, 226), "Medium", max_w=cw - 120, line_gap=1.35)
+            card.alpha_composite(en, (60, y)); y += en.height + 24
+        ok = G.appear(t, self.line_start(sp.get("ko_on", 1)) + 0.15, 0.35)
+        if sp.get("ko") and ok > 0:
+            lab = G.pill("번역", "ExtraBold", 24, (14, 16, 24), Y, pad=(12, 4), radius=8)
+            card.alpha_composite(lab, (60, y))
+            ko = _hl_text(sp["ko"], sp.get("ko_size", 52), max_w=cw - 120, align="left")
+            card.alpha_composite(G.with_opacity(ko, ok), (60, y + 44))
+        card = card.rotate((1 - k) * 3, resample=Image.BICUBIC, expand=True)
+        G.blit(f, card, (S.W / 2, sp.get("y", 470) + (1 - k) * 40), k, "mm")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W / 2, sp.get("y", 470) + ch / 2 + 40), k, "mt")
+        credit(f, sp)
+        self.draw_common(f, t)
+
+
+class Domino(Editorial):
+    """도미노: 막대가 문장마다 하나씩 쓰러지며 아래에 하락률. items: [{label, text, on}], headline"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        if sp.get("headline"):
+            G.blit(f, T(sp["headline"], 48, S.FG, "Black"), (S.W / 2, 150), 1, "mt")
+        items = sp["items"]
+        n = len(items)
+        gap = sp.get("gap", 300)
+        x0 = S.W / 2 - gap * (n - 1) / 2
+        base = sp.get("base", 640)
+        bw, bh = 74, 300
+        d = ImageDraw.Draw(f)
+        d.line((x0 - 160, base, x0 + gap * (n - 1) + 160, base), fill=(255, 255, 255, 90), width=3)
+        for i, it in enumerate(items):
+            ti = self.line_start(it.get("on", 1)) + it.get("delay", 0.0)
+            k = G.clamp((t - ti) / 0.55)
+            k = k * k * (3 - 2 * k)
+            ang = -62 * k   # 오른쪽으로 쓰러짐
+            fallen = k > 0.02
+            col = (236, 96, 96) if fallen else (210, 214, 226)
+            bar = Image.new("RGBA", (bw * 2, bh * 2), (0, 0, 0, 0))
+            bd = ImageDraw.Draw(bar)
+            bd.rounded_rectangle((bw // 2, 0, bw // 2 + bw, bh), 10, fill=col + (255,))
+            bd.rectangle((bw // 2, 0, bw // 2 + bw * 0.28, bh), fill=tuple(min(255, c + 30) for c in col) + (255,))
+            # 회전 축 = 아래 오른쪽 모서리
+            bar = bar.rotate(ang, center=(bw // 2 + bw, bh), resample=Image.BICUBIC)
+            cx = x0 + gap * i
+            f.alpha_composite(bar, (int(cx - bw), int(base - bh)))
+            G.blit(f, T(it["label"], 40, S.FG, "ExtraBold"), (cx, base + 22), 1, "mt")
+            if fallen:
+                G.blit(f, T(it["text"], 66, (255, 96, 96), "Black"), (cx, base + 80), min(1, k * 2), "mt")
+        credit(f, sp)
+        self.draw_common(f, t)
+
+
+TYPES.update({"saying": QuoteCard, "xpost": XPost, "domino": Domino})

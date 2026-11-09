@@ -175,7 +175,7 @@ def _numbers_ko(t):
 def speakable(text, extra=None):
     """TTS가 어색하게 읽는 표현을 소리 내기 좋은 형태로 바꾼다."""
     import re
-    t = text.replace(" | ", " ").replace("|", "")
+    t = text.replace(" | ", " ").replace("|", "").replace("**", "").replace("!!", "")  # 자막 강조 표시 제거
     # 소수 끝자리 0은 읽지 않음: 2.60억 → 2.6억, 3.70억 → 3.7억, 1.0억 → 1억 (EP011 피드백)
     t = re.sub(r"(\d+\.\d*?[1-9])0+(?=\s?억)", r"\1", t)
     t = re.sub(r"(\d+)\.0+(?=\s?억)", r"\1", t)

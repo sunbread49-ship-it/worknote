@@ -64,6 +64,11 @@ DATA = {
     "data/msft_daily.csv": DAILY.format("MSFT"),
     "data/aapl_daily.csv": DAILY.format("AAPL"),
     "data/amd_daily.csv": DAILY.format("AMD"),
+    "data/smh_daily.csv": DAILY.format("SMH"),
+    "data/soxx_daily.csv": DAILY.format("SOXX"),
+    "data/intc_daily.csv": DAILY.format("INTC"),
+    "data/mu_daily.csv": DAILY.format("MU"),
+    "data/tsm_daily.csv": DAILY.format("TSM"),
     # S&P500 월평균 지수 1871~ (Robert Shiller 데이터 기반, 매월 갱신)
     # 지도 (공개 GeoJSON)
     "geo/us_states.json": "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json",
@@ -82,6 +87,25 @@ def get(rel, url, force=False):
     print("받는 중:", rel)
     with urllib.request.urlopen(url, timeout=60) as r:
         dst.write_bytes(r.read())
+
+
+def naver_stock(code, name, force=False):
+    """국내 종목 일별(네이버 차트) — 000660 SK하이닉스, 005930 삼성전자"""
+    import json, re
+    dst = ASSETS / "data" / f"{name}_daily.csv"
+    if dst.exists() and not force:
+        return
+    u = (f"https://fchart.stock.naver.com/siseJson.nhn?symbol={code}&requestType=1"
+         "&startTime=19900101&endTime=20991231&timeframe=day")
+    txt = urllib.request.urlopen(u, timeout=60).read().decode("utf-8", "ignore")
+    with open(dst, "w") as f:
+        f.write("date,open,high,low,close,volume\n")
+        for l in txt.splitlines():
+            l = l.strip()
+            if not l.startswith('["'):
+                continue
+            p = json.loads(re.sub(r",\s*,", ",null,", re.sub(r",\s*]", "]", l.rstrip(","))))
+            f.write(f"{p[0][:4]}-{p[0][4:6]}-{p[0][6:]},{p[1]},{p[2]},{p[3]},{p[4]},{p[5] if len(p) > 5 else ''}\n")
 
 
 def kospi(force=False):
@@ -112,6 +136,11 @@ def main():
             print("  실패:", rel, e)
     for rel, url in DATA.items():
         get(rel, url, force=force_data)
+    for code, nm in (("000660", "skhynix"), ("005930", "samsung")):
+        try:
+            naver_stock(code, nm, force_data)
+        except Exception as e:
+            print("  실패:", nm, e)
     try:
         kospi(force_data)
     except Exception as e:

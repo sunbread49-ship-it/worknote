@@ -35,7 +35,7 @@ def _vix() -> pd.Series:
 def _daily(name: str) -> pd.Series:
     df = pd.read_csv(DATA / f"{name}_daily.csv")
     df.columns = [c.lower().replace(" ", "_") for c in df.columns]
-    col = "adj_close" if name not in ("ndx", "spx", "kospi") else "close"
+    col = "adj_close" if name not in ("ndx", "spx", "kospi", "skhynix", "samsung") else "close"
     s = df.assign(date=pd.to_datetime(df["date"])).set_index("date")[col].astype(float)
     return s[s > 0].dropna()
 
@@ -300,7 +300,8 @@ def series(name: str, start=None, end=None) -> pd.Series:
         s = _vix()
     elif name in ("strat_mid2pres", "strat_pres2mid"):
         s = _cycle_strategy(name)
-    elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd", "kospi"):
+    elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd", "kospi",
+                  "smh", "soxx", "intc", "mu", "tsm", "skhynix", "samsung"):
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()
@@ -339,6 +340,31 @@ def stat(kind: str, **kw) -> float:
       count_dd / count_vix  해당 달 수
       change              start→end 지수 변화율(%)
     """
+    if kind.startswith("dropev_"):  # 하루(또는 주) th 이하 급락 뒤 h거래일 성과: dropev_n / _up / _med (series, th, h, y0, y1, weekly)
+        p = series(kw["series"])
+        if kw.get("weekly"):
+            p = p.resample("W-FRI").last().dropna()
+        r = p.pct_change()
+        out, last = [], None
+        for dt, v in r[r <= kw.get("th", -0.07)].items():
+            if last is not None and (dt - last).days < kw.get("gap", 30):
+                last = dt
+                continue
+            last = dt
+            if not (str(kw.get("y0", 1900)) <= str(dt.year) <= str(kw.get("y1", 2100))):
+                continue
+            i = p.index.get_loc(dt)
+            h = kw.get("h", 252)
+            if i + h < len(p):
+                out.append((p.iloc[i + h] / p.iloc[i] - 1) * 100)
+        v = np.array(out)
+        return float({"dropev_n": len(v), "dropev_up": (v > 0).sum(), "dropev_med": np.median(v) if len(v) else 0}[kind])
+    if kind == "from_peak":  # since 이후 최고점 대비 현재(%)
+        p = series(kw["series"]).loc[str(kw.get("since", "2025")):]
+        return float((p.iloc[-1] / p.max() - 1) * 100)
+    if kind == "day_ret":  # 특정 날 하루 수익률(%)
+        p = series(kw["series"]).pct_change()
+        return float(p.loc[str(kw["date"])] * 100)
     if kind.startswith("hl_"):  # 대출로 산 서울 아파트: hl_eq / hl_int / hl_min (t0, ltv)
         v = house_lev(kw["t0"], kw.get("ltv", 0.6), 1.0, kw.get("col", "서울"))
         return {"hl_eq": v[0], "hl_int": v[1], "hl_min": v[2]}[kind]

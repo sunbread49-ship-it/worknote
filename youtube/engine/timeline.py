@@ -224,4 +224,4 @@ def write_srt(cs, path):
         return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
     with open(path, "w", encoding="utf-8") as fp:
         for i, (a, b, t) in enumerate(cs, 1):
-            fp.write(f"{i}\n{ts(a)} --> {ts(b)}\n{t}\n\n")
+            fp.write(f"{i}\n{ts(a)} --> {ts(b)}\n{t.replace('**', '').replace('!!', '')}\n\n")

@@ -850,12 +850,36 @@ def subtitle(f, text):
 _subs = {}
 
 
+def _sub_segments(text):
+    """'**노랑**' · '!!빨강!!' 표시를 색 구간으로 (EP012 벤치마킹: 핵심 단어 색 강조)"""
+    import re
+    out = []
+    for part in re.split(r"(\*\*.+?\*\*|!!.+?!!)", text):
+        if not part:
+            continue
+        if part.startswith("**"):
+            out.append((part[2:-2], S.GOLD))
+        elif part.startswith("!!"):
+            out.append((part[2:-2], (255, 96, 96)))
+        else:
+            out.append((part, S.FG))
+    return out
+
+
 def _sub_img(text):
     if text not in _subs:
-        fnt_size = 46
-        tx = G.text_img(text, "Bold", fnt_size, S.FG, max_w=1500, align="center")
+        segs = _sub_segments(text)
+        fnt = S.font("Bold", 50)
+        w = int(sum(fnt.getlength(t) for t, _ in segs)) + 4
+        asc, desc = fnt.getmetrics()
+        tx = Image.new("RGBA", (w, asc + desc + 4), (0, 0, 0, 0))
+        d = ImageDraw.Draw(tx)
+        x = 2
+        for t_, c in segs:
+            d.text((x, 2), t_, font=fnt, fill=c)
+            x += fnt.getlength(t_)
         pad = (34, 14)
-        bg = G.panel(tx.width + pad[0] * 2, tx.height + pad[1] * 2, (6, 8, 16), 16, alpha=200)
+        bg = G.panel(tx.width + pad[0] * 2, tx.height + pad[1] * 2, (6, 8, 16), 16, alpha=205)
         bg.alpha_composite(tx, pad)
         _subs[text] = bg
     return _subs[text]

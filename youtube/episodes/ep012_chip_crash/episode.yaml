@@ -1,0 +1,328 @@
+# EP012 · 주식 궁금증, 숫자로 풀기 — 반도체 반토막, 과거엔 어땠나 (초안)
+# 4요소: 감정 = "삼전닉스 물렸다" 불안 → 데이터·CEO 발언으로 희망(+조건)
+# 벤치마킹: 한 화면 한 메시지 · 색 강조 자막(**노랑** !!빨강!!) · 발언은 원본 영상 대신 문장 인용 카드 + 자유 이용 사진
+title: '하이닉스 고점 대비 -60%, 반도체 이대로 끝일까? 26년 급락 데이터와 CEO들의 말'
+series_tag: 반도체 급락
+tts:
+  voice: ko-KR-Chirp3-HD-Sadaltager
+  rate: 1.12
+  say:
+    AMD: 에이엠디
+    HBM: 에이치비엠
+    D램: 디램
+    CEO: 씨이오
+    AI: 에이아이
+    '291만 9천 원': 이백구십일만 구천 원
+    '115만 2천 원': 백십오만 이천 원
+    '29만 2천 원': 이십구만 이천 원
+    1년 만에: 일년 만에
+    '104.6조': 백사쩜육조
+    3조~4조 달러: 삼조에서 사조 달러
+    X: 엑스
+youtube:
+  title: '하이닉스 고점 대비 -60%, 반도체 이대로 끝일까? 26년 급락 데이터와 CEO들의 말'
+  description: '인텔 하루 -28.6%, 반도체 ETF -8%, SK하이닉스 고점 대비 -60%. 반도체가 줄줄이 넘어졌습니다.
+
+    과거 반도체 급락 뒤엔 어떻게 됐을까요? 그리고 리사 수, 젠슨 황, 일론 머스크, SK하이닉스는 지금 뭐라고 말할까요?
+
+
+    ✔ 10월 30일, 반도체 도미노
+
+    ✔ 하루 -7% 반도체 급락 15번, 1년 뒤
+
+    ✔ 2000년과 2022년, 갈림길
+
+    ✔ CEO들의 말: 공포와 확신 사이
+
+    ✔ 지켜볼 신호 세 가지
+
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목의 매수·매도 추천이 아닙니다.
+
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 배당·세금·수수료는 반영하지 않았습니다. 발언은 공개 보도·실적 발표·SNS 게시물을 한국어로 옮긴 것이며, 원문 링크는 아래에 있습니다.
+
+
+    [자료] 미국 반도체 ETF(SMH, 2000.6~ · SOXX) · 인텔 · AMD · SK하이닉스 · 삼성전자 일간 종가(배당 제외) · 하루 -7% 이하 급락은 30일 안에 이어지면 한 번으로 셈
+
+    외국인 순매도 · 보유율: 한국거래소 집계 언론 보도(2026.11.8)
+
+
+    [발언 출처]
+
+    일론 머스크 X 게시물 (2026.10.25) · CNBC 보도
+
+    인텔 2026년 3분기 실적 발표 · 10-Q (2026.10.29)
+
+    리사 수 AMD CEO 인터뷰 (2026.11.5, 24/7 Wall St.·Yahoo Finance 보도)
+
+    SK하이닉스 2026년 3분기 실적 발표 (2026.10.28)
+
+    젠슨 황 엔비디아 CEO 발언 (실적 발표·컨퍼런스, 여러 차례)
+
+
+    [사진] 위키미디어 공용 — Debbie Rowe, 일론 머스크(CC BY-SA 3.0) · Fuzheado, 리사 수(CC BY 4.0) · Coolcaesar, 인텔 본사(CC BY-SA 4.0) · 젠슨 황(CC) · hyolee2, 한국거래소(CC BY-SA 3.0)
+
+    '
+  tags: [반도체, SK하이닉스, 삼성전자, 인텔, 엔비디아, AMD, 반도체주, 폭락장, 백테스트, 리사수]
+  privacy: private
+checks:
+- {name: 인텔 10.30, kind: day_ret, series: intc, date: '2026-10-30'}
+- {name: AMD 10.30, kind: day_ret, series: amd, date: '2026-10-30'}
+- {name: 하이닉스 10.30, kind: day_ret, series: skhynix, date: '2026-10-30'}
+- {name: SOXX 10.30, kind: day_ret, series: soxx, date: '2026-10-30'}
+- {name: SOXX 11.5, kind: day_ret, series: soxx, date: '2026-11-05'}
+- {name: 하이닉스 고점 대비, kind: from_peak, series: skhynix}
+- {name: 삼성전자 고점 대비, kind: from_peak, series: samsung}
+- {name: SMH 급락 15번, kind: dropev_n, series: smh, th: -0.07}
+- {name: SMH 1년 뒤 플러스, kind: dropev_up, series: smh, th: -0.07}
+- {name: 2000~01 급락, kind: dropev_n, series: smh, th: -0.07, y1: 2001}
+- {name: 2000~01 플러스, kind: dropev_up, series: smh, th: -0.07, y1: 2001}
+- {name: 2000~01 중간값, kind: dropev_med, series: smh, th: -0.07, y1: 2001}
+- {name: 2002~ 급락, kind: dropev_n, series: smh, th: -0.07, y0: 2002}
+- {name: 2002~ 플러스, kind: dropev_up, series: smh, th: -0.07, y0: 2002}
+- {name: 2002~ 중간값, kind: dropev_med, series: smh, th: -0.07, y0: 2002}
+scenes:
+# ── 콜드 오픈 ─────────────────────────────────────────────
+- type: domino
+  chapter: 인트로
+  headline: 2026년 10월 30일, 하루 성적
+  items:
+  - {label: 인텔, text: -28.6%, on: 1}
+  - {label: AMD, text: -10.9%, on: 2}
+  - {label: SK하이닉스, text: -8.2%, on: 2, delay: 0.5}
+  - {label: 반도체 ETF, text: -8.2%, on: 3}
+  credit: '자료: 각 종목 일간 종가 · 반도체 ETF = SOXX'
+  narration: ['10월 30일, 인텔이 하루에 !!-28.6%!!. | **40여 년 만에 최악의 하루**였어요.', '도미노처럼 같은 날 AMD가 넘어지고, 한국에선 SK하이닉스가 넘어졌죠.', '미국 반도체 ETF도 하루에 !!-8%!! 넘게 빠졌어요.']
+- type: punch
+  chapter: 인트로
+  tone: down
+  photo: {file: krx_building, focus: [0.5, 0.4], dark: 0.5}
+  label: SK하이닉스 · 2026.6.22 → 11.9
+  big: 고점 대비 -60%
+  sub: 291만 9천 원 → 115만 2천 원
+  sub_on: 2
+  narration: ['그리고 오늘, SK하이닉스는 고점 대비 !!-60%!!.', '291만 9천 원이던 주가가 115만 2천 원이 됐어요.']
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "반도체,\n이대로 끝일까?", on: 1, size: 150, highlight: 끝일까?, hl_color: up}
+  narration: ['삼성전자, SK하이닉스 들고 계신 분들, 요즘 잠 못 주무시죠. | 반도체, 이대로 끝일까요?']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "반도체 반토막,\n과거엔 어떻게 됐을까?"
+  highlight: 과거엔
+  subtitle: 26년 급락 데이터 · 그리고 CEO들의 말
+  narration: ['오늘은 감정 말고, 두 가지만 볼게요. | 과거 반도체가 크게 빠졌을 때 그 뒤엔 어땠는지,', '그리고 이 산업을 움직이는 사람들은, 지금 뭐라고 말하는지요.']
+# ── 무엇이 무너뜨렸나 (불안 셋) ────────────────────────────
+- type: depthphoto
+  chapter: 불안 하나
+  photo: intel_hq
+  move: {zoom: 0.14, dx: 0.02, dy: 0.0}
+  dark: 0.3
+  pos: bottom
+  kicker: 불안 하나 · 인텔 3분기 실적 발표 (2026.10.29)
+  title: "메모리 값이\nPC를 멈춰 세웠다"
+  highlight: 메모리 값
+  caption: 미국 캘리포니아 산타클라라 · 인텔 본사
+  narration: ['첫 번째 불안은 인텔이었어요. | 실적 자체는 예상보다 좋았는데, 앞으로의 전망이 문제였죠.', 'AI 서버가 메모리를 쓸어 가면서, **메모리 값**이 너무 올랐거든요. | 그 바람에 PC를 사는 사람이 줄었어요.']
+- type: kpi
+  chapter: 불안 하나
+  kpis:
+  - {label: 'PC 판매 대수 · 2026년 전체 (인텔 전망)', value: -12%, on: 1, color: navy}
+  - {label: 'PC 판매 대수 · 2026년 하반기', value: -20% 이상, on: 2}
+  bars:
+  - {label: 2026년, value: 12, text: -12%, hl: false}
+  - {label: 하반기, value: 20, text: -20%↓, hl: true}
+  - {label: 2027년, value: 10, text: -10%, hl: false}
+  bars_on: 3
+  vmax: 24
+  credit: '자료: 인텔 2026년 3분기 실적 발표 · 10-Q'
+  narration: ['인텔은 올해 PC 판매가 !!12%!! 줄고, 하반기만 보면 !!20%!! 넘게 줄 거라고 봤어요.', '그리고 메모리 값이 정상으로 돌아올 때까지, | 이 상황이 이어질 거라고 했죠.', '내년도 !!10%!! 감소. | 시장은 이 말을 듣고, 인텔을 하루에 28% 던졌어요.']
+- type: xpost
+  chapter: 불안 둘
+  photo: musk
+  face_focus: [0.5, 0.28]
+  name: 일론 머스크
+  handle: '@elonmusk'
+  date: '2026.10.25'
+  big: guppy-level death
+  en: 'That means the 200+ neoclouds are going to see guppy-level death and consolidation. Some will make it through, but not many.'
+  ko: '네오클라우드 200곳 넘게 !!구피처럼 죽거나!! 합쳐질 것.\n살아남는 곳도 있겠지만, **많지 않다.**'
+  ko_on: 2
+  card_h: 640
+  y: 490
+  narration: ['두 번째 불안은 일론 머스크의 한 줄이었어요. | 10월 25일, X에 이렇게 썼죠.', '네오클라우드 200곳 넘게, !!구피처럼 죽거나!! 합쳐질 거라고요. | 살아남는 곳은 많지 않을 거라고.']
+- type: checklist
+  chapter: 불안 둘
+  kicker: 네오클라우드가 뭐길래?
+  title: 빚으로 칩을 사서 빌려주는 회사
+  highlight: 빚으로
+  title_size: 84
+  icon: photo:musk
+  icon_on: 1
+  icon_x: 1620
+  items:
+  - {text: 'AI 칩을 사서 시간 단위로 빌려준다', on: 1}
+  - {text: '칩 살 돈은 대부분 빚', on: 2, highlight: 빚}
+  - {text: '돈줄이 막히면 칩 주문도 멈춘다', on: 3}
+  narration: ['네오클라우드는 AI 칩을 잔뜩 사서, 다른 회사에 시간 단위로 빌려주는 회사예요. 코어위브 같은 곳이죠.', '문제는 그 칩을 대부분 **빚**으로 샀다는 거예요.', '빚을 못 내면 칩 주문이 멈추고, 그건 곧 반도체 회사들의 매출 걱정이 돼요. | 실제로 이 회사들 주가는 한 달 새 !!30%!! 넘게 빠졌어요.']
+- type: kpi
+  chapter: 불안 셋
+  kpis:
+  - {label: '외국인 순매도 · 삼성전자 + SK하이닉스 · 11.2~6', value: 7.5조 원, on: 1}
+  - {label: '삼성전자 외국인 보유율', value: 17년 만에 최저, on: 2, color: navy}
+  bars:
+  - {label: SK하이닉스, value: 5.3, text: 5.3조, hl: true}
+  - {label: 삼성전자, value: 2.2, text: 2.2조, hl: false}
+  bars_on: 1
+  vmax: 6
+  credit: '자료: 한국거래소 집계 언론 보도 (2026.11.8)'
+  narration: ['세 번째 불안은 한국 쪽이에요. | 지난주 외국인이 삼성전자와 SK하이닉스를 !!7.5조 원!! 넘게 팔았어요.', '삼성전자의 외국인 보유율은 !!17년 만에 최저!!까지 내려갔고요.']
+- type: chart
+  chapter: 불안 셋
+  chart:
+    series: skhynix
+    start: '2025-06-02'
+    end: '2026-11-09'
+    color: [240, 84, 84]
+    title: SK하이닉스 · 2025.6 ~ 2026.11
+    draw: {on: 1, dur: 2.4}
+    marks:
+    - {date: '2025-06-30', label: 29만 원, sub: 2025.6, on: 1, offset: 1.0, dy: -70, dx: 60, color: neutral, size: 32}
+    - {date: '2026-06-22', label: 291만 원, sub: 2026.6 고점, on: 2, dy: -60, dx: -110, color: gold, size: 34}
+    - {date: '2026-11-09', label: -60%, sub: 지금, on: 3, dy: 60, dx: -80, color: down, size: 36}
+    source: '자료: SK하이닉스 일간 종가'
+  narration: ['그런데 이 그래프를 보면, 왜 이렇게 크게 빠졌는지도 보여요.', '작년 6월 29만 원이던 주가가, 딱 1년 만에 **10배**인 291만 원까지 올랐었거든요.', '많이 오른 만큼, 빠질 때도 크게 빠진 거죠.']
+# ── 반전: 과거 데이터 ──────────────────────────────────────
+- type: kinetic
+  chapter: 과거엔?
+  items:
+  - {text: "반도체가 하루 -7%\n빠진 다음엔?", on: 1, size: 130, highlight: -7%, hl_color: down}
+  narration: ['이제 데이터를 볼게요. | 미국 반도체 ETF가 하루에 7% 넘게 빠진 날, 그 뒤 1년은 어땠을까요?']
+- type: grid
+  chapter: 과거엔?
+  kicker: 미국 반도체 ETF · 2000 ~ 2025 · 하루 -7% 이하 급락 (1년 뒤 확인 가능)
+  title: 1년 뒤 플러스였던 횟수
+  highlight: 플러스
+  n: 15
+  k: 9
+  cols: 15
+  cell: 90
+  headline: 15번 중 9번 플러스
+  headline_hl: 9번
+  narration: ['2000년 이후 이런 날은 15번. | 1년 뒤에 플러스였던 건 !!9번!!이에요.', '반반보다 조금 나은 정도. | 그런데 이걸 시기별로 나누면, 완전히 다른 그림이 나와요.']
+- type: duel
+  chapter: 과거엔?
+  heading: 같은 급락, 다른 1년 · 미국 반도체 ETF 하루 -7% 이하
+  left: {title: '2000 ~ 2001년 · 7번', value: 1번 플러스, sub: '1년 뒤 중간값 -35.8%', color: down, on: 1}
+  right: {title: '2002년 이후 · 8번', value: 8번 모두 플러스, sub: '1년 뒤 중간값 +54.0%', color: up, on: 2}
+  narration: ['닷컴 버블이 터지던 2000년과 2001년의 급락 7번은, | 1년 뒤에 플러스가 !!딱 한 번!!이었어요.', '그런데 2002년 이후의 급락 8번은, | 1년 뒤 **8번 모두 플러스**였어요. 중간값이 +54%였죠.']
+- type: punch
+  chapter: 과거엔?
+  tone: gold
+  photo: {file: nyse_floor, focus: [0.5, 0.4], dark: 0.5}
+  label: 2002년 이후 · 반도체 하루 -7% 급락 → 1년 뒤
+  big: 8번 중 8번 플러스
+  sub: 단, 2000년 버블 꼭대기에선 7번 중 1번
+  sub_on: 2
+  narration: ['2002년 이후 반도체 급락, 1년 뒤 **8번 중 8번** 플러스.', '단, 버블 꼭대기였던 2000년엔 !!7번 중 1번!!뿐이었어요.']
+- type: hbars
+  chapter: 과거엔?
+  kicker: 큰 하락 · 고점 대비 최대 낙폭과 다시 고점까지
+  title: 지금은 2000년일까, 2022년일까?
+  highlight: 2000년
+  title_y: 150
+  bar_h: 40
+  row_gap: 24
+  rows:
+  - {label: '미국 반도체 ETF · 2000년 닷컴', value: 85.9, text: '-85.9% · 회복 17년', on: 1}
+  - {label: '미국 반도체 ETF · 2022년 금리', value: 45.3, text: '-45.3% · 회복 1.5년', hl: true, on: 2, offset: 0.3}
+  - {label: 'SK하이닉스 · 2021 ~ 22년', value: 49.5, text: '-49.5% · 회복 3년', on: 2, offset: 0.6}
+  - {label: 'SK하이닉스 · 지금', value: 60.5, text: '-60.5% · 진행 중', on: 3}
+  narration: ['결국 질문은 이거예요. 지금이 2000년일까, 2022년일까? | 2000년 닷컴 버블 땐 미국 반도체 ETF가 !!-85.9%!!까지 빠졌고, 고점을 되찾는 데 17년이 걸렸어요.', '2022년 금리 인상 땐 -45.3%, 회복까지 1년 반. SK하이닉스는 그때 -49.5%에서 3년 만에 돌아왔고요.', '그리고 지금 SK하이닉스는 -60.5%. | 어느 쪽에 가까운지는, 결국 수요가 진짜냐에 달려 있어요.']
+# ── CEO들의 말 (희망 셋) ───────────────────────────────────
+- type: kinetic
+  chapter: CEO들의 말
+  items:
+  - {text: "그래서 수요는\n진짜일까?", on: 1, size: 140, highlight: 진짜일까?}
+  narration: ['그래서 이 산업을 움직이는 사람들에게 물어봤어요. | 정확히는, 그들이 최근 공개적으로 한 말을 모아 봤어요.']
+- type: saying
+  chapter: CEO들의 말
+  photo: lisa_su
+  move: {zoom: 0.1, dx: 0.0, dy: -0.01}
+  focus: [0.5, 0.3]
+  face_focus: [0.5, 0.25]
+  name: 리사 수
+  role: AMD CEO
+  source: '인터뷰 · 2026.11.5'
+  en: 'The market can be short-sighted, but it is what it is.'
+  ko: '시장은 **근시안적**일 수 있죠.\n하지만 어쩔 수 없어요.'
+  ko_on: 1
+  narration: ['먼저 AMD의 리사 수. 급락 직후 인터뷰에서 이렇게 말했어요. | 시장은 **근시안적**일 수 있다. 하지만 어쩔 수 없다.', '그리고 숫자로 답했죠. | 내년 서버 매출은 **두 배**, 데이터센터 AI 매출은 두 배 넘게 늘 거라고요.']
+- type: kpi
+  chapter: CEO들의 말
+  kpis:
+  - {label: 'SK하이닉스 · 3분기 매출', value: 104.6조 원, on: 1}
+  - {label: '영업이익률', value: 80%, on: 1}
+  bars:
+  - {label: '1년 전 대비 매출', value: 4.28, text: 4.3배, hl: true}
+  bars_on: 2
+  vmax: 5
+  credit: '자료: SK하이닉스 2026년 3분기 실적 발표 (2026.10.28)'
+  narration: ['SK하이닉스는 지난달 말, 분기 매출 **104.6조** 원을 발표했어요. 영업이익률은 80%.', '그리고 장기 계약에 협상 중인 물량까지 합치면, | D램과 HBM이 **2029년까지 사실상 다 팔렸다**고 했죠.']
+- type: saying
+  chapter: CEO들의 말
+  photo: jensen_stanford
+  move: {zoom: 0.1, dx: 0.02, dy: 0.0}
+  focus: [0.5, 0.3]
+  name: 젠슨 황
+  role: 엔비디아 CEO
+  source: '실적 발표 · 컨퍼런스에서 여러 차례'
+  en: '$3 trillion to $4 trillion in AI infrastructure spend by the end of the decade.'
+  ko: '이번 10년이 끝날 무렵,\nAI 인프라 투자는 **3조~4조 달러**'
+  ko_on: 1
+  narration: ['엔비디아의 젠슨 황은, 여러 자리에서 같은 숫자를 반복해 왔어요.', '이번 10년이 끝날 무렵, AI 인프라 투자는 **3조~4조 달러**가 될 거라고요.']
+- type: duel
+  chapter: CEO들의 말
+  heading: 같은 원인, 다른 결과 · 메모리 값
+  left: {title: 인텔, value: PC 수요 감소, sub: 메모리가 비싸서 PC가 안 팔림, color: down, on: 1}
+  right: {title: SK하이닉스, value: 2029년까지 매진, sub: 메모리가 비싸서 사상 최대 이익, color: up, on: 2}
+  narration: ['재밌는 건, 인텔을 무너뜨린 것과 SK하이닉스를 밀어 올린 게 같은 거라는 점이에요. | 바로 메모리 값이죠.', '메모리가 비싸서 인텔은 PC가 안 팔리고, SK하이닉스는 사상 최대 이익을 냈어요. | 시장은 이번 급락에서, 이 둘을 한꺼번에 던진 거예요.']
+# ── 지켜볼 신호 ───────────────────────────────────────────
+- type: checklist
+  chapter: 지켜볼 신호
+  kicker: 2000년이냐 2022년이냐를 가를
+  title: 지켜볼 신호 세 가지
+  highlight: 세 가지
+  title_size: 90
+  icon: photo:krx_building
+  icon_on: 1
+  icon_x: 1620
+  items:
+  - {text: '메모리 계약 가격이 버티는가', on: 1, highlight: 메모리}
+  - {text: '네오클라우드가 돈을 빌릴 수 있는가', on: 2, highlight: 돈을 빌릴}
+  - {text: '외국인이 다시 사는가', on: 3, highlight: 외국인}
+  narration: ['그럼 뭘 보면 될까요? 세 가지만 기억하세요. | 첫째, 메모리 가격이 버티는지. SK하이닉스의 매진 이야기가 진짜인지 보여 주니까요.', '둘째, 네오클라우드들이 계속 돈을 빌릴 수 있는지. 그게 칩 주문의 숨통이에요.', '셋째, 외국인이 삼성전자와 SK하이닉스를 다시 사기 시작하는지요.']
+- type: kinetic
+  chapter: 정리
+  items:
+  - {text: "반도체는 사이클\n겨울 뒤엔 봄이 왔다", on: 1, size: 120, highlight: 봄}
+  narration: ['반도체는 원래 겨울과 봄이 번갈아 오는, 사이클 산업이에요. | 2002년 이후의 급락은, 1년 뒤 매번 봄이 왔었죠.', '다만 2000년처럼 겨울이 17년 간 적도 있었어요. | 그래서 확신 대신, 신호를 보고 대응하는 게 중요해요.']
+- type: outro
+  heading: "공포는 짧았고\n사이클은 길었다"
+  highlight: 사이클은 길었다
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목의 매수·매도 추천이 아닙니다.
+
+    과거 데이터는 미래 수익을 보장하지 않으며 배당·세금·수수료는 반영하지 않았습니다.'
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['여러분은 이번 반도체 급락, 2000년일 것 같으세요, 2022년일 것 같으세요? | 댓글로 생각을 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
