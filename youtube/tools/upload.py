@@ -141,8 +141,12 @@ def plan(ep_dir, want_long, want_shorts, publish_at, shorts_every):
         if publish_at:
             when = publish_at + shorts_every * len([i for i in items if i["key"].startswith("short")]) + \
                 (shorts_every if want_long else dt.timedelta(0))
+        desc = sh.get("yt_desc", "")
+        lid = load_log().get(ep_dir.name, {}).get("long", {}).get("id")
+        if lid and "▶ 전체 영상" not in desc:  # 쇼츠 → 롱폼 연결 (설명란 첫 줄)
+            desc = f"▶ 전체 영상: https://youtu.be/{lid}\n\n" + desc
         items.append({"key": f"short{n}", "file": out / "shorts" / f"short{n}.mp4", "title": sh.get("yt_title", sh["title"]),
-                      "desc": sh.get("yt_desc", ""), "tags": yt.get("tags", [])[:10], "thumb": None, "srt": None,
+                      "desc": desc, "tags": yt.get("tags", [])[:10], "thumb": None, "srt": None,
                       "publish_at": when, "playlist": None})
     return items, out
 
