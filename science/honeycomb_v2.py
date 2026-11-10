@@ -21,7 +21,7 @@ from shortkit import G, T, W, H, CREAM, DIM, CORAL, BLUE, GOLD
 
 OUT = K.HERE / "out" / "honeycomb_v2"
 HEAD = {"kicker": "자연의 수학", "title": "벌집은 왜\n육각형일까?", "highlight": "육각형"}
-SAY = {"__rate__": 1.12, "6~8킬로그램": "육에서 팔 킬로그램", "1킬로그램": "일 킬로그램", "1999년": "천구백구십구 년",
+SAY = {"__voice__": "ko-KR-Chirp3-HD-Umbriel", "__rate__": 1.1, "6~8킬로그램": "육에서 팔 킬로그램", "1킬로그램": "일 킬로그램", "1999년": "천구백구십구 년",
        "7%": "칠 퍼센트", "18%": "십팔 퍼센트", "2,000년": "이천 년", "벌은 계산기": "벌은, 계산기"}
 CX = W / 2
 AMBER_HI, AMBER_LO, RIM = (255, 206, 92), (110, 58, 8), (255, 226, 150)
@@ -189,31 +189,46 @@ def s_tiles(f, t, sc):
 
 
 def s_wall(f, t, sc):
-    L = sc["L"]
-    G.blit(f, T("같은 넓이, 벽 길이는?", 54, CREAM, "Black"), (CX, 420), 1, "mt")
-    rows = [(CORAL, "삼각형", 4.559), (SKY, "사각형", 4.000), (GOLD, "육각형", 3.722)]
-    y = 560
-    for i, (col, lab, v) in enumerate(rows):
-        k = G.ease_out(G.clamp((t - 0.2 - i * 0.35) / 0.7))
-        G.blit(f, T(lab, 44, col, "Black"), (90, y + 6), 1, "lt")
-        bw = int(560 * v / 4.6 * k)
-        if bw > 4:
-            bar = Image.new("RGBA", (bw, 54), (0, 0, 0, 0))
-            bd = ImageDraw.Draw(bar)
-            for xx in range(bw):
-                c = tuple(int(cc * (0.55 + 0.45 * xx / max(bw, 1))) for cc in col)
-                bd.line((xx, 0, xx, 54), fill=c + (255,))
-            mk = Image.new("L", bar.size, 0)
-            ImageDraw.Draw(mk).rounded_rectangle((0, 0, bw - 1, 53), 27, fill=255)
-            bar.putalpha(mk)
-            f.alpha_composite(bar.filter(ImageFilter.GaussianBlur(12)), (300, y + 2))
-            f.alpha_composite(bar, (300, y + 2))
-        G.blit(f, T(f"{v * k:.2f}", 50, CREAM, "Black"), (316 + bw, y), min(1, k * 2), "lt")
-        y += 150
-    o = G.appear(t, L[-1] + 0.1, 0.3)
-    p = G.pill("육각형이 가장 짧다", "Black", 56, (12, 10, 6), GOLD, pad=(32, 14))
-    K.drop(f, p, (CX, 1060 + (1 - o) * 20), "mt", o, blur=16)
-    G.blit(f, T("넓이 1 기준 둘레", 26, DIM, "SemiBold"), (W - 70, 1240), 1, "rb")
+    """벽 쌓기 경주: 넓이가 같은 세 방의 벽을 같은 속도로 쌓으면 육각형이 1등 (둘레 4.56 · 4.00 · 3.72)"""
+    G.blit(f, T("같은 넓이 방, 벽 쌓기 경주!", 54, CREAM, "Black"), (CX, 420), 1, "mt")
+    rows = [(3, CORAL, "삼각형", 4.559, -math.pi / 2), (4, SKY, "사각형", 4.000, math.pi / 4), (6, GOLD, "육각형", 3.722, 0.0)]
+    t0 = 0.5
+    speed = 3.722 / 3.0          # 육각형이 3초에 완성
+    fin = sorted(rows, key=lambda r: r[3])
+    for i, (n, col, lab, per, rot) in enumerate(rows):
+        cx, cy = 190 + i * 350, 800
+        Rn = 178 * math.sqrt(2 / (n * math.sin(2 * math.pi / n)))  # 넓이가 같은 정다각형의 외접원 반지름 (비례)
+        pts = [(cx + Rn * math.cos(rot + 2 * math.pi * q / n), cy + Rn * math.sin(rot + 2 * math.pi * q / n)) for q in range(n)] 
+        p = G.clamp((t - t0) * speed / per)
+        ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        d = ImageDraw.Draw(ov)
+        d.polygon(pts, fill=col + (int(40 + 60 * (p >= 1)),))
+        d.line(pts + [pts[0]], fill=(80, 84, 104, 255), width=6)
+        # 지금까지 쌓은 벽(밝게) + 벽돌 쌓는 점
+        segs = [(pts[q], pts[(q + 1) % n]) for q in range(n)]
+        rem = p * n
+        path = [pts[0]]
+        for q, (a, b) in enumerate(segs):
+            u = G.clamp(rem - q)
+            if u <= 0:
+                break
+            path.append((a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u))
+        if len(path) > 1:
+            d.line(path, fill=col + (255,), width=12, joint="curve")
+            if p < 1:
+                x, y = path[-1]
+                d.ellipse((x - 16, y - 16, x + 16, y + 16), fill=(255, 255, 255, 255))
+        f.alpha_composite(ov.filter(ImageFilter.GaussianBlur(10)))
+        f.alpha_composite(ov)
+        G.blit(f, T(lab, 48, col, "Black"), (cx, 1010), 1, "mt")
+        if p >= 1:
+            rank = [r[2] for r in fin].index(lab) + 1
+            o = G.appear(t, t0 + per / speed, 0.25)
+            badge = G.pill(f"{rank}등", "Black", 48 if rank == 1 else 38, (12, 10, 6), GOLD if rank == 1 else (200, 204, 214), pad=(22, 8))
+            K.drop(f, badge, (cx, cy - (1 - o) * 20), "mm", o, blur=12)
+    o = G.appear(t, t0 + 4.559 / speed + 0.2, 0.3)
+    G.blit(f, T("벽이 덜 든다 = 재료를 아낀다", 48, CREAM, "Black"), (CX, 1110), o, "mt")
+    G.blit(f, T("넓이가 같을 때 둘레 · 사각형보다 7%, 삼각형보다 18% 짧음", 26, DIM, "SemiBold"), (CX, 1185), o, "mt")
 
 
 def s_wax(f, t, sc):
@@ -262,8 +277,8 @@ SCENES = [
      "narr": ["벌집은 왜, 하필 육각형일까요?"]},
     {"draw": s_tiles, "min": 3.0, "gap": 0.2, "tail": 0.2,
      "narr": ["빈틈없이 바닥을 채우는 정다각형은, 삼각형, 사각형, 육각형. 딱 셋뿐."]},
-    {"draw": s_wall, "min": 3.0, "gap": 0.2, "tail": 0.25,
-     "narr": ["그중 같은 넓이에 벽이 가장 짧은 게 육각형. 사각형보다 7%, 삼각형보다 18%나 짧아요."]},
+    {"draw": s_wall, "min": 5.0, "gap": 0.2, "tail": 0.3,
+     "narr": ["같은 넓이의 방을, 세 모양으로 지어 볼게요.", "벽을 같은 속도로 쌓으면? 1등은 육각형!"]},
     {"draw": s_wax, "min": 3.0, "gap": 0.2, "tail": 0.2,
      "narr": ["벌한테 벽은 밀랍인데, 밀랍 1킬로그램에 꿀이 6~8킬로그램이나 들어요.", "벽이 짧을수록 꿀을 아끼는 거죠."]},
     {"draw": s_proof, "min": 2.6, "gap": 0.2, "tail": 0.2,

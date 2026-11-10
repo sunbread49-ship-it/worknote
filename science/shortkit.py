@@ -75,12 +75,13 @@ def pcm(path):
 def plan(scenes, out, say):
     say = {**CTA_SAY, **say}
     rate = say.pop("__rate__", RATE)
+    voice = say.pop("__voice__", VOICE)
     cache = out / "tts_cache"
     t, clips, cues = 0.0, [], []
     for sc in scenes:
         sc["start"], cur, sc["L"] = t, 0.25, []
         for line in sc["narr"]:
-            a = pcm(TTS.synth(TTS.speakable(line, say), VOICE, rate, 0.0, cache))
+            a = pcm(TTS.synth(TTS.speakable(line, say), voice, rate, 0.0, cache))
             sc["L"].append(cur)
             clips.append((t + cur, a))
             d = len(a) / 48000
