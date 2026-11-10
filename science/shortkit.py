@@ -18,7 +18,7 @@ from engine import sfx as SFX  # noqa: E402
 from engine import tts as TTS  # noqa: E402
 
 W, H, FPS = 1080, 1920, 30
-VOICE, RATE = "ko-KR-Chirp3-HD-Sadaltager", 1.12
+VOICE, RATE = "ko-KR-Chirp3-HD-Umbriel", 1.15  # 2026-11-10: 주식 악어새와 같은 남자 15번, 쇼츠는 1.15배 (이전: Sadaltager 1.12)
 BG1, BG2 = (14, 18, 34), (6, 8, 16)
 CREAM = (244, 236, 220)
 DIM = (150, 160, 190)
@@ -81,12 +81,22 @@ def plan(scenes, out, say):
     for sc in scenes:
         sc["start"], cur, sc["L"] = t, 0.25, []
         for line in sc["narr"]:
-            a = pcm(TTS.synth(TTS.speakable(line, say), voice, rate, 0.0, cache))
+            # ' / ' = 짧게 띄기(0.12초), ' // ' = 한 템포 쉬기(0.3초): 조각마다 따로 읽어 이어 붙임 → 쉼표 쉼 기호가 만드는 이상한 소리 방지
+            pieces = [p for p in line.replace(" // ", " /~/ ").split(" /") if p.strip()]
             sc["L"].append(cur)
-            clips.append((t + cur, a))
-            d = len(a) / 48000
-            cues.append((t + cur, t + cur + d, line.replace(" | ", " ").replace("|", "")))
-            cur += d + sc.get("gap", 0.25)
+            seg, st0 = [], cur
+            for k, pc in enumerate(pieces):
+                long = pc.startswith("~/")
+                pc = pc[2:] if long else pc
+                pc = pc.lstrip("/ ").strip()
+                a = pcm(TTS.synth(TTS.speakable(pc, say), voice, rate, 0.0, cache))
+                if k:
+                    cur += 0.3 if long else 0.12
+                clips.append((t + cur, a))
+                cur += len(a) / 48000
+            text = line.replace(" // ", " ").replace(" / ", " ").replace(" | ", " ").replace("|", "")
+            cues.append((t + st0, t + cur, text))
+            cur += sc.get("gap", 0.25)
         sc["dur"] = max(sc.get("min", 2.0), cur + sc.get("tail", 0.3))
         t += sc["dur"]
     buf = np.zeros(int(t * 48000) + 48000, np.float32)
@@ -189,7 +199,9 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
         else:
             f.alpha_composite(g.crop((0, 0, W, H - SHIFT)), (0, SHIFT))
             header(f, head)
-        if lt < 0.18 and sc is not scenes[0]:
+        if sc.get("flash") and lt < 0.14:  # 장면 전환 번쩍
+            f.alpha_composite(Image.new("RGBA", (W, H), (255, 244, 220, int(170 * (1 - lt / 0.14)))))
+        if lt < 0.18 and sc is not scenes[0] and not sc.get("flash"):
             f.alpha_composite(Image.new("RGBA", (W, H), BG2 + (int(200 * (1 - lt / 0.18)),)))
             if not sc.get("nohead"):
                 header(f, head)

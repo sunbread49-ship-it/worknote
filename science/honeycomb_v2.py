@@ -21,7 +21,7 @@ from shortkit import G, T, W, H, CREAM, DIM, CORAL, BLUE, GOLD
 
 OUT = K.HERE / "out" / "honeycomb_v2"
 HEAD = {"kicker": "자연의 수학", "title": "벌집은 왜\n육각형일까?", "highlight": "육각형"}
-SAY = {"__voice__": "ko-KR-Chirp3-HD-Umbriel", "__rate__": 1.1, "6~8킬로그램": "육에서 팔 킬로그램", "1킬로그램": "일 킬로그램", "1999년": "천구백구십구 년",
+SAY = {"6~8킬로그램": "육에서 팔 킬로그램", "1킬로그램": "일 킬로그램", "1999년": "천구백구십구 년",
        "7%": "칠 퍼센트", "18%": "십팔 퍼센트", "2,000년": "이천 년", "벌은 계산기": "벌은, 계산기"}
 CX = W / 2
 AMBER_HI, AMBER_LO, RIM = (255, 206, 92), (110, 58, 8), (255, 226, 150)
@@ -179,13 +179,13 @@ def s_tiles(f, t, sc):
     G.blit(f, T("빈틈없이 채우는 정다각형", 50, CREAM, "Black"), (CX, 420), 1, "mt")
     for i, (kind, col, lab) in enumerate([("tri", CORAL, "삼각형"), ("sq", SKY, "사각형"), ("hex", GOLD, "육각형")]):
         x = 60 + i * 330
-        k = G.ease_out(G.clamp((t - L[0] - 0.4 - i * 0.45) / 0.9))
+        k = G.ease_out(G.clamp((t - L[-1] + 0.1 - i * 0.55) / 0.7))
         card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
         ImageDraw.Draw(card).rounded_rectangle((0, 0, w - 1, h - 1), 30, fill=(18, 20, 30, 230), outline=(60, 64, 84, 255), width=2)
         f.alpha_composite(card, (x, 540))
         if k > 0:
             f.alpha_composite(tiles(kind, w, h, 92, max(k, 0.02), col), (x, 540))
-        G.blit(f, T(lab, 48, col, "Black"), (x + w / 2, 975), G.appear(t, L[0] + 0.4 + i * 0.45, 0.3), "mt")
+        G.blit(f, T(lab, 48, col, "Black"), (x + w / 2, 975), G.appear(t, L[-1] + i * 0.55, 0.25), "mt")
 
 
 def s_wall(f, t, sc):
@@ -232,35 +232,105 @@ def s_wall(f, t, sc):
 
 
 def s_wax(f, t, sc):
-    K.pband(f, "bee_comb_bartz", t, sc["dur"], 380, 880, move={"zoom": 0.14, "dx": -0.02, "dy": 0.01}, focus=(0.5, 0.35), dark=0.4)
-    o = G.appear(t, sc["L"][-1], 0.3)
-    card = Image.new("RGBA", (840, 240), (0, 0, 0, 0))
-    ImageDraw.Draw(card).rounded_rectangle((0, 0, 839, 239), 30, fill=(12, 10, 6, 225), outline=GOLD + (255,), width=3)
-    card.alpha_composite(T("밀랍 1kg", 72, CREAM, "Black"), (54, 34))
-    card.alpha_composite(T("= 꿀 6~8kg", 72, GOLD, "Black"), (54, 126))
-    K.drop(f, card, (CX, 1060 - (1 - o) * 30), "mm", o, blur=16)
+    K.pband(f, "bee_comb_bartz", t, sc["dur"], 380, 880, move={"zoom": 0.2, "dx": -0.03, "dy": 0.01}, focus=(0.5, 0.35), dark=0.3)
+    o = G.appear(t, 0.35, 0.25)
+    p = G.pill("벽 = 밀랍", "Black", 92, (12, 10, 6), GOLD, pad=(40, 16))
+    K.drop(f, p, (CX, 1080 - (1 - o) * 30), "mm", o, blur=18)
     K.credit(f, K.credit_of("bee_comb_bartz"))
 
 
-def s_proof(f, t, sc):
-    comb(f, t + 3, r=70, grow=0.1, center=(0.5, 0.5), dim=0.72, sweep=True)
-    o = G.appear(t, 0.1, 0.3)
-    G.blit(f, T("2,000년 넘은 수수께끼", 52, DIM, "ExtraBold"), (CX, 560), o, "mt")
-    k = G.appear(t, sc["L"][-1] + 1.2, 0.35)
-    K.drop(f, T("1999년", 190, GOLD, "Black", stroke=8, stroke_fill=(8, 6, 4)), (CX, 820 - (1 - k) * 30), "mm", k, blur=24)
-    G.blit(f, T("수학자 토머스 헤일스, 증명", 48, CREAM, "Black"), (CX, 960), k, "mt")
+def jar(h=210, fill=0.0):
+    """꿀단지 아이콘 (그림) — fill: 채워진 비율"""
+    k = 3
+    w_, h_ = int(h * 0.82) * k, h * k
+    im = Image.new("RGBA", (w_, h_), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    body = (w_ * 0.08, h_ * 0.22, w_ * 0.92, h_ * 0.98)
+    d.rounded_rectangle(body, radius=w_ * 0.22, fill=(40, 30, 16, 230), outline=RIM + (255,), width=4 * k)
+    if fill > 0:
+        top = body[3] - (body[3] - body[1]) * fill
+        mk = Image.new("L", (w_, h_), 0)
+        ImageDraw.Draw(mk).rounded_rectangle(body, radius=w_ * 0.22, fill=255)
+        hn = Image.new("RGBA", (w_, h_), (0, 0, 0, 0))
+        ImageDraw.Draw(hn).rectangle((0, top, w_, h_), fill=AMBER_HI + (255,))
+        im.alpha_composite(Image.composite(hn, Image.new("RGBA", (w_, h_), (0, 0, 0, 0)), mk))
+        d.rounded_rectangle(body, radius=w_ * 0.22, outline=RIM + (255,), width=4 * k)
+    d.rounded_rectangle((w_ * 0.2, h_ * 0.04, w_ * 0.8, h_ * 0.2), radius=10 * k, fill=(190, 120, 40, 255))
+    return im.resize((w_ // k, h_ // k), Image.LANCZOS)
 
 
-def s_end(f, t, sc):
+def s_honey(f, t, sc):
+    """밀랍 1kg 저울 → 꿀단지 8개가 차례로 떨어지며 차오름 + 카운터"""
     L = sc["L"]
-    comb(f, t + 3, r=96, grow=0.1, dim=0.55, sweep=True)
-    o = G.appear(t, 0.1, 0.35)
-    if t < L[-1] - 0.1:
-        K.drop(f, T("가장 적은 밀랍으로\n가장 많은 꿀을", 84, CREAM, "Black", highlight="가장 많은 꿀", hl_fill=GOLD,
-                    align="center", line_gap=1.16, stroke=6, stroke_fill=(8, 6, 4)), (CX, 820), "mm", o, blur=24)
-    else:  # 마지막 문장 = 첫 질문 → 처음으로 이어지는 루프
-        k = G.ease_out(G.clamp((t - L[-1] + 0.1) / 0.35))
-        big_q(f, t, y=830, size=150, o=k)
+    f.alpha_composite(Image.new("RGBA", (W, H), (10, 8, 6, 255)))
+    comb(f, t + 3, r=70, grow=0.1, center=(0.5, 0.5), dim=0.8, sweep=False)
+    G.blit(f, T("밀랍 1kg 만들려면", 60, CREAM, "Black"), (CX, 430), G.appear(t, 0.0, 0.2), "mt")
+    t1 = L[-1] if len(L) > 1 else 0.6
+    n = 8
+    for i in range(n):
+        k = G.ease_out(G.clamp((t - t1 - i * 0.16) / 0.3))
+        if k <= 0:
+            continue
+        x = 150 + (i % 4) * 260
+        y = 640 + (i // 4) * 270
+        G.blit(f, jar(200, min(1, k * 1.1)), (x, y - (1 - k) * 160), min(1, k * 1.5), "mt")
+    kk = G.clamp((t - t1) / (0.16 * n + 0.3))
+    num = T("꿀 6~8kg" if kk >= 1 else f"꿀 {8 * kk:.0f}kg", 120, GOLD, "Black", stroke=8, stroke_fill=(8, 6, 4))
+    K.drop(f, num, (CX, 1210), "mb", G.appear(t, t1, 0.2), blur=18)
+    G.blit(f, T("양봉 문헌 · 약 6~8kg", 26, DIM, "SemiBold"), (W - 70, 1240), 1, "rb")
+
+
+def s_proof(f, t, sc):
+    """기원전 36년 → 1999년: 연도가 빠르게 굴러가는 카운터"""
+    L = sc["L"]
+    f.alpha_composite(Image.new("RGBA", (W, H), (8, 7, 5, 255)))
+    comb(f, t + 3, r=70, grow=0.1, center=(0.5, 0.5), dim=0.72, sweep=True)
+    G.blit(f, T("2,000년 넘은 수수께끼", 54, DIM, "ExtraBold"), (CX, 470), 1, "mt")
+    t1 = L[-1] if len(L) > 1 else 0.8
+    k = G.clamp((t - 0.2) / max(0.4, t1 - 0.1))
+    k = k ** 2.2
+    yr = int(-36 + (1999 + 36) * k)
+    label = f"기원전 {-yr}년" if yr < 0 else f"{max(yr, 1)}년"
+    col = GOLD if k >= 1 else CREAM
+    sz = 170 if k >= 1 else 130
+    K.drop(f, T(label, sz, col, "Black", stroke=8, stroke_fill=(8, 6, 4)), (CX, 820), "mm", 1, blur=24)
+    if k >= 1:
+        o = G.appear(t, t1 + 0.1, 0.25)
+        G.blit(f, G.pill("수학자 토머스 헤일스, 드디어 증명", "Black", 46, (12, 10, 6), GOLD, pad=(26, 12)), (CX, 980), o, "mt")
+
+
+def s_bee(f, t, sc):
+    K.pband(f, "honeycomb_drip", t, sc["dur"], 380, 880, move={"zoom": 0.22, "dx": 0.0, "dy": -0.03}, focus=(0.4, 0.3), dark=0.35)
+    o = G.appear(t, 0.3, 0.3)
+    K.drop(f, T("가장 적은 밀랍으로\n가장 많은 꿀을", 84, CREAM, "Black", highlight="가장 많은 꿀", hl_fill=GOLD,
+                align="center", line_gap=1.16, stroke=6, stroke_fill=(8, 6, 4)), (CX, 830), "mm", o, blur=24)
+    K.credit(f, K.credit_of("honeycomb_drip"))
+
+
+def s_share(f, t, sc):
+    L = sc["L"]
+    f.alpha_composite(Image.new("RGBA", (W, H), (6, 5, 4, 255)))
+    comb(f, t + 3, r=96, grow=0.1, dim=0.6, sweep=True)
+    if t < L[-1] - 0.05:
+        k = G.ease_out(G.clamp(t / 0.3))
+        K.drop(f, T("친구한테\n물어보세요", 150, CREAM, "Black", highlight="물어보세요", hl_fill=GOLD, align="center",
+                    line_gap=1.08, stroke=8, stroke_fill=(8, 6, 4)), (CX, 830), "mm", 1, blur=24)
+        q = G.pill("벌집은 왜 육각형?", "Black", 54, (12, 10, 6), CREAM, pad=(30, 12))
+        G.blit(f, q, (CX, 1060 + (1 - k) * 30), k, "mt")
+    else:
+        k = G.ease_out(G.clamp((t - L[-1] + 0.05) / 0.3))
+        K.drop(f, T("구독하고\n함께해요!", 150, GOLD, "Black", align="center", line_gap=1.08, stroke=8, stroke_fill=(8, 6, 4)),
+               (CX, 830 - (1 - k) * 30), "mm", k, blur=24)
+
+
+def s_loop(f, t, sc):
+    f.alpha_composite(Image.new("RGBA", (W, H), (6, 5, 4, 255)))
+    comb(f, t + 3, r=96, grow=0.1, dim=0.35, sweep=True)
+    dark = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(dark).rectangle((0, 520, W, 1140), fill=(6, 5, 4, 150))
+    f.alpha_composite(dark.filter(ImageFilter.GaussianBlur(60)))
+    k = G.ease_out(G.clamp(t / 0.3))
+    big_q(f, t, y=830, size=int(158 + 12 * k), o=1.0)
 
 
 def draw_cover(f):
@@ -273,19 +343,24 @@ def draw_cover(f):
 
 
 SCENES = [
-    {"draw": s_hook, "nohead": True, "min": 2.6, "gap": 0.15, "tail": 0.25,
-     "narr": ["벌집은 왜, 하필 육각형일까요?"]},
-    {"draw": s_tiles, "min": 3.0, "gap": 0.2, "tail": 0.2,
-     "narr": ["빈틈없이 바닥을 채우는 정다각형은, 삼각형, 사각형, 육각형. 딱 셋뿐."]},
-    {"draw": s_wall, "min": 5.0, "gap": 0.2, "tail": 0.3,
-     "narr": ["같은 넓이의 방을, 세 모양으로 지어 볼게요.", "벽을 같은 속도로 쌓으면? 1등은 육각형!"]},
-    {"draw": s_wax, "min": 3.0, "gap": 0.2, "tail": 0.2,
-     "narr": ["벌한테 벽은 밀랍인데, 밀랍 1킬로그램에 꿀이 6~8킬로그램이나 들어요.", "벽이 짧을수록 꿀을 아끼는 거죠."]},
-    {"draw": s_proof, "min": 2.6, "gap": 0.2, "tail": 0.2,
-     "narr": ["이게 최선이라는 증명은, 겨우 1999년에야 나왔죠."]},
-    {"draw": s_end, "nohead": True, "min": 3.0, "gap": 0.2, "tail": 0.15,
-     "narr": ["벌은 계산기 없이, 가장 적은 밀랍으로 가장 많은 꿀을 담은 거예요.",
-              "친구한테도 물어보세요.", K.CTA, "벌집은 왜, 하필 육각형일까요?"]},
+    {"draw": s_hook, "nohead": True, "min": 2.4, "gap": 0.15, "tail": 0.2,
+     "narr": ["벌집은 왜 / 하필 육각형일까요?"]},
+    {"draw": s_tiles, "flash": True, "min": 3.0, "gap": 0.3, "tail": 0.3,
+     "narr": ["빈틈없이 바닥을 채우는 정다각형은,", "삼각형 / 사각형 / 육각형. / 딱 / 셋뿐."]},
+    {"draw": s_wall, "flash": True, "min": 5.0, "gap": 0.2, "tail": 0.3,
+     "narr": ["같은 넓이의 방을, 세 모양으로 지어 볼게요.", "벽을 같은 속도로 쌓으면? / 1등은 육각형."]},
+    {"draw": s_wax, "flash": True, "min": 1.6, "gap": 0.15, "tail": 0.1,
+     "narr": ["그런데 벌한테 벽은 밀랍이에요."]},
+    {"draw": s_honey, "flash": True, "min": 3.0, "gap": 0.15, "tail": 0.3,
+     "narr": ["밀랍 1킬로그램을 만들려면,", "꿀을 6~8킬로그램이나 먹어야 하죠."]},
+    {"draw": s_proof, "flash": True, "min": 2.6, "gap": 0.15, "tail": 0.3,
+     "narr": ["이게 최선이라는 증명은,", "겨우 1999년에야 나왔어요."]},
+    {"draw": s_bee, "flash": True, "min": 2.4, "gap": 0.15, "tail": 0.2,
+     "narr": ["벌은 계산기 없이, 가장 적은 밀랍으로 가장 많은 꿀을 담은 거예요."]},
+    {"draw": s_share, "flash": True, "nohead": True, "min": 2.4, "gap": 0.15, "tail": 0.15,
+     "narr": ["친구한테도 물어보세요.", K.CTA]},
+    {"draw": s_loop, "nohead": True, "min": 1.8, "gap": 0.1, "tail": 0.15,
+     "narr": ["벌집은 왜 / 하필 육각형일까요?"]},
 ]
 
 if __name__ == "__main__":
