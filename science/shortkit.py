@@ -227,7 +227,7 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
         w.setsampwidth(2)
         w.setframerate(48000)
         w.writeframes((np.clip(voice, -1, 1) * 32767).astype("<i2").tobytes())
-    ev = [(sc["start"], "whoosh", 0.18) for sc in scenes]
+    ev = [(sc["start"], "whoosh", 0.09) for sc in scenes]  # 전환 쓱 소리 절반 (2026-11-10)
     for sc in scenes:
         for at, nm, vol in sc.get("sfx", []):
             ev.append((sc["start"] + sc["L"][0] + at, nm, vol))
