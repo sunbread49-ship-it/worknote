@@ -308,19 +308,14 @@ def s_bee(f, t, sc):
 
 
 def s_share(f, t, sc):
-    L = sc["L"]
+    """마무리: 좋아요 + 친구한테 물어보기 (긴 구독 문구 대신 짧게 → 바로 루프)"""
     f.alpha_composite(Image.new("RGBA", (W, H), (6, 5, 4, 255)))
     comb(f, t + 3, r=96, grow=0.1, dim=0.6, sweep=True)
-    if t < L[-1] - 0.05:
-        k = G.ease_out(G.clamp(t / 0.3))
-        K.drop(f, T("친구한테\n물어보세요", 150, CREAM, "Black", highlight="물어보세요", hl_fill=GOLD, align="center",
-                    line_gap=1.08, stroke=8, stroke_fill=(8, 6, 4)), (CX, 830), "mm", 1, blur=24)
-        q = G.pill("벌집은 왜 육각형?", "Black", 54, (12, 10, 6), CREAM, pad=(30, 12))
-        G.blit(f, q, (CX, 1060 + (1 - k) * 30), k, "mt")
-    else:
-        k = G.ease_out(G.clamp((t - L[-1] + 0.05) / 0.3))
-        K.drop(f, T("구독하고\n함께해요!", 150, GOLD, "Black", align="center", line_gap=1.08, stroke=8, stroke_fill=(8, 6, 4)),
-               (CX, 830 - (1 - k) * 30), "mm", k, blur=24)
+    k = G.ease_out(G.clamp(t / 0.3))
+    K.drop(f, T("좋아요 누르고", 110, GOLD, "Black", stroke=8, stroke_fill=(8, 6, 4)), (CX, 700 - (1 - k) * 20), "mm", k, blur=20)
+    k2 = G.ease_out(G.clamp((t - 0.7) / 0.3))
+    K.drop(f, T("친구한테\n물어보세요", 140, CREAM, "Black", highlight="물어보세요", hl_fill=GOLD, align="center",
+                line_gap=1.08, stroke=8, stroke_fill=(8, 6, 4)), (CX, 940 - (1 - k2) * 20), "mm", k2, blur=24)
 
 
 def s_loop(f, t, sc):
@@ -358,7 +353,7 @@ SCENES = [
     {"draw": s_bee, "flash": True, "min": 2.4, "gap": 0.15, "tail": 0.2,
      "narr": ["벌은 계산기 없이, 가장 적은 밀랍으로 가장 많은 꿀을 담은 거예요."]},
     {"draw": s_share, "flash": True, "nohead": True, "min": 2.4, "gap": 0.15, "tail": 0.15,
-     "narr": ["친구한테도 물어보세요.", K.CTA]},
+     "narr": ["좋아요 누르고, / 친구한테도 물어보세요."]},
     {"draw": s_loop, "nohead": True, "min": 1.8, "gap": 0.1, "tail": 0.15,
      "narr": ["벌집은 왜 / 하필 육각형일까요?"]},
 ]
