@@ -74,18 +74,19 @@ def pcm(path):
 
 def plan(scenes, out, say):
     say = {**CTA_SAY, **say}
+    rate = say.pop("__rate__", RATE)
     cache = out / "tts_cache"
     t, clips, cues = 0.0, [], []
     for sc in scenes:
         sc["start"], cur, sc["L"] = t, 0.25, []
         for line in sc["narr"]:
-            a = pcm(TTS.synth(TTS.speakable(line, say), VOICE, RATE, 0.0, cache))
+            a = pcm(TTS.synth(TTS.speakable(line, say), VOICE, rate, 0.0, cache))
             sc["L"].append(cur)
             clips.append((t + cur, a))
             d = len(a) / 48000
             cues.append((t + cur, t + cur + d, line.replace(" | ", " ").replace("|", "")))
-            cur += d + 0.25
-        sc["dur"] = max(sc.get("min", 2.0), cur + 0.3)
+            cur += d + sc.get("gap", 0.25)
+        sc["dur"] = max(sc.get("min", 2.0), cur + sc.get("tail", 0.3))
         t += sc["dur"]
     buf = np.zeros(int(t * 48000) + 48000, np.float32)
     for st, a in clips:
@@ -182,11 +183,15 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
         g = BG.copy()
         sc["draw"](g, lt, sc)
         f = BG.copy()
-        f.alpha_composite(g.crop((0, 0, W, H - SHIFT)), (0, SHIFT))
-        header(f, head)
+        if sc.get("nohead"):  # 첫 장면: 고정 제목 없이 화면 가득 (지식창고 v2, 첫 1초 개선)
+            f = g
+        else:
+            f.alpha_composite(g.crop((0, 0, W, H - SHIFT)), (0, SHIFT))
+            header(f, head)
         if lt < 0.18 and sc is not scenes[0]:
             f.alpha_composite(Image.new("RGBA", (W, H), BG2 + (int(200 * (1 - lt / 0.18)),)))
-            header(f, head)
+            if not sc.get("nohead"):
+                header(f, head)
         cue = next((c for c in subs if c[0] <= t < c[1] + 0.1), None)
         if cue:
             subtitle(f, cue[2])
