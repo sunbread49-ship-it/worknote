@@ -294,13 +294,13 @@ def draw_cover(f):
 
 
 SCENES = [
-    {"draw": s_hook, "nohead": True, "min": 2.6, "gap": 0.15, "tail": 0.2, "sfx_t": [(0.0, "flyby", 0.8)],
+    {"draw": s_hook, "nohead": True, "min": 2.6, "gap": 0.15, "tail": 0.2, "sfx_t": [(0.0, "glide", 0.7)],
      "narr": ["인천에서 뉴욕 가는 비행기, / 왜 굳이 북극 쪽으로 돌아갈까요?"]},
     {"draw": s_compare, "flash": True, "min": 6.0, "gap": 0.25, "tail": 0.6,
-     "sfx_fn": lambda sc: [(sc["L"][0] + 0.2, "zip", 0.7), (sc["L"][-1] + 0.1, "flyby", 0.8), (sc["L"][-1] + 1.55, "wow", 0.6), (sc["L"][-1] + 1.6, "reveal", 0.6)],
+     "sfx_fn": lambda sc: [(sc["L"][0] + 0.2, "glide", 0.45), (sc["L"][-1] + 0.1, "glide", 0.7), (sc["L"][-1] + 1.55, "wow", 0.6), (sc["L"][-1] + 1.6, "reveal", 0.6)],
      "narr": ["지도에서 쭉 그은 직선은, 1만 3,800킬로미터.", "그런데 휘어진 길은, / 1만 1,090킬로미터예요."]},
     {"draw": s_globe, "flash": True, "min": 3.4, "gap": 0.2, "tail": 0.3,
-     "sfx_fn": lambda sc: [(sc["L"][-1], "flyby", 0.6)],
+     "sfx_fn": lambda sc: [(sc["L"][-1], "glide", 0.5)],
      "narr": ["지구는 공이고, 평평한 지도는 귤껍질을 억지로 펴 놓은 그림이거든요.", "공 위에선, 이 휘어진 길이 진짜 직선이에요."]},
     {"draw": s_string, "flash": True, "min": 3.4, "gap": 0.2, "tail": 0.3, "sfx_t": [(0.8, "riser", 0.35), (2.6, "ding", 0.55)],
      "narr": ["지구본에 실을 팽팽하게 당겨 봐도, / 실은 똑같이 북쪽으로 지나가죠."]},

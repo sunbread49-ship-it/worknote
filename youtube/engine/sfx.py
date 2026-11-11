@@ -179,8 +179,17 @@ def wow():
     return np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(len(t), 0.01, 0.3) * 0.5
 
 
+def glide():
+    """'휘이잉↗' 부드러운 상승 휘파람 (선 · 경로가 그려질 때 기본, 2026-11-11 사용자 선택 C)"""
+    t = _t(1.2)
+    f = 500 * 2 ** (t / 1.2 * 1.5)
+    x = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * t / 1.2) ** 1.5 * 0.35
+    x += np.sin(2 * np.pi * np.cumsum(f * 2) / SR) * np.sin(np.pi * t / 1.2) ** 2 * 0.12
+    return x * 1.6
+
+
 BANK = {k: v for k, v in globals().items() if k in
-        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh accent accent_low reveal flyby wow".split()}
+        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh accent accent_low reveal flyby wow glide".split()}
 BANK["zip"] = zip_
 _cache = {}
 
