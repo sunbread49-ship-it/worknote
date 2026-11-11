@@ -203,8 +203,9 @@ def _pcm(path):
 
 def plan(scenes, cfg, work_dir: Path, log=print):
     """각 장면에 start/dur/lines를 채우고 내레이션 wav 경로 반환"""
-    voice = cfg.get("voice", "ko-KR-Chirp3-HD-Charon")
-    rate = cfg.get("rate", 1.0)
+    # 2026-11-11 두 채널 통일: 남자 15번(Umbriel) 1.15배 — 롱폼 · 쇼츠 모두 (에피소드 tts에 따로 적으면 그게 우선)
+    voice = cfg.get("voice", "ko-KR-Chirp3-HD-Umbriel")
+    rate = cfg.get("rate", 1.15)
     gap = cfg.get("line_gap", 0.28)          # 문장 사이 쉼
     lead, tail = cfg.get("scene_pad", [0.2, 0.45])
     cache = work_dir / "tts_cache"
