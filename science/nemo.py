@@ -24,7 +24,7 @@ FL.SEA, FL.LAND, FL.LAND_EDGE = (12, 30, 64), (78, 108, 150), (170, 205, 240)  #
 
 OUT = K.HERE / "out" / "nemo"
 HEAD = {"kicker": "지구에서 가장 외로운 곳", "title": "포인트 니모", "highlight": "니모"}
-SAY = {"130톤": "백삼십 톤", "1928년": "천구백이십팔 년", "2,740킬로미터": "이천칠백사십 킬로미터", "2,700킬로미터": "이천칠백 킬로미터", "400킬로미터": "사백 킬로미터", "7배": "일곱 배", "2030년": "이천삼십 년",
+SAY = {"텅빈": "텅빈", "국제우주정거장": "국제우주정거장", "130톤": "백삼십 톤", "1928년": "천구백이십팔 년", "2,740킬로미터": "이천칠백사십 킬로미터", "2,700킬로미터": "이천칠백 킬로미터", "400킬로미터": "사백 킬로미터", "7배": "일곱 배", "2030년": "이천삼십 년",
        "2001년": "이천일 년", "포인트 니모": "포인트 니모"}
 CX = W / 2
 NEMO = (-48.88, -123.39)
@@ -246,6 +246,51 @@ def s_fall(f, t, sc):
     K.credit(f, K.credit_of("rough_sea"))
 
 
+def s_why_burn(f, t, sc):
+    """왜 떨어뜨리나: 큰 우주선은 대기권에서 다 타지 않고, 남은 조각이 넓게 흩어진다"""
+    f.alpha_composite(Image.new("RGBA", (W, H), (6, 8, 18, 255)))
+    # 지구 가장자리(아래 큰 호) + 대기권
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    d.ellipse((-900, 1050, W + 900, 3600), fill=(20, 50, 100, 255))
+    d.ellipse((-940, 1010, W + 940, 3640), outline=(110, 180, 255, 120), width=26)
+    k = G.ease_out(G.clamp(t / 1.6))
+    x, y = 140 + 700 * k, 420 + 560 * k
+    for j in range(16):  # 불꽃 꼬리
+        a = j / 16
+        d.line((x - 300 * a * k, y - 240 * a * k, x - 300 * (a + 0.07) * k, y - 240 * (a + 0.07) * k),
+               fill=(255, int(220 - 160 * a), 80, int(230 * (1 - a))), width=int(26 * (1 - a)) + 2)
+    d.rectangle((x - 22, y - 14, x + 22, y + 14), fill=(230, 230, 240, 255))
+    if t > 1.2:  # 다 타지 않은 조각들이 흩어짐
+        for i in range(9):
+            u = G.clamp((t - 1.2) / 1.2)
+            px = x + (i - 4) * 60 * u + 40 * u
+            py = y + 80 * u + (i % 3) * 30 * u
+            d.ellipse((px - 9, py - 9, px + 9, py + 9), fill=(255, 190, 120, 255))
+    f.alpha_composite(ov.filter(ImageFilter.GaussianBlur(5)))
+    f.alpha_composite(ov)
+    pill_tag(f, "왜 하필 여기로?", t, col=CORAL)
+    big(f, "다 타지 않은 조각이\n비처럼 쏟아진다", 1250, 96, hl="조각", o=G.appear(t, 1.0, 0.3))
+
+
+def s_why_aim(f, t, sc):
+    """그래서 일부러 조준: 사람도 배도 없는 곳 = 포인트 니모 (섬이 아니라 바다 한가운데)"""
+    f.alpha_composite(Image.new("RGBA", (W, H), (4, 6, 14, 255)))
+    r = globe(f, CX, 830, 440, C_LAT, C_LON, 1.3)
+    p, _ = project(*NEMO, CX, 830, r, C_LAT, C_LON)
+    k = G.ease_out(G.clamp(t / 0.9))
+    R0 = 420 - 300 * k
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    d.ellipse((p[0] - R0, p[1] - R0, p[0] + R0, p[1] + R0), outline=(255, 70, 70, 255), width=8)
+    d.line((p[0] - R0 - 40, p[1], p[0] + R0 + 40, p[1]), fill=(255, 70, 70, 255), width=5)
+    d.line((p[0], p[1] - R0 - 40, p[0], p[1] + R0 + 40), fill=(255, 70, 70, 255), width=5)
+    f.alpha_composite(ov.filter(ImageFilter.GaussianBlur(5)))
+    f.alpha_composite(ov)
+    pill_tag(f, "사람 머리 위는 절대 안 돼", t, col=CORAL)
+    big(f, "그래서 일부러\n여기를 조준", 1200, 112, hl="조준", o=G.appear(t, 0.6, 0.3))
+
+
 def s_mir(f, t, sc):
     name = "mir" if (K.PHOTOS / "mir.json").exists() else "iss_sts132"
     full_photo(f, name, t, dark=0.3, zoom=0.14, tint=(80, 20, 0, 40))
@@ -308,7 +353,7 @@ SCENES = [
     {"draw": s_radar, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.1, "tick", 0.4), (0.9, "tick", 0.4), (1.7, "tick", 0.4)],
      "narr": ["사방 어디로 가도, 섬까지 2,700킬로미터."]},
     {"draw": s_hanoi, "flash": True, "min": 2.6, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.3, "glide", 0.55)],
-     "narr": ["서울에서 하노이 거리만큼, 텅 빈 바다예요."]},
+     "narr": ["서울에서 하노이 거리만큼, / 텅빈 / 바다예요."]},
     {"draw": s_iss, "flash": True, "nohead": True, "min": 2.0, "gap": 0.1, "tail": 0.1,
      "sfx_fn": lambda sc: [(0.2, "wow", 0.55), (sc["L"][-1], "reveal", 0.55)],
      "narr": ["머리 위 우주정거장은 고작 400킬로미터.", "가장 가까운 이웃이, 우주비행사인 거죠."]},
@@ -316,10 +361,14 @@ SCENES = [
      "narr": ["물고기도 드문, 바다의 사막이고요."]},
     {"draw": s_fall, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.05, "accent_low", 0.6), (0.5, "boom", 0.35)],
      "narr": ["그래서 이곳은, / 우주선의 무덤이 됐어요."]},
+    {"draw": s_why_burn, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "glide", 0.5), (1.2, "boom", 0.35)],
+     "narr": ["큰 우주선은 떨어질 때 다 타지 않아서, / 불타고 남은 조각이 비처럼 쏟아지거든요."]},
+    {"draw": s_why_aim, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "riser", 0.35), (0.9, "accent_low", 0.6)],
+     "narr": ["사람 머리 위로 떨어지면 큰일이니까, / 지구에서 제일 외로운 이 바다를 일부러 조준하는 거예요."]},
     {"draw": s_mir, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.5, "boom", 0.4)],
      "narr": ["2001년엔 130톤짜리 미르가, 불타며 떨어졌고,"]},
     {"draw": s_next, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.05, "accent", 0.5)],
-     "narr": ["2030년쯤엔, / 축구장만 한 국제우주정거장 차례예요."]},
+     "narr": ["2030년쯤엔, 축구장만 한 / 국제우주정거장 차례예요."]},
     {"draw": s_cthulhu, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.2, "sfx_t": [(0.05, "riser", 0.4), (0.5, "accent_low", 0.55)],
      "narr": ["게다가 공포 소설 속 괴물이 잠든 도시도, / 바로 이 근처래요."]},
     {"draw": s_share, "flash": True, "nohead": True, "min": 2.2, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "pop", 0.6), (0.75, "pop", 0.6)],
