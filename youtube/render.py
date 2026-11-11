@@ -120,6 +120,7 @@ def scene_content(c, sc, lt):
     """장면 그림(로고·자막 제외). 화면 흔들림 반영."""
     bg = G.background()
     f = bg.copy()
+    sc._now = lt  # 움직이는 배경(bgvideo)용 장면 시각
     sc.draw(f, lt)
     cx, cy, z = sc.camera_at(lt)
     if z > 1.001:
@@ -306,10 +307,22 @@ def write_review(c, out):
 def sfx_events(c):
     """전체 영상 기준 효과음 이벤트: 장면 전환 '슉' + 장면별 요소"""
     ev = []
+    import re
     for sc in c.scenes:
-        if sc.idx > 1 and sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "whoosh")):
-            ev.append((sc.start - 0.18, sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "whoosh")), 0.25))  # 전환음 절반 (EP012 피드백)
+        # 2026-11-11: 전환 '쓱'은 기본으로 빼고(필요하면 transition_sfx로 지정), 중요 대사에 강조음
+        tr = sc.spec.get("transition_sfx", c.ep.get("transition_sfx", "none"))
+        if sc.idx > 1 and tr and tr != "none":
+            ev.append((sc.start - 0.18, tr, 0.25))
         ev += [(sc.start + t, n, v) for t, n, v in sc.sfx_events()]
+        if c.ep.get("emphasis_sfx", True) and not sc.spec.get("no_emphasis"):
+            for text, (a, b) in zip(getattr(sc, "narration", []), getattr(sc, "lines", [])):
+                plain = text.replace("[낮게]", "")
+                m = re.search(r"!!|\*\*", plain)
+                if not m:
+                    continue
+                pos = len(re.sub(r"!!|\*\*", "", plain[:m.start()])) / max(1, len(re.sub(r"!!|\*\*", "", plain)))
+                name = "accent_low" if m.group() == "!!" else "accent"
+                ev.append((sc.start + a + (b - a) * pos, name, 0.55 if name == "accent_low" else 0.45))
     return ev
 
 

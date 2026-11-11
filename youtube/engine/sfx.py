@@ -128,8 +128,33 @@ def laugh():
     return np.concatenate(out)
 
 
+# ── 강조용 무난한 효과음 (2026-11-11: 전환 '쓱' 대신 중요 대사 · 숫자에) ──────────────
+def accent():
+    """'톡' — 부드러운 나무 클릭 + 아주 짧은 저음 (긍정 · 일반 강조)"""
+    t = _t(0.22)
+    click = np.sin(2 * np.pi * 1800 * t) * _env(len(t), 0.001, 0.012)
+    body = np.sin(2 * np.pi * (220 * np.exp(-t * 6) + 140) * t) * _env(len(t), 0.002, 0.06)
+    return (click * 0.35 + body * 0.7) * 0.8
+
+
+def accent_low():
+    """'둥' — 낮고 묵직한 짧은 울림 (손실 · 경고 · 충격 숫자)"""
+    t = _t(0.5)
+    f = 90 * np.exp(-t * 3) + 48
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(len(t), 0.004, 0.18)
+    air = _lp(_noise(len(t), 3), 40) * _env(len(t), 0.002, 0.03) * 0.25
+    return (body + air) * 0.9
+
+
+def reveal():
+    """'샤랑' — 부드러운 종소리 두 겹 (정답 · 결과 공개)"""
+    t = _t(0.9)
+    x = sum(np.sin(2 * np.pi * fr * t) * a for fr, a in ((880, 0.5), (1320, 0.3), (1760, 0.15)))
+    return x * _env(len(t), 0.004, 0.35) * 0.55
+
+
 BANK = {k: v for k, v in globals().items() if k in
-        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh".split()}
+        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh accent accent_low reveal".split()}
 _cache = {}
 
 

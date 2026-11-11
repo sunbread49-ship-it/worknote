@@ -217,7 +217,17 @@ class Editorial(Scene):
     def base(self, f):
         bg = self.spec.get("bg") or {"kind": "grain", "tone": "navy"}
         self.paper = bg.get("kind") == "paper"
-        if bg.get("kind") == "photo":
+        if bg.get("kind") in ("video", "motion", "parallax"):  # 움직이는 배경 (2026-11-11)
+            from . import bgvideo
+            f.paste(bgvideo.at(bg, getattr(self, "_now", 0.0)).convert("RGBA"), (0, 0))
+            if bg.get("kind") == "video" and not self.spec.get("credit"):
+                self.spec["credit"] = bgvideo.credit(bg["file"])
+            elif bg.get("kind") == "parallax" and not self.spec.get("credit"):
+                _, cr = photo_backdrop({"kind": "photo", "file": bg["file"]})
+                self.spec["credit"] = cr
+            self.paper = False
+            self.fg, self.acc, self.dim, self.off = S.FG, Y, (200, 204, 214), (90, 94, 108)
+        elif bg.get("kind") == "photo":
             im, cr = photo_backdrop(bg)
             f.paste(im, (0, 0))
             if cr and not self.spec.get("credit"):
@@ -2499,3 +2509,102 @@ class Flow(Editorial):
 
 
 TYPES.update({"qa": QA, "flow": Flow})
+
+
+# ── 논문 하이라이트 (2026-11-11 사용자 요청): 원문 일부를 재구성한 논문 지면 + 형광펜 + 확대 + 번역 카드 + 빨간 강조 ──────
+@lru_cache(maxsize=8)
+def _paper_page(key):
+    sp = json.loads(key)
+    pw, ph = 980, 1300
+    pg = Image.new("RGBA", (pw, ph), (246, 244, 238, 255))
+    d = ImageDraw.Draw(pg)
+    x, y = 70, 60
+    G.blit(pg, T(sp.get("journal", ""), 24, (110, 110, 120), "SemiBold"), (x, y))
+    G.blit(pg, T(str(sp.get("year", "")), 24, (110, 110, 120), "SemiBold"), (pw - 70, y), 1, "rt")
+    y += 60
+    tt = T(sp["title"], 40, (24, 26, 34), "ExtraBold", max_w=pw - 140, line_gap=1.25)
+    G.blit(pg, tt, (x, y))
+    y += tt.height + 22
+    G.blit(pg, T(sp.get("authors", ""), 24, (90, 92, 104), "Medium", max_w=pw - 140), (x, y))
+    y += 70
+    d.line((x, y, pw - 70, y), fill=(200, 196, 186, 255), width=2)
+    y += 30
+    G.blit(pg, T(sp.get("section") or "Abstract", 28, (24, 26, 34), "ExtraBold"), (x, y))
+    y += 56
+    rng = np.random.default_rng(len(sp["quote_en"]))
+    hl_y = None
+    for i in range(22):
+        if i == (sp.get("quote_row") or 6):
+            q = T(sp["quote_en"], 27, (24, 26, 34), "SemiBold", max_w=pw - 140, line_gap=1.45)
+            hl_y = (y, q.width, q.height)
+            G.blit(pg, q, (x, y))
+            y += q.height + 18
+            continue
+        wl = int((pw - 140) * (0.55 + 0.45 * rng.random())) if i % 5 != 4 else int((pw - 140) * 0.4)
+        d.rounded_rectangle((x, y + 8, x + wl, y + 20), 6, fill=(206, 204, 198, 255))
+        y += 36
+        if y > ph - 60:
+            break
+    return pg, hl_y
+
+
+class PaperQuote(Editorial):
+    """논문 하이라이트. journal, year, title(원제), authors, quote_en(인용 문장 그대로), quote_ko(번역, **강조**),
+    red(빨간 강조 문구 — 'stamp'는 공통 장치 이름이라 피함), on: [형광펜, 번역 카드, 강조] 등장 문장, note(출처 표기)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        sp.setdefault("bg", {"kind": "motion", "style": "particles", "tone": "navy", "dark": 0.2})
+        self.base(f)
+        key = json.dumps({k: sp.get(k) for k in ("journal", "year", "title", "authors", "quote_en", "quote_row", "section")},
+                         ensure_ascii=False, sort_keys=True)
+        pg, (qy, qw, qh) = _paper_page(key)
+        on = sp.get("on", [1, 2, 3])
+        t_hl, t_card, t_st = (self.line_start(o) for o in (on + [on[-1]] * 3)[:3])
+        # 형광펜이 문장을 따라 칠해짐
+        k = G.ease_out(G.clamp((t - t_hl - 0.2) / 1.0))
+        page = pg.copy()
+        if k > 0:
+            hl = Image.new("RGBA", page.size, (0, 0, 0, 0))
+            ImageDraw.Draw(hl).rectangle((64, qy - 4, 64 + (qw + 12) * k, qy + qh + 2), fill=(255, 214, 60, 120))
+            page = Image.alpha_composite(page, hl)
+        # 카메라: 지면 전체 → 인용 문장 쪽으로 확대
+        z = 1.0 + 0.45 * G.ease_out(G.clamp((t - t_hl) / 2.2))
+        sc = 0.78 * z
+        pw, ph = int(page.width * sc), int(page.height * sc)
+        im = page.resize((pw, ph), Image.LANCZOS).rotate(-1.5, expand=True, resample=Image.BICUBIC, fillcolor=(0, 0, 0, 0))
+        fx = sp.get("page_x", 520)
+        e = (z - 1) / 0.45
+        cy = (qy + qh / 2) * sc
+        y0 = 150 * (1 - e) + (S.H * 0.5 - cy) * e
+        k0 = G.ease_out(G.clamp(t / 0.5))
+        shadow(f, im, (fx, y0 + (1 - k0) * 60), "mt", k0, blur=30, alpha=0.7)
+        # 번역 카드
+        kc = G.ease_out(G.clamp((t - t_card) / 0.4))
+        if kc > 0:
+            cw = 780
+            en = T(sp["quote_en"], 26, (200, 206, 220), "Medium", max_w=cw - 80, line_gap=1.35)
+            ko = _hl_text(sp["quote_ko"], sp.get("ko_size", 48), max_w=cw - 80, align="left", line_gap=1.25)
+            chh = en.height + ko.height + 120
+            card = Image.new("RGBA", (cw, chh), (0, 0, 0, 0))
+            ImageDraw.Draw(card).rounded_rectangle((0, 0, cw - 1, chh - 1), 26, fill=(14, 16, 26, 238), outline=(255, 214, 60, 255), width=3)
+            card.alpha_composite(en, (40, 36))
+            card.alpha_composite(ko, (40, 36 + en.height + 34))
+            shadow(f, card, (S.W - 80, 260 + (1 - kc) * 30), "rt", kc, blur=24, alpha=0.7)
+        ks = G.ease_out(G.clamp((t - t_st - 0.3) / 0.3))
+        if ks > 0 and sp.get("red"):
+            st = G.pill(sp["red"], "Black", 64, (255, 255, 255), (220, 40, 40), pad=(30, 12), radius=10)
+            st = st.rotate(-3, expand=True, resample=Image.BICUBIC)
+            shadow(f, st, (S.W - 120, 750 + (1 - ks) * 20), "rt", ks, blur=16, alpha=0.6)
+        G.blit(f, T(sp.get("note", "논문 원문 일부를 재구성한 화면 · 인용 문장만 원문 그대로"), 22, (170, 176, 192), "SemiBold"),
+               (S.W - 80, 205), 1, "rt")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        on = self.spec.get("on", [1, 2, 3])
+        on = (on + [on[-1]] * 3)[:3]
+        return [(self.line_start(on[0]) + 0.2, "accent", 0.4), (self.line_start(on[1]), "reveal", 0.5),
+                (self.line_start(on[2]) + 0.3, "accent_low", 0.55)]
+
+
+TYPES.update({"paper": PaperQuote})

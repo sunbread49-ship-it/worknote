@@ -701,8 +701,8 @@ class Kinetic(Scene):
         return out
 
     def extra_sfx(self):
-        return [(self.line_start(it.get("on", 1)) + it.get("offset", 0), it.get("sfx", "whoosh"), 0.18)
-                for it in self.spec["items"] if it.get("sfx", "whoosh") != "none"]
+        return [(self.line_start(it.get("on", 1)) + it.get("offset", 0), it.get("sfx", "accent"), 0.4)  # 2026-11-11: 쓱 → 톡
+                for it in self.spec["items"] if it.get("sfx", "accent") != "none"]
 
 
 class Punch(Scene):
