@@ -82,7 +82,7 @@ def glow_pin(f, xy, t, col=GOLD, label=None, size=16):
 
 def pill_tag(f, text, t, y=420, col=GOLD):
     k = G.ease_out(G.clamp(t / 0.25))
-    p = G.pill(text, "Black", 50, (12, 10, 6), col, pad=(28, 10))
+    p = G.pill(text, "Black", 66, (12, 10, 6), col, pad=(38, 14))  # 상단 띠 크게 (2026-11-12)
     K.drop(f, p, (CX, y - (1 - k) * 20), "mt", k, blur=12)
 
 
@@ -112,7 +112,7 @@ def s_hook(f, t, sc):
     full_photo(f, "rough_sea", t, dark=0.35, zoom=0.1)
     f.alpha_composite(Image.new("RGBA", (W, H), (20, 0, 0, 60)))
     if int(t * 3) % 2 == 0:  # 깜빡이는 SOS
-        K.drop(f, G.pill("SOS", "Black", 90, (255, 255, 255), (220, 30, 30), pad=(40, 12)), (CX, 360), "mt", 1, blur=20)
+        K.drop(f, G.pill("SOS", "Black", 110, (255, 255, 255), (220, 30, 30), pad=(40, 12)), (CX, 360), "mt", 1, blur=20)
     big(f, "여기서 조난당하면\n가장 가까운 사람은\n우주에 있다", 960, 112, hl="우주")
     K.credit(f, K.credit_of("rough_sea"))
 
@@ -270,7 +270,7 @@ def s_why_burn(f, t, sc):
     f.alpha_composite(ov.filter(ImageFilter.GaussianBlur(5)))
     f.alpha_composite(ov)
     pill_tag(f, "왜 하필 여기로?", t, col=CORAL)
-    big(f, "다 타지 않은 조각이\n비처럼 쏟아진다", 1250, 96, hl="조각", o=G.appear(t, 1.0, 0.3))
+    big(f, "다 타지 않은 조각이\n비처럼 쏟아진다", 720, 96, hl="조각", o=G.appear(t, 1.0, 0.3))
 
 
 def s_why_aim(f, t, sc):
@@ -295,7 +295,7 @@ def s_mir(f, t, sc):
     name = "mir" if (K.PHOTOS / "mir.json").exists() else "iss_sts132"
     full_photo(f, name, t, dark=0.3, zoom=0.14, tint=(80, 20, 0, 40))
     k = G.ease_out(G.clamp(t / 0.4))
-    K.drop(f, G.pill("2001년 · 러시아 미르 우주정거장", "Black", 50, (255, 255, 255), (200, 40, 40), pad=(28, 12)),
+    K.drop(f, G.pill("2001년 · 러시아 미르", "Black", 66, (255, 255, 255), (200, 40, 40), pad=(38, 14)),
            (CX, 430 + (1 - k) * 20), "mt", k, blur=12)
     big(f, "130톤이\n불타며 추락", 1100, 124, hl="130톤", o=G.appear(t, 0.5, 0.3))
     K.credit(f, K.credit_of(name))
@@ -304,7 +304,7 @@ def s_mir(f, t, sc):
 def s_next(f, t, sc):
     full_photo(f, "iss_sts132", t + 3, dark=0.35, zoom=0.1, focus=(0.5, 0.45))
     k = G.ease_out(G.clamp(t / 0.4))
-    K.drop(f, G.pill("다음 차례는?", "Black", 54, (12, 10, 6), GOLD, pad=(30, 12)), (CX, 430 + (1 - k) * 20), "mt", k, blur=12)
+    K.drop(f, G.pill("다음 차례는?", "Black", 66, (12, 10, 6), GOLD, pad=(38, 14)), (CX, 430 + (1 - k) * 20), "mt", k, blur=12)
     big(f, "2030년쯤\n축구장만 한\n국제우주정거장", 1100, 104, hl="국제우주정거장", o=G.appear(t, 0.3, 0.3))
     K.credit(f, K.credit_of("iss_sts132"))
 
