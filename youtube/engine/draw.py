@@ -59,16 +59,45 @@ def wrap(text: str, fnt, max_w: int):
     """공백 기준 줄바꿈(한글 어절 단위). '\n'은 강제 줄바꿈."""
     lines = []
     for para in text.split("\n"):
-        cur = ""
-        for word in para.split(" "):
-            trial = word if not cur else cur + " " + word
-            if fnt.getlength(trial) <= max_w or not cur:
-                cur = trial
-            else:
-                lines.append(cur)
-                cur = word
-        lines.append(cur)
+        lines += _balanced(para.split(" "), fnt, max_w)
     return lines
+
+
+def _balanced(words, fnt, max_w):
+    """줄 수는 최소로, 그 안에서 줄 길이를 고르게 + 쉼표 · 마침표 뒤에서 끊기를 선호 (2026-11-11: 한 줄씩 매끄럽게)"""
+    n = len(words)
+    if n <= 1 or fnt.getlength(" ".join(words)) <= max_w:
+        return [" ".join(words)]
+    sp = fnt.getlength(" ")
+    wl = [fnt.getlength(w) for w in words]
+    INF = float("inf")
+    best = [(INF, INF)] * (n + 1)   # (줄 수, 비용)
+    prev = [0] * (n + 1)
+    best[0] = (0, 0.0)
+    for j in range(1, n + 1):
+        width = -sp
+        for i in range(j - 1, -1, -1):
+            width += wl[i] + sp
+            if width > max_w and i < j - 1:
+                break
+            cnt, cost = best[i]
+            if cnt == INF:
+                continue
+            slack = max(0.0, max_w - width) / max_w
+            c = slack ** 2
+            if j < n and words[j - 1][-1:] in ",.?!·":
+                c -= 0.35          # 구두점 뒤에서 끊으면 가산점
+            cand = (cnt + 1, cost + c)
+            if cand < best[j]:
+                best[j], prev[j] = cand, i
+    out, j = [], n
+    while j > 0:
+        i = prev[j]
+        out.append(" ".join(words[i:j]))
+        j = i
+    out = out[::-1]
+    # 줄 수가 같다면 줄 길이를 최대한 고르게: 마지막 줄 비용을 덜 따지는 대신 전체 균형 재계산
+    return out
 
 
 _EMOJI_RE = __import__("re").compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\uFE0F]")

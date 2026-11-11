@@ -107,8 +107,11 @@ def backdrop(sp):
 
 
 # ── 공통 그리기 도구 ────────────────────────────────────────────
+TEXT_SCALE = 1.12  # 2026-11-11: 화면 글자 전반 키우기 (직관 · 가독성)
+
+
 def T(text, size, color=S.FG, weight="Black", **kw):
-    return G.text_img(text, weight, size, color, **kw)
+    return G.text_img(text, weight, int(round(size * TEXT_SCALE)), color, **kw)
 
 
 def shadow(f, im, xy, anchor="lt", op=1.0, blur=10, alpha=0.6):
@@ -363,6 +366,13 @@ class HBars(Editorial):
         vmax = sp.get("vmax") or max(abs(r["value"]) for r in rows)
         x0, wmax = 300, S.W - 600
         y = yy + 70
+        bh, gap = sp.get("bar_h", 58), sp.get("row_gap", 40)
+        lab_h = T("가", 36, self.fg, "ExtraBold").height + 10
+        need = len(rows) * (lab_h + bh + gap) - gap
+        if y + need > 860:  # 글자가 커진 만큼 줄 간격을 줄여 자막 위에서 끝나게
+            room = max(200, 860 - y)
+            sc_ = room / need
+            bh, gap = max(22, int(bh * sc_)), max(8, int(gap * sc_))
         for r in rows:
             t0 = self.line_start(r.get("on", 1)) + r.get("offset", 0)
             k = G.ease_out((t - t0) / 0.7)
@@ -373,13 +383,13 @@ class HBars(Editorial):
             y += lab.height + 10
             bw = max(8, int(wmax * abs(r["value"]) / vmax * k))
             if k > 0:
-                G.blit(f, Image.new("RGBA", (bw, sp.get("bar_h", 58)), c + (255,)), (x0, y))
+                G.blit(f, Image.new("RGBA", (bw, bh), c + (255,)), (x0, y))
                 txt = T(counter(r.get("text", str(r["value"])), (t - t0) / 0.7), 64, self.acc if hl else self.fg, "Black")
                 if bw + txt.width + 30 < wmax + 220:
-                    shadow(f, txt, (x0 + bw + 24, y + sp.get("bar_h", 58) / 2), "lm", min(1, k * 2), alpha=0 if self.paper else 0.6)
+                    shadow(f, txt, (x0 + bw + 24, y + bh / 2), "lm", min(1, k * 2), alpha=0 if self.paper else 0.6)
                 else:
                     shadow(f, txt, (x0 + bw, y - 8), "rb", min(1, k * 2), alpha=0 if self.paper else 0.6)
-            y += sp.get("bar_h", 58) + sp.get("row_gap", 40)
+            y += bh + gap
         self.finish(f, t)
 
 
@@ -929,13 +939,18 @@ class KPI(Editorial):
         y = 300
         for j, kp in enumerate(sp["kpis"]):
             o = G.appear(t, self.line_start(kp.get("on", 1)) + 0.1, 0.35)
-            lab = T(kp["label"], 38, self.fg, "ExtraBold")
+            lab = T(kp["label"], 38, self.fg, "ExtraBold", max_w=660)
             G.blit(f, lab, (180, y), o)
             y += lab.height + 6
             kc = _rc(kp.get("color"), CORAL)
             if not self.paper and kc == NAVY:
                 kc = (205, 210, 222)
-            v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), 132, kc, NAVY if self.paper else (0, 0, 0), off=(5, 5))
+            vs = 132
+            while True:  # 왼쪽 칸(660px)을 넘으면 줄여서 막대와 겹치지 않게
+                v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), vs, kc, NAVY if self.paper else (0, 0, 0), off=(5, 5))
+                if v.width <= 680 or vs <= 70:
+                    break
+                vs -= 8
             G.blit(f, v, (172, y), o)
             y += v.height + 40
         bars = sp["bars"]
@@ -1331,13 +1346,18 @@ class KPI(Editorial):
         y = 300
         for j, kp in enumerate(sp["kpis"]):
             o = G.appear(t, self.line_start(kp.get("on", 1)) + 0.1, 0.35)
-            lab = T(kp["label"], 38, self.fg, "ExtraBold")
+            lab = T(kp["label"], 38, self.fg, "ExtraBold", max_w=660)
             G.blit(f, lab, (180, y), o)
             y += lab.height + 6
             kc = _rc(kp.get("color"), CORAL)
             if not self.paper and kc == NAVY:
                 kc = (205, 210, 222)
-            v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), 132, kc, NAVY if self.paper else (0, 0, 0), off=(5, 5))
+            vs = 132
+            while True:  # 왼쪽 칸(660px)을 넘으면 줄여서 막대와 겹치지 않게
+                v = riso_text(counter(kp["value"], (t - self.line_start(kp.get("on", 1))) / 0.9), vs, kc, NAVY if self.paper else (0, 0, 0), off=(5, 5))
+                if v.width <= 680 or vs <= 70:
+                    break
+                vs -= 8
             G.blit(f, v, (172, y), o)
             y += v.height + 40
         bars = sp["bars"]
@@ -1577,7 +1597,11 @@ class Checklist(Editorial):
                 continue
             ck = _check(52)
             G.blit(f, ck, (x, y + 8), o)
-            shadow(f, T(it["text"], 62, S.FG, "Black", highlight=it.get("highlight", ""), hl_fill=Y), (x + 78, y), "lt", o)
+            mw = (sp.get("icon_x", 1450) - 300 - x - 78) if sp.get("icon") else 1500
+            tx = T(it["text"], 62, S.FG, "Black", highlight=it.get("highlight", ""), hl_fill=Y)
+            if tx.width > mw:  # 그림과 겹치면 한 줄을 유지한 채 줄이기
+                tx = tx.resize((int(mw), int(tx.height * mw / tx.width)), Image.LANCZOS)
+            shadow(f, tx, (x + 78, y), "lt", o)
             y += 96
         ic = sp.get("icon")
         if ic:
@@ -2039,11 +2063,12 @@ TYPES.update({"matrix": Matrix})
 
 
 # ── EP012 벤치마킹: 인용 카드 · X 게시물 카드 · 도미노 ───────────────────
-def _hl_text(text, size, weight="Black", fg=None, max_w=1500, align="center", line_gap=1.2):
-    """'**노랑**' · '!!빨강!!' 강조가 들어간 여러 줄 텍스트"""
+def _hl_text(text, size, weight="Black", fg=None, max_w=1500, align="center", line_gap=1.2, emph=1.12):
+    """'**노랑**' · '!!빨강!!' 강조가 들어간 여러 줄 텍스트.
+    2026-11-11: 글자 전반 TEXT_SCALE배 · 강조 부분은 emph배 더 크게(아래선 맞춤) · 가장 긴 줄이 max_w를 넘으면 전체를 줄여 한 줄 유지"""
     import re
     fg = fg or S.FG
-    fnt = S.font(weight, size)
+    size = int(round(size * TEXT_SCALE))
     lines = text.replace("\\n", "\n").split("\n")
     rows = []
     for ln in lines:
@@ -2052,22 +2077,35 @@ def _hl_text(text, size, weight="Black", fg=None, max_w=1500, align="center", li
             if not part:
                 continue
             if part.startswith("**"):
-                segs.append((part[2:-2], Y))
+                segs.append((part[2:-2], Y, True))
             elif part.startswith("!!"):
-                segs.append((part[2:-2], (255, 96, 96)))
+                segs.append((part[2:-2], (255, 96, 96), True))
             else:
-                segs.append((part, fg))
+                segs.append((part, fg, False))
         rows.append(segs)
-    lh = int(size * line_gap)
-    asc, desc = fnt.getmetrics()
-    widths = [sum(fnt.getlength(t) for t, _ in r) for r in rows]
+
+    def measure(sz):
+        f0, f1 = S.font(weight, sz), S.font(weight, int(sz * emph))
+        return f0, f1, [sum((f1 if e else f0).getlength(t) for t, _, e in r) for r in rows]
+
+    f0, f1, widths = measure(size)
+    while max(widths) > max_w and size > 24:
+        size = int(size * 0.94)
+        f0, f1, widths = measure(size)
+    has_emph = any(e for r in rows for *_, e in r)
+    asc0, desc0 = f0.getmetrics()
+    asc1, desc1 = f1.getmetrics()
+    asc = asc1 if has_emph else asc0
+    lh = int(size * (emph if has_emph else 1) * line_gap)
     W_ = int(max(widths)) + 8
-    im = Image.new("RGBA", (W_, lh * (len(rows) - 1) + asc + desc + 8), (0, 0, 0, 0))
+    im = Image.new("RGBA", (W_, lh * (len(rows) - 1) + asc + max(desc0, desc1) + 8), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     for i, (r, w) in enumerate(zip(rows, widths)):
         x = 4 if align == "left" else (W_ - w) / 2
-        for t_, c in r:
-            d.text((x, 4 + i * lh), t_, font=fnt, fill=c)
+        base = 4 + i * lh + asc   # 아래선(기준선) 맞춤
+        for t_, c, e in r:
+            fnt = f1 if e else f0
+            d.text((x, base - (asc1 if e else asc0)), t_, font=fnt, fill=c)
             x += fnt.getlength(t_)
     return im
 
@@ -2150,7 +2188,14 @@ class XPost(Editorial):
         self.spec["bg"] = bg
         self.base(f)
         k = G.ease_out(t / 0.45)
-        cw, ch = 1320, sp.get("card_h", 600)
+        cw = 1320
+        plain = sp.get("plain", False)
+        est = 190 + (T(sp["big"], 96, S.FG, "Black").height + 10 if sp.get("big") else 0)
+        if sp.get("en") and not plain:
+            est += T(sp["en"], 34, (210, 214, 226), "Medium", max_w=cw - 120, line_gap=1.35).height + 24
+        if sp.get("ko"):
+            est += _hl_text(sp["ko"], sp.get("ko_size", 76 if plain else 52), max_w=cw - 120, align="left").height + (10 if plain else 44)
+        ch = max(sp.get("card_h", 0), est + 40)  # 글자 크기에 맞춰 카드 높이 자동
         card = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
         d = ImageDraw.Draw(card)
         d.rounded_rectangle((0, 0, cw - 1, ch - 1), 30, fill=(16, 18, 26, 240), outline=(70, 76, 96, 255), width=2)
@@ -2164,7 +2209,6 @@ class XPost(Editorial):
         if sp.get("big"):
             bt = T(sp["big"], 96, S.FG, "Black")
             card.alpha_composite(bt, (60, y)); y += bt.height + 10
-        plain = sp.get("plain", False)  # plain: 원문 문장 · '번역' 표시 없이 한글 한 줄만 크게 (EP013 피드백)
         if sp.get("en") and not plain:
             en = T(sp["en"], 34, (210, 214, 226), "Medium", max_w=cw - 120, line_gap=1.35)
             card.alpha_composite(en, (60, y)); y += en.height + 24
@@ -2317,11 +2361,20 @@ class QA(Editorial):
         G.blit(f, fig, (430 - (1 - k) * 40, S.H + 10), k, "mb")
         x, y = 880, sp.get("top", 170)
         lw = 860
+        # 글자 크기에 맞춰 전체 높이를 재고, 자막(약 940) 위에서 끝나도록 위로 당김
+        if sp.get("compare"):  # 도식(막대)까지 들어가면 글자를 한 단계 낮춰 전체가 자막 위에 들어오게
+            sp.setdefault("q_size", 64)
+            sp.setdefault("a_size", 56)
+        _q = _hl_text(sp["q"], sp.get("q_size", 74), max_w=lw, align="left", line_gap=1.22)
+        _a = _hl_text(sp["a"], sp.get("a_size", 64), max_w=lw, align="left", line_gap=1.22)
+        step = 70
+        _h = 60 + _q.height + 60 + 56 + _a.height + 30 + len(sp.get("compare", [])) * step + (60 if sp.get("sub") else 0)
+        y = max(150, min(y, 830 - _h))
         G.blit(f, T("QUESTION", 30, (214, 172, 96), "ExtraBold"), (x, y), k)
         ImageDraw.Draw(f).line((x + 190, y + 18, x + 190 + 120 * k, y + 18), fill=(214, 172, 96, 255), width=2)
         q = _hl_text(sp["q"], sp.get("q_size", 74), max_w=lw, align="left", line_gap=1.22)
         shadow(f, q, (x, y + 60 + (1 - k) * 20), "lt", k)
-        y2 = y + 60 + q.height + 70
+        y2 = y + 60 + q.height + 60
         a0 = self.line_start(sp.get("a_on", 2))
         ka = G.ease_out((t - a0) / 0.5)
         if ka > 0:
@@ -2346,7 +2399,7 @@ class QA(Editorial):
                     bw = int((lw - 220) * abs(c["value"]) / vmax * kc)
                     ImageDraw.Draw(f).rounded_rectangle((x, yy + 44, x + max(bw, 6), yy + 44 + 26), 6, fill=col + (255,))
                     G.blit(f, T(c.get("text", ""), 40, col, "Black"), (x + max(bw, 6) + 18, yy + 57), kc, "lm")
-                    yy += 88
+                    yy += step
         if sp.get("figure_credit", True):
             self.spec.setdefault("credit", "조각: 오귀스트 로댕 '생각하는 사람' · 사진 AndrewHorne, Public domain (Wikimedia Commons)")
         self.finish(f, t)

@@ -138,12 +138,13 @@ def accent():
 
 
 def accent_low():
-    """'둥' — 낮고 묵직한 짧은 울림 (손실 · 경고 · 충격 숫자)"""
-    t = _t(0.5)
-    f = 90 * np.exp(-t * 3) + 48
-    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(len(t), 0.004, 0.18)
-    air = _lp(_noise(len(t), 3), 40) * _env(len(t), 0.002, 0.03) * 0.25
-    return (body + air) * 0.9
+    """'퉁' — 묵직하지만 휴대폰 스피커에서도 들리게 중음을 섞은 짧은 울림 (손실 · 경고 · 빨간 강조)"""
+    t = _t(0.42)
+    f = 160 * np.exp(-t * 5) + 90
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(len(t), 0.003, 0.14)
+    mid = np.sin(2 * np.pi * np.cumsum(f * 2.7) / SR) * _env(len(t), 0.002, 0.06) * 0.5
+    snap = _lp(_noise(len(t), 3), 6) * _env(len(t), 0.001, 0.012) * 0.6
+    return (body + mid + snap) * 0.95
 
 
 def reveal():
