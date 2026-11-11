@@ -154,8 +154,34 @@ def reveal():
     return x * _env(len(t), 0.004, 0.35) * 0.55
 
 
+def flyby():
+    """'슈우웅~' 비행기가 지나가는 소리 (경로가 그려질 때) — 노이즈 대역이 올라갔다 내려감"""
+    t = _t(1.3)
+    x = _noise(len(t), 11)
+    out = np.zeros_like(t)
+    f = 400 + 1400 * np.sin(np.pi * t / 1.3) ** 2
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    out = _lp(x, 3) * (0.55 + 0.45 * np.sin(ph)) * np.sin(np.pi * t / 1.3) ** 2
+    hum = np.sin(2 * np.pi * np.cumsum(180 + 60 * np.sin(np.pi * t / 1.3)) / SR) * np.sin(np.pi * t / 1.3) ** 2 * 0.25
+    return (out * 0.35 + hum) * 0.9
+
+
+def zip_():
+    """'쓰윽' 짧은 선 긋기 (점선 직선이 그려질 때)"""
+    t = _t(0.45)
+    return _lp(_noise(len(t), 13), 2) * np.sin(np.pi * t / 0.45) ** 2 * 0.3
+
+
+def wow():
+    """'뾰-옹↑' 놀라움 상승음 (반전 · 큰 숫자 직전)"""
+    t = _t(0.5)
+    f = 300 * 2 ** (t / 0.5 * 1.6)
+    return np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(len(t), 0.01, 0.3) * 0.5
+
+
 BANK = {k: v for k, v in globals().items() if k in
-        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh accent accent_low reveal".split()}
+        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh accent accent_low reveal flyby wow".split()}
+BANK["zip"] = zip_
 _cache = {}
 
 

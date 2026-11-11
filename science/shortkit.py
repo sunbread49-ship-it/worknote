@@ -228,7 +228,10 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
         w.setsampwidth(2)
         w.setframerate(48000)
         w.writeframes((np.clip(voice, -1, 1) * 32767).astype("<i2").tobytes())
-    ev = [(sc["start"], "accent", 0.4) for sc in scenes if sc.get("flash")]  # 2026-11-11: 전환 쓱 제거 · 번쩍 전환과 강조에만 '톡'
+    ev = []  # 2026-11-11: 장면 전환 효과음 없음 — 내용(경로 · 숫자 · 반전)에 맞춘 효과음만 (장면의 sfx_t: [(장면 시작 기준 초, 이름, 볼륨)] 또는 sfx_fn(sc))
+    for sc in scenes:
+        for at, nm, vol in sc.get("sfx_t", []) + (sc["sfx_fn"](sc) if sc.get("sfx_fn") else []):
+            ev.append((sc["start"] + at, nm, vol))
     for sc in scenes:
         for at, nm, vol in sc.get("sfx", []):
             ev.append((sc["start"] + sc["L"][0] + at, nm, vol))
@@ -236,10 +239,10 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
     tail = 0.3 if cover else 0.0
     SFX.build_track(ev, total + tail, out / "sfx.wav")
     from engine import bgm
-    bgm.generate(total + tail, out / "bgm.wav")
+    bgm.bright(total + tail, out / "bgm.wav")  # 2026-11-11: 밝고 두근거리는 배경음
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
            "-i", str(out / "voice.wav"), "-i", str(out / "sfx.wav"), "-i", str(out / "bgm.wav"),
-           "-filter_complex", "[3:a]volume=0.10[b];[1:a][2:a][b]amix=inputs=3:normalize=0,apad,loudnorm=I=-14:TP=-1.5[a]",
+           "-filter_complex", "[3:a]volume=0.16[b];[1:a][2:a][b]amix=inputs=3:normalize=0,apad,loudnorm=I=-14:TP=-1.5[a]",
            "-map", "0:v", "-map", "[a]", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
            "-c:a", "aac", "-b:a", "192k", "-shortest", str(out / "short.mp4")]
     pr = subprocess.Popen(cmd, stdin=subprocess.PIPE)
