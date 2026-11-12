@@ -545,3 +545,14 @@ shorts:
 
     ※ 투자 교육 목적이며 매수·매도 추천이 아닙니다.'
   cover: {style: punch, photo: bess_site, tone: gold, top: 'AI 데이터센터에 배터리가 왜 필요할까?', label: ESS 원리 · 그림으로 보기, big: 남으면 채우고 모자라면 꺼내 쓴다, sub: 그 안은 전부 2차전지}
+thumbs10:
+- {p: P01, photo: ev_snow, top: '2차전지가 고점을 되찾아도', bottom: '레버리지는 -63%', hl: '-63%', sticker: '버티면 끝?'}
+- {p: P02, photo: bess_site, top: '2차전지 개미가 지금 꼭 볼', num: '3', unit: '가지 신호'}
+- {p: P03, photo: ev_snow, label: '2023.7 고점 → 2026.11', before: '1,000만', after: '39만', sub: '산 건 2차전지 레버리지 하나'}
+- {p: P04, photo: musk, focus: [0.62, 0.25], quote: '2027년 메가팩은 거의 다 팔렸다', who: '일론 머스크 · 테슬라 3분기 실적 발표', top: '배터리는 매진인데', bottom: '내 레버리지는 -96%', hl: '-96%'}
+- {p: P05, photo: ev_snow, line1: '2차전지 꼭대기에 1,000만 원', line2: '3년 버텼다면', line3: '결과는…', sticker: '실제 데이터로 계산'}
+- {p: P06, photo: krx_building, top: '에코프로, 한때 7개월에 11.8배', bottom: '지금은 -76%', sticker: '경고!'}
+- {p: P07, photo: bess_site, label: '테슬라 CFO · 3분기 실적 발표', top: '데이터센터 배터리 수요', bottom: '극심합니다', hl: '극심'}
+- {p: P08, a: car, b: ai, top: '전기차 vs AI 데이터센터', bottom: '배터리는 어디로?'}
+- {p: P09, photo: ev_snow, bubble: '버티면… 돌아오겠지?', top: '2차전지 레버리지 -96%', bottom: '진짜 돌아올까?'}
+- {p: P10, photo: bess_site, label: '(ESS 수주잔고 약 160GWh)', top: 'AI가 쓸어 담는', bottom: '2차전지의 정체', hl: '정체'}
