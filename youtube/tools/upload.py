@@ -14,7 +14,7 @@
   롱폼: out/<ep>/video.mp4 + 제목·설명(설명란.txt 기준, 챕터 포함) + 태그 + 대표 썸네일 + 한국어 자막(captions.srt)
   쇼츠: out/<ep>/shorts/shortN.mp4 + episode.yaml shorts[N].yt_title / yt_desc
   결과는 youtube/uploads.json 에 기록(커밋할 것) → 같은 파일을 두 번 올리지 않음
-  --publish-at next → 다음 빈 화·금 18:00 KST 롱폼, 쇼츠는 다음 날부터 하루 1개
+  --publish-at next → 다음 빈 화·금·토 18:00 KST 롱폼, 쇼츠는 다음 날부터 하루 1개
 
 주의
   - API 프로젝트가 YouTube 감사(audit)를 통과하기 전에는 업로드 영상이 '비공개'로 잠긴다.
@@ -151,7 +151,7 @@ def plan(ep_dir, want_long, want_shorts, publish_at, shorts_every):
     return items, out
 
 
-SLOT_DAYS = (1, 4)   # 화(1)·금(4)
+SLOT_DAYS = (1, 4, 5)   # 화(1)·금(4)·토(5)
 SLOT_HOUR = 18       # 18:00 KST
 LOG_PATH = ROOT / "uploads.json"  # git에 커밋되는 업로드 기록 (out/ 은 git 제외라 세션이 바뀌면 사라짐)
 
@@ -161,7 +161,7 @@ def load_log():
 
 
 def next_slot(log, now=None):
-    """이미 예약된 롱폼과 겹치지 않는 다음 화·금 18:00 (최소 3시간 여유)."""
+    """이미 예약된 롱폼과 겹치지 않는 다음 화·금·토 18:00 (최소 3시간 여유)."""
     now = now or dt.datetime.now(KST)
     taken = {v.get("publish_at", "")[:16] for ep in log.values() for k, v in ep.items() if k == "long" and v.get("publish_at")}
     d = now + dt.timedelta(hours=3)
@@ -184,7 +184,7 @@ def main():
     ap.add_argument("episode", nargs="?")
     ap.add_argument("--long", action="store_true")
     ap.add_argument("--shorts", default="", help="예: 1,2,3")
-    ap.add_argument("--publish-at", help="한국 시간 예약 공개. 예: 2026-11-10T18:00 · 'next' = 다음 빈 화·금 18:00")
+    ap.add_argument("--publish-at", help="한국 시간 예약 공개. 예: 2026-11-10T18:00 · 'next' = 다음 빈 화·금·토 18:00")
     ap.add_argument("--shorts-every", default="1d", help="쇼츠 예약 간격 (1d=하루, 6h=6시간)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="이미 올린 것도 다시 올리기")

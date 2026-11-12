@@ -52,15 +52,15 @@
 - 통과 후: 예약 공개까지 완전 자동
 
 ## 정기 일정 (확정)
-- **롱폼: 매주 화·금 18:00 KST** · 쇼츠: 롱폼 다음 날부터 하루 1개 18:00
-- 영상 완성 후 한 번에 예약: `--publish-at next` 가 다음 빈 화·금 18시를 자동으로 고름
+- **롱폼: 매주 화·금·토 18:00 KST** (2026-11-12 변경, 주 3편 · 한도 부족하면 조정) · 쇼츠: 롱폼 다음 날부터 하루 1개 18:00
+- 영상 완성 후 한 번에 예약: `--publish-at next` 가 다음 빈 화·금·토 18시를 자동으로 고름
 - 감사 통과 전에는 비공개로만 올라가므로 → 예약 시간에 스튜디오 앱에서 '공개'로 바꾸기
 - 연결 테스트 완료 (2026-11-06): 비공개 업로드 성공 · 테스트 영상은 삭제
 
 ## 업로드 명령 (참고)
 ```bash
 python tools/upload.py episodes/ep004_templeton_vix --long --shorts 1,2,3 --dry-run               # 미리 보기
-python tools/upload.py episodes/ep005_xxx --long --shorts 1,2,3 --publish-at next                 # 다음 화·금 18시 + 쇼츠 하루 1개
+python tools/upload.py episodes/ep005_xxx --long --shorts 1,2,3 --publish-at next                 # 다음 화·금·토 18시 + 쇼츠 하루 1개
 ```
 - 대표 썸네일: `out/<ep>/thumbnail_pick.png` 가 있으면 그걸, 없으면 `thumbnail.png`
 - 올린 기록: `uploads.json` (중복 업로드 방지, 업로드 후 커밋) · 직접 올린 것도 여기 `manual: true`로 적어 둠
