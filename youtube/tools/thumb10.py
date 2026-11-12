@@ -34,14 +34,17 @@ def txt(text, size, color=WHITE, hl="", hl_color=YEL, stroke=None, maxw=1760):
     return TH.fit(text, size, maxw, color=color, hl=hl, hl_color=hl_color)
 
 
-def bottom_two(f, top, bottom, top_size=96, bot_size=150, top_col=WHITE, bot_col=YEL, hl="", y_bottom=None, x=None):
-    """아래쪽 두 줄 (작은 윗줄 + 큰 아랫줄) — 왼쪽 정렬"""
-    b = txt(bottom, bot_size, bot_col, hl=hl)
-    t = txt(top, top_size, top_col)
-    yb = (y_bottom or H - 60) - b.height
-    xx = x if x is not None else 70
-    TH.shadowed(f, t, (xx, yb - t.height + 6))
-    TH.shadowed(f, b, (xx, yb))
+def bottom_two(f, top, bottom, top_size=150, bot_size=230, top_col=WHITE, bot_col=YEL, hl="", y_bottom=None, x=None):
+    """가운데 아래 두 줄 (2026-11-12: 가운데 정렬 · 글자 크게 — 작은 줄 150, 큰 줄 230 기준, 화면 폭에 맞춰 자동 축소)"""
+    b = txt(bottom, bot_size, bot_col, hl=hl, maxw=1820)
+    t = txt(top, top_size, top_col, maxw=1820)
+    yb = (y_bottom or H - 50) - b.height
+    if x is None:
+        TH.shadowed(f, t, (W / 2, yb - t.height + 14), "mt")
+        TH.shadowed(f, b, (W / 2, yb), "mt")
+    else:
+        TH.shadowed(f, t, (x, yb - t.height + 14))
+        TH.shadowed(f, b, (x, yb))
 
 
 def shade_bottom(f, strength=230, start=0.35):
@@ -53,8 +56,35 @@ def shade_bottom(f, strength=230, start=0.35):
     f.alpha_composite(g)
 
 
-def bg(name, focus=(0.5, 0.5), dark=0.3, gray=0.2):
-    return TH.photo_fill(name, W, H, focus, dark, 0, gray).copy()
+def bg(name, focus=(0.5, 0.5), dark=0.3, gray=0.2, theme="red", chart=None):
+    """매콤한 배경 (2026-11-12): 사진 대비 · 채도 올림 + 테마색 그라데이션 + 가운데 빛 + 강한 비네트 + (선택) 빛나는 폭락 차트"""
+    from PIL import ImageEnhance
+    im = TH.photo_fill(name, W, H, focus, max(0.0, dark - 0.15), 0, 0.0).convert("RGB")
+    im = ImageEnhance.Contrast(im).enhance(1.35)
+    im = ImageEnhance.Color(im).enhance(1.35)
+    f = im.convert("RGBA")
+    c1 = {"red": (190, 20, 20), "gold": (230, 150, 20), "blue": (20, 70, 200), "green": (20, 150, 90)}[theme]
+    g = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(g)
+    for y in range(0, H, 6):  # 위는 테마색, 아래는 검정으로
+        k = y / H
+        d.rectangle((0, y, W, y + 6), fill=c1 + (int(80 * (1 - k)),))
+    f.alpha_composite(g)
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(glow).ellipse((W * 0.2, -H * 0.2, W * 0.8, H * 0.6), fill=(255, 230, 180, 50))
+    f.alpha_composite(glow.filter(ImageFilter.GaussianBlur(160)))
+    if chart:
+        ch = TH.chart_line(chart["series"], chart.get("start"), chart.get("end"), tuple(chart.get("color", (255, 50, 50))), 1700, 620)
+        ch = ch.resize((W, int(ch.height * W / ch.width)), Image.LANCZOS)
+        a = ch.getchannel("A").point(lambda v: int(v * chart.get("alpha", 0.75)))
+        ch.putalpha(a)
+        f.alpha_composite(ch, (0, chart.get("y", 40)))
+    v = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    vd = ImageDraw.Draw(v)
+    for i in range(30):
+        vd.rectangle((i * 14, i * 9, W - i * 14, H - i * 9), outline=(0, 0, 0, int(200 * (1 - i / 30) ** 2)), width=16)
+    f.alpha_composite(v.filter(ImageFilter.GaussianBlur(30)))
+    return f
 
 
 def cutout(name, h):
@@ -68,95 +98,98 @@ def stamp(text, size=64, bgc=RED, fg=WHITE, rot=-6):
     return p.rotate(rot, expand=True, resample=Image.BICUBIC)
 
 
-# ── 패턴별 ───────────────────────────────────────────────────────
+# ── 패턴별 (2026-11-12 v2: 가운데 정렬 · 큰 글씨 · 매콤한 배경) ─────────────────
+def B(sp, name, focus=(0.5, 0.5), dark=0.3, theme="red"):
+    return bg(sp.get("photo", name), tuple(sp.get("focus", focus)), sp.get("dark", dark), 0.0, sp.get("theme", theme), sp.get("chart"))
+
+
 def p01(sp):
-    f = bg(sp.get("photo", "ev_snow"), dark=0.35, gray=0.4)
-    shade_bottom(f)
-    bottom_two(f, sp["top"], sp["bottom"], 100, 158, hl=sp.get("hl", ""))
+    f = B(sp, "tesla_chargers")
+    shade_bottom(f, 240, 0.3)
+    bottom_two(f, sp["top"], sp["bottom"], hl=sp.get("hl", ""))
     if sp.get("sticker"):
-        TH.shadowed(f, stamp(sp["sticker"], 70), (W - 80, 70), "rt")
+        TH.shadowed(f, stamp(sp["sticker"], 96), (W - 70, 60), "rt")
     return f
 
 
 def p02(sp):
-    f = bg(sp.get("photo", "bess_site"), dark=0.55, gray=0.3)
-    fig = cutout(sp.get("figure", "thinker_cut"), 760)
-    f.alpha_composite(TH.rim(fig, (255, 200, 80), 30), (W - fig.width - 10 - 60, H - fig.height - 60))
-    f.alpha_composite(fig, (W - fig.width - 10, H - fig.height + 30))
-    t = txt(sp["top"], 92, WHITE, maxw=1150)
-    TH.shadowed(f, t, (70, 120))
-    n = TH.T(sp["num"], 380, YEL)
-    TH.shadowed(f, n, (60, 220))
-    u = txt(sp["unit"], 150, WHITE, maxw=700)
-    TH.shadowed(f, u, (80 + n.width, 220 + n.height - u.height - 40))
+    f = B(sp, "bess_site", dark=0.45, theme="gold")
+    fig = cutout(sp.get("figure", "thinker_cut"), 900)
+    f.alpha_composite(TH.rim(fig, (255, 200, 80), 34), (W - fig.width + 30 - 70, H - fig.height + 60 - 70))
+    f.alpha_composite(fig, (W - fig.width + 30, H - fig.height + 60))
+    shade_bottom(f, 200, 0.5)
+    t = txt(sp["top"], 150, WHITE, maxw=1400)
+    TH.shadowed(f, t, (80, 50))   # 읽는 순서: 위 문장 → 큰 숫자
+    n = TH.T(sp["num"], 600, YEL)
+    TH.shadowed(f, n, (90, 60 + t.height - 40))
+    u = txt(sp["unit"], 230, WHITE, maxw=900)
+    TH.shadowed(f, u, (120 + n.width, 60 + t.height - 40 + n.height - u.height - 100))
     return f
 
 
 def p03(sp):
-    f = bg(sp.get("photo", "ev_snow"), dark=0.6, gray=0.5)
-    a = TH.T(sp["before"], 190, WHITE)
-    b = TH.T(sp["after"], 220, RED)
-    arr = TH.big_arrow(300, 210, YEL)
-    total = a.width + 40 + arr.width + 40 + b.width
-    sc = min(1.0, 1780 / total)
+    f = B(sp, "tesla_chargers", dark=0.45)
+    a = TH.T(sp["before"], 260, WHITE)
+    b = TH.T(sp["after"], 300, RED)
+    arr = TH.big_arrow(330, 240, YEL)
+    total = a.width + 30 + arr.width + 30 + b.width
+    sc = min(1.0, 1820 / total)
     if sc < 1:
-        a = a.resize((int(a.width * sc), int(a.height * sc)), Image.LANCZOS)
-        b = b.resize((int(b.width * sc), int(b.height * sc)), Image.LANCZOS)
-        arr = arr.resize((int(arr.width * sc), int(arr.height * sc)), Image.LANCZOS)
-    x = (W - (a.width + 40 + arr.width + 40 + b.width)) // 2
-    y = 330
-    TH.shadowed(f, a, (x, y))
-    TH.shadowed(f, arr, (x + a.width + 40, y + a.height // 2 - arr.height // 2))
-    TH.shadowed(f, b, (x + a.width + 80 + arr.width, y + a.height - b.height))
-    s = txt(sp["sub"], 96, YEL)
-    TH.shadowed(f, s, (W / 2, H - 90), "mb")
+        a, b, arr = (im.resize((int(im.width * sc), int(im.height * sc)), Image.LANCZOS) for im in (a, b, arr))
+    x = (W - (a.width + 30 + arr.width + 30 + b.width)) // 2
+    y = 250
+    TH.shadowed(f, a, (x, y + b.height - a.height))
+    TH.shadowed(f, arr, (x + a.width + 30, y + b.height // 2 - arr.height // 2))
+    TH.shadowed(f, b, (x + a.width + 60 + arr.width, y))
+    shade_bottom(f, 220, 0.6)
+    s_ = txt(sp["sub"], 150, YEL, maxw=1820)
+    TH.shadowed(f, s_, (W / 2, H - 50), "mb")
     if sp.get("label"):
-        TH.shadowed(f, TH.tag(sp["label"], size=54), (80, 80))
+        TH.shadowed(f, TH.tag(sp["label"], size=70), (W / 2, 70), "mt")
     return f
 
 
 def p04(sp):
-    f = bg(sp.get("photo", "musk"), sp.get("focus", (0.6, 0.3)), dark=0.25, gray=0.15)
-    shade_bottom(f, 240, 0.3)
-    q = txt(f"“{sp['quote']}”", 70, MINT, maxw=1300)
-    TH.shadowed(f, q, (W - 70, 70), "rt")
+    f = B(sp, "musk", (0.62, 0.25), dark=0.15)
+    shade_bottom(f, 245, 0.35)
+    q = txt(f"\u201c{sp['quote']}\u201d", 110, MINT, maxw=1820)
+    TH.shadowed(f, q, (W / 2, 50), "mt")
     if sp.get("who"):
-        TH.shadowed(f, TH.tag(sp["who"], size=44), (W - 70, 90 + q.height), "rt")
-    bottom_two(f, sp["top"], sp["bottom"], 96, 150, hl=sp.get("hl", ""))
+        TH.shadowed(f, TH.tag(sp["who"], size=56), (W / 2, 70 + q.height), "mt")
+    bottom_two(f, sp["top"], sp["bottom"], hl=sp.get("hl", ""))
     return f
 
 
 def p05(sp):
-    f = bg(sp.get("photo", "ev_snow"), dark=0.45, gray=0.3)
-    shade_bottom(f, 220, 0.25)
-    t = txt(sp["line1"], 84, WHITE)
-    m = txt(sp["line2"], 150, WHITE)
-    r = txt(sp["line3"], 190, YEL)
-    y = H - 60 - r.height
-    TH.shadowed(f, r, (70, y))
-    TH.shadowed(f, m, (70, y - m.height + 10))
-    TH.shadowed(f, t, (70, y - m.height - t.height + 20))
+    f = B(sp, "ev_snow", dark=0.35)
+    shade_bottom(f, 230, 0.2)
+    r = txt(sp["line3"], 280, YEL, maxw=1820)
+    m = txt(sp["line2"], 190, WHITE, maxw=1820)
+    t = txt(sp["line1"], 130, WHITE, maxw=1820)
+    y = H - 40 - r.height
+    TH.shadowed(f, r, (W / 2, y), "mt")
+    TH.shadowed(f, m, (W / 2, y - m.height + 20), "mt")
+    TH.shadowed(f, t, (W / 2, y - m.height - t.height + 34), "mt")
     if sp.get("sticker"):
-        TH.shadowed(f, stamp(sp["sticker"], 64, YEL, BLACK, 5), (W - 80, 80), "rt")
+        TH.shadowed(f, stamp(sp["sticker"], 80, YEL, BLACK, 5), (W - 70, 60), "rt")
     return f
 
 
 def p06(sp):
-    f = bg(sp.get("photo", "krx_building"), dark=0.4, gray=0.3)
-    red = Image.new("RGBA", (W, H), (120, 0, 0, 70))
-    f.alpha_composite(red)
-    shade_bottom(f, 235, 0.3)
-    bottom_two(f, sp["top"], sp["bottom"], 104, 160, top_col=WHITE, bot_col=RED)
-    TH.shadowed(f, stamp(sp.get("sticker", "경고!"), 92, RED, WHITE, -8), (W - 90, 80), "rt")
+    f = B(sp, "krx_building", dark=0.35)
+    f.alpha_composite(Image.new("RGBA", (W, H), (140, 0, 0, 80)))
+    shade_bottom(f, 240, 0.3)
+    bottom_two(f, sp["top"], sp["bottom"], top_col=WHITE, bot_col=RED)
+    TH.shadowed(f, stamp(sp.get("sticker", "경고!"), 130, RED, WHITE, -8), (W - 80, 60), "rt")
     return f
 
 
 def p07(sp):
-    f = bg(sp.get("photo", "bess_site"), dark=0.4, gray=0.25)
-    shade_bottom(f, 235, 0.3)
-    lab = G.pill(sp["label"], "Black", 52, BLACK, WHITE, pad=(24, 10), radius=10)
-    TH.shadowed(f, lab, (70, 70))
-    bottom_two(f, sp["top"], sp["bottom"], 104, 150, hl=sp.get("hl", ""))
+    f = B(sp, "server_rack", dark=0.3, theme="blue")
+    shade_bottom(f, 240, 0.3)
+    lab = G.pill(sp["label"], "Black", 70, BLACK, WHITE, pad=(30, 12), radius=12)
+    TH.shadowed(f, lab, (W / 2, 70), "mt")
+    bottom_two(f, sp["top"], sp["bottom"], hl=sp.get("hl", ""))
     return f
 
 
@@ -185,40 +218,40 @@ def icon_card(kind, s=330, col=(40, 44, 60)):
 
 
 def p08(sp):
-    f = TH.bg_split(left=(30, 60, 120), right=(30, 110, 80))
-    a, b = icon_card(sp.get("a", "car")), icon_card(sp.get("b", "ai"))
-    TH.shadowed(f, a, (W / 2 - 230, 290), "mm")
-    TH.shadowed(f, b, (W / 2 + 230, 290), "mm")
-    TH.shadowed(f, TH.T("VS", 130, YEL), (W / 2, 290), "mm")
-    bottom_two(f, sp["top"], sp["bottom"], 96, 150, x=None)
+    """두 사진을 반씩 + 가운데 VS (사진이 없으면 아이콘)"""
+    f = Image.new("RGBA", (W, H), (0, 0, 0, 255))
+    left = bg(sp.get("left", "tesla_chargers"), (0.5, 0.5), 0.3, 0.0, "blue").crop((W // 4, 0, W // 4 + W // 2, H))
+    right = bg(sp.get("right", "server_rack"), (0.5, 0.5), 0.3, 0.0, "green").crop((W // 4, 0, W // 4 + W // 2, H))
+    f.alpha_composite(left, (0, 0))
+    f.alpha_composite(right, (W // 2, 0))
+    ImageDraw.Draw(f).polygon([(W / 2 - 20, 0), (W / 2 + 40, 0), (W / 2 + 20, H), (W / 2 - 40, H)], fill=(255, 214, 40, 255))
+    TH.shadowed(f, TH.T("VS", 220, YEL), (W / 2, 330), "mm")
+    shade_bottom(f, 240, 0.35)
+    bottom_two(f, sp["top"], sp["bottom"])
     return f
 
 
 def p09(sp):
-    f = bg(sp.get("photo", "ev_snow"), dark=0.45, gray=0.5)
-    shade_bottom(f, 230, 0.25)
-    bub = TH.T(sp["bubble"], 76, BLACK, stroke=0)  # 말풍선 글씨는 테두리 없이 (검은 테두리면 뭉개짐)
-    pad = 34
-    card = Image.new("RGBA", (bub.width + pad * 2, bub.height + pad * 2 + 40), (0, 0, 0, 0))
+    f = B(sp, "ev_snow", dark=0.35, theme="blue")
+    shade_bottom(f, 235, 0.25)
+    bub = TH.T(sp["bubble"], 110, BLACK, stroke=0)
+    pad = 40
+    card = Image.new("RGBA", (bub.width + pad * 2, bub.height + pad * 2 + 50), (0, 0, 0, 0))
     d = ImageDraw.Draw(card)
-    d.rounded_rectangle((0, 0, card.width - 1, card.height - 41), 40, fill=(255, 255, 255, 250))
-    d.polygon([(70, card.height - 42), (130, card.height - 42), (60, card.height - 2)], fill=(255, 255, 255, 250))
+    d.rounded_rectangle((0, 0, card.width - 1, card.height - 51), 50, fill=(255, 255, 255, 250))
+    d.polygon([(card.width // 2 - 40, card.height - 52), (card.width // 2 + 40, card.height - 52), (card.width // 2, card.height - 2)], fill=(255, 255, 255, 250))
     card.alpha_composite(bub, (pad, pad))
-    TH.shadowed(f, card, (W - 90, 80), "rt")
-    bottom_two(f, sp["top"], sp["bottom"], 96, 168, hl=sp.get("hl", ""))
+    TH.shadowed(f, card, (W / 2, 50), "mt")
+    bottom_two(f, sp["top"], sp["bottom"], hl=sp.get("hl", ""))
     return f
 
 
 def p10(sp):
-    f = bg(sp.get("photo", "bess_site"), sp.get("focus", (0.5, 0.5)), dark=0.15, gray=0.05)
-    shade_bottom(f, 230, 0.45)
-    lab = txt(sp["label"], 58, WHITE)
-    b = txt(sp["bottom"], 150, YEL, hl=sp.get("hl", ""))
-    t = txt(sp["top"], 100, WHITE)
-    yb = H - 60 - b.height
-    TH.shadowed(f, b, (70, yb))
-    TH.shadowed(f, t, (70, yb - t.height + 6))
-    TH.shadowed(f, lab, (70, yb - t.height - lab.height + 6))
+    f = B(sp, "bess_site", dark=0.1, theme="gold")
+    shade_bottom(f, 235, 0.4)
+    lab = txt(sp["label"], 90, WHITE, maxw=1820)
+    TH.shadowed(f, lab, (W / 2, 60), "mt")
+    bottom_two(f, sp["top"], sp["bottom"], hl=sp.get("hl", ""))
     return f
 
 
