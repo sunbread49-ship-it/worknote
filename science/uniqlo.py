@@ -73,32 +73,81 @@ def bin_box(f, cx, top, w=700, h=520, glow=0.0):
     return (cx, top + h - 60)
 
 
-def price_panel(f, n, x=60, y=520, o=1.0):
-    items = [("니트", "39,900원"), ("셔츠", "29,900원"), ("티셔츠", "14,900원"), ("바지", "49,900원"), ("양말", "5,900원")]
-    card = Image.new("RGBA", (420, 120 + 70 * n), (0, 0, 0, 0))
+# ── 실제 옷 사진(퍼블릭 도메인, rawpixel) 누끼로 '대충 던져 넣는' 장면 ─────────────────
+import numpy as np
+from functools import lru_cache
+
+
+@lru_cache(maxsize=2)
+def pile_pieces(width=900):
+    """구겨진 옷 더미 사진을 물결 모양 경계로 5조각 → 하나씩 던져져 다시 더미가 됨"""
+    im = Image.open(K.HERE.parent / "youtube" / "assets" / "people" / "clo_tees_cut.png").convert("RGBA")
+    im = im.resize((width, int(im.height * width / im.width)), Image.LANCZOS)
+    w, h = im.size
+    a = np.asarray(im.getchannel("A")).copy()
+    n = 5
+    yy = np.arange(h)
+    bounds = [np.zeros(h)] + [w * k / n + 35 * np.sin(yy / 23 + k * 1.7) for k in range(1, n)] + [np.full(h, w)]
+    pieces = []
+    xs = np.arange(w)[None, :]
+    for k in range(n):
+        m = (xs >= bounds[k][:, None]) & (xs < bounds[k + 1][:, None])
+        pa = np.where(m, a, 0).astype(np.uint8)
+        pc = im.copy()
+        pc.putalpha(Image.fromarray(pa))
+        bb = pc.getbbox()
+        pieces.append((pc.crop(bb), bb[0], bb[1]))
+    return pieces, (w, h)
+
+
+BIN = (560, 1230)   # 사진 속 계산대 통 바닥 가운데 (focus 1.0 기준)
+
+
+def toss(f, t, t0=0.0, gap=0.2):
+    """옷 조각들이 제각각 회전하며 떨어져 통 안에 쌓임. 착지한 개수 반환"""
+    pieces, (w, h) = pile_pieces()
+    ox, oy = BIN[0] - w / 2, BIN[1] - h / 2
+    landed = 0
+    for k, (pc, x, y) in enumerate(pieces):
+        u = G.clamp((t - t0 - k * gap) / 0.45)
+        if u <= 0:
+            continue
+        e = u * u   # 떨어질수록 빨라짐
+        rot = (1 - e) * (70 if k % 2 else -55) * (1 + k * 0.2)
+        sx = (1 - e) * (-260 + k * 130)
+        sy = (1 - e) * (-1100 - k * 60)
+        im = pc.rotate(rot, expand=True, resample=Image.BICUBIC) if abs(rot) > 0.5 else pc
+        cx, cy = ox + x + pc.width / 2 + sx, oy + y + pc.height / 2 + sy
+        K.drop(f, im, (cx, cy), "mm", 1, blur=18, alpha=0.5)
+        if u >= 1:
+            landed += 1
+    return landed
+
+
+def price_panel(f, n, x=60, y=520, o=1.0, check=True):
+    items = [("니트", "39,900원"), ("셔츠", "29,900원"), ("티셔츠", "14,900원"), ("바지", "49,900원"), ("후드", "39,900원")]
+    card = Image.new("RGBA", (460, 130 + 74 * max(n, 1)), (0, 0, 0, 0))
     d = ImageDraw.Draw(card)
-    d.rounded_rectangle((0, 0, card.width - 1, card.height - 1), 24, fill=(255, 255, 255, 240))
-    card.alpha_composite(T("자동 인식", 40, RED, "Black"), (30, 26))
+    d.rounded_rectangle((0, 0, card.width - 1, card.height - 1), 26, fill=(255, 255, 255, 246))
+    card.alpha_composite(T("자동 인식", 42, RED, "Black"), (30, 28))
     for i, (a, b) in enumerate(items[:n]):
-        card.alpha_composite(T(a, 36, (30, 32, 40), "ExtraBold"), (30, 96 + i * 70))
-        tb = T(b, 36, (30, 32, 40), "Black")
-        card.alpha_composite(tb, (card.width - 30 - tb.width, 96 + i * 70))
+        if check:
+            card.alpha_composite(T("✓", 38, (30, 170, 90), "Black"), (28, 100 + i * 74))
+        card.alpha_composite(T(a, 38, (30, 32, 40), "ExtraBold"), (78, 100 + i * 74))
+        tb = T(b, 38, (30, 32, 40), "Black")
+        card.alpha_composite(tb, (card.width - 30 - tb.width, 100 + i * 74))
     K.drop(f, card, (x, y), "lt", o, blur=18)
 
 
 # ── 장면 ─────────────────────────────────────────────────────────
 def s_hook(f, t, sc):
-    """결과 먼저: 통에 옷이 우수수 → 가격이 바로 뜸"""
-    f.alpha_composite(Image.new("RGBA", (W, H), (14, 16, 24, 255)))
-    bin_box(f, CX + 120, 560, 640, 480, glow=0.5 + 0.5 * math.sin(t * 8))
-    for i, col in enumerate(CLOTHES[:5]):
-        st = G.clamp((t + 0.6 - i * 0.18) / 0.5)
-        y = 120 + 640 * G.ease_out(st)
-        G.blit(f, tshirt(col, 230, (i * 37) % 60 - 30), (CX + 120 - 160 + i * 80, y), 1 if st > 0 else 0, "mm")
-    n = min(5, int(max(0, t + 0.6) / 0.25))
+    """결과 먼저: 실제 계산대 통에 옷을 아무렇게나 휙휙 → 떨어지는 족족 가격이 뜸"""
+    full_photo(f, "uq_selfcheck", t, dark=0.12, zoom=0.04, focus=(1.0, 0.5))
+    n = toss(f, t + 0.55, 0.0, 0.18)
     if n:
-        price_panel(f, n, 30, 360)
-    big(f, "던져 넣기만 했는데\n가격이 뜬다?", 1190, 108, hl="가격이 뜬다")
+        price_panel(f, n, 600, 420)
+    big(f, "대충 던졌는데\n가격이 뜬다?", 230, 118, hl="가격이 뜬다")
+    K.credit(f, K.credit_of("uq_selfcheck") + " · 옷 사진: rawpixel CC0")
 
 
 def s_store(f, t, sc):
@@ -185,19 +234,27 @@ def s_wave(f, t, sc):
 
 
 def s_many(f, t, sc):
-    """통 속 옷 6벌의 칩이 아주 빠르게 차례로 대답"""
-    f.alpha_composite(Image.new("RGBA", (W, H), (10, 14, 26, 255)))
-    bin_box(f, CX, 600, 860, 700, glow=1.0)
-    for i, col in enumerate(CLOTHES):
-        x = CX - 300 + (i % 3) * 300
-        y = 820 + (i // 3) * 240
-        G.blit(f, tshirt(col, 200, (i * 41) % 50 - 25), (x, y), 1, "mm")
-        lit = int(t * 10) % 6 == i or t > 1.6
-        if lit:
-            ImageDraw.Draw(f).ellipse((x + 30, y - 10, x + 66, y + 26), fill=(255, 230, 120, 255))
-    k = G.ease_out(G.clamp((t - 1.6) / 0.3))
-    big(f, "한 번에\n전부 인식", 1420, 110, hl="전부", o=k)
-    pill_tag(f, "눈 깜짝할 새 차례로 대답", t, y=400)
+    """구겨지고 뒤집히고 밑에 깔린 옷까지 — 더미 속 칩들이 차례로 '나 여기!' 하고 빛남"""
+    full_photo(f, "uq_selfcheck", t + 2, dark=0.35, zoom=0.05, focus=(1.0, 0.5))
+    toss(f, 99)
+    pieces, (w, h) = pile_pieces()
+    ox, oy = BIN[0] - w / 2, BIN[1] - h / 2
+    rng = np.random.default_rng(3)
+    spots = [(ox + w * (0.12 + 0.76 * rng.random()), oy + h * (0.25 + 0.6 * rng.random())) for _ in range(7)]
+    ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(ov)
+    for i, (x, y) in enumerate(spots):
+        on = t > 0.2 + i * 0.18
+        if not on:
+            continue
+        pulse = 0.5 + 0.5 * math.sin(t * 9 + i)
+        r = 18 + 10 * pulse
+        d.ellipse((x - r * 2.4, y - r * 2.4, x + r * 2.4, y + r * 2.4), fill=(255, 220, 90, int(70 * pulse)))
+        d.rounded_rectangle((x - 16, y - 11, x + 16, y + 11), 4, fill=(255, 236, 150, 255))
+    f.alpha_composite(ov.filter(ImageFilter.GaussianBlur(3)))
+    f.alpha_composite(ov)
+    pill_tag(f, "구겨져도 · 뒤집혀도 · 깔려도", t, y=330)
+    big(f, "한 번에\n전부 인식", 600, 130, hl="전부", o=G.ease_out(G.clamp((t - 1.4) / 0.3)))
 
 
 def s_vs(f, t, sc):
@@ -249,7 +306,7 @@ def draw_cover(f):
 
 SCENES = [
     {"draw": s_hook, "nohead": True, "min": 2.6, "gap": 0.12, "tail": 0.15,
-     "sfx_t": [(0.05, "pop", 0.5), (0.25, "pop", 0.5), (0.45, "pop", 0.5), (0.65, "pop", 0.5), (0.9, "ding", 0.55)],
+     "sfx_t": [(0.0, "pop", 0.45), (0.18, "pop", 0.45), (0.36, "pop", 0.45), (0.54, "pop", 0.45), (0.72, "pop", 0.45), (0.95, "ding", 0.55)],
      "narr": ["옷을 통에 던져 넣기만 했는데, / 가격이 바로 뜬다?"]},
     {"draw": s_store, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(1.0, "accent", 0.45)],
      "narr": ["유니클로 셀프계산대, / 바코드도 안 찍었는데 말이죠."]},
