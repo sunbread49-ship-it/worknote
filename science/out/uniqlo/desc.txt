@@ -1,0 +1,12 @@
+유니클로 셀프계산대에 옷을 통째로 넣기만 하면 가격이 뜨는 이유, RFID(무선 인식)입니다.
+가격표 속에 아주 작은 칩과 안테나가 숨어 있어요. 배터리는 없지만, 계산대 통 안의 안테나가 쏘는 전파 에너지로 잠깐 깨어나 자기 번호를 전파로 되돌려 보냅니다.
+여러 벌의 칩이 아주 빠르게 차례로 대답해서 한 번에 읽는 것처럼 보이고, 빛이 필요한 바코드와 달리 전파는 옷 속까지 통과해요.
+같은 원리로 계산하지 않은 물건을 출입구에서 잡아내는 매장도 있습니다.
+
+※ 이 영상은 원리 설명용이며 유니클로와 제휴 · 협찬 관계가 없습니다. 매장별 실제 장비 구성은 다를 수 있어요.
+참고: SupplyChainBrain 'Uniqlo Automates Store Checkout with RFID Chips' (WSJ 인용)
+사진 (Wikimedia Commons): Syced, Self-checkout at UNIQLO in Tokyo (CC0) · Kashiwa Satō, Uniqlo Logo (CC BY 2.0) · Nielsoncaetanosalmeron, Inside of UNIQLO Disney Springs (CC BY 4.0)
+
+좋아요 누르고, 친구한테도 물어보세요! 더 신기한 지식은 @악어새지식창고
+
+#과학 #RFID #유니클로 #셀프계산대 #생활과학 #지식 #shorts
