@@ -175,6 +175,7 @@ def chunks(text, max_chars=36):
     3) 문장이 한 줄(max_chars)을 넘을 때만 쉼표 절 단위로 묶고  4) 그래도 길면 단어 경계에서 나눈다.
     짧은 문장 여러 개는 한 줄에 들어가면 합친다."""
     import re
+    text = re.sub(r"\s//?\s", " ", text)   # ' / ' · ' // ' 는 음성 쉼 표시 (자막에는 안 보임)
     if "|" in text:
         return [c for p in text.split("|") if p.strip() for c in chunks(p.strip(), max_chars)]
     sents = [x for x in re.split(r"(?<=[.?!])\s+", text.strip()) if x]

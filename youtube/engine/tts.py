@@ -7,6 +7,7 @@
   목소리 목록·샘플: python tools/tts_voices.py
 """
 import base64
+import re
 import hashlib
 import json
 import os
@@ -87,7 +88,8 @@ SAY = {
     "TQQQ": "티큐큐큐", "SQQQ": "에스큐큐큐", "QQQ": "큐큐큐", "ETF": "이티에프", "S&P500": "에스앤피 오백",
     "VIX": "빅스", "9·11": "구일일", "AI": "에이아이", "SOXL": "속슬",
     "무려, 302배": "무려, 삼백, 이 배", "302배": "삼백 이 배",
-    "%p": "퍼센트포인트",  # 2026-11-11: 퍼센트피 → 퍼센트포인트
+    "%p": "퍼센트포인트",
+    "OECD": "오이씨디", "IRP": "아이알피", "KB": "케이비", "GDP": "지디피", "CEO": "씨이오", "CFO": "씨에프오",  # 2026-11-11: 퍼센트피 → 퍼센트포인트
 }
 
 
@@ -167,6 +169,13 @@ def _numbers_ko(t):
     t = re.sub(r"(?<![\d.])(\d{1,3}(?:,\d{3})+)(?![\d.])", lambda m: hangul_num(int(m.group(1).replace(",", ""))), t)
     # "-30%에 사도" → 에와 사를 붙여 자연스럽게
     t = re.sub(r"%에 (사|팔)", r"%에\1", t)
+    # 2026-11-12 (EP014): 남은 숫자를 TTS에 맡기지 않고 직접 읽기로 바꿈
+    t = re.sub(r"(?<![\d.,])(\d+)\s?%", lambda m: hangul_num(int(m.group(1))) + " 퍼센트", t)          # 13% → 십삼 퍼센트
+    t = re.sub(r"(?<![\d.,])(\d+)층", lambda m: hangul_num(int(m.group(1))) + "층", t)                    # 1층 → 일층
+    t = re.sub(r"(?<![\d.,])(\d{1,2})배", lambda m: (native_count(int(m.group(1))) if int(m.group(1)) <= 10 else hangul_num(int(m.group(1)))) + " 배", t)  # 4배 → 네 배 · 15배 → 십오 배
+    t = re.sub(r"(?<![\d.,])(\d{1,2})\s?(명|가지|개|살|마리|군데|시간|가구)", lambda m: (native_count(int(m.group(1))) if int(m.group(1)) < 100 else hangul_num(int(m.group(1)))) + " " + m.group(2), t)  # 3가지 → 세 가지
+    t = re.sub(r"([가-힣])(\d+)(?![\d.,])", lambda m: m.group(1) + " " + hangul_num(int(m.group(2))), t)   # 코스피200 → 코스피 이백
+    t = re.sub(r"(?<![\d.,])(\d+)(?![\d.,])", lambda m: hangul_num(int(m.group(1))), t)                    # 그 밖의 숫자는 한자어로
     # 띄어 읽기 → 붙여 읽기
     for a, b in (("년 치", "년치"), ("다음 해", "다음해"), ("전 해", "전해"), ("1등", "일뜽")):
         t = t.replace(a, b)
@@ -186,6 +195,10 @@ def speakable(text, extra=None):
     t = re.sub(r"(?<![\w.])\+(\d)", r"플러스 \1", t)      # +4% → 플러스 4%
     t = t.replace("…", ",").replace("...", ",")
     t = re.sub(r"[\'\"‘’“”]", "", t)                      # 따옴표는 소리로 쉼을 만들어 어색 → 제거
+    # 소수: 46.1% → 사십육점일 퍼센트 · 9.5% → 구점오 퍼센트 · 8.3배 → 팔점삼 배 ('점' 앞뒤가 끊겨 들림 · EP014 피드백)
+    t = re.sub(r"(?<![\d.,])(\d+)\.(\d+)(?![\d.])", lambda m: hangul_num(int(m.group(1))) + "점" + "".join(_DIG[int(c)] for c in m.group(2)) + " ", t)
+    t = re.sub(r" +(%|퍼센트)", " 퍼센트", t)
+    t = re.sub(r"점([영일이삼사오육칠팔구]+) (?=[억만배조년])", r"점\1", t)
     t = _money_words(t)
     t = _numbers_ko(t)
     t = re.sub(r"(\S)\?\s", r"\1? ", t)
@@ -201,6 +214,24 @@ def _pcm(path):
     return np.frombuffer(raw, dtype="<i2").astype(np.float32) / 32768
 
 
+def _pieces(text, voice, rate, cfg, cache):
+    parts = re.split(r"\s(//?)\s", text)
+    pcm = []
+    for i, seg in enumerate(parts):
+        if i % 2:
+            pcm.append(np.zeros(int(SR * (0.3 if seg == "//" else 0.12)), dtype=np.float32))
+            continue
+        a = _pcm(synth(speakable(seg, cfg.get("say")), voice, rate, cfg.get("pitch", 0.0), cache))
+        nz = np.where(np.abs(a) > 0.01)[0]
+        pcm.append(a[max(0, nz[0] - 240): nz[-1] + 1200] if len(nz) else a)
+    out = cache / (hashlib.sha1(json.dumps([text, voice, rate, cfg.get("say")], ensure_ascii=False).encode()).hexdigest()[:16] + ".pcs.wav")
+    if not out.exists():
+        with wave.open(str(out), "wb") as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
+            w.writeframes((np.clip(np.concatenate(pcm), -1, 1) * 32767).astype("<i2").tobytes())
+    return out
+
+
 def plan(scenes, cfg, work_dir: Path, log=print):
     """각 장면에 start/dur/lines를 채우고 내레이션 wav 경로 반환"""
     # 2026-11-11 두 채널 통일: 남자 15번(Umbriel) 1.15배 — 롱폼 · 쇼츠 모두 (에피소드 tts에 따로 적으면 그게 우선)
@@ -214,8 +245,12 @@ def plan(scenes, cfg, work_dir: Path, log=print):
         sc.start = t
         cur, lines = lead, []
         for text in sc.narration:
-            clean = speakable(text, cfg.get("say"))
-            mp3 = synth(clean, voice, rate, cfg.get("pitch", 0.0), cache)
+            # 첫째 · 둘째 · 셋째는 따로 떼어 차분하게 (쉼표 억양 · [pause] 모두 어색 · EP013 · EP014 피드백)
+            text = re.sub(r"(첫째|둘째|셋째|넷째),\s", r"\1 / ", text)
+            if re.search(r"\s//?\s", text):   # ' / ' 짧은 쉼(0.12초) · ' // ' 긴 쉼(0.3초): 조각마다 따로 만들어 이어 붙임
+                mp3 = _pieces(text, voice, rate, cfg, cache)
+            else:
+                mp3 = synth(speakable(text, cfg.get("say")), voice, rate, cfg.get("pitch", 0.0), cache)
             if text.lstrip().startswith("[낮게]"):
                 # soft(기본): 음 높이는 그대로, 5% 느리게 · 살짝 작게 → 기계음 없음 (EP013 피드백)
                 # pitch: 음 높이 -1.2음 + 6% 느리게 (EP012에서 사용, rubberband 특유의 기계음이 남)

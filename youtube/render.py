@@ -398,6 +398,12 @@ def main():
     stats_report(c, out)
     timeline.write_srt(c.cues, out / "captions.srt")
     write_review(c, out)
+    try:  # 2026-11-12: 사용자 검수 전에 음성 자동 점검 (tools/voice_check.py · VOICE_RULES.md)
+        sys.path.insert(0, str(ROOT / "tools"))
+        import voice_check
+        voice_check.main(ep_dir, quiet=True)
+    except Exception as e:
+        print("음성 자동 점검 생략:", e)
     yt = dict(c.ep.get("youtube", {}))
     chap = chapters(c)
     if chap and "description" in yt:
