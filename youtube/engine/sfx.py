@@ -188,8 +188,108 @@ def glide():
     return x * 1.6
 
 
+# ── 다양화 세트 (2026-11-12: 같은 소리 반복 줄이기) ─────────────────────
+def sos_beep():
+    """'삐-삐-삐' 조난 경보음"""
+    out = np.zeros(int(0.9 * SR))
+    for k in range(3):
+        t = _t(0.16)
+        x = np.sign(np.sin(2 * np.pi * 1250 * t)) * 0.25 * _env(len(t), 0.003, 0.2)
+        s = int(k * 0.28 * SR)
+        out[s:s + len(x)] += x
+    return _lp(out, 3)
+
+
+def sonar():
+    """'핑~' 소나 · 레이더 탐지음 (메아리)"""
+    t = _t(1.4)
+    x = np.sin(2 * np.pi * 1480 * t) * np.exp(-t * 4) * 0.5
+    x += np.roll(x, int(0.35 * SR)) * 0.35 + np.roll(x, int(0.7 * SR)) * 0.15
+    return x * _env(len(t), 0.002, 2.0)
+
+
+def zoom_in():
+    """'우웅↗' 확대 (아래에서 위로 쓸려 올라가는 바람 + 저음)"""
+    t = _t(0.7)
+    n = _lp(_noise(len(t), 21), 8) * (t / 0.7) ** 2 * 0.5
+    f = 80 + 220 * (t / 0.7) ** 2
+    return (n + np.sin(2 * np.pi * np.cumsum(f) / SR) * (t / 0.7) * 0.4) * np.minimum(1, (0.7 - t) / 0.05)
+
+
+def count_roll():
+    """'다다다다닥' 숫자 굴러가는 소리 (점점 빨라졌다 멈춤)"""
+    out = np.zeros(int(1.2 * SR))
+    at, gap = 0.0, 0.09
+    while at < 1.05:
+        c = np.sin(2 * np.pi * 2400 * _t(0.02)) * _env(int(0.02 * SR), 0.0005, 0.006) * 0.4
+        s = int(at * SR)
+        out[s:s + len(c)] += c
+        at += gap
+        gap = max(0.035, gap * 0.9)
+    return out
+
+
+def sparkle():
+    """'반짝반짝' 높은 음 알갱이 (발견 · 신기함)"""
+    rng = np.random.default_rng(5)
+    out = np.zeros(int(0.9 * SR))
+    for k in range(9):
+        f = 2000 + rng.random() * 2500
+        t = _t(0.25)
+        x = np.sin(2 * np.pi * f * t) * _env(len(t), 0.001, 0.06) * 0.2
+        s = int(k * 0.07 * SR)
+        out[s:s + len(x)] += x
+    return out
+
+
+def fall_burn():
+    """'쉬이이익↓ 지지직' 불타며 떨어지는 소리"""
+    t = _t(1.3)
+    f = 900 * np.exp(-t * 1.8) + 120
+    whistle = np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.25 * np.minimum(1, t / 0.1)
+    crackle = (_noise(len(t), 33) > 2.6).astype(float) * _noise(len(t), 34) * 0.5
+    roar = _lp(_noise(len(t), 35), 20) * 0.35
+    return (whistle + crackle + roar) * np.minimum(1, (1.3 - t) / 0.2)
+
+
+def splash():
+    """'풍덩' 바다에 떨어짐"""
+    t = _t(0.8)
+    body = np.sin(2 * np.pi * np.cumsum(140 * np.exp(-t * 6) + 50) / SR) * np.exp(-t * 5) * 0.6
+    spray = _lp(_noise(len(t), 41), 3) * np.exp(-t * 4) * 0.4
+    return body + spray
+
+
+def typewriter():
+    """'탁탁탁탁' 좌표 · 문서 타이핑"""
+    out = np.zeros(int(0.9 * SR))
+    for k in range(8):
+        c = _lp(_noise(int(0.03 * SR), 50 + k), 2) * _env(int(0.03 * SR), 0.0005, 0.008) * 0.6
+        s = int(k * 0.1 * SR)
+        out[s:s + len(c)] += c
+    return out
+
+
+def eerie():
+    """'우우웅~' 오싹한 저음 드론 (괴담 · 미스터리)"""
+    t = _t(2.0)
+    x = sum(np.sin(2 * np.pi * f0 * t + 2 * np.sin(2 * np.pi * 0.7 * t)) * a for f0, a in ((55, 0.5), (58.3, 0.4), (110.5, 0.15)))
+    return x * np.minimum(1, t / 0.6) * np.minimum(1, (2.0 - t) / 0.5) * 0.6
+
+
+def heartbeat():
+    """'쿵-쿵' 심장 박동 두 번 (긴장)"""
+    out = np.zeros(int(1.4 * SR))
+    for at in (0.0, 0.25, 0.75, 1.0):
+        t = _t(0.18)
+        x = np.sin(2 * np.pi * np.cumsum(70 * np.exp(-t * 20) + 45) / SR) * np.exp(-t * 18) * 0.8
+        s = int(at * SR)
+        out[s:s + len(x)] += x
+    return out
+
+
 BANK = {k: v for k, v in globals().items() if k in
-        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh accent accent_low reveal flyby wow glide".split()}
+        "pop bubble whoosh ding cash boom fail riser tick scratch drum laugh accent accent_low reveal flyby wow glide sos_beep sonar zoom_in count_roll sparkle fall_burn splash typewriter eerie heartbeat".split()}
 BANK["zip"] = zip_
 _cache = {}
 
