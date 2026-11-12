@@ -263,7 +263,6 @@ scenes:
   a: '연금으로 받는 돈도\n**2억 6,800만 원**'
   a_on: 2
   compare:
-  - {label: '코스피 적립', value: 2.02, text: '2.02억', color: [255, 204, 40]}
   - {label: '연금 · 월 103만 × 21.7년', value: 2.68, text: '2.68억', color: [90, 220, 170]}
   - {label: 'S&P500 적립', value: 2.89, text: '2.89억', color: [240, 84, 84]}
   vmax: 3.2
@@ -404,9 +403,9 @@ scenes:
   kicker: 월급의 10% · 언제 시작했나 (S&P500 · 코스피 반반 · 2026.10까지)
   title: 늦게 시작한 10년의 값
   highlight: 10년의 값
-  title_y: 120
-  base: 850
-  hmax: 330
+  title_y: 150
+  base: 780
+  hmax: 290
   items:
   - {label: 월 92만, year: 30년, sub: '1996년 시작 · 2.77억', value: 92, hl: true}
   - {label: 월 59만, year: 20년, sub: '2006년 시작 · 1.76억', value: 59}
