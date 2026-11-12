@@ -726,7 +726,10 @@ class Punch(Scene):
         self.draw_common(f, t)
 
     def extra_sfx(self):
-        return [(self.line_start(self.spec.get("on", 1)), self.spec.get("sfx", "boom"), 0.45)]
+        nm = self.spec.get("sfx", "boom")
+        if isinstance(nm, list):   # sfx 목록(공통 효과음)을 쓴 장면은 기본 '쾅'만
+            nm = self.spec.get("punch_sfx", "boom")
+        return [(self.line_start(self.spec.get("on", 1)), nm, 0.45)]
 
 
 class YearBars(Scene):
