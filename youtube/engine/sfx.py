@@ -294,9 +294,26 @@ BANK["zip"] = zip_
 _cache = {}
 
 
+def _file(name):
+    """외부 효과음 파일: 'mx:1489' → assets/sfx/mx_1489.mp3 (Mixkit) · 'file:이름' → assets/sfx/이름.(mp3|wav)"""
+    import subprocess
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1] / "assets" / "sfx"
+    stem = "mx_" + name[3:] if name.startswith("mx:") else name[5:]
+    p = next((root / f"{stem}{e}" for e in (".mp3", ".wav") if (root / f"{stem}{e}").exists()), None)
+    if p is None:
+        return None
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(p), "-ac", "1", "-ar", str(SR), "-f", "s16le", "-"],
+                         capture_output=True, check=True).stdout
+    return np.frombuffer(raw, "<i2").astype(np.float64) / 32768
+
+
 def get(name):
     if name not in _cache:
-        _cache[name] = BANK[name]().astype(np.float64)
+        if name.startswith(("mx:", "file:")):
+            _cache[name] = _file(name)
+        else:
+            _cache[name] = BANK[name]().astype(np.float64)
     return _cache[name]
 
 
@@ -305,9 +322,12 @@ def build_track(events, duration, path, gain=0.55):
     n = int(duration * SR) + SR
     out = np.zeros(n)
     for t, name, vol in events:
-        if name not in BANK or t < 0:
+        if (name not in BANK and not name.startswith(("mx:", "file:"))) or t < 0:
             continue
-        x = get(name) * vol
+        x = get(name)
+        if x is None:
+            continue
+        x = x * vol
         s = int(t * SR)
         e = min(n, s + len(x))
         if s < n:
