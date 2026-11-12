@@ -2468,6 +2468,37 @@ def _flow_layer(key):
                     yy = A[1] - 20 * k - j * 21 * k
                     d.line([(A[0] + 8 * k, yy - 4 * k), (B[0] - 8 * k, yy - 4 * k - (B[1] - A[1]) * -0.0)], fill=(60, 70, 96), width=2 * k)
                     d.ellipse((A[0] + 10 * k, yy - 10 * k, A[0] + 18 * k, yy - 2 * k), fill=(90, 220, 170) if (i + j) % 3 else Y)
+        elif kind == "salary":  # 지폐 다발 3묶음 (EP014)
+            for i, (ox, oy) in enumerate(((-120, 0), (10, -10), (-55, -70))):
+                A, B, Cc, D = _iso_box(d, cx + ox * k, by + oy * k, 150 * k, 80 * k, 46 * k,
+                                       (150, 214, 160), (70, 140, 92), (100, 176, 120))
+                mx, my = (A[0] + B[0]) / 2, (A[1] + B[1]) / 2  # 띠지
+                d.polygon([(mx - 16 * k, my - 8 * k), (mx + 16 * k, my - 26 * k), (mx + 16 * k, my - 72 * k), (mx - 16 * k, my - 54 * k)], fill=(240, 236, 220))
+            d.ellipse((cx - 10 * k, by - 250 * k, cx + 70 * k, by - 170 * k), fill=Y + (255,))
+            d.text((cx + 30 * k, by - 210 * k), "₩", fill=(120, 90, 10), anchor="mm", font=S.font("Black", 54 * k))
+        elif kind == "fund":  # 기금: 기둥 있는 금고 건물
+            _iso_box(d, cx - 30 * k, by, 240 * k, 140 * k, 30 * k, (220, 224, 236), (130, 136, 156), (170, 176, 196))
+            for j in range(5):
+                tx = cx - 30 * k + j * 46 * k * 0.866 + 20 * k
+                ty = by - 30 * k - j * 46 * k * 0.5 - 10 * k
+                d.rectangle((tx - 9 * k, ty - 150 * k, tx + 9 * k, ty), fill=(236, 238, 246))
+                d.rectangle((tx + 3 * k, ty - 150 * k, tx + 9 * k, ty), fill=(176, 182, 200))
+            A, B, Cc, D = _iso_box(d, cx - 30 * k, by - 185 * k, 240 * k, 140 * k, 26 * k, (236, 238, 246), (140, 146, 166), (186, 192, 210))
+            top = [(A[0], A[1] - 26 * k), (B[0], B[1] - 26 * k), (Cc[0], Cc[1] - 26 * k), (D[0], D[1] - 26 * k)]
+            pk = ((top[0][0] + top[2][0]) / 2, (top[0][1] + top[2][1]) / 2 - 90 * k)
+            d.polygon([top[0], top[1], pk], fill=(200, 206, 222))
+            d.polygon([top[3], top[0], pk], fill=(150, 156, 176))
+            d.polygon([top[1], top[2], pk], fill=(176, 182, 200))
+        elif kind == "pension":  # 매달 받는 동전 기둥 (달력 위)
+            _iso_box(d, cx - 60 * k, by, 200 * k, 150 * k, 18 * k, (236, 240, 248), (150, 156, 176), (190, 196, 214))
+            for i, (ox, n_) in enumerate(((-90, 3), (-20, 5), (50, 7), (120, 9))):
+                x_, y_ = cx + ox * k, by - 40 * k - i * 12 * k
+                for j in range(n_):
+                    yy = y_ - j * 16 * k
+                    d.ellipse((x_ - 34 * k, yy - 12 * k, x_ + 34 * k, yy + 12 * k), fill=(196, 150, 30))
+                    d.ellipse((x_ - 34 * k, yy - 18 * k, x_ + 34 * k, yy + 6 * k), fill=Y + (255,))
+            d.polygon([(cx + 150 * k, by - 260 * k), (cx + 110 * k, by - 225 * k), (cx + 135 * k, by - 225 * k), (cx + 135 * k, by - 180 * k),
+                       (cx + 165 * k, by - 180 * k), (cx + 165 * k, by - 225 * k), (cx + 190 * k, by - 225 * k)], fill=(90, 220, 170))
     return L.resize((S.W, S.H), Image.LANCZOS)
 
 

@@ -120,9 +120,13 @@ def p02(sp):
     shade_bottom(f, 200, 0.5)
     t = txt(sp["top"], 150, WHITE, maxw=1400)
     TH.shadowed(f, t, (80, 50))   # 읽는 순서: 위 문장 → 큰 숫자
-    n = TH.T(sp["num"], 600, YEL)
-    TH.shadowed(f, n, (90, 60 + t.height - 40))
     u = txt(sp["unit"], 230, WHITE, maxw=900)
+    ns = 600
+    n = TH.T(sp["num"], ns, YEL)
+    while n.width + u.width + 60 > W - 60 and ns > 300:   # 숫자 + 단위가 화면 안에 들어오게
+        ns -= 30
+        n = TH.T(sp["num"], ns, YEL)
+    TH.shadowed(f, n, (90, 60 + t.height - 40))
     TH.shadowed(f, u, (120 + n.width, 60 + t.height - 40 + n.height - u.height - 100))
     return f
 

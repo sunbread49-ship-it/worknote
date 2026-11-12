@@ -286,7 +286,46 @@ def house_lev(t0, ltv=0.6, eq=1.0, col="서울"):
     return float(path.iloc[-1]), float((loan * r / 100 / 12).sum()), float(path.min()), path.idxmin()
 
 
+
+# ── 국민연금 적립 백테스트 (EP014) ─────────────────────────────────
+NPS_A = 3193511   # 2026년 A값(가입자 평균소득월액)
+
+
+@lru_cache(maxsize=None)
+def nps_income():
+    """평균 직장인 월급 근사: 한국 제조업 임금지수(OECD, 분기)로 2026년 A값 319만 원에서 거꾸로 환산"""
+    w = _fred("LCEAMN01KRQ661S").resample("MS").ffill()
+    w = w.reindex(pd.date_range("1992-01-01", "2026-10-01", freq="MS")).ffill()
+    return NPS_A * w / w.iloc[-1]
+
+
+def nps_rate(t):
+    """직장가입자 보험료율(회사 몫 포함): 1993~97 6% · 1998~2025 9% · 2026 9.5%"""
+    return 0.06 if t.year < 1998 else (0.09 if t.year < 2026 else 0.095)
+
+
+@lru_cache(maxsize=None)
+def nps_dca(start="1996-11-01", end="2026-10-01", frac=None):
+    """매달 보험료(또는 월급의 frac)를 그달 말 종가로 S&P500(원화)·코스피에 적립 → 월별 [paid, spx, kospi] (원)"""
+    inc = nps_income()
+    spx, ks = _spx_krw(), _daily("kospi")
+    rows, paid, us, uk = [], 0.0, 0.0, 0.0
+    for m in pd.date_range(start, end, freq="MS"):
+        me = m + pd.offsets.MonthEnd(0)
+        ps, pk = spx.loc[:me].iloc[-1], ks.loc[:me].iloc[-1]
+        c = inc.loc[m] * (nps_rate(m) if frac is None else frac)
+        paid, us, uk = paid + c, us + c / ps, uk + c / pk
+        rows.append((me, paid, us * ps, uk * pk))
+    df = pd.DataFrame(rows, columns=["m", "paid", "spx", "kospi"]).set_index("m")
+    last = df.index[-1]
+    df.loc[last, "spx"] = us * spx.iloc[-1]       # 마지막 값은 최신 종가
+    df.loc[last, "kospi"] = uk * ks.iloc[-1]
+    return df
+
+
 def series(name: str, start=None, end=None) -> pd.Series:
+    if name in ("nps_paid", "nps_spx", "nps_kospi"):   # 만 원
+        return (nps_dca()[name[4:]] / 1e4).loc[start:end]
     if name in ("kb_jr", "kb_conv"):  # 서울 아파트 전세가율(%) · 전월세전환율(%)
         df = pd.read_csv(DATA / "kb_seoul_extra.csv")
         s = df.assign(m=pd.to_datetime(df["month"])).set_index("m")[{"kb_jr": "jeonse_ratio", "kb_conv": "conv_rate"}[name]]
@@ -561,6 +600,15 @@ def stat(kind: str, **kw) -> float:
             if b <= p.index[-1]:
                 v.append((_by(p, b) / _on(p, a) - 1) * 100)
         return float({"half_mean": np.mean(v), "half_win": np.mean(np.array(v) > 0) * 100, "half_up": sum(x > 0 for x in v)}[kind])
+    if kind == "nps":  # 국민연금 적립 백테스트 값(만 원): col = paid/spx/kospi/mix, at = 날짜(기본 마지막), frac
+        df = nps_dca(frac=kw.get("frac"))
+        row = df.loc[:kw["at"]].iloc[-1] if kw.get("at") else df.iloc[-1]
+        v = (row["spx"] + row["kospi"]) / 2 if kw["col"] == "mix" else row[kw["col"]]
+        return float(v / 1e4)
+    if kind == "growth_x":  # 1996.11 → 최신 배수: wage / kospi / spx / seoul
+        t0 = pd.Timestamp(kw.get("start", "1996-11-30"))
+        s_ = {"wage": nps_income(), "kospi": _daily("kospi"), "spx": _spx_krw(), "seoul": _kb("서울")}[kw["what"]]
+        return float(s_.iloc[-1] / s_.loc[:t0].iloc[-1])
     if kind == "count_days_below":  # 하루 수익률이 threshold% 미만인 날 수
         p = series(kw["series"]).loc[str(kw["start"]):str(kw["end"])]
         return float((p.pct_change() * 100 < kw["threshold"]).sum())
