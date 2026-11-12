@@ -271,8 +271,23 @@ def s_vs(f, t, sc):
         if bt.width > 430:
             bt = bt.resize((430, int(bt.height * 430 / bt.width)), Image.LANCZOS)
         card.alpha_composite(bt, ((470 - bt.width) // 2, 250))
-        K.drop(f, card, (CX - 255 + i * 510, 860 + (1 - k) * 30), "mm", k, blur=20)
-    G.blit(f, T("VS", 90, CORAL, "Black", stroke=6, stroke_fill=(6, 8, 14)), (CX, 860), k2, "mm")
+        K.drop(f, card, (CX - 255 + i * 510, 590 + (1 - k) * 30), "mm", k, blur=20)
+    G.blit(f, T("VS", 90, CORAL, "Black", stroke=6, stroke_fill=(6, 8, 14)), (CX, 590), k2, "mm")
+    # RFID 풀네임 · 우리말 · 원리 한 줄 (2026-11-12 피드백)
+    L = sc["L"]
+    k3 = G.ease_out(G.clamp((t - (L[-1] if len(L) > 1 else 1.2)) / 0.35))
+    if k3 > 0:
+        box = Image.new("RGBA", (980, 300), (0, 0, 0, 0))
+        dd = ImageDraw.Draw(box)
+        dd.rounded_rectangle((0, 0, 979, 299), 28, fill=(255, 214, 80, 250))
+        t1 = T("RFID = Radio-Frequency IDentification", 46, (14, 16, 24), "Black")
+        t2 = T("무선 주파수 식별", 74, (14, 16, 24), "Black")
+        t3 = T("전파로 물건의 이름표를 읽는 기술", 44, (60, 50, 20), "ExtraBold")
+        for im_, yy in ((t1, 30), (t2, 100), (t3, 210)):
+            if im_.width > 920:
+                im_ = im_.resize((920, int(im_.height * 920 / im_.width)), Image.LANCZOS)
+            box.alpha_composite(im_, ((980 - im_.width) // 2, yy))
+        K.drop(f, box, (CX, 950 - (1 - k3) * 30), "mt", k3, blur=20)
 
 
 def s_gate(f, t, sc):
@@ -320,8 +335,9 @@ SCENES = [
     {"draw": s_many, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.2,
      "sfx_t": [(0.1, "tick", 0.35), (0.4, "tick", 0.35), (0.7, "tick", 0.35), (1.0, "tick", 0.35), (1.3, "tick", 0.35), (1.6, "reveal", 0.55)],
      "narr": ["여러 벌이 눈 깜짝할 새 차례로 대답해서, / 한 번에 읽는 것처럼 보이죠."]},
-    {"draw": s_vs, "flash": True, "nohead": True, "min": 2.2, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "accent", 0.45), (0.6, "accent", 0.45)],
-     "narr": ["빛으로 하나씩 비추는 바코드와 달리, / 전파는 옷 속까지 통과하니까요."]},
+    {"draw": s_vs, "flash": True, "nohead": True, "min": 3.0, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "accent", 0.45), (0.6, "accent", 0.45)],
+     "sfx_fn": lambda sc: [(sc["L"][-1], "sparkle", 0.5)],
+     "narr": ["빛으로 하나씩 비추는 바코드와 달리, / 전파는 옷 속까지 통과하니까요.", "알에프아이디, 우리말로 무선 주파수 식별. / 전파로 물건의 이름표를 읽는 기술이에요."]},
     {"draw": s_gate, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.6, "accent_low", 0.5), (0.8, "fail", 0.35)],
      "narr": ["같은 원리로, 계산 안 한 물건을 / 출입구에서 잡아내는 매장도 있어요."]},
     {"draw": s_share, "flash": True, "nohead": True, "min": 2.2, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "pop", 0.6), (0.75, "pop", 0.6)],
