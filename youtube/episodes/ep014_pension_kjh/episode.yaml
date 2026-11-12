@@ -474,9 +474,15 @@ scenes:
   signature: 오늘도 감 말고, 숫자로 투자하세요.
   signature_on: 4
   narration: ['여러분의 예상 연금은 얼마였나요? | 그리고 지금 몇 층까지 쌓여 있나요?', '댓글로 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
-thumbs10:
-- {p: P04, photo: seoul_night_still, dark: 0.35, theme: gold, person: {file: kimjanghoon_cut, h: 1100, side: right, dy: 150}, quote: "한 달에?\n그렇게 많이 줘요?", quote_w: 1100, quote_size: 150, top: '내 국민연금은', bottom: '얼마 나올까?'}
+thumb_pick: P04b   # 2026-11-12 사용자 확정 → 업로드 썸네일 = out/<ep>/thumbs10/P04b.png
+thumbs10:   # v3 (THUMB_PATTERNS.md 학습 반영 · 패턴마다 화면 구조 다르게)
+- {p: P01, photo: seoul_subway, top: '다들 국민연금 손해라는데', bottom: '직장인은 8배 받는다?', hl: 8배, sticker: 반전}
+- {p: P02, photo: pensioner_bench, theme: blue, top: '월급쟁이가 조용히 쌓는', num: '3', unit: '층', bottom: '연예인 아니어도 되는 노후', diagram: pyramid}
+- {p: P03, photo: pensioner_bench, theme: green, label: '평균 직장인 · 한 달 노후 소득', before: '103만', after: '226만', sub: '바꾼 건 월급 13% 하나'}
 - {p: P04, name: P04b, photo: pensioner_bench, dark: 0.3, theme: gold, person: {file: kimjanghoon_cut, h: 1100, side: right, dy: 150}, quote: "한 달에?\n그렇게 많이 줘요?", quote_w: 1100, quote_size: 150, top: '김장훈도 놀란', bottom: '국민연금 수령액'}
-- {p: P08, left: noryangjin_cross, right: seoul_subway, persons: [{file: kimjanghoon_cut, h: 1080, side: left, x: 60, dy: 160}], top: '김장훈 vs 평범한 직장인', bottom: '국민연금, 누가 더 남길까?'}
-- {p: P10, photo: pensioner_bench, dark: 0.15, person: {file: kimjanghoon_cut, h: 1100, side: right, dy: 150}, label: '(김장훈이 놀란 이유)', top: '아무도 말 안 한', bottom: '국민연금의 진짜 수익률'}
-- {p: P10, name: P10b, photo: pensioner_bench, dark: 0.15, person: {file: kimjanghoon_cut, h: 1100, side: left, dy: 150}, label: '(내 몫의 8배)', top: '김장훈도 놀란', bottom: '국민연금의 진짜 수익률'}
+- {p: P05, photo: stock_monitor, line1: '30년 낸 국민연금', line2: '주식에 넣어봤더니', line3: '결과는…', sticker: '실제 데이터', chart: {series: nps_spx, start: '1996-11-01'}}
+- {p: P06, photo: seoul_subway, top: '한때 월급의 70% 주겠다던 연금', bottom: '이젠 43%', sticker: '경고!'}
+- {p: P07, photo: pensioner_bench, label: 'OECD 한눈에 보는 연금 2025', top: '한국 노인 10명 중 4명', bottom: '가난하다', red: true}
+- {p: P08, left: noryangjin_cross, right: seoul_subway, badge_l: kimjanghoon_cut, badge_r: worker_stressed_cut, name_l: 김장훈, name_r: 평범한 직장인, bottom: '낸 돈 대비, 누가 더 받을까?'}
+- {p: P09, photo: seoul_subway, person: {file: worker_stressed_cut, h: 900, side: right, dy: 60}, bubble: "국민연금 낼 바엔\n내가 굴리지??", bottom: '30년 치 직접 계산해봤습니다'}
+- {p: P10, photo: krw_coins, focus: [0.5, 0.4], person: {file: kimjanghoon_cut, h: 900, side: right, dy: 120}, align: left, label: '(30년 낸 국민연금: 6,468만 원)', top: '김장훈도 놀란', bottom: '이 돈의 진짜 수익률'}
