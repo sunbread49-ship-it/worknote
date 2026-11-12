@@ -4,7 +4,7 @@ API 키는 **절대 채팅에 붙여넣지 마세요.** 발급 후 "발급했어
 
 ---
 
-## 1. Pexels ⭐ 먼저 (사진 + 무료 영상)
+## 1. Pexels (사진 + 무료 영상) — ⚠️ 2026-11-12 현재 새 API 키 발급 중단 → Pixabay로 대체
 
 - 라이선스: 상업적 이용 · 수정 가능, 출처 표기 의무 없음 (우리는 그래도 설명란에 표기)
   https://www.pexels.com/license/
@@ -18,13 +18,16 @@ API 키는 **절대 채팅에 붙여넣지 마세요.** 발급 후 "발급했어
 5. Claude에게 "Pexels 키 발급했어" → 입력 창에 키 붙여넣기
    - Claude 쪽 설정: api.pexels.com 에 키를 헤더로 자동 첨부, images.pexels.com · videos.pexels.com 접속 허용
 
-## 2. Pixabay (사진 · 일러스트 · 영상, 선택)
+## 2. Pixabay ⭐ 지금 1순위 (사진 · 일러스트 · 무료 영상)
 
 - 라이선스: https://pixabay.com/service/license-summary/ (상업적 이용 · 수정 가능)
 1. 가입: https://pixabay.com/accounts/register/
 2. 로그인 후 API 문서: https://pixabay.com/api/docs/ → 페이지 안 **"Your API key"** 부분에 키가 보임
-3. Claude에게 "Pixabay 키 발급했어"
-   - 참고: Pixabay는 키를 주소에 붙여 보내는 방식이라, 저장 방법을 Claude와 한 번 더 정해야 함
+3. 키 저장 (Pixabay는 키를 주소에 붙여 보내는 방식이라 '환경 변수'로 저장):
+   - claude.ai/code 세션 화면 위쪽 제목 줄의 **클라우드 환경 메뉴(유튜브 영상제작) → Edit(편집)**
+   - **환경 변수(Environment variables)** 에 한 줄 추가: `PIXABAY_API_KEY=발급받은키`
+   - 저장 후 **새 세션**을 열면 Claude가 그 키를 씀 (지금 세션에는 바로 안 들어올 수 있음)
+   - Claude 쪽 설정: pixabay.com(API) · cdn.pixabay.com(사진 · 영상) 접속 허용 요청
 
 ## 3. Unsplash (감성 고화질 사진, 선택)
 
@@ -32,7 +35,7 @@ API 키는 **절대 채팅에 붙여넣지 마세요.** 발급 후 "발급했어
 1. 개발자 가입: https://unsplash.com/developers → "Register as a developer"
 2. https://unsplash.com/oauth/applications → **New Application** → 약관 동의 → 이름 · 설명 입력
 3. 앱 페이지의 **Access Key** 복사 (Secret Key는 필요 없음)
-4. Claude에게 "Unsplash 키 발급했어"
+4. 위 Pixabay와 같은 곳(환경 편집 → 환경 변수)에 `UNSPLASH_ACCESS_KEY=키` 추가 → 새 세션에서 사용
 
 ---
 
@@ -54,7 +57,7 @@ API 키는 **절대 채팅에 붙여넣지 마세요.** 발급 후 "발급했어
 - 라이선스: 소리마다 다름 → **CC0 · CC BY만** 골라 씀 (CC BY는 설명란 표기, NC 제외)
 1. 가입: https://freesound.org/home/register/
 2. API 키 신청: https://freesound.org/apiv2/apply/ → 이름 · 설명 입력 → **Client secret/Api key** 확인
-3. Claude에게 "Freesound 키 발급했어" → 입력 창에 키
+3. Claude에게 "Freesound 키 발급했어" → Claude가 비밀값 입력 창을 띄움(지금 세션에서 바로 사용 가능)
    - Claude 쪽 설정: freesound.org(API) · cdn.freesound.org(미리듣기 고음질 mp3) 접속 허용
 
 ## B. Mixkit (무료 효과음 · 키 필요 없음)
