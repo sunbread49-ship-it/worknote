@@ -2692,3 +2692,82 @@ class PaperQuote(Editorial):
 
 
 TYPES.update({"paper": PaperQuote})
+
+
+class Pyramid(Editorial):
+    """노후 소득 피라미드(2026-11-12 사용자 요청: 사다리 · 피라미드로 쌓는 그림).
+    layers: [{label, sub, value, text, color, on}] (아래층부터) · target: {value, label, on} 목표선 · ghost: {label, value} 맨 위 점선 층 · total: {text, on}"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 120))
+        layers = sp["layers"]
+        gh = sp.get("ghost")
+        tot = sum(float(l["value"]) for l in layers)
+        vmax = tot + (float(gh["value"]) if gh else 0)
+        cx, base, Hh = sp.get("cx", 960), sp.get("base", 850), sp.get("height", 560)
+        wb, wt = sp.get("w_bottom", 980), sp.get("w_top", 160)
+        yv = lambda v: base - Hh * v / vmax
+        wv = lambda v: wb - (wb - wt) * v / vmax
+        ov = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        d = ImageDraw.Draw(ov)
+        acc = 0.0
+        tops = []
+        for i, l in enumerate(layers):
+            v = float(l["value"])
+            ti = self.line_start(l.get("on", i + 1)) + l.get("offset", 0)
+            k = G.ease_out((t - ti) / 0.55)
+            if k > 0:
+                a, b = acc, acc + v * k
+                c = _col(l.get("color"), [(120, 132, 160), (74, 144, 255), (90, 220, 170), Y][i % 4])
+                y0, y1 = yv(a), yv(b)
+                w0, w1 = wv(a), wv(b)
+                d.polygon([(cx - w0 / 2, y0 - 3), (cx + w0 / 2, y0 - 3), (cx + w1 / 2, y1 + 3), (cx - w1 / 2, y1 + 3)], fill=c + (255,))
+                d.polygon([(cx - w1 / 2, y1 + 3), (cx + w1 / 2, y1 + 3), (cx + w1 / 2 - 6, y1 + 14), (cx - w1 / 2 + 6, y1 + 14)], fill=(255, 255, 255, 60))
+                tops.append((i, l, (y0 + y1) / 2, w0, w1, k))
+            acc += v
+        if gh:
+            o = G.appear(t, self.line_start(gh.get("on", len(layers))) + 0.4, 0.4)
+            if o > 0:
+                y0, y1 = yv(tot), yv(vmax)
+                w0 = wv(tot)
+                pts = [(cx - w0 / 2, y0), (cx, y1), (cx + w0 / 2, y0)]
+                for (xa, ya), (xb, yb) in ((pts[0], pts[1]), (pts[1], pts[2]), (pts[2], pts[0])):
+                    n = 18
+                    for j in range(0, n, 2):
+                        d.line([(xa + (xb - xa) * j / n, ya + (yb - ya) * j / n), (xa + (xb - xa) * (j + 1) / n, ya + (yb - ya) * (j + 1) / n)], fill=(236, 240, 248, int(170 * o)), width=4)
+        f.alpha_composite(ov)
+        if gh:
+            o = G.appear(t, self.line_start(gh.get("on", len(layers))) + 0.4, 0.4)
+            G.blit(f, T(gh["label"], 34, (210, 214, 226), "ExtraBold"), (cx, yv(tot + float(gh["value"]) * 0.42)), o, "mm")
+        tg = sp.get("target")
+        if tg:
+            o = G.appear(t, self.line_start(tg.get("on", 1)) + 0.3, 0.4)
+            if o > 0:
+                y = yv(float(tg["value"]))
+                ov = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+                dd = ImageDraw.Draw(ov)
+                for x in range(S.SAFE_X, S.W - S.SAFE_X - 260, 34):
+                    dd.line([(x, y), (x + 20, y)], fill=(240, 84, 84, 230), width=4)
+                f.alpha_composite(G.with_opacity(ov, o))
+                G.blit(f, G.pill(tg["label"], "Black", 32, S.FG, (240, 84, 84), pad=(16, 6), radius=10), (S.W - S.SAFE_X, y), o, "rm")
+        for i, l, ym, w0, w1, k in tops:
+            o = min(1, k * 1.6)
+            lab = T(l["label"], 44, (14, 16, 24) if i % 4 == 3 else S.FG, "Black")
+            if lab.width > min(w0, w1) - 40:   # 좁은 층은 글자 줄임
+                lab = T(l["label"], 36, (14, 16, 24) if i % 4 == 3 else S.FG, "Black")
+            G.blit(f, lab, (cx, ym), o, "mm")
+            xr = cx + max(w0, w1) / 2 + 30
+            vt = T(l["text"], 56, _col(l.get("color"), [(190, 196, 210), (120, 180, 255), (90, 220, 170), Y][i % 4]), "Black")
+            G.blit(f, vt, (xr, ym), o, "lm")
+            if l.get("sub"):
+                G.blit(f, T(l["sub"], 26, (190, 196, 214), "SemiBold"), (cx - max(w0, w1) / 2 - 30, ym), o, "rm")
+        tl = sp.get("total")
+        if tl:
+            o = G.appear(t, self.line_start(tl.get("on", len(layers))) + 0.3, 0.35)
+            G.blit(f, G.pill(tl["text"], "Black", 52, (14, 16, 24), Y, pad=(28, 12), radius=14), (S.W - S.SAFE_X, sp.get("total_y", 300)), o, "rt")
+        self.finish(f, t)
+
+
+TYPES.update({"pyramid": Pyramid})

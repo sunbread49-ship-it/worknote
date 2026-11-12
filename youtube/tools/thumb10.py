@@ -100,7 +100,19 @@ def stamp(text, size=64, bgc=RED, fg=WHITE, rot=-6):
 
 # ── 패턴별 (2026-11-12 v2: 가운데 정렬 · 큰 글씨 · 매콤한 배경) ─────────────────
 def B(sp, name, focus=(0.5, 0.5), dark=0.3, theme="red"):
-    return bg(sp.get("photo", name), tuple(sp.get("focus", focus)), sp.get("dark", dark), 0.0, sp.get("theme", theme), sp.get("chart"))
+    f = bg(sp.get("photo", name), tuple(sp.get("focus", focus)), sp.get("dark", dark), 0.0, sp.get("theme", theme), sp.get("chart"))
+    if sp.get("person"):
+        add_person(f, sp["person"])
+    return f
+
+
+def add_person(f, pp):
+    """인물 누끼(assets/people/<file>.png)를 한쪽에 크게 세움 — 글자는 그 위에 얹히되 얼굴은 비켜 가게 (2026-11-12)"""
+    fig = cutout(pp["file"], pp.get("h", 1000))
+    x = pp.get("x", W - fig.width - 20) if pp.get("side", "right") == "right" else pp.get("x", 20)
+    y = H - fig.height + pp.get("dy", 120)
+    f.alpha_composite(TH.rim(fig, tuple(pp.get("rim", (255, 214, 40))), 26), (int(x - 78 - fig.width * 0.02), int(y - 78 - fig.height * 0.02)))
+    f.alpha_composite(fig, (x, y))
 
 
 def p01(sp):
@@ -156,8 +168,12 @@ def p03(sp):
 def p04(sp):
     f = B(sp, "musk", (0.62, 0.25), dark=0.15)
     shade_bottom(f, 245, 0.35)
-    q = txt(f"\u201c{sp['quote']}\u201d", 110, MINT, maxw=1820)
-    TH.shadowed(f, q, (W / 2, 50), "mt")
+    if sp.get("quote_w"):  # 인물이 옆에 있으면 따옴표는 반대쪽에 (얼굴 가리지 않게)
+        q = txt(f"\u201c{sp['quote']}\u201d", sp.get("quote_size", 120), MINT, maxw=sp["quote_w"])
+        TH.shadowed(f, q, (60, 50), "lt")
+    else:
+        q = txt(f"\u201c{sp['quote']}\u201d", 110, MINT, maxw=1820)
+        TH.shadowed(f, q, (W / 2, 50), "mt")
     if sp.get("who"):
         TH.shadowed(f, TH.tag(sp["who"], size=56), (W / 2, 70 + q.height), "mt")
     bottom_two(f, sp["top"], sp["bottom"], hl=sp.get("hl", ""))
@@ -228,6 +244,8 @@ def p08(sp):
     right = bg(sp.get("right", "server_rack"), (0.5, 0.5), 0.3, 0.0, "green").crop((W // 4, 0, W // 4 + W // 2, H))
     f.alpha_composite(left, (0, 0))
     f.alpha_composite(right, (W // 2, 0))
+    for pp in sp.get("persons", []):
+        add_person(f, pp)
     ImageDraw.Draw(f).polygon([(W / 2 - 20, 0), (W / 2 + 40, 0), (W / 2 + 20, H), (W / 2 - 40, H)], fill=(255, 214, 40, 255))
     TH.shadowed(f, TH.T("VS", 220, YEL), (W / 2, 330), "mm")
     shade_bottom(f, 240, 0.35)
@@ -271,13 +289,14 @@ def main(ep_dir):
     outs = []
     for sp in ep["thumbs10"]:
         f = TH.finish(P[sp["p"]](sp), frame=False)
-        path = od / f"{sp['p']}.png"
+        nm = sp.get("name", sp["p"])   # 같은 패턴 여러 시안: name: P04b
+        path = od / f"{nm}.png"
         f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(path)
-        outs.append((sp["p"], path))
+        outs.append((nm, path))
         print("썸네일 →", path)
     # 비교표 (2열 × 5행, 휴대폰 크기 확인용)
     tw, th = 640, 360
-    sheet = Image.new("RGB", (tw * 2 + 30, (th + 50) * 5 + 10), (16, 16, 20))
+    sheet = Image.new("RGB", (tw * 2 + 30, (th + 50) * ((len(outs) + 1) // 2) + 10), (16, 16, 20))
     for i, (p, path) in enumerate(outs):
         x, y = 10 + (i % 2) * (tw + 10), 10 + (i // 2) * (th + 50)
         sheet.paste(Image.open(path).resize((tw, th)), (x, y))
