@@ -7,6 +7,7 @@ episode.yaml 의 shorts: [{title, highlight, start: "1:44", end: "2:27"}] 를 �
   python tools/make_shorts.py episodes/ep002_tqqq_reddit 3   # 3번 쇼츠만
 """
 import multiprocessing as mp
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -51,7 +52,8 @@ def compose(c, sh, t, bg):
     f.paste(fr, (0, VID_Y))
     cue = next((x for x in c.cues if x[0] <= t < x[1] + 0.12), None)
     if cue:  # 자막: 영상 바로 위
-        tx = G.text_img(cue[2], "Black", 64, (255, 255, 255), max_w=980, align="center", stroke=5, stroke_fill=(0, 0, 0))
+        txt = re.sub(r"\*\*|!!|\[낮게\]|\s//?\s", lambda m: " " if "/" in m.group() else "", cue[2]).strip()  # 강조 · 쉼 표시 제거
+        tx = G.text_img(txt, "Black", 64, (255, 255, 255), max_w=980, align="center", stroke=5, stroke_fill=(0, 0, 0))
         f.alpha_composite(tx, ((VW - tx.width) // 2, VID_Y - 90 - tx.height))
     return f
 
