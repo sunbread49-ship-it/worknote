@@ -84,6 +84,9 @@ def stt(x, cache):
     r = urllib.request.Request(STT_URL, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
     res = json.loads(urllib.request.urlopen(r, timeout=90).read())
     txt = " ".join(a["alternatives"][0]["transcript"] for a in res.get("results", []))
+    if not txt.strip():   # 가끔 빈 결과 → 한 번 더
+        res = json.loads(urllib.request.urlopen(r, timeout=90).read())
+        txt = " ".join(a["alternatives"][0]["transcript"] for a in res.get("results", []))
     cache[h] = txt
     return txt
 
@@ -157,7 +160,7 @@ def main(ep_dir, quiet=False, use_stt=True):
             dur = len(x) / SR
             syl = len(re.findall(r"[가-힣]", spoken))
             sps = syl / max(dur, 0.1)
-            commas = len(re.findall(r"[,.?!]|\s//?\s", spoken))
+            commas = len(re.findall(r"[,.?!|]|\s//?\s", text))   # 원문 기준 (조사 뒤 쉼표는 읽기에서 지워도 자연스럽게 쉼)
             ps = _pauses(x)
             if len(ps) > commas:
                 warn.append(f"쉼표 없는 곳에서 끊김 {len(ps) - commas}번 (" + ", ".join(f"{a:.1f}초" for a, _ in ps[:3]) + ")")
