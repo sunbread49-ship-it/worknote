@@ -124,3 +124,130 @@ def bright(duration, path, bpm=116, seed=3):
         w.setframerate(SR)
         w.writeframes((stereo * 32767).astype("<i2").tobytes())
     return path
+
+
+# ══ 2026-11-13: 장(챕터) 분위기에 맞춰 바뀌는 배경음 (사용자: "잔잔하다 → 흥미진진 · 두근두근 · 쫄깃하게") ══
+def _kit(rng):
+    kt = np.arange(int(0.28 * SR)) / SR
+    kick = np.sin(2 * np.pi * np.cumsum(120 * np.exp(-kt * 24) + 46) / SR) * np.exp(-kt * 12)
+    ht = np.arange(int(0.05 * SR)) / SR
+    hat = np.diff(rng.normal(0, 1, len(ht) + 1)) * np.exp(-ht * 100) * 0.16
+    ct = np.arange(int(0.18 * SR)) / SR
+    clap = rng.normal(0, 1, len(ct)) * (np.exp(-ct * 30) + 0.4 * np.exp(-np.maximum(0, ct - 0.012) * 40)) * 0.22
+    return kick, hat, clap
+
+
+def _tone(f, d, dec, harm=(1, 0.35, 0.12)):
+    tt = np.arange(int(d * SR)) / SR
+    x = sum(a * np.sin(2 * np.pi * f * (i + 1) * tt) for i, a in enumerate(harm))
+    return x * np.exp(-tt * dec) * np.minimum(1, tt / 0.004)
+
+
+def _saw(f, d, dec=3.0, n=7):
+    return _tone(f, d, dec, tuple(0.6 / (k + 1) for k in range(n)))
+
+
+def mood(kind, duration, seed=5):
+    """kind: tense(쫄깃 · 긴장) | drive(흥미진진 · 탐색) | dark(무겁게 · 심장박동) | hope(밝게 · 설렘)"""
+    rng = np.random.default_rng(seed)
+    n = int(duration * SR) + SR
+    out = np.zeros(n)
+
+    def add(at, sig, g=1.0):
+        s = int(at * SR)
+        if s >= n:
+            return
+        e = min(n, s + len(sig))
+        out[s:e] += sig[:e - s] * g
+
+    kick, hat, clap = _kit(rng)
+    if kind == "hope":
+        return None
+    bpm = {"tense": 104, "drive": 112, "dark": 76}[kind]
+    beat = 60 / bpm
+    prog = {"tense": [[57, 60, 64], [53, 57, 60], [50, 53, 57], [52, 56, 59]],   # Am F Dm E
+            "drive": [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]],   # Am F C G
+            "dark": [[57, 60, 64], [53, 57, 60], [57, 60, 64], [52, 56, 59]]}[kind]
+    nb = int(duration / beat) + 4
+    for b in range(nb):
+        at, bar = b * beat, b // 4
+        ch = prog[bar % 4]
+        root = ch[0] - 24
+        if kind == "tense":
+            add(at, kick, 0.5 if b % 2 == 0 else 0.0)
+            if b % 4 == 3:
+                add(at + beat * 0.5, kick, 0.35)
+            for q in range(2):   # 8분 펄스 베이스 (쫄깃)
+                add(at + q * beat / 2, _saw(_hz(root + 12 * (q % 2 == 1 and b % 2 == 1)), beat / 2 * 0.9, 9), 0.11)
+            for q in range(4):
+                add(at + q * beat / 4, hat, 0.55 if q % 2 else 0.3)
+            pat = [ch[0] + 24, ch[1] + 24, ch[2] + 24, ch[1] + 24]
+            add(at, _tone(_hz(pat[b % 4]), 0.3, 10), 0.07)
+            add(at + beat / 2, _tone(_hz(pat[(b + 2) % 4]), 0.3, 10), 0.05)
+            if bar % 4 == 3 and b % 4 == 0:   # 4마디마다 긴장 상승(라이저)
+                L = int(beat * 4 * SR)
+                tt = np.arange(L) / SR
+                add(at, np.sin(2 * np.pi * np.cumsum(np.linspace(300, 1200, L)) / SR) * np.linspace(0, 0.05, L))
+        elif kind == "drive":
+            add(at, kick, 0.55)
+            if b % 2 == 1:
+                add(at, clap, 0.6)
+            add(at + beat / 2, hat, 0.7)
+            add(at + beat / 2, _saw(_hz(root + 12), beat / 2 * 0.8, 7), 0.10)   # 오프비트 베이스
+            for q in range(4):
+                m = ch[[0, 2, 1, 2][q]] + 24
+                add(at + q * beat / 4, _tone(_hz(m), 0.25, 12), 0.06 if q else 0.08)
+        elif kind == "dark":
+            add(at, kick, 0.55 if b % 2 == 0 else 0.0)        # 쿵-쿵 심장박동
+            add(at + beat * 0.3, kick, 0.3 if b % 2 == 0 else 0.0)
+            if b % 4 == 0:
+                d = beat * 4
+                for m in (root, root + 7, root + 12):
+                    add(at, _tone(_hz(m), d, 0.4, (1, 0.3)), 0.07)
+            if b % 2 == 1 and rng.random() < 0.6:
+                add(at, _tone(_hz(ch[rng.integers(3)] + 12), 1.4, 2.5), 0.06)
+    return out[:int(duration * SR)]
+
+
+def scored(duration, path, cues, xfade=2.0):
+    """cues: [(시작 초, kind)] → 분위기별 트랙을 겹쳐 만들고 구간마다 2초 크로스페이드"""
+    import tempfile
+    from pathlib import Path
+    L = int(duration * SR)
+    mix = np.zeros(L)
+    kinds = sorted({k for _, k in cues})
+    for k in kinds:
+        if k == "hope":
+            tmp = Path(tempfile.mkdtemp()) / "h.wav"
+            bright(duration + 1, tmp)
+            with wave.open(str(tmp)) as w:
+                x = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").reshape(-1, 2)[:, 0].astype(np.float64) / 32767
+        else:
+            x = mood(k, duration + 1)
+        x = x[:L] if len(x) >= L else np.pad(x, (0, L - len(x)))
+        x = x / (np.sqrt(np.mean(x ** 2)) + 1e-9) * 0.12      # 분위기마다 크기 맞춤
+        g = np.zeros(L)
+        for i, (t0, kk) in enumerate(cues):
+            if kk != k:
+                continue
+            t1 = cues[i + 1][0] if i + 1 < len(cues) else duration
+            a, b = int(max(0, t0 - xfade / 2) * SR), int(min(duration, t1 + xfade / 2) * SR)
+            env = np.ones(b - a)
+            f = int(xfade * SR)
+            if t0 > 0:
+                env[:f] = np.linspace(0, 1, min(f, len(env)))[:len(env[:f])]
+            if t1 < duration:
+                env[-f:] = np.linspace(1, 0, min(f, len(env)))[-len(env[-f:]):]
+            g[a:b] = np.maximum(g[a:b], env)
+        mix += x * g
+    fi, fo = int(0.5 * SR), int(3 * SR)
+    mix[:fi] *= np.linspace(0, 1, fi)
+    mix[-fo:] *= np.linspace(1, 0, fo)
+    mix = mix / (np.abs(mix).max() + 1e-9) * 0.6
+    stereo = np.stack([mix, np.roll(mix, int(0.01 * SR))], axis=1)
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(2)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes((stereo * 32767).astype("<i2").tobytes())
+    return path

@@ -245,7 +245,17 @@ def render_video(c, ep_dir, out, only, workers):
 
     # 오디오: 내레이션 정리 + BGM 생성 + 더킹 믹스
     dur = c.t1 - c.t0
-    music = bgm.generate(dur + 0.5, tmp / "bgm.wav")
+    bg = c.ep.get("bgm")
+    if isinstance(bg, dict) and bg.get("chapters"):   # 장 분위기에 맞춰 바뀌는 배경음 (2026-11-13)
+        cues, last = [], None
+        for sc in c.scenes:
+            k = bg["chapters"].get(sc.spec.get("chapter"), last or bg.get("default", "drive"))
+            if k != last and sc.start + sc.dur > c.t0 and sc.start < c.t1:
+                cues.append((max(0.0, sc.start - c.t0), k))
+                last = k
+        music = bgm.scored(dur + 0.5, tmp / "bgm.wav", cues or [(0, "drive")])
+    else:
+        music = bgm.generate(dur + 0.5, tmp / "bgm.wav")
     voice = None
     if c.narr:
         voice = tmp / "voice.wav"
@@ -258,7 +268,7 @@ def render_video(c, ep_dir, out, only, workers):
     events = [(t - c.t0, n, v) for t, n, v in sfx_events(c) if c.t0 <= t < c.t1]
     fx = sfx.build_track(events, dur + 0.5, tmp / "sfx.wav")
     if voice:
-        fc = ("[1:a]aresample=48000,volume=0.20,aformat=channel_layouts=stereo[m];"
+        fc = (f"[1:a]aresample=48000,volume={c.ep.get('bgm', {}).get('volume', 0.20) if isinstance(c.ep.get('bgm'), dict) else 0.20},aformat=channel_layouts=stereo[m];"
               "[2:a]aformat=channel_layouts=stereo,asplit=2[v1][v2];"
               "[m][v1]sidechaincompress=threshold=0.02:ratio=8:attack=30:release=600[md];"
               "[3:a]aresample=48000,volume=0.55[fx];"
@@ -393,6 +403,13 @@ def main():
     only = tuple(int(x) for x in a.scenes.split("-")) if a.scenes else None
     if only and len(only) == 1:
         only = (only[0], only[0])
+    try:  # 2026-11-13: 화면 요소 등장 시점(on)을 내레이션과 자동으로 맞춤 (tools/sync_check.py)
+        sys.path.insert(0, str(ROOT / "tools"))
+        import sync_check
+        for r in sync_check.main(ep_dir, do_fix=True, quiet=True):
+            print("  싱크 수정:", r)
+    except Exception as e:
+        print("싱크 점검 생략:", e)
     c = setup(ep_dir, only)
     print(f"모드: {c.mode} · 총 길이 {c.total / 60:.1f}분 · 장면 {len(c.scenes)}개")
     stats_report(c, out)
