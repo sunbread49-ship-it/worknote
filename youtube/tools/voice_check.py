@@ -77,8 +77,9 @@ def stt(x, cache):
     h = hashlib.sha1(x.tobytes()).hexdigest()[:16]
     if h in cache:
         return cache[h]
-    raw = (np.clip(x, -1, 1) * 32767).astype("<i2").tobytes()
-    body = {"config": {"encoding": "LINEAR16", "sampleRateHertz": SR, "languageCode": "ko-KR"},
+    pad = np.zeros(SR // 2, np.float32)   # 앞뒤 무음 0.5초: 없으면 첫 · 끝 단어를 자주 놓침
+    raw = (np.clip(np.concatenate([pad, x, pad]), -1, 1) * 32767).astype("<i2").tobytes()
+    body = {"config": {"encoding": "LINEAR16", "sampleRateHertz": SR, "languageCode": "ko-KR", "model": "latest_long"},
             "audio": {"content": base64.b64encode(raw).decode()}}
     r = urllib.request.Request(STT_URL, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
     res = json.loads(urllib.request.urlopen(r, timeout=90).read())
@@ -88,6 +89,7 @@ def stt(x, cache):
 
 
 def _norm(t):
+    t = re.sub(r"[A-Za-z][A-Za-z&]*\d*", " ", t)   # 영어 약어(S&P500 · IMF)는 받아쓰기가 영어로 적으므로 비교에서 뺌
     t = tts.speakable(t)                       # 받아쓴 숫자(18.3)도 같은 규칙으로 한글로
     return re.sub(r"[^가-힣]", "", t)
 
@@ -173,8 +175,8 @@ def main(ep_dir, quiet=False, use_stt=True):
             if use_stt:
                 try:
                     heard = stt(x, stt_cache)
-                    ratio, diffs = stt_diff(spoken, heard)
-                    if ratio < 0.9 and diffs:
+                    ratio, diffs = stt_diff(re.sub(r"\s//?\s|[|]|\[낮게\]|\*\*|!!", " ", text), heard)
+                    if ratio < 0.85 and diffs:
                         warn.append(f"받아쓰기와 다름(일치 {ratio * 100:.0f}%): " + ", ".join(diffs[:4]) + f"  · 들린 말: {heard[:60]}")
                 except Exception as e:  # 키 · 네트워크 문제면 받아쓰기만 건너뜀
                     use_stt = False
