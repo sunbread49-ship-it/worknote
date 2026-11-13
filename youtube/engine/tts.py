@@ -227,7 +227,8 @@ def _pieces(text, voice, rate, cfg, cache):
         a = _pcm(synth(speakable(seg, cfg.get("say")), voice, rate, cfg.get("pitch", 0.0), cache))
         nz = np.where(np.abs(a) > 0.01)[0]
         pcm.append(a[max(0, nz[0] - 240): nz[-1] + 1200] if len(nz) else a)
-    out = cache / (hashlib.sha1(json.dumps([text, voice, rate, cfg.get("say")], ensure_ascii=False).encode()).hexdigest()[:16] + ".pcs.wav")
+    key = [speakable(p_, cfg.get("say")) if i % 2 == 0 else p_ for i, p_ in enumerate(parts)]   # 읽기 규칙이 바뀌면 다시 만듦
+    out = cache / (hashlib.sha1(json.dumps([key, voice, rate], ensure_ascii=False).encode()).hexdigest()[:16] + ".pcs.wav")
     if not out.exists():
         with wave.open(str(out), "wb") as w:
             w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
