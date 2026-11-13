@@ -65,6 +65,42 @@ def _pauses(x, thr=0.012, min_s=0.3):
     return runs
 
 
+STT_URL = "https://speech.googleapis.com/v1/speech:recognize"
+
+
+def stt(x, cache):
+    """음성 → 글자 (Google Speech-to-Text · 키는 환경 Network secrets가 자동 첨부). 결과는 캐시."""
+    import base64
+    import hashlib
+    import json
+    import urllib.request
+    h = hashlib.sha1(x.tobytes()).hexdigest()[:16]
+    if h in cache:
+        return cache[h]
+    raw = (np.clip(x, -1, 1) * 32767).astype("<i2").tobytes()
+    body = {"config": {"encoding": "LINEAR16", "sampleRateHertz": SR, "languageCode": "ko-KR"},
+            "audio": {"content": base64.b64encode(raw).decode()}}
+    r = urllib.request.Request(STT_URL, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+    res = json.loads(urllib.request.urlopen(r, timeout=90).read())
+    txt = " ".join(a["alternatives"][0]["transcript"] for a in res.get("results", []))
+    cache[h] = txt
+    return txt
+
+
+def _norm(t):
+    t = tts.speakable(t)                       # 받아쓴 숫자(18.3)도 같은 규칙으로 한글로
+    return re.sub(r"[^가-힣]", "", t)
+
+
+def stt_diff(spoken, heard):
+    """대본 읽기 vs 받아쓰기: 일치율과 다른 부분"""
+    import difflib
+    a, b = _norm(spoken), _norm(heard)
+    sm = difflib.SequenceMatcher(None, a, b)
+    diffs = [f"'{a[i1:i2]}'→'{b[j1:j2]}'" for op, i1, i2, j1, j2 in sm.get_opcodes() if op != "equal" and (i2 - i1 > 1 or j2 - j1 > 1)]
+    return sm.ratio(), diffs
+
+
 TAIL = re.compile(r"(처럼|같이|보다|까지|부터|만큼|대로|이라도|라도)요[.?!]?$")
 
 
@@ -84,7 +120,7 @@ def text_lint(raw, spoken, say):
     return w
 
 
-def main(ep_dir, quiet=False):
+def main(ep_dir, quiet=False, use_stt=True):
     import render as R
     ep_dir = Path(ep_dir).resolve()
     ep, _ = R.load(ep_dir)
@@ -98,6 +134,9 @@ def main(ep_dir, quiet=False):
             rows.append(f"[사전] '{k}: {v}' — 소수를 띄어 쓰면 '점' 앞뒤가 끊겨 들림. 사전에서 빼면 자동 규칙(사십육점일)이 처리")
         if "[pause]" in str(v):
             rows.append(f"[사전] '{k}: {v}' — [pause]는 길고 어색함. 쉼표(짧은 쉼)나 ' // '를 쓸 것")
+    import json
+    sc_path = ROOT / "out" / ep_dir.name / "stt_cache.json"
+    stt_cache = json.loads(sc_path.read_text(encoding="utf-8")) if sc_path.exists() else {}
     n = 0
     for si, sc in enumerate(ep["scenes"], 1):
         for text in sc.get("narration", []):
@@ -131,8 +170,18 @@ def main(ep_dir, quiet=False):
                     q = spoken.rstrip().endswith("?")
                     if not q and rise > 1.18:
                         warn.append(f"질문이 아닌데 끝 음정이 올라감(+{(rise - 1) * 100:.0f}%) → 끝맺음 바꾸기('~요.' 대신 '~어요/~죠' 완결형)")
+            if use_stt:
+                try:
+                    heard = stt(x, stt_cache)
+                    ratio, diffs = stt_diff(spoken, heard)
+                    if ratio < 0.9 and diffs:
+                        warn.append(f"받아쓰기와 다름(일치 {ratio * 100:.0f}%): " + ", ".join(diffs[:4]) + f"  · 들린 말: {heard[:60]}")
+                except Exception as e:  # 키 · 네트워크 문제면 받아쓰기만 건너뜀
+                    use_stt = False
+                    rows.append(f"[받아쓰기] 생략: {str(e)[:80]}")
             stats.append((n, si, sps))
             rows.append((n, si, text, spoken, warn, sps))
+    sc_path.write_text(json.dumps(stt_cache, ensure_ascii=False, indent=1), encoding="utf-8")
     med = np.median([s for _, _, s in stats])
     out, bad = [], 0
     for r in rows:
