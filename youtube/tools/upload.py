@@ -151,7 +151,7 @@ def plan(ep_dir, want_long, want_shorts, publish_at, shorts_every):
     return items, out
 
 
-SLOT_DAYS = (1, 4, 5)   # 화(1)·금(4)·토(5)
+SLOT_DAYS = (0, 1, 2, 3, 4, 5, 6)   # 2026-11-16~11-29 매일 롱폼 2주 시험 (이전: 화·금·토 (1, 4, 5))
 SLOT_HOUR = 18       # 18:00 KST
 LOG_PATH = ROOT / "uploads.json"  # git에 커밋되는 업로드 기록 (out/ 은 git 제외라 세션이 바뀌면 사라짐)
 
