@@ -237,11 +237,24 @@ def banner_img(lines):
     return _ban[key]
 
 
-def with_banner(f, lines):
+def with_banner(f, lines, dy=BANNER_H):
     out = Image.new("RGBA", (W, H), (0, 0, 0, 255))
-    out.alpha_composite(f.crop((0, 0, W, H - BANNER_H)), (0, BANNER_H))
+    out.alpha_composite(f.crop((0, 0, W, H - dy)), (0, dy))
     out.alpha_composite(banner_img(lines), (0, 0))
     return out
+
+
+def scene_shift(sc):
+    """장면 가운데 시점 화면에서 배경과 다른 첫 줄(내용 시작)을 찾아, 띠 아래 40px에 오도록 내릴 양 (0~BANNER_H)"""
+    if "_dy" not in sc:
+        g = BG.copy()
+        sc["draw"](g, min(sc["dur"] * 0.6, sc["L"][-1] + 0.8), sc)
+        a = np.asarray(g.convert("L"), dtype=np.float32)
+        rows = a.std(axis=1)          # 한 줄이 단색(빈 배경)이면 표준편차가 작음 → 내용 시작 = 처음으로 얼룩이 생기는 줄
+        hit = np.where(rows > 10)[0]
+        first = int(hit[0]) if len(hit) else H
+        sc["_dy"] = int(max(0, min(BANNER_H, BANNER_H + 40 - first)))
+    return sc["_dy"]
 
 
 def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None, bgm_cues=None):
@@ -271,11 +284,13 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None, bgm_cues=N
             f.alpha_composite(Image.new("RGBA", (W, H), BG2 + (int(200 * (1 - lt / 0.18)),)))
             if not sc.get("nohead"):
                 header(f, head)
-        if head.get("banner"):   # 2026-11-14: 위쪽 고정 제목 띠 (검은 띠 + 흰 줄 + 빨간 상자 줄) · 장면은 띠 높이만큼 아래로
-            f = with_banner(f, head["banner"])
+        dy = 0
+        if head.get("banner"):   # 2026-11-14: 위쪽 고정 제목 띠 · 장면은 '내용이 시작되는 줄'이 띠 바로 아래에 오도록 필요한 만큼만 내림
+            dy = scene_shift(sc)
+            f = with_banner(f, head["banner"], dy)
         cue = next((c for c in subs if c[0] <= t < c[1] + 0.1), None)
         if cue:
-            subtitle(f, cue[2], dy=BANNER_H if head.get("banner") else 0)   # 장면이 내려간 만큼 자막도 같이 (장면이 비워 둔 자리)
+            subtitle(f, cue[2], dy=dy)   # 장면이 내려간 만큼 자막도 같이 (장면이 비워 둔 자리)
         return f.convert("RGB")
 
     def cover_img():
