@@ -474,8 +474,16 @@ def v3_p08(sp):
     f.alpha_composite(left, (0, 0))
     f.alpha_composite(right, (W // 2, 0))
     ImageDraw.Draw(f).polygon([(W / 2 - 14, 0), (W / 2 + 26, 0), (W / 2 + 14, H), (W / 2 - 26, H)], fill=YEL + (255,))
-    bl = badge(sp["badge_l"], ring=(90, 160, 255))
-    br = badge(sp["badge_r"], ring=(255, 90, 90))
+    def tbadge(txt, ring, d=460):   # 인물이 없으면 큰 글자 원형 배지 (예: 2007 vs 2026)
+        o = Image.new("RGBA", (d + 30, d + 30), (0, 0, 0, 0))
+        dd = ImageDraw.Draw(o)
+        dd.ellipse((0, 0, d + 29, d + 29), fill=ring + (255,))
+        dd.ellipse((15, 15, d + 14, d + 14), fill=(24, 28, 40, 255))
+        t_ = TH.fit(txt, 170, d - 60, color=WHITE)
+        o.alpha_composite(t_, ((d + 30 - t_.width) // 2, (d + 30 - t_.height) // 2))
+        return o
+    bl = badge(sp["badge_l"], ring=(90, 160, 255)) if sp.get("badge_l") else tbadge(sp["text_l"], (90, 160, 255))
+    br = badge(sp["badge_r"], ring=(255, 90, 90)) if sp.get("badge_r") else tbadge(sp["text_r"], (255, 90, 90))
     TH.shadowed(f, bl, (W / 4, 60), "mt")
     TH.shadowed(f, br, (W * 3 / 4, 60), "mt")
     for x_, t_ in ((W / 4, sp.get("name_l", "")), (W * 3 / 4, sp.get("name_r", ""))):
@@ -515,7 +523,9 @@ def v3_p10(sp):
     y = left_two(f, sp["top"], sp["bottom"], top_size=140, bot_size=200) if sp.get("align") == "left" else None
     if y is None:
         bottom_two(f, sp["top"], sp["bottom"], top_size=140, bot_size=200)
-        TH.shadowed(f, lab, (W / 2, H - 450), "mb")
+        hb = txt(sp["bottom"], 200, YEL, maxw=1820).height
+        ht = txt(sp["top"], 140, WHITE, maxw=1820).height
+        TH.shadowed(f, lab, (W / 2, H - 50 - hb - ht + 4), "mb")
     else:
         TH.shadowed(f, lab, (70, y - 10), "lb")
     return f

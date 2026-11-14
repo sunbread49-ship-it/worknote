@@ -33,7 +33,7 @@ def _vix() -> pd.Series:
 
 # 네이버 차트 일별 종가 (tools/fetch_assets.naver_stock)
 KR_NAVER = ("kodex200", "kodex_lev", "kodex_inv2x", "bat_kodex", "bat_lev_kodex", "bat_lev_tiger",
-            "lges", "ecopro", "ecopro_bm", "hanwha_aero")
+            "lges", "ecopro", "ecopro_bm", "hanwha_aero", "hanwha_ocean", "samsung_heavy", "hd_ksoe", "hd_hhi")
 
 
 @lru_cache(maxsize=None)

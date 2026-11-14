@@ -251,11 +251,13 @@ def plan(scenes, cfg, work_dir: Path, log=print):
         for text in sc.narration:
             # 첫째 · 둘째 · 셋째는 따로 떼어 차분하게 (쉼표 억양 · [pause] 모두 어색 · EP013 · EP014 피드백)
             text = re.sub(r"(첫째|둘째|셋째|넷째),\s", r"\1 / ", text)
-            if re.search(r"\s//?\s", text):   # ' / ' 짧은 쉼(0.12초) · ' // ' 긴 쉼(0.3초): 조각마다 따로 만들어 이어 붙임
+            if cfg.get("provider") == "gemini":   # 2026-11-14: Gemini 음성 (줄 통째로 · 받아쓰기 확인 후 재생성)
+                mp3 = gemini_line(text, cfg, cache)
+            elif re.search(r"\s//?\s", text):   # ' / ' 짧은 쉼(0.12초) · ' // ' 긴 쉼(0.3초): 조각마다 따로 만들어 이어 붙임
                 mp3 = _pieces(text, voice, rate, cfg, cache)
             else:
                 mp3 = synth(speakable(text, cfg.get("say")), voice, rate, cfg.get("pitch", 0.0), cache)
-            if text.lstrip().startswith("[낮게]"):
+            if text.lstrip().startswith("[낮게]") and cfg.get("provider") != "gemini":
                 # soft(기본): 음 높이는 그대로, 5% 느리게 · 살짝 작게 → 기계음 없음 (EP013 피드백)
                 # pitch: 음 높이 -1.2음 + 6% 느리게 (EP012에서 사용, rubberband 특유의 기계음이 남)
                 mode = cfg.get("low", "soft")
@@ -337,3 +339,29 @@ def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), sty
             last = e
             time.sleep(10 + 10 * k)
     raise RuntimeError(f"Gemini TTS 실패: {last}")
+
+
+def gemini_line(text, cfg, cache, log=print):
+    """롱폼 한 줄 → Gemini 음성 wav. [낮게]는 말투 지시로. 받아쓰기 일치율이 낮으면 최대 3번 다시 만들어 가장 좋은 것."""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parents[1] / "tools"))
+    low = text.lstrip().startswith("[낮게]")
+    txt = gemini_text(text, cfg.get("say"))
+    speed = "낮고 차분한 톤으로, 한 박자 천천히." if low else cfg.get("speed", "빠르게")
+    best = None
+    for take in range(3):
+        p = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
+        try:
+            import voice_check as VC
+            x = VC._pcm(p)
+            key = str(p) + ".stt"
+            ratio, diffs = VC.stt_diff(text, VC.stt(x, {}))
+        except Exception:
+            return p
+        if best is None or ratio > best[0]:
+            best = (ratio, p)
+        if ratio >= 0.88:
+            break
+        log(f"  Gemini 다시 만듦({ratio:.2f}): {text[:30]} {diffs[:2]}")
+    return best[1]

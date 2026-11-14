@@ -150,7 +150,9 @@ def main(ep_dir, quiet=False, use_stt=True):
             spoken = " / ".join(tts.speakable(p, say) for p in re.split(r"\s//?\s", text))
             warn = text_lint(text, spoken, say)
             mp3 = None
-            if re.search(r"\s//?\s", text):
+            if cfg.get("provider") == "gemini":
+                mp3 = tts.gemini_line(text, cfg, cache, log=lambda *a: None)
+            elif re.search(r"\s//?\s", text):
                 mp3 = tts._pieces(text, voice, rate, cfg, cache)
             else:
                 mp3 = tts.synth(tts.speakable(text, say), voice, rate, cfg.get("pitch", 0.0), cache)
