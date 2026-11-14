@@ -308,7 +308,13 @@ def chapters(c):
             else:
                 rows.append((t, ch))
             last = ch
-    return "\n".join(f"{int(t // 60):02d}:{int(t % 60):02d} {n}" for t, n in rows) if len(rows) >= 3 else ""
+    # 2026-11-14: 챕터 이름은 구글 검색 '주요 순간'에 그대로 노출 → episode.yaml chapter_titles로 핵심 키워드 이름을 붙임
+    #   chapter_titles: {인트로: "한화오션 10개월 -67%", 반전: "반전: 신조선가지수", ...}
+    seo = c.ep.get("chapter_titles", {}) or {}
+    missing = [n for _, n in rows if n not in seo]
+    if seo and missing:
+        print("chapter_titles에 없는 챕터(키워드 이름 필요):", missing)
+    return "\n".join(f"{int(t // 60):02d}:{int(t % 60):02d} {seo.get(n, n)}" for t, n in rows) if len(rows) >= 3 else ""
 
 
 def write_review(c, out):
