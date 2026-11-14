@@ -295,6 +295,8 @@ def plan(scenes, cfg, work_dir: Path, log=print):
 # ══ Gemini TTS (2026-11-14 사용자 결정: 블라인드 테스트에서 '압도적으로' 자연스러움 → 두 채널 모두 사용) ══════════
 # 키: 환경 Network secrets — generativelanguage.googleapis.com / 헤더 x-goog-api-key (요청에 자동으로 붙음)
 GEMINI_MODEL = "gemini-2.5-flash-preview-tts"
+GEMINI_MODELS = ["gemini-2.5-flash-preview-tts", "gemini-2.5-pro-preview-tts"]   # 하루 한도가 모델마다 따로 (Tier 1: 각 100번)
+_G_DEAD = set()
 GEMINI_MIN_GAP = 7.0   # 초 · 분당 약 8번 (429 방지)
 _G_LAST = 0.0   # pro 모델은 긴 글에서 502가 잦음
 GEMINI_STYLE = ("다음 한국어 대본을 그대로 읽어 줘. 경제 유튜브 진행자 말투로, 친구에게 이야기하듯 자연스럽고 생생하게. "
@@ -315,11 +317,14 @@ def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), sty
     """문장/문단 → wav(24kHz) 경로. 같은 입력이면 캐시. take를 바꾸면 다시 만든다(어색할 때 재시도)."""
     import time
     cache_dir.mkdir(parents=True, exist_ok=True)
+    global GEMINI_MODEL
     prompt = (style or GEMINI_STYLE).format(speed=GEMINI_SPEED.get(speed, speed))
+    for m_ in GEMINI_MODELS:   # 어느 모델로 만든 것이든 캐시에 있으면 그대로
+        h_ = hashlib.sha1(json.dumps([text, voice, prompt, m_, take], ensure_ascii=False).encode()).hexdigest()[:16]
+        if (cache_dir / f"g_{h_}.wav").exists():
+            return cache_dir / f"g_{h_}.wav"
     h = hashlib.sha1(json.dumps([text, voice, prompt, GEMINI_MODEL, take], ensure_ascii=False).encode()).hexdigest()[:16]
     out = cache_dir / f"g_{h}.wav"
-    if out.exists():
-        return out
     body = {"contents": [{"parts": [{"text": prompt + "\n\n대본:\n" + text}]}],
             "generationConfig": {"responseModalities": ["AUDIO"],
                                  "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}}}}
@@ -346,9 +351,23 @@ def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), sty
             last = e
             wait = 15 + 15 * k
             try:
-                m = re.search(r'"retryDelay":\s*"(\d+)', e.read().decode())
+                body_ = e.read().decode()
+                if "per_day" in body_ or "PerDay" in body_:   # 하루 한도 → 다른 모델로 넘어감 (모델마다 한도가 따로)
+                    rest = [m_ for m_ in GEMINI_MODELS if m_ not in _G_DEAD and m_ != GEMINI_MODEL]
+                    _G_DEAD.add(GEMINI_MODEL)
+                    if not rest:
+                        raise RuntimeError("Gemini TTS 하루 한도 소진 (모든 모델) — 한국 시간 17시쯤 초기화")
+                    GEMINI_MODEL = rest[0]
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+                    h = hashlib.sha1(json.dumps([text, voice, prompt, GEMINI_MODEL, take], ensure_ascii=False).encode()).hexdigest()[:16]
+                    out = cache_dir / f"g_{h}.wav"
+                    print(f"  Gemini 하루 한도 → {GEMINI_MODEL} 로 전환")
+                    continue
+                m = re.search(r'"retryDelay":\s*"(\d+)', body_)
                 if m:
                     wait = int(m.group(1)) + 3
+            except RuntimeError:
+                raise
             except Exception:
                 pass
             time.sleep(min(wait, 120))
