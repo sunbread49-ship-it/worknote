@@ -288,3 +288,52 @@ def plan(scenes, cfg, work_dir: Path, log=print):
         w.writeframes((np.clip(buf, -1, 1) * 32767).astype("<i2").tobytes())
     log(f"  AI 음성: {voice} · 속도 {rate} · 문장 {len(clips)}개 · {t / 60:.1f}분")
     return out, f"AI 음성({voice})"
+
+
+# ══ Gemini TTS (2026-11-14 사용자 결정: 블라인드 테스트에서 '압도적으로' 자연스러움 → 두 채널 모두 사용) ══════════
+# 키: 환경 Network secrets — generativelanguage.googleapis.com / 헤더 x-goog-api-key (요청에 자동으로 붙음)
+GEMINI_MODEL = "gemini-2.5-flash-preview-tts"   # pro 모델은 긴 글에서 502가 잦음
+GEMINI_STYLE = ("다음 한국어 대본을 그대로 읽어 줘. 경제 유튜브 진행자 말투로, 친구에게 이야기하듯 자연스럽고 생생하게. "
+                "{speed} 숫자는 또렷하게, 질문은 진짜 궁금한 듯이, 반전 앞에서는 한 박자 쉬어 줘.")
+GEMINI_SPEED = {"보통": "차분하지만 지루하지 않은 보통 속도로.", "빠르게": "템포 빠르고 경쾌하게, 쇼츠처럼 몰입감 있게."}
+
+
+def gemini_text(text, extra=None):
+    """Gemini용 가벼운 다듬기: 자막 표시 · 쉼 표시 제거 + 발음 사전 + 소수 '쩜' (나머지 숫자는 Gemini가 자연스럽게 읽음)"""
+    t = re.sub(r"\s//?\s", " ", text).replace("[낮게]", "").replace(" | ", " ").replace("|", "").replace("**", "").replace("!!", "")
+    for k, v in sorted({**SAY, **(extra or {})}.items(), key=lambda kv: -len(kv[0])):
+        t = t.replace(k, v)
+    t = re.sub(r"(?<![\d.,])(\d+)\.(\d+)(?![\d.])", lambda m: hangul_num(int(m.group(1))) + "쩜" + "".join(_DIG[int(c)] for c in m.group(2)), t)
+    return t.strip()
+
+
+def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), style=None, take=0):
+    """문장/문단 → wav(24kHz) 경로. 같은 입력이면 캐시. take를 바꾸면 다시 만든다(어색할 때 재시도)."""
+    import time
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    prompt = (style or GEMINI_STYLE).format(speed=GEMINI_SPEED.get(speed, speed))
+    h = hashlib.sha1(json.dumps([text, voice, prompt, GEMINI_MODEL, take], ensure_ascii=False).encode()).hexdigest()[:16]
+    out = cache_dir / f"g_{h}.wav"
+    if out.exists():
+        return out
+    body = {"contents": [{"parts": [{"text": prompt + "\n\n대본:\n" + text}]}],
+            "generationConfig": {"responseModalities": ["AUDIO"],
+                                 "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}}}}
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+    last = None
+    for k in range(6):
+        try:
+            req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=240) as r:
+                res = json.loads(r.read())
+            pcm = base64.b64decode(res["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
+            with wave.open(str(out), "wb") as w:
+                w.setnchannels(1)
+                w.setsampwidth(2)
+                w.setframerate(24000)
+                w.writeframes(pcm)
+            return out
+        except Exception as e:  # 429(잠깐 많음) · 502(서버) → 잠시 뒤 재시도
+            last = e
+            time.sleep(10 + 10 * k)
+    raise RuntimeError(f"Gemini TTS 실패: {last}")

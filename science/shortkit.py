@@ -73,15 +73,43 @@ def pcm(path):
     return a[max(0, nz[0] - 480):nz[-1] + 2400] if len(nz) else a
 
 
+def _gemini_line(line, gem, say, cache):
+    sys.path.insert(0, str(HERE.parent / "youtube" / "tools"))
+    import voice_check as VC
+    txt = TTS.gemini_text(line, say)
+    best = None
+    for take in range(3):
+        a = pcm(TTS.gemini_synth(txt, gem.get("voice", "Umbriel"), gem.get("speed", "빠르게"), cache, take=take))
+        try:
+            x16 = a[::3]   # 48k → 16k
+            ratio, diffs = VC.stt_diff(line, VC.stt(x16, {}))
+        except Exception:
+            return a
+        if best is None or ratio > best[0]:
+            best = (ratio, a)
+        if ratio >= 0.88:
+            break
+        print(f"  다시 만듦({ratio:.2f}): {line[:30]} {diffs[:2]}")
+    return best[1]
+
+
 def plan(scenes, out, say):
     say = {**CTA_SAY, **say}
     rate = say.pop("__rate__", RATE)
     voice = say.pop("__voice__", VOICE)
+    gem = say.pop("__gemini__", None)   # 예: {"voice": "Umbriel", "speed": "빠르게"}
     cache = out / "tts_cache"
     t, clips, cues = 0.0, [], []
     for sc in scenes:
         sc["start"], cur, sc["L"] = t, 0.25, []
         for line in sc["narr"]:
+            if gem:  # 2026-11-14: Gemini 음성 — 줄 통째로 자연스럽게 + 받아쓰기로 확인해 틀리면 다시 (최대 3번)
+                sc["L"].append(cur)
+                a = _gemini_line(line, gem, say, cache)
+                clips.append((t + cur, a))
+                cues.append((t + cur, t + cur + len(a) / 48000, line.replace(" // ", " ").replace(" / ", " ").replace(" | ", " ").replace("|", "")))
+                cur += len(a) / 48000 + sc.get("gap", 0.25)
+                continue
             # ' / ' = 짧게 띄기(0.12초), ' // ' = 한 템포 쉬기(0.3초): 조각마다 따로 읽어 이어 붙임 → 쉼표 쉼 기호가 만드는 이상한 소리 방지
             pieces = [p for p in line.replace(" // ", " /~/ ").split(" /") if p.strip()]
             sc["L"].append(cur)
@@ -179,7 +207,7 @@ def subtitle(f, text):
     G.blit(f, _subc[text], (W / 2, SUB_Y), 1, "mt")
 
 
-def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
+def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None, bgm_cues=None):
     """scenes: [{draw(f, t, sc), narr:[..], min}], head: {kicker, title, highlight}, cover: draw(f) 커버 그림"""
     ap = argparse.ArgumentParser()
     ap.add_argument("--stills", action="store_true")
@@ -239,7 +267,10 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None):
     tail = 0.3 if cover else 0.0
     SFX.build_track(ev, total + tail, out / "sfx.wav")
     from engine import bgm
-    bgm.bright(total + tail, out / "bgm.wav")  # 2026-11-11: 밝고 두근거리는 배경음
+    if bgm_cues:  # [(장면 번호, 분위기)] → 장면 시작 시각으로 (2026-11-14 주식 쇼츠: 긴장 → 반전 밝게)
+        bgm.scored(total + tail, out / "bgm.wav", [(scenes[i]["start"], k) for i, k in bgm_cues])
+    else:
+        bgm.bright(total + tail, out / "bgm.wav")  # 2026-11-11: 밝고 두근거리는 배경음
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
            "-i", str(out / "voice.wav"), "-i", str(out / "sfx.wav"), "-i", str(out / "bgm.wav"),
            "-filter_complex", "[3:a]volume=0.16[b];[1:a][2:a][b]amix=inputs=3:normalize=0,apad,loudnorm=I=-14:TP=-1.5[a]",
