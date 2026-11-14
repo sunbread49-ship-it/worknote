@@ -153,7 +153,7 @@ scenes:
   narration: ['시간을 돌려 볼게요. | 코로나가 덮친 2020년 3월, 한화오션 주가는 바닥이었어요.', '그리고 2026년 1월까지, **15배**가 됐죠. | 1,000만 원이 1억 5천만 원이 된 거예요.', '그런데 거기서 10개월 만에, !!-67%!!.']
 - type: isobars
   chapter: 광풍
-  bg: {kind: parallax, file: ai_shipyard_boom, dark: 0.72, blur: 4}
+  bg: {kind: parallax, file: port_cranes, dark: 0.72, blur: 4}
   kicker: 2020년 3월 코로나 바닥 → 2025~26년 꼭대기
   title: 조선주가 몇 배가 됐나
   highlight: 몇 배
@@ -165,6 +165,22 @@ scenes:
   - {label: 11.7배, year: 삼성중공업, sub: '2026.4 꼭대기', value: 11.7}
   - {label: 7.2배, year: HD한국조선해양, sub: '2025.11 꼭대기', value: 7.2}
   narration: ['다른 조선주도 마찬가지예요. | 삼성중공업은 11.7배, HD한국조선해양은 7.2배.', '배가 모자라서 몇 년 치 주문이 밀려 있다는 말에, | 다들 슈퍼사이클이라고 불렀죠.']
+- type: xpost
+  chapter: 광풍
+  photo: trump
+  face_focus: [0.5, 0.3]
+  bg: {kind: video, file: port_aerial_v, dark: 0.72, blur: 10}
+  platform: 백악관 발표 · 보도
+  name: 도널드 트럼프
+  handle: 미국 대통령 · 호위함 건조 계획 발표
+  date: '2025.12'
+  big: '"a good company"'
+  plain: true
+  ko: '미 해군 호위함, **한화와 함께** 만든다'
+  ko_on: 2
+  y: 470
+  credit: '자료: Korea Herald · Korea Times 보도 (2025.12) · MASGA 1,500억 달러 한미 조선 협력'
+  narration: ['기름을 부은 건 미국이었어요. | 한미 조선 협력, 이른바 마스가에 1,500억 달러 투자 계획이 나왔고,', '트럼프 대통령은 미 해군 호위함을 한화와 함께 만들겠다며, | 한화를 좋은 회사라고 불렀죠.']
 - type: qa
   chapter: 광풍
   visual: ai_investor_peak
@@ -186,19 +202,15 @@ scenes:
   vmax: 65
   credit: '올해 수익률 · 2026.1.2 종가 → 11.13 종가 · 네이버 차트'
   narration: ['올해만 놓고 보면 더 아파요. | 한화오션은 1월 2일보다 !!-57.4%!!.', '꼭대기를 찍은 지 304일째예요.', 'HD한국조선해양은 -39%, 삼성중공업도 -31%죠.']
-- type: checklist
+- type: clips
   chapter: 추락
-  kicker: 증권가가 꼽는 이유
-  title: 왜 빠졌나, 세 줄 요약
-  highlight: 세 줄
-  title_size: 90
-  icon: photo:port_cranes
-  icon_on: 1
-  icon_x: 1620
+  title: 왜 빠졌나 · 요즘 기사 제목
+  highlight: 왜 빠졌나
   items:
-  - {text: '3분기 실적이 기대에 못 미쳤다', on: 2, highlight: 실적}
-  - {text: '중국 조선소가 계속 늘어난다', on: 3, highlight: 중국}
-  - {text: '원가 · 노조 · 지정학 변수', on: 4, highlight: 원가}
+  - {outlet: 한국경제, date: 2026.9, headline: '이익 늘었는데 주가는 빠졌다…맥 못추는 조선주', on: 2}
+  - {outlet: 서플, date: 2026, headline: '힘 잃은 조선주…실적·중국 부담에 약세', on: 3, hl: true}
+  - {outlet: CBC뉴스, date: 2026, headline: 'HD현대중공업 2%대 하락…미국·이란 전쟁 변수 속 조선주 약세', on: 4}
+  credit: '기사 제목: 한국경제 · 서플 · CBC뉴스 (보도 그대로)'
   narration: ['증권가가 꼽는 이유를 세 줄로 줄이면 이래요.', '첫째, 3분기 실적이 기대에 못 미쳤어요. | HD현대중공업이 대표적이죠.', '둘째, 중국 조선소가 계속 생산능력을 늘리면서, | 배가 다시 남아돌 거라는 걱정이 커졌어요.', '셋째, 원자재 값과 노조 파업, | 미국과 이란 사이 긴장 같은 바깥 변수까지 겹쳤고요.']
 - type: qa
   chapter: 추락
@@ -230,6 +242,16 @@ scenes:
   sfx: [{name: fall_burn, on: 2, offset: 0.2, vol: 0.7}]
   shake: [{on: 2, offset: 0.3, amp: 12, dur: 0.4}]
   narration: ['그때도 조선은 슈퍼사이클이었어요. | 대우조선해양, 지금의 한화오션은 2007년 10월에 꼭대기를 찍었죠.', '그리고 딱 1년 뒤, 주가는 !!-86%!!. | 금융위기가 겹치면서, 배 주문 취소까지 쏟아졌어요.']
+- type: clips
+  chapter: 2007년의 기억
+  title: 2008년 8월 · 그때 신문
+  highlight: 2008년 8월
+  bg: {kind: parallax, file: ai_ships_idle, dark: 0.7, blur: 6}
+  items:
+  - {outlet: 머니투데이, date: 2008.8.4, headline: '조선사 수주계약 해지 "악재긴 하지만"', on: 1}
+  - {outlet: 머니투데이, date: 2008.8.4, headline: "[오늘의포인트] 코스피 '조선 쇼크'", on: 2, hl: true}
+  credit: '기사 제목: 머니투데이 (2008.8.4, 보도 그대로)'
+  narration: ['그때 신문은 이랬어요. | 2008년 8월, 조선사들이 잇따라 배 주문 계약이 해지됐다고 공시했고,', '증시엔 조선 쇼크라는 말이 붙었죠.']
 - type: duel
   chapter: 2007년의 기억
   heading: 2007년 10월 꼭대기에서 1,000만 원
@@ -274,7 +296,7 @@ scenes:
   narration: ['그런데 2007년에도 그랬어요. | 주가는 2007년 10월에 꼭대기를 찍었는데,', '배 값이 꼭대기를 찍은 건 2008년 9월이었어요. | 거의 1년 뒤죠.', '[낮게]배 값이 꺾이기도 전에, 주가는 이미 반 토막이 나 있었던 거예요.']
 - type: kinetic
   chapter: 반전
-  bg: {kind: parallax, file: ai_stock_ahead, dark: 0.55, blur: 0}
+  bg: {kind: video, file: container_ship_v, dark: 0.6, blur: 4}
   items:
   - {text: "주가는\n배 값보다\n먼저 움직인다", on: 1, size: 130, highlight: '먼저', hl_color: gold}
   narration: ['주식시장은, 지금이 아니라 2~3년 뒤를 사고팔거든요.', '오늘 배 값이 좋아도, 앞으로 남아돌 것 같으면 | 주가가 먼저 빠지는 거예요.']
@@ -285,9 +307,23 @@ scenes:
   left: {title: '같은 점', value: '주가 먼저', sub: '배 값은 높은데 주가가 먼저 꺾임 · 중국 증설', color: down, on: 1}
   right: {title: '다른 점', value: '취소 없음', sub: '2008년엔 금융위기 · 주문 취소 / 지금은 몇 년 치 주문 보유', color: up, on: 2}
   narration: ['그럼 이번에도 2007년처럼 될까요? | 같은 점은 분명히 있어요. 배 값은 높은데, 주가가 먼저 꺾였다는 거죠.', '다른 점도 있어요. | 2008년엔 금융위기가 터지면서 주문 취소가 쏟아졌는데,', '지금은 아직 그런 소식은 없고, | 증권가는 3년 치가 넘는 주문이 쌓여 있다고 봐요.']
+- type: chart
+  chapter: 이번엔 다를까
+  chart:
+    lines:
+    - {series: 'peak:hanwha_ocean:2007-10-16', color: neutral, label: 2007년 꼭대기부터}
+    - {series: 'peak:hanwha_ocean:2026-01-13', color: [240, 84, 84], label: 2026년 꼭대기부터}
+    end: '2001-02-01'
+    x_days: true
+    rect: [300, 200, 1200, 620]
+    end_labels: true
+    title: 한화오션 · 두 번의 꼭대기를 겹쳐 보면 (꼭대기 = 100)
+    draw: {on: 1, dur: 2.6}
+    source: '자료: 네이버 차트 한화오션 일별 종가 · 꼭대기 날의 종가를 100으로'
+  narration: ['두 번의 꼭대기를 겹쳐 볼게요. | 회색이 2007년, 빨간색이 이번이에요.', '꼭대기 뒤 304일째, 2007년엔 -40%였는데 이번엔 !!-67%!!. | 이번이 더 빨리 빠졌어요.', '2007년엔 1년째에 -68%, 그리고 바닥은 -86%였죠.']
 - type: qa
   chapter: 이번엔 다를까
-  visual: ai_bottom_valley
+  visual: dry_dock
   q: '그럼 지금이\n**바닥**일까?'
   a: '아무도 몰라요.\n그래서 **신호**를 봐요.'
   a_on: 2
@@ -318,7 +354,7 @@ scenes:
   title: 지켜볼 신호 세 가지
   highlight: 세 가지
   title_size: 90
-  icon: photo:ai_signals
+  icon: photo:lng_carrier
   icon_on: 1
   icon_x: 1620
   items:

@@ -131,6 +131,8 @@ class LineChart:
         return list(np.arange(start, self.hi + 1e-9, step))
 
     def _ticks_x(self):
+        if self.spec.get("x_days"):   # 경과일 축 (꼭대기 겹쳐 보기)
+            return []
         span = self.x1 - self.x0
         if span < 1.6:
             return []
@@ -154,7 +156,14 @@ class LineChart:
             d.line((x, ybot, x, ybot + 8), fill=S.MUTED + (180,), width=2)
             t = G.text_img(str(yr), "Medium", 24, S.MUTED)
             base.alpha_composite(t, (int(x - t.width / 2), int(ybot + 14)))
-        if not self._ticks_x():  # 짧은 기간이면 시작·끝 날짜
+        if self.spec.get("x_days"):
+            step = self.spec.get("x_days_step", 100)
+            for dd in range(0, int((self.x1 - self.x0) * 365.25) + 1, step):
+                x, _ = self.px(self.x0 + dd / 365.25, 1)
+                d.line((x, ybot, x, ybot + 8), fill=S.MUTED + (180,), width=2)
+                t = G.text_img("꼭대기" if dd == 0 else f"+{dd}일", "Medium", 24, S.MUTED)
+                base.alpha_composite(t, (int(x - t.width / 2), int(ybot + 14)))
+        elif not self._ticks_x():  # 짧은 기간이면 시작·끝 날짜
             for x_, ts in ((rx, self.s.index[0]), (rx + rw, self.s.index[-1])):
                 t = G.text_img(ts.strftime("%Y.%m.%d"), "Medium", 24, S.MUTED)
                 base.alpha_composite(t, (int(x_ - t.width / 2), int(ybot + 14)))

@@ -1388,8 +1388,10 @@ class KPI(Editorial):
                 G.blit(f, bar, (cx - bw / 2, base - hh))
                 G.blit(f, T(b.get("text", str(b["value"])), 44 if hl else 36, self.fg, "Black"), (cx, base - hh - 12), min(1, k * 2), "mb")
                 G.blit(f, T(b["label"], 30, self.fg, "ExtraBold"), (cx, base + 18), min(1, k * 2), "mt")
-        d = ImageDraw.Draw(f)
-        d.line((x0 - 10, base, x1 + 10, base), fill=self.fg + (160,), width=3)
+        kb = G.ease_out((t - t0) / 0.4)   # 막대가 나올 때 기준선도 같이 (EP015 피드백 · 실제로 쓰이는 KPI)
+        if kb > 0:
+            d = ImageDraw.Draw(f)
+            d.line((x0 - 10, base, x0 - 10 + (x1 - x0 + 20) * kb, base), fill=self.fg + (160,), width=3)
         self.finish(f, t)
 
 
@@ -2826,3 +2828,54 @@ class Pyramid(Editorial):
 
 
 TYPES.update({"pyramid": Pyramid})
+
+
+class Clips(Editorial):
+    """신문 · 기사 스크랩 콜라주 (2026-11-14 벤치마킹: 다채로운 장면 변주). items: [{outlet, date, headline, on, hl}]
+    한 장씩 비스듬히 날아와 쌓임 · 카드 높이대로 차곡차곡(자막 위까지만). 실제 보도 제목만 (credit에 출처)."""
+
+    def _card(self, it, size, w):
+        head = T(it["headline"], size, (20, 22, 30), "Black", max_w=w - 100)
+        h = 104 + head.height
+        card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        d = ImageDraw.Draw(card)
+        d.rectangle((0, 0, w - 1, h - 1), fill=(248, 246, 240, 255))
+        d.rectangle((0, 0, 14, h - 1), fill=(220, 40, 40, 255) if it.get("hl") else (60, 64, 80, 255))
+        card.alpha_composite(T(f"{it['outlet']} · {it.get('date', '')}", 28, (110, 112, 124), "Bold"), (50, 26))
+        card.alpha_composite(head, (50, 72))
+        return card
+
+    def draw(self, f, t):
+        sp = self.spec
+        sp.setdefault("bg", {"kind": "motion", "style": "particles", "tone": "navy", "dark": 0.25})
+        self.base(f)
+        if sp.get("title"):
+            self.hdr(f, t, y=sp.get("title_y", 110))
+        items = sp["items"]
+        top, bottom, w = (260 if sp.get("title") else 160), 900, 1440
+        size = sp.get("size", 54)
+        while True:   # 전부 자막 위에 들어오도록 글자 크기 자동
+            cards = [self._card(it, size, w) for it in items]
+            total = sum(c.height for c in cards) + 26 * (len(cards) - 1)
+            if total <= bottom - top or size <= 36:
+                break
+            size -= 4
+        y = top + max(0, (bottom - top - total) // 2)
+        for i, (it, card) in enumerate(zip(items, cards)):
+            t0 = self.line_start(it.get("on", 1)) + it.get("offset", 0.0)
+            k = G.ease_out((t - t0) / 0.35)
+            yy = y
+            y += card.height + 26
+            if k <= 0:
+                continue
+            rot = it.get("tilt", (-1.6, 1.2, -0.9, 1.4)[i % 4])
+            c2 = card.rotate(rot * (1 + (1 - k) * 3), expand=True, resample=Image.BICUBIC)
+            sh = Image.new("RGBA", c2.size, (0, 0, 0, 0))
+            sh.putalpha(c2.getchannel("A").point(lambda v: int(v * 0.5)))
+            x = S.W / 2 + (i % 2 * 2 - 1) * 40 + (1 - k) * 600 * (1 if i % 2 else -1)
+            G.blit(f, sh.filter(ImageFilter.GaussianBlur(14)), (x + 10, yy + 14), k * 0.8, "mt")
+            G.blit(f, c2, (x, yy), k, "mt")
+        self.finish(f, t)
+
+
+TYPES.update({"clips": Clips})

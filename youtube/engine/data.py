@@ -324,6 +324,11 @@ def nps_dca(start="1996-11-01", end="2026-10-01", frac=None):
 
 
 def series(name: str, start=None, end=None) -> pd.Series:
+    if name.startswith("peak:"):   # 꼭대기 겹쳐 보기: "peak:hanwha_ocean:2007-10-16" → 꼭대기=100, 날짜는 2000-01-01 + 경과일 (차트 x_days)
+        _, nm, pk = name.split(":")
+        s_ = series(nm).loc[pk:]
+        idx = pd.Timestamp("2000-01-01") + (s_.index - s_.index[0])
+        return pd.Series((s_ / s_.iloc[0] * 100).values, index=idx).loc[start:end]   # start/end는 겹친 축(2000-01-01 + 경과일) 기준
     if name in ("nps_paid", "nps_spx", "nps_kospi"):   # 만 원
         return (nps_dca()[name[4:]] / 1e4).loc[start:end]
     if name in ("kb_jr", "kb_conv"):  # 서울 아파트 전세가율(%) · 전월세전환율(%)
