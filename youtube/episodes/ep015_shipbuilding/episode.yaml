@@ -17,7 +17,7 @@ tts:
     CGT: 씨지티
 bgm:
   volume: 0.24
-  chapters: {인트로: tense, 광풍: drive, 추락: tense, 2007년의 기억: dark, 반전: hope, 이번엔 다를까: drive, 지켜볼 신호: hope, 정리: hope}
+  chapters: {인트로: tense, 광풍: drive, 추락: tense, 2007년의 기억: dark, 반전: hope, 이번엔 다를까: drive, 언제 팔았어야 했나: tense, 지켜볼 신호: hope, 정리: hope}
 youtube:
   title: '조선 슈퍼사이클, 2007년처럼 끝났을까? 한화오션 -67%'
   description: '한화오션, 10개월 만에 -67%. 조선 슈퍼사이클은 이대로 끝난 걸까요?
@@ -34,6 +34,8 @@ youtube:
     ✔ 반전: 배 값(신조선가지수)은 아직 꼭대기 근처
 
     ✔ 그때도 주가가 배 값보다 1년 먼저 꺾였다
+
+    ✔ ''-20%면 판다'' 규칙, 2020년엔 너무 일찍 · 2007년엔 살렸다
 
     ✔ 지켜볼 신호 3가지
 
@@ -163,6 +165,8 @@ scenes:
   narration: ['다른 조선주도 마찬가지예요. | 삼성중공업은 11.7배, HD한국조선해양은 7.2배.', '배가 모자라서 몇 년 치 주문이 밀려 있다는 말에, | 다들 슈퍼사이클이라고 불렀죠.']
 - type: qa
   chapter: 광풍
+  figure: worker_stressed_cut
+  figure_h: 900
   q: '2020년 바닥에서 산 사람은\n**지금 손해**일까?'
   a: '아니요, 아직 **4.9배**예요.\n꼭대기에서 산 사람만 아파요.'
   a_on: 2
@@ -202,6 +206,8 @@ scenes:
 - type: qa
   chapter: 추락
   bg: {kind: parallax, file: watermelons, dark: 0.62, blur: 6}
+  figure: container_ship_cut
+  figure_h: 380
   q: '배가 모자랐는데\n왜 **남아돈다는** 걱정이?'
   a: '수박이 비싸면\n**다들 수박을 심거든요.**'
   a_on: 2
@@ -222,7 +228,7 @@ scenes:
     title: 한화오션(옛 대우조선해양) · 2004 ~ 2010 (원, 수정 주가)
     draw: {on: 1, dur: 2.4}
     marks:
-    - {date: '2007-10-16', label: 꼭대기, sub: 2007.10.16, on: 1, offset: 0.8, dy: -70, dx: -150, color: gold, size: 34}
+    - {date: '2007-10-16', label: 꼭대기, sub: 2007.10.16, on: 1, offset: 0.8, dy: 60, dx: -230, color: gold, size: 34}
     - {date: '2008-10-29', label: -86%, sub: 1년 뒤 2008.10.29, on: 2, dy: 60, dx: 150, color: down, size: 38}
     source: '자료: 네이버 차트 한화오션(옛 대우조선해양) 일별 종가 (수정 주가)'
   sfx: [{name: fall_burn, on: 2, offset: 0.2, vol: 0.7}]
@@ -250,8 +256,12 @@ scenes:
 # ── 반전 ──────────────────────────────────────────────
 - type: qa
   chapter: 반전
-  q: '그럼 지금도\n**배 값이 떨어져서**\n주가가 빠진 걸까?'
-  a: '아니요.\n배 값은 **아직 꼭대기 근처**예요.'
+  figure: lng_carrier_cut
+  figure_h: 200
+  q_size: 64
+  a_size: 56
+  q: '**배 값이 떨어져서**\n주가가 빠진 걸까?'
+  a: '아니요. 배 값은\n**아직 꼭대기 근처**예요.'
   a_on: 2
   compare:
   - {label: '신조선가지수 · 2008.9 (역대 꼭대기 근처)', value: 190, text: '약 190', color: [190, 196, 210]}
@@ -288,10 +298,38 @@ scenes:
 - type: qa
   chapter: 이번엔 다를까
   bg: {kind: video, file: port_aerial_v, dark: 0.66, blur: 8}
+  figure: worker_stressed_cut
+  figure_h: 900
   q: '그럼 지금이\n**바닥**일까?'
   a: '아무도 몰라요.\n그래서 **신호**를 봐야 해요.'
   a_on: 2
   narration: ['그럼 지금이 바닥일까요?', '솔직히, 그건 아무도 몰라요. | 그래서 날짜를 맞히는 대신, 신호를 봐야 해요.']
+# ── 언제 팔았어야 했나 ────────────────────────────────────
+- type: qa
+  chapter: 언제 팔았어야 했나
+  figure: container_ship_cut
+  figure_h: 380
+  q_size: 64
+  a_size: 56
+  q: '고점에서 **-20%** 빠지면 판다,\n이 규칙이면 됐을까?'
+  a: '2020년 바닥에서 산 사람에겐\n**너무 일찍** 울린 경보였어요.'
+  a_on: 2
+  compare:
+  - {label: '2020.3 바닥 매수 · -20% 규칙 (2020.6 매도)', value: 2.09, text: '2.09배', color: [190, 196, 210]}
+  - {label: '2020.3 바닥 매수 · 그냥 보유 (지금)', value: 4.91, text: '4.91배', color: [90, 220, 170]}
+  vmax: 5.5
+  narration: ['그럼 이런 규칙은 어땠을까요? | 꼭대기에서 20% 빠지면 무조건 판다.', '2020년 바닥에서 산 사람이 이 규칙을 지켰다면, | 석 달 만인 2020년 6월에 2.09배로 내렸어요.', '그냥 들고 있었다면, 이렇게 빠진 지금도 4.9배인데 말이죠.']
+- type: duel
+  chapter: 언제 팔았어야 했나
+  heading: 2007년 꼭대기 근처 · 고점에서 -30% 빠지면 판다
+  left: {title: '규칙대로 · 2007.8 매도', value: '살았다', sub: '그 뒤 1년 동안 -79%를 피함', color: up, on: 1}
+  right: {title: '버텼다면 · 2008.10', value: '-86%', sub: '그리고 19년', color: down, on: 2}
+  narration: ['반대로 2007년 꼭대기 근처에서는, | 30% 빠지면 판다는 규칙이 2007년 8월에 울렸고, 그 뒤 -79%를 피했어요.', '[낮게]버틴 사람은 -86%, 그리고 19년이었죠.']
+- type: kinetic
+  chapter: 언제 팔았어야 했나
+  items:
+  - {text: "사이클 주식은\n언제 파느냐보다\n어디서 샀느냐", on: 1, size: 120, highlight: '어디서 샀느냐', hl_color: gold}
+  narration: ['같은 규칙이 한 번은 살렸고, 한 번은 너무 일찍 내리게 했어요.', '그러니까 사이클 주식은, 언제 파느냐보다 어디서 샀느냐가 결과의 대부분을 정해요. | 바닥 근처에서 산 사람은 흔들려도 버틸 여유가 있지만,', '[낮게]꼭대기 근처에서 산 사람은, 어떤 규칙으로도 아프죠.']
 # ── 지켜볼 신호 ──────────────────────────────────────
 - type: checklist
   chapter: 지켜볼 신호

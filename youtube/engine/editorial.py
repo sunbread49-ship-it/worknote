@@ -2358,7 +2358,12 @@ class QA(Editorial):
         f.alpha_composite(gl.filter(ImageFilter.GaussianBlur(160)))
         k = G.ease_out(t / 0.6)
         fig = _figure(sp.get("figure", "thinker_cut"), sp.get("figure_h", 900))
-        G.blit(f, fig, (430 - (1 - k) * 40, S.H + 10), k, "mb")
+        if fig.width > fig.height * 1.6:   # 배 · 차처럼 옆으로 긴 누끼는 왼쪽 가운데에 크게 (바닥에 붙이면 자막에 가림)
+            if fig.width > 820:
+                fig = fig.resize((820, int(fig.height * 820 / fig.width)), Image.LANCZOS)
+            G.blit(f, fig, (440 - (1 - k) * 40, 520), k, "mm")
+        else:
+            G.blit(f, fig, (430 - (1 - k) * 40, S.H + 10), k, "mb")
         x, y = 880, sp.get("top", 170)
         lw = 860
         # 글자 크기에 맞춰 전체 높이를 재고, 자막(약 940) 위에서 끝나도록 위로 당김
@@ -2369,7 +2374,7 @@ class QA(Editorial):
         _a = _hl_text(sp["a"], sp.get("a_size", 64), max_w=lw, align="left", line_gap=1.22)
         step = 70
         _h = 60 + _q.height + 60 + 56 + _a.height + 30 + len(sp.get("compare", [])) * step + (60 if sp.get("sub") else 0)
-        y = max(150, min(y, 830 - _h))
+        y = max(130, min(y, 790 - _h))
         G.blit(f, T("QUESTION", 30, (214, 172, 96), "ExtraBold"), (x, y), k)
         ImageDraw.Draw(f).line((x + 190, y + 18, x + 190 + 120 * k, y + 18), fill=(214, 172, 96, 255), width=2)
         q = _hl_text(sp["q"], sp.get("q_size", 74), max_w=lw, align="left", line_gap=1.22)
@@ -2401,7 +2406,15 @@ class QA(Editorial):
                     G.blit(f, T(c.get("text", ""), 40, col, "Black"), (x + max(bw, 6) + 18, yy + 57), kc, "lm")
                     yy += step
         if sp.get("figure_credit", True):
-            self.spec.setdefault("credit", "조각: 오귀스트 로댕 '생각하는 사람' · 사진 AndrewHorne, Public domain (Wikimedia Commons)")
+            fn = sp.get("figure", "thinker_cut")
+            if fn == "thinker_cut":
+                self.spec.setdefault("credit", "조각: 오귀스트 로댕 '생각하는 사람' · 사진 AndrewHorne, Public domain (Wikimedia Commons)")
+            else:   # 다른 누끼는 원본 사진의 출처 (assets/photos/<이름>.json)
+                import json as _j
+                from pathlib import Path as _P
+                src = _P(__file__).resolve().parents[1] / "assets/photos" / (fn.replace("_cut", "") + ".json")
+                if src.exists():
+                    self.spec.setdefault("credit", _j.loads(src.read_text()).get("credit", ""))
         self.finish(f, t)
 
 
