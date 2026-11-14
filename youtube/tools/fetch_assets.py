@@ -69,6 +69,12 @@ DATA = {
     "data/intc_daily.csv": DAILY.format("INTC"),
     "data/mu_daily.csv": DAILY.format("MU"),
     "data/tsm_daily.csv": DAILY.format("TSM"),
+    # EP016 CEO 축출 (2026-11-14)
+    "data/mcd_daily.csv": DAILY.format("MCD"),
+    "data/hpq_daily.csv": DAILY.format("HPQ"),
+    "data/sbux_daily.csv": DAILY.format("SBUX"),
+    "data/dis_daily.csv": DAILY.format("DIS"),
+    "data/ba_daily.csv": DAILY.format("BA"),
     # S&P500 월평균 지수 1871~ (Robert Shiller 데이터 기반, 매월 갱신)
     # 지도 (공개 GeoJSON)
     "geo/us_states.json": "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json",

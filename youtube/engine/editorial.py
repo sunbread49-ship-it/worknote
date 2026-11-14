@@ -1895,6 +1895,7 @@ class Leaderboard(Editorial):
         x0, y0, rh, bw = S.SAFE_X + 40, sp.get("top", 330), sp.get("row_h", 132), 860
         medal = [(255, 204, 40), (210, 214, 224), (205, 140, 80), (120, 128, 150), (100, 108, 128)]
         n = len(rows)
+        r0 = sp.get("rank_start", 1)   # 2026-11-14: 순위표를 둘로 나눌 때 아래쪽은 5위부터
         for i, r in enumerate(rows):
             # 꼴찌부터 차례로 등장 → 1위가 마지막에 '쾅'
             ti = t0 + (n - 1 - i) * step
@@ -1906,14 +1907,14 @@ class Leaderboard(Editorial):
             # 줄 배경 (얇은 유리판)
             pane = Image.new("RGBA", (S.W - 2 * S.SAFE_X, rh - 22), (255, 255, 255, 0))
             ImageDraw.Draw(pane).rounded_rectangle((0, 0, pane.width - 1, pane.height - 1), 22,
-                                                   fill=(255, 255, 255, 30 if i else 46),
-                                                   outline=(255, 214, 120, 150) if i == 0 else (255, 255, 255, 40), width=2)
+                                                   fill=(255, 255, 255, 30 if i + r0 - 1 else 46),
+                                                   outline=(255, 214, 120, 150) if i + r0 - 1 == 0 else (255, 255, 255, 40), width=2)
             G.blit(f, pane, (S.SAFE_X, y), k)
             # 메달
             cx, cy, rr = x0 + 30, y + (rh - 22) / 2, 40
             md = Image.new("RGBA", (rr * 2 + 8, rr * 2 + 8), (0, 0, 0, 0))
-            ImageDraw.Draw(md).ellipse((4, 4, rr * 2 + 4, rr * 2 + 4), fill=medal[min(i, 4)] + (255,))
-            num = T(str(i + 1), 46, (20, 22, 30), "Black")
+            ImageDraw.Draw(md).ellipse((4, 4, rr * 2 + 4, rr * 2 + 4), fill=medal[min(i + r0 - 1, 4)] + (255,))
+            num = T(str(i + r0), 46, (20, 22, 30), "Black")
             md.alpha_composite(num, (md.width // 2 - num.width // 2, md.height // 2 - num.height // 2 - 2))
             G.blit(f, md, (cx, cy), k, "mm")
             lab = T(r["label"], 44, S.FG, "Black")

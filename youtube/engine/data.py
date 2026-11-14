@@ -350,7 +350,8 @@ def series(name: str, start=None, end=None) -> pd.Series:
     elif name in ("strat_mid2pres", "strat_pres2mid"):
         s = _cycle_strategy(name)
     elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd", "kospi",
-                  "smh", "soxx", "intc", "mu", "tsm", "skhynix", "samsung") + KR_NAVER:
+                  "smh", "soxx", "intc", "mu", "tsm", "skhynix", "samsung",
+                  "mcd", "hpq", "sbux", "dis", "ba") + KR_NAVER:
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()

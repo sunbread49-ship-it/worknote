@@ -1,0 +1,473 @@
+# EP016 · 주식 궁금증, 숫자로 풀기 — CEO가 쫓겨나면 주가는 망할까? (젠슨 황 사임 · 2026.11.12)
+# 4요소: 감정 = 충격(엔비디아 일주일 -12.75% · 4조 달러 붕괴) → 질문(CEO 쫓겨나면 망하나?) → 의외(다음 날 반응은 1년 뒤를 못 맞혔다)
+#        → 공포(애플: 창업자 내보낸 뒤 6년 10배, 그리고 -81%) → 조건부 출구(1년 뒤를 가른 건 사업 · 지켜볼 신호 3가지)
+#        알고리즘 = 미국 구글 트렌드 2000+ (Huang) · 11/17 엔비디아 3분기 실적 전날 공개 · EP009 젠슨 황 33년(비공개 보류)과 연결
+# 인트로 규칙(2026-11-14): 첫 1초 가장 강한 숫자 · 3초 안 질문 · 5초 안 약속 · 처음 10초 빠른 컷
+# 2주 시험(11/16~): 롱폼 매일 18:00 + 같은 날 쇼츠 2개(12:00 · 21:00)
+# 사실 원칙: 사임 사유는 회사가 밝히지 않음 → '보도'로만, 간첩 의혹 등 확인 안 된 내용은 다루지 않음
+title: 'CEO가 쫓겨나면 주가는 망할까? 젠슨 황 · 스티브 잡스 · 9개 회사로 본 결과'
+series_tag: CEO 리스크
+pace: punchy
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    S&P500: 에스앤피 오백
+    CEO: 씨이오
+    CFO: 씨에프오
+    HP: 에이치피
+    AI: 에이아이
+    GPU: 지피유
+    CUDA: 쿠다
+bgm:
+  volume: 0.24
+  chapters: {인트로: tense, 무슨 일이: tense, 다음 날: drive, 1년 뒤: drive, 창업자를 내보낸 회사: dark, 반전: hope, 엔비디아는: drive, 지켜볼 신호: hope, 정리: hope}
+chapter_titles:
+  인트로: '젠슨 황 사임 · 엔비디아 일주일 -12.75%'
+  무슨 일이: '엔비디아 CEO 사임, 무슨 일이'
+  다음 날: 'CEO 해임 다음 날 주가 · 9개 회사'
+  1년 뒤: 'CEO 해임 1년 뒤 주가 vs S&P500'
+  창업자를 내보낸 회사: '스티브 잡스 축출 후 애플 주가'
+  반전: '반전: 잡스 복귀 후 애플 110배'
+  엔비디아는: '젠슨 황 없는 엔비디아, 애플과 다른 점'
+  지켜볼 신호: '엔비디아 지켜볼 신호 3가지 (11/17 실적)'
+  정리: '정리: CEO 해임과 주가'
+youtube:
+  title: 'CEO가 쫓겨나면 주가는 망할까? 젠슨 황 · 스티브 잡스 · 9개 회사로 본 결과'
+  description: '젠슨 황이 엔비디아 CEO에서 물러났습니다. 엔비디아는 일주일 -12.75%, 시가총액 4조 달러가 무너졌죠.
+
+    CEO가 갑자기 떠나면 주가는 정말 망할까요? 스티브 잡스의 애플부터 HP · 인텔 · 맥도날드 · 보잉 · 디즈니 · 스타벅스 · 마이크로소프트까지, 실제 주가로 다음 날과 1년 뒤를 확인했습니다.
+
+
+    ✔ 엔비디아: 사임 발표일 -4.3% · 일주일 -12.75% · 10월 고점 대비 -32%
+
+    ✔ CEO가 떠난 다음 날: 스타벅스 +24.5% ~ HP -8.0%
+
+    ✔ 다음 날 반응은 1년 뒤를 거의 맞히지 못했다
+
+    ✔ 1년 뒤를 가른 건 CEO보다 ''사업''
+
+    ✔ 잡스를 내보낸 애플: 6년 동안 10배, 그리고 -81%
+
+    ✔ 잡스가 돌아온 뒤 14년: 110배
+
+    ✔ 엔비디아 지켜볼 신호 3가지 (11월 17일 3분기 실적)
+
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·상품의 매수·매도 추천이 아닙니다.
+
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 주가는 Yahoo Finance 일별 수정 종가(배당·분할 반영) 기준, 세금·수수료는 반영하지 않았습니다.
+
+    ※ 사임 사유는 회사가 공식적으로 밝히지 않았으며, 영상의 관련 내용은 언론 보도를 인용한 것입니다.
+
+
+    [자료]
+
+    엔비디아 CEO 교체 발표 (NVIDIA 보도자료 · SEC 8-K, 2026.11.12) · CNBC · Axios · The Hill 보도 (2026.11.12~13)
+
+    CEO 교체 시점: 각 회사 발표 및 보도 — 애플(1985.9.17) · HP(2010.8.6) · 인텔(2018.6.21 · 2024.12.2) · 맥도날드(2019.11.3) · 보잉(2019.12.23) · 디즈니(2022.11.20) · 스타벅스(2024.8.13) · 마이크로소프트(2013.8.23)
+
+    주가: Yahoo Finance 일별 수정 종가 (발표 직전 거래일 종가 기준)
+
+
+    [사진 · 영상] Wikimedia Commons — Anderseidesvik · Bernard Gotfryd · Tom Coates · Oracle PR · SounderBruce · Harrison Keely · YosemiteYamper · SiliconANGLE theCUBE / Pixabay — Dimitri_K · MrWashingt0n · AdisResic · TungArt7 · DesignScape / 그림: AI 생성 (Gemini)
+
+    '
+  tags: [엔비디아, 젠슨황, 엔비디아주가, CEO, 스티브잡스, 애플, 주식, 미국주식, 백테스트, CEO리스크]
+  privacy: private
+checks:
+- {name: 엔비디아 사임 발표일, kind: ret, series: nvda, start: '2026-11-11', end: '2026-11-12'}
+- {name: 엔비디아 일주일, kind: ret, series: nvda, start: '2026-11-06', end: '2026-11-13'}
+- {name: 엔비디아 10월 고점 대비, kind: ret, series: nvda, start: '2026-10-06', end: '2026-11-13'}
+- {name: 스타벅스 다음 날, kind: ret, series: sbux, start: '2024-08-12', end: '2024-08-13'}
+- {name: HP 다음 날, kind: ret, series: hpq, start: '2010-08-06', end: '2010-08-09'}
+- {name: 보잉 1년, kind: ret, series: ba, start: '2019-12-20', end: '2020-12-21'}
+- {name: 애플 1985 → 1991 꼭대기, kind: ret, series: aapl, start: '1985-09-17', end: '1991-04-02'}
+- {name: 애플 1991 꼭대기 → 1997 바닥, kind: ret, series: aapl, start: '1991-04-02', end: '1997-12-23'}
+- {name: 애플 1997.7 → 2011.8, kind: ret, series: aapl, start: '1997-07-09', end: '2011-08-24'}
+scenes:
+# ── 인트로: 1초 숫자 · 3초 질문 · 5초 약속 · 빠른 컷 ─────────────────
+- type: punch
+  chapter: 인트로
+  tone: down
+  photo: {file: jensen_010, focus: [0.5, 0.3], dark: 0.55, gray: 0.6}
+  label: 엔비디아 · 2026.11.6 → 11.13 · 젠슨 황 CEO 사임
+  big: '-12.75%'
+  sub: 단 일주일
+  'on': 1
+  sub_on: 1
+  sfx: [{name: 'mx:2908', on: 1, offset: 0.0, vol: 0.85}]
+  shake: [{on: 1, offset: 0.05, amp: 18, dur: 0.5}]
+  narration: ['젠슨 황이 떠난 엔비디아, 일주일 만에 !!-12.75%!!.']
+- type: kinetic
+  chapter: 인트로
+  bg: {kind: video, file: boardroom_v, dark: 0.66, blur: 8}
+  items:
+  - {text: "CEO가 쫓겨나면\n주가는 망할까?", on: 1, size: 150, highlight: '망할까?', hl_color: down}
+  narration: ['CEO가 쫓겨나면, 주가는 정말 망할까요?']
+- type: punch
+  chapter: 인트로
+  tone: gold
+  photo: {file: jobs_1984, focus: [0.5, 0.3], dark: 0.6, gray: 1.0}
+  label: 1985년 스티브 잡스가 떠난 애플 · 그 뒤 6년
+  big: 10배
+  sub: 끝까지 보면, 그다음 반전까지 보입니다
+  'on': 2
+  sub_on: 3
+  sfx: [{name: 'mx:2003', on: 2, offset: 0.1, vol: 0.7}]
+  narration: ['힌트 하나. 스티브 잡스가 쫓겨나듯 떠난 애플은,', '그 뒤 6년 동안 주가가 10배가 됐어요.', '그런데 이야기는 거기서 안 끝나요. 끝까지 보시면, 엔비디아에서 뭘 봐야 할지 보여요.']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "CEO가 쫓겨나면\n주가는 망할까?"
+  highlight: 망할까?
+  subtitle: 9개 회사 · 다음 날과 1년 뒤 · 그리고 애플
+  narration: ['오늘은 9개 회사를 볼게요. | CEO가 떠난 다음 날 주가는 어땠고,', '1년 뒤엔 어땠는지, | 그리고 창업자를 내보낸 애플은 어떻게 됐는지요.']
+# ── 무슨 일이 ──────────────────────────────────────────
+- type: clips
+  chapter: 무슨 일이
+  title: 2026년 11월 11~13일 · 기사 제목
+  highlight: 기사 제목
+  bg: {kind: video, file: stock_decline_v, dark: 0.7, blur: 8}
+  items:
+  - {outlet: Axios, date: 2026.11.12, headline: 'Jensen Huang, an architect of the AI boom, resigns as Nvidia CEO', on: 1, hl: true}
+  - {outlet: CNBC, date: 2026.11.12, headline: 'Nvidia stock closes down over 4% after CEO Jensen Huang announces resignation', on: 2}
+  - {outlet: CNBC, date: 2026.11.13, headline: 'Nvidia closes below $4T market cap for first time since July 2025 in Huang fallout', on: 3}
+  credit: '기사 제목: Axios · CNBC (보도 그대로)'
+  narration: ['무슨 일이었는지부터 볼게요. | 11월 12일, 엔비디아는 젠슨 황이 CEO와 이사회에서 즉시 물러난다고 발표했어요.', '그날 주가는 4.3% 빠졌고,', '다음 날 엔비디아 시가총액은 1년 4개월 만에 처음으로, 4조 달러 아래로 내려갔죠.']
+- type: card
+  chapter: 무슨 일이
+  heading: 회사가 밝힌 것 · 언론이 전한 것
+  highlight: 밝힌 것
+  size: 46
+  gap: 30
+  width: 1500
+  bullets:
+  - {text: '회사 발표 · 젠슨 황, CEO · 이사회 즉시 사임 (사유는 밝히지 않음)', on: 1}
+  - {text: '임시 CEO · 콜레트 크레스 CFO가 겸임, 정식 후임은 찾는 중', highlight: 콜레트 크레스, on: 2}
+  - {text: '보도 · 사내 관계 보도 뒤 이사회 긴급 회의', on: 3}
+  - {text: '다음 일정 · 11월 17일 3분기 실적 발표', highlight: 11월 17일, hl_color: up, on: 4}
+  credit: '자료: NVIDIA 보도자료 · SEC 8-K (2026.11.12) · CNBC 보도'
+  narration: ['회사는 사유를 밝히지 않았어요.', '임시 CEO는 콜레트 크레스 최고재무책임자가 맡았고, | 정식 후임은 회사 안팎에서 찾는 중이에요.', '언론은, 젠슨 황의 사내 관계가 보도된 뒤 | 이사회가 긴급 회의를 열었다고 전했죠.', '그리고 11월 17일, 3분기 실적 발표가 기다리고 있어요.']
+- type: chart
+  chapter: 무슨 일이
+  chart:
+    series: nvda
+    start: '2026-06-01'
+    end: '2026-11-13'
+    color: [118, 185, 0]
+    title: 엔비디아 · 2026.6 ~ 11.13 (달러, 수정 주가)
+    draw: {on: 1, dur: 2.4}
+    marks:
+    - {date: '2026-10-06', label: 꼭대기, sub: 2026.10.6, on: 1, offset: 0.8, dy: -60, dx: -170, color: gold, size: 34}
+    - {date: '2026-11-12', label: 사임 발표, sub: 11.12 · -4.3%, on: 2, dy: -70, dx: -190, color: down, size: 32}
+    - {date: '2026-11-13', label: -32%, sub: 꼭대기 대비, on: 3, dy: 70, dx: -60, color: down, size: 38}
+    source: '자료: Yahoo Finance 엔비디아(NVDA) 일별 수정 종가'
+  sfx: [{name: fall_burn, on: 3, offset: 0.2, vol: 0.6}]
+  narration: ['사실 엔비디아는 그 전부터 빠지고 있었어요. | 10월 6일 꼭대기를 찍고 내려오던 중이었죠.', '거기에 사임 발표가 겹쳤고,', '지금은 꼭대기보다 !!-32%!!. | 6주 연속 하락이에요.']
+- type: qa
+  chapter: 무슨 일이
+  visual: ai_empty_ceo_chair
+  q: '33년 동안 회사를 이끈\n**창업자가 사라지면?**'
+  a: '과거에 **답이 있어요.**\n9번이나요.'
+  a_on: 2
+  narration: ['33년 동안 회사를 이끈 창업자가, 하루아침에 사라졌어요. | 이런 회사의 주가는 어떻게 될까요?', '다행히 과거에 답이 있어요. | 이름만 들으면 아는 회사들에서, 9번이나요.']
+# ── 다음 날 ──────────────────────────────────────────
+- type: hbars
+  chapter: 다음 날
+  kicker: CEO가 물러난 발표 · 직전 종가 → 다음 거래일 종가
+  title: 떠난 다음 날, 오른 곳
+  highlight: 오른 곳
+  title_y: 110
+  bar_h: 40
+  row_gap: 20
+  vmax: 26
+  rows:
+  - {label: '스타벅스 · 나라심한 (2024)', value: 24.5, text: +24.5%, color: up, hl: true, on: 1}
+  - {label: '마이크로소프트 · 발머 (2013)', value: 7.3, text: +7.3%, color: up, on: 2}
+  - {label: '애플 · 잡스 (1985)', value: 6.6, text: +6.6%, color: up, on: 2, offset: 0.25}
+  - {label: '디즈니 · 차펙 (2022)', value: 6.3, text: +6.3%, color: up, on: 2, offset: 0.5}
+  - {label: '보잉 · 뮬런버그 (2019)', value: 2.9, text: +2.9%, color: up, on: 2, offset: 0.75}
+  sfx: [{name: 'mx:2003', on: 1, offset: 0.1, vol: 0.5}]
+  narration: ['결과는 의외예요. | 9곳 중 5곳은, 다음 날 오히려 올랐어요. 스타벅스는 하루 만에 !!+24.5%!!.', '마이크로소프트, 애플, 디즈니, 보잉도 올랐죠.']
+- type: hbars
+  chapter: 다음 날
+  kicker: CEO가 물러난 발표 · 직전 종가 → 다음 거래일 종가
+  title: 떠난 다음 날, 빠진 곳
+  highlight: 빠진 곳
+  title_y: 110
+  bar_h: 40
+  row_gap: 20
+  vmax: 10
+  rows:
+  - {label: '인텔 · 겔싱어 (2024)', value: 0.5, text: -0.5%, color: down, on: 1}
+  - {label: '인텔 · 크르자니크 (2018)', value: 2.4, text: -2.4%, color: down, on: 1, offset: 0.25}
+  - {label: '맥도날드 · 이스터브룩 (2019)', value: 2.7, text: -2.7%, color: down, on: 1, offset: 0.5}
+  - {label: '엔비디아 · 젠슨 황 (2026)', value: 4.3, text: -4.3%, color: down, hl: true, on: 2}
+  - {label: 'HP · 허드 (2010)', value: 8.0, text: -8.0%, color: down, on: 2, offset: 0.4}
+  sfx: [{name: fall_burn, on: 2, offset: 0.4, vol: 0.5}]
+  narration: ['빠진 곳은 인텔 두 번, 그리고 맥도날드.', '엔비디아는 -4.3%, | 가장 크게 빠진 건 HP의 마크 허드, -8%였어요.']
+- type: qa
+  chapter: 다음 날
+  visual: ai_engine_brake
+  q: '누구는 오르고\n누구는 **왜 빠졌을까?**'
+  a: '그 CEO가 **엔진**이었나,\n**브레이크**였나.'
+  a_on: 2
+  narration: ['왜 이렇게 갈렸을까요?', '시장이 하루 만에 묻는 질문은 하나예요. | 떠난 CEO가 회사의 엔진이었나, 아니면 브레이크였나.', '스타벅스와 디즈니는, 실적이 부진하던 CEO가 나가고 | 시장이 반기던 사람이 들어왔어요. 브레이크가 풀린 거죠.']
+- type: portrait
+  chapter: 다음 날
+  photo: mark_hurd
+  gray: 1.0
+  focus: [0.5, 0.25]
+  kicker: HP CEO (2005~2010) · 2010년 8월 6일 사임
+  name: 마크 허드
+  line: 엔진이 빠지자 하루 -8%
+  line_hl: '-8%'
+  chips:
+  - {text: 비용 절감 · 실적 개선, 'on': 1}
+  - {text: 내부 조사 뒤 사임, 'on': 2}
+  - {text: 다음 날 -8.0%, 'on': 2}
+  narration: ['반대로 HP의 마크 허드는, 실적을 끌어올린 엔진으로 평가받던 CEO였어요.', '내부 조사 끝에 물러나자, | 다음 날 주가는 -8%였죠.']
+# ── 1년 뒤 ──────────────────────────────────────────
+- type: kinetic
+  chapter: 1년 뒤
+  bg: {kind: video, file: skyline_v, dark: 0.62, blur: 6}
+  items:
+  - {text: "그럼\n1년 뒤엔?", on: 1, size: 170, highlight: '1년 뒤', hl_color: gold}
+  narration: ['그런데 진짜 중요한 건 하루가 아니죠. | 1년 뒤엔 어땠을까요?']
+- type: leaderboard
+  chapter: 1년 뒤
+  kicker: CEO가 물러나기 직전 종가 → 1년 뒤 (같은 기간 S&P500)
+  title: 1년 뒤 성적표 · 5~9위
+  highlight: 5~9위
+  'on': 1
+  rank_start: 5
+  row_h: 104
+  top: 350
+  rows:
+  - {label: 맥도날드 · 2019, sub: 'S&P500 +8%', value: 12.4, text: +12%, color: [255, 204, 40]}
+  - {label: 디즈니 · 2022, sub: 'S&P500 +15%', value: 3.5, text: +3.5%, color: [255, 204, 40]}
+  - {label: 인텔 · 2018, sub: 'S&P500 +7%', value: -9.5, text: -9.5%, color: [236, 96, 82]}
+  - {label: 보잉 · 2019, sub: 'S&P500 +15%', value: -32.7, text: -33%, color: [236, 96, 82]}
+  - {label: HP · 2010, sub: 'S&P500 0%', value: -32.8, text: -33%, color: [236, 96, 82]}
+  note: 수정 종가(배당 · 분할 반영) · 엔비디아는 아직 1년이 지나지 않아 제외
+  narration: ['1년 뒤 성적표예요. 아래부터 볼게요. | 꼴찌는 HP와 보잉, -33%.', '인텔 2018년은 -9.5%, | 디즈니와 맥도날드는 겨우 플러스였죠.']
+- type: leaderboard
+  chapter: 1년 뒤
+  kicker: CEO가 물러나기 직전 종가 → 1년 뒤 (같은 기간 S&P500)
+  title: 1년 뒤 성적표 · 1~4위
+  highlight: 1~4위
+  'on': 1
+  rows:
+  - {label: 애플 · 1985, sub: 'S&P500 +28%', value: 124.6, text: +125%, color: [120, 220, 180]}
+  - {label: 인텔 · 2024, sub: 'S&P500 +13%', value: 66.4, text: +66%, color: [120, 220, 180]}
+  - {label: 마이크로소프트 · 2013, sub: 'S&P500 +20%', value: 43.4, text: +43%, color: [120, 220, 180]}
+  - {label: 스타벅스 · 2024, sub: 'S&P500 +21%', value: 24.2, text: +24%, color: [120, 220, 180]}
+  note: 수정 종가(배당 · 분할 반영)
+  narration: ['위쪽은 스타벅스 +24%, 마이크로소프트 +43%, | 인텔 2024년은 +66%.', '그리고 1위는, 잡스가 떠난 애플. !!+125%!!.']
+- type: duel
+  chapter: 1년 뒤
+  heading: 다음 날 반응 → 1년 뒤 (S&P500보다 나았나)
+  left: {title: '다음 날 오른 5곳', value: '3곳', sub: '디즈니 · 보잉은 시장보다 못함', color: neutral, on: 1}
+  right: {title: '다음 날 빠진 4곳', value: '2곳', sub: '인텔 2024 · 맥도날드는 시장보다 나음', color: neutral, on: 2}
+  narration: ['재밌는 건 여기예요. | 다음 날 오른 다섯 곳 중에, 1년 뒤 시장보다 나았던 건 세 곳.', '다음 날 빠진 네 곳 중에서도, 두 곳은 시장보다 나았어요.', '[낮게]그러니까 다음 날 반응은, 1년 뒤를 거의 못 맞혔어요. | 동전 던지기랑 비슷했죠.']
+- type: qa
+  chapter: 1년 뒤
+  visual: ai_captain_ship
+  q: '그럼 1년 뒤를\n**가른 건** 뭐였을까?'
+  a: 'CEO보다\n**배가 어디로 가고 있었나.**'
+  a_on: 2
+  narration: ['그럼 1년 뒤를 가른 건 뭐였을까요?', '선장이 내렸을 때보다, | 그 배가 어디로 가고 있었는지가 더 중요했어요.']
+- type: punch
+  chapter: 1년 뒤
+  tone: down
+  photo: {file: b737max_grounded, focus: [0.5, 0.5], dark: 0.55}
+  label: 보잉 · 2019.12 CEO 해임 → 1년 뒤
+  big: '-33%'
+  sub: 737 맥스 운항 정지 · 그리고 코로나
+  'on': 1
+  sub_on: 1
+  sfx: [{name: fall_burn, on: 1, offset: 0.1, vol: 0.5}]
+  narration: ['보잉은 CEO를 바꿨지만, | 737 맥스 운항 정지에 코로나까지 겹치면서 -33%.']
+- type: punch
+  chapter: 1년 뒤
+  tone: gold
+  photo: {file: mcd_store, focus: [0.5, 0.5], dark: 0.55}
+  label: 맥도날드 · 2019.11 CEO 해임 → 1년 뒤
+  big: '+12%'
+  sub: CEO는 바뀌어도 햄버거는 그대로 팔렸다
+  'on': 1
+  sub_on: 1
+  narration: ['맥도날드는 CEO가 해임됐어도, | 햄버거는 그대로 팔렸어요. 1년 뒤 +12%.']
+- type: punch
+  chapter: 1년 뒤
+  tone: gold
+  photo: {file: starbucks_store, focus: [0.5, 0.5], dark: 0.55}
+  label: 스타벅스 · 2024.8 CEO 교체 → 1년 뒤
+  big: '+24%'
+  sub: 시장이 원하던 새 CEO
+  'on': 1
+  sub_on: 1
+  narration: ['스타벅스는 시장이 원하던 새 CEO가 들어오면서, | 기대가 1년 내내 이어졌죠.']
+- type: kinetic
+  chapter: 1년 뒤
+  bg: {kind: video, file: skyline_v, dark: 0.62, blur: 6}
+  items:
+  - {text: "바뀐 건 CEO,\n정한 건 사업", on: 1, size: 140, highlight: '사업', hl_color: gold}
+  narration: ['바뀐 건 CEO였지만, | 1년 뒤를 정한 건 결국 사업이었어요.']
+# ── 창업자를 내보낸 회사 ──────────────────────────────────
+- type: kinetic
+  chapter: 창업자를 내보낸 회사
+  bg: {kind: parallax, file: jobs_1984, dark: 0.62, blur: 2}
+  items:
+  - {text: "그런데\n창업자라면?", on: 1, size: 170, highlight: '창업자', hl_color: gold}
+  narration: ['그런데 젠슨 황은, 그냥 CEO가 아니죠. | 33년 전에 회사를 세운 창업자예요.', '창업자가 떠난 회사는 어땠을까요? | 가장 유명한 사례가 있어요.']
+- type: portrait
+  chapter: 창업자를 내보낸 회사
+  photo: jobs_1984
+  gray: 1.0
+  focus: [0.5, 0.3]
+  kicker: 애플 공동 창업자 · 1984년 매킨토시 발표
+  name: 스티브 잡스
+  line: 1985년, 자기가 세운 회사에서 밀려나다
+  line_hl: 밀려나다
+  chips:
+  - {text: 1985.5 경영에서 배제, 'on': 1}
+  - {text: 1985.9.17 사임, 'on': 2}
+  - {text: 존 스컬리 체제, 'on': 2}
+  narration: ['1985년, 스티브 잡스는 이사회와의 다툼 끝에 경영에서 밀려났고,', '그해 9월, 결국 자기가 세운 애플을 떠났어요. | 회사는 펩시 출신 존 스컬리가 이끌게 됐죠.']
+- type: chart
+  chapter: 창업자를 내보낸 회사
+  chart:
+    series: aapl
+    start: '1984-01-01'
+    end: '1998-06-30'
+    log: true
+    color: [200, 206, 220]
+    title: 애플 · 1984 ~ 1998 (달러, 수정 주가 · 로그 스케일)
+    draw: {on: 1, dur: 2.6}
+    marks:
+    - {date: '1985-09-17', label: 잡스 떠남, sub: 1985.9, on: 1, offset: 0.4, dy: 70, dx: 60, color: neutral, size: 32}
+    - {date: '1991-04-02', label: 10배, sub: 1991.4 꼭대기, on: 2, dy: -60, dx: -160, color: gold, size: 38}
+    - {date: '1997-12-23', label: -81%, sub: 1997.12 바닥, on: 3, dy: 70, dx: -80, color: down, size: 38}
+    source: '자료: Yahoo Finance 애플(AAPL) 일별 수정 종가'
+  sfx: [{name: 'mx:2003', on: 2, offset: 0.2, vol: 0.6}, {name: fall_burn, on: 3, offset: 0.2, vol: 0.7}]
+  shake: [{on: 3, offset: 0.3, amp: 12, dur: 0.4}]
+  narration: ['처음엔 아무 문제 없어 보였어요. | 매킨토시가 팔리기 시작하면서, 6년 만에 주가는 **10배**.', '그런데 1991년 꼭대기 이후, | 새 히트작이 나오지 않았어요.', '[낮게]그리고 1997년 말, 주가는 꼭대기에서 !!-81%!!. 파산 이야기까지 나왔죠.']
+- type: qa
+  chapter: 창업자를 내보낸 회사
+  visual: ai_apple_tree
+  q: '왜 **6년 뒤에야**\n무너졌을까?'
+  a: '창업자가 심은 나무에서\n**열매를 다 따 먹은 뒤**라서.'
+  a_on: 2
+  narration: ['왜 바로 무너지지 않고, 6년 뒤에야 무너졌을까요?', '창업자가 심어 둔 나무에서, | 열매를 따 먹는 동안은 괜찮았던 거예요.', '[낮게]새 나무를 심지 못하자, | 열매가 떨어진 순간부터 무너졌죠.']
+# ── 반전 ──────────────────────────────────────────────
+- type: punch
+  chapter: 반전
+  tone: gold
+  photo: {file: jobs_2008, focus: [0.85, 0.4], dark: 0.68, blur: 3}
+  label: 1997년 7월 잡스 복귀 → 2011년 8월 사임
+  big: 110배
+  sub: 14년 동안
+  'on': 1
+  sub_on: 2
+  sfx: [{name: 'mx:2003', on: 1, offset: 0.05, vol: 0.8}]
+  narration: ['그리고 반전이에요. | 1997년, 잡스가 다시 애플로 돌아와요.', '아이맥, 아이팟, 아이폰. | 2011년 잡스가 물러날 때까지 14년 동안, 주가는 **110배**가 됐어요.']
+- type: duel
+  chapter: 반전
+  heading: 애플 · 창업자가 떠났을 때 vs 돌아왔을 때
+  left: {title: '떠난 뒤 · 1985~1997', value: '10배 → -81%', sub: '6년은 좋았고, 그다음 6년은 무너졌다', color: down, on: 1}
+  right: {title: '돌아온 뒤 · 1997~2011', value: '110배', sub: '그리고 2011년, 잡스가 떠난 다음 날은 -0.7%', color: up, on: 2}
+  narration: ['정리하면, 창업자가 떠난 애플은 6년은 좋았고 그다음 6년은 무너졌어요.', '그런데 2011년 잡스가 병으로 물러날 땐, 다음 날 -0.7%가 다였어요. | 이번엔 팀 쿡이라는 준비된 후계자가 있었거든요.']
+# ── 엔비디아는 ────────────────────────────────────────
+- type: kinetic
+  chapter: 엔비디아는
+  bg: {kind: video, file: datacenter_v, dark: 0.6, blur: 4}
+  items:
+  - {text: "그럼\n엔비디아는?", on: 1, size: 170, highlight: '엔비디아', hl_color: up}
+  narration: ['그럼 엔비디아는, 어느 쪽일까요?']
+- type: duel
+  chapter: 엔비디아는
+  heading: 1985년 애플 vs 2026년 엔비디아
+  left: {title: '같은 점', value: '창업자의 얼굴', sub: '회사를 세우고 키운 사람이 하루아침에 떠남', color: down, on: 1}
+  right: {title: '다른 점', value: '후임 미정', sub: '1985 애플은 스컬리가 바로 맡음 · 엔비디아는 임시 CEO', color: neutral, on: 2}
+  narration: ['같은 점은 분명해요. | 회사를 세우고 키운 얼굴이, 하루아침에 떠났다는 거죠.', '다른 점도 있어요. | 1985년 애플엔 바로 다음 CEO가 있었지만, 엔비디아는 아직 정식 후임이 없어요.']
+- type: qa
+  chapter: 엔비디아는
+  visual: nvidia_hq
+  q: '젠슨 황이 심은 나무,\n**열매는 남았을까?**'
+  a: '그건 **실적**이\n말해 줄 거예요.'
+  a_on: 2
+  narration: ['애플에서 배운 질문을 엔비디아에 던져 보면 이래요. | 젠슨 황이 심은 나무, 그러니까 AI 칩과 쿠다라는 나무에 열매는 아직 남았을까?', '그 답은, 이틀 뒤 나오는 실적이 처음으로 말해 줄 거예요.']
+- type: kinetic
+  chapter: 엔비디아는
+  bg: {kind: video, file: stock_decline_v, dark: 0.62, blur: 6}
+  items:
+  - {text: "다음 날 주가보다\n1년 뒤의 사업", on: 1, size: 120, highlight: '1년 뒤의 사업', hl_color: gold}
+  narration: ['오늘 본 9개 회사가 알려 준 건 하나예요. | 다음 날 주가는 1년 뒤를 못 맞혔고, 1년 뒤를 정한 건 사업이었다는 거죠.']
+# ── 지켜볼 신호 ──────────────────────────────────────
+- type: checklist
+  chapter: 지켜볼 신호
+  kicker: 젠슨 황 없는 엔비디아
+  title: 지켜볼 신호 세 가지
+  highlight: 세 가지
+  title_size: 90
+  icon: photo:nvidia_hq
+  icon_on: 1
+  icon_x: 1620
+  items:
+  - {text: '11월 17일 실적 · 다음 분기 전망', on: 2, highlight: 11월 17일}
+  - {text: '정식 CEO는 누구인가', on: 3, highlight: 정식 CEO}
+  - {text: '핵심 임원 · 엔지니어가 남는가', on: 4, highlight: 남는가}
+  narration: ['그럼 뭘 보면 될까요? 세 가지예요.', '첫째, 11월 17일 실적과 다음 분기 전망. | 열매가 아직 달려 있는지 보여 주니까요.', '둘째, 정식 CEO가 누구인지. | 2011년 애플처럼 시장이 믿는 사람이면, 충격은 짧아요.', '셋째, 핵심 임원과 엔지니어가 남는지요. | 나무를 키우는 건 결국 사람이니까요.']
+- type: card
+  chapter: 정리
+  heading: 오늘의 숫자
+  highlight: 숫자
+  numbered: true
+  size: 46
+  gap: 30
+  width: 1500
+  bullets:
+  - {text: '엔비디아 · 사임 발표일 -4.3% · 일주일 -12.75% · 꼭대기 대비 -32%', on: 2}
+  - {text: 'CEO가 떠난 다음 날 · 스타벅스 +24.5% ~ HP -8.0%', on: 3}
+  - {text: '다음 날 반응은 1년 뒤를 거의 못 맞혔다', highlight: 못 맞혔다, hl_color: down, on: 3}
+  - {text: '애플 · 잡스가 떠난 뒤 10배 → -81% · 돌아온 뒤 110배', highlight: 110배, hl_color: up, on: 4}
+  narration: ['오늘 본 숫자를 정리해 볼게요.', '엔비디아는 사임 발표일 -4.3%, 일주일 -12.75%.', 'CEO가 떠난 다음 날 주가는 제각각이었고, | 그 반응은 1년 뒤를 거의 못 맞혔어요.', '그리고 창업자가 떠난 애플은, 6년 뒤에야 무너졌고 | 창업자가 돌아오자 110배가 됐죠.']
+- type: kinetic
+  chapter: 정리
+  items:
+  - {text: "CEO는 떠나도\n사업은 남는다", on: 1, size: 130, highlight: '사업은 남는다'}
+  narration: ['CEO는 떠나도, 사업은 남아요.', '[낮게]그 사업이 아직 자라는 중인지, 그게 앞으로의 주가를 정할 거예요.']
+- type: outro
+  heading: "다음 날 주가보다\n1년 뒤의 사업"
+  highlight: 1년 뒤의 사업
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목·상품의 매수·매도 추천이 아닙니다.
+
+    과거 데이터는 미래 수익을 보장하지 않으며 세금·수수료는 반영하지 않았습니다.'
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['여러분은 젠슨 황 없는 엔비디아, 어떻게 보세요? 1985년 애플일까요, 2011년 애플일까요?', '댓글로 생각을 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
+thumbs10:
+- {p: P01, photo: jensen_010, top: '창업자가 쫓겨났는데', bottom: '주가는 올랐다?', hl: '올랐다?', sticker: 반전}
+- {p: P02, photo: nvidia_hq, theme: blue, top: '젠슨 황 없는 엔비디아', num: '3', unit: '신호', bottom: '11월 17일 실적부터'}
+- {p: P03, photo: jobs_1984, theme: red, label: '1985년 잡스가 떠난 애플', before: '10배', after: '-81%', sub: '6년 뒤에 무너졌다'}
+- {p: P10, name: P04, photo: jensen_010, label: '(엔비디아 · 2026.11.6 → 11.13)', top: '젠슨 황 쫓겨났다', bottom: '엔비디아 망할까?'}
+- {p: P05, photo: jobs_1984, line1: '창업자를 쫓아낸 회사', line2: '주가는', line3: '어떻게 됐을까…', sticker: '실제 주가', chart: {series: aapl, start: '1984-01-01', end: '1998-06-30'}}
+- {p: P06, photo: jensen_010, top: '4조 달러 무너진', bottom: '엔비디아', sticker: '경고!'}
+- {p: P07, photo: nvidia_hq, label: 'CEO 떠난 9개 회사 · 다음 날 주가', top: '스타벅스 +24.5%', bottom: 'HP -8.0%', red: true}
+- {p: P08, left: jobs_1984, right: jensen_010, text_l: '1985', text_r: '2026', name_l: 스티브 잡스, name_r: 젠슨 황, bottom: '결말도 같을까?'}
+- {p: P09, photo: nvidia_hq, person: {file: worker_stressed_cut, h: 900, side: right, dy: 60}, bubble: "엔비디아 물렸는데\n이제 망하는 거야??", bottom: '9개 회사 1년 뒤를 봤더니'}
+- {p: P10, photo: jensen_010, label: '(엔비디아 · 10월 고점 → 11.13)', top: '창업자 쫓겨난 엔비디아', bottom: '꼭대기 대비 -32%'}
+shorts9:
+  s1: {title: '젠슨 황 쫓겨난 엔비디아, 일주일 -12.75%… CEO 쫓겨나면 주가 망할까? #엔비디아 #젠슨황 #shorts', at: '2026-11-16T12:00'}
+  s2: {title: '잡스를 쫓아낸 애플, 6년 동안 10배… 그다음 벌어진 일 #애플 #스티브잡스 #shorts', at: '2026-11-16T21:00'}
