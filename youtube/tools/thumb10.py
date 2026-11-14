@@ -466,8 +466,50 @@ def badge(name, d=460, ring=YEL, bgc=(30, 34, 48)):
     return out
 
 
+def face_half(fc, w=W // 2, h=H):
+    """반쪽 화면에 얼굴을 크게: fc = {file, cx, cy(원본 기준 얼굴 중심 비율), scale, y(화면 속 얼굴 높이), gray}"""
+    from PIL import ImageEnhance
+    src = TH._photo_src(fc["file"]).convert("RGB")
+    sc = max(w / src.width, h / src.height) * fc.get("scale", 1.0)
+    im = src.resize((int(src.width * sc) + 1, int(src.height * sc) + 1), Image.LANCZOS)
+    x0 = int(min(max(0, im.width * fc["cx"] - w / 2), im.width - w))
+    y0 = int(min(im.height * fc["cy"] - fc.get("y", 430), im.height - h))
+    if y0 < 0:   # 얼굴이 사진 맨 위에 있으면 위를 사진 윗줄 색으로 늘려서라도 얼굴을 원하는 높이에
+        top = im.crop((0, 0, im.width, 8)).resize((1, 1), Image.BILINEAR).getpixel((0, 0))
+        pad = Image.new("RGB", (im.width, im.height - y0), top)
+        pad.paste(im, (0, -y0))
+        im, y0 = pad, 0
+    im = im.crop((x0, y0, x0 + w, y0 + h))
+    if fc.get("gray"):
+        im = ImageEnhance.Color(im).enhance(1 - fc["gray"])
+    im = ImageEnhance.Contrast(im).enhance(1.2)
+    return im.convert("RGBA")
+
+
+def v3_p08_faces(sp):
+    """2026-11-14 사용자: '1985 vs 2026'만으로는 뭘 비교하는지 모름 → 두 얼굴을 크게 + 위에 '그해 무슨 일' + 왼쪽은 결과, 오른쪽은 '?'"""
+    f = Image.new("RGBA", (W, H), (0, 0, 0, 255))
+    f.alpha_composite(face_half(sp["face_l"]), (0, 0))
+    f.alpha_composite(face_half(sp["face_r"]), (W // 2, 0))
+    ImageDraw.Draw(f).polygon([(W / 2 - 14, 0), (W / 2 + 26, 0), (W / 2 + 14, H), (W / 2 - 26, H)], fill=YEL + (255,))
+    for x_, (yr, what), col in ((W / 4, sp["top_l"], (40, 110, 230)), (W * 3 / 4, sp["top_r"], (226, 32, 38))):
+        lab = TH.T(yr, 120, WHITE)
+        sub = TH.T(what, 84, WHITE)
+        card = Image.new("RGBA", (max(lab.width, sub.width) + 60, lab.height + sub.height + 40), col + (240,))
+        card.alpha_composite(lab, ((card.width - lab.width) // 2, 10))
+        card.alpha_composite(sub, ((card.width - sub.width) // 2, lab.height + 22))
+        TH.shadowed(f, card, (x_, 24), "mt")
+    band(f, H - 330, 225, fade=120)
+    TH.shadowed(f, txt(sp["res_l"], 120, YEL, maxw=880), (W / 4, H - 235), "mb")
+    TH.shadowed(f, txt(sp.get("res_r", "?"), 120, YEL, maxw=880), (W * 3 / 4, H - 235), "mb")
+    TH.shadowed(f, txt(sp["bottom"], 150, WHITE, hl=sp.get("hl", ""), maxw=1840), (W / 2, H - 30), "mb")
+    return f
+
+
 def v3_p08(sp):
     """대결: 좌우 색 반반 + 위 두 원형 배지(인물/로고) + 가운데 VS + 아래 비교 기준 (승자 숨김)"""
+    if sp.get("face_l"):
+        return v3_p08_faces(sp)
     f = Image.new("RGBA", (W, H), (0, 0, 0, 255))
     left = bg(sp.get("left", "tesla_chargers"), (0.5, 0.5), 0.45, 0.2, "blue").crop((W // 4, 0, W // 4 + W // 2, H))
     right = bg(sp.get("right", "server_rack"), (0.5, 0.5), 0.45, 0.2, "red").crop((W // 4, 0, W // 4 + W // 2, H))
