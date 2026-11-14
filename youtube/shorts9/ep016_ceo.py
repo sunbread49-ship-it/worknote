@@ -77,7 +77,7 @@ def a6(f, t, sc):
 
 
 S1 = [
-    {"draw": a1, "nohead": True, "min": 2.2, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.05, "mx:2908", 0.8)], "narr": ["젠슨 황이 떠난 엔비디아, 일주일 만에 마이너스 12.75%."]},
+    {"draw": a1, "nohead": True, "min": 2.2, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.05, "mx:2908", 0.8)], "narr": ["젠슨 황이 떠난 엔비디아, 일주일 만에 12% 넘게 빠졌어요."]},
     {"draw": a2, "nohead": True, "flash": True, "min": 2.2, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.1, "accent_low", 0.5)],
      "narr": ["CEO가 쫓겨나면, 주가는 망할까요? 9개 회사로 확인해 봤어요."]},
     {"draw": a3, "nohead": True, "flash": True, "min": 3.0, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.2, "pop", 0.5), (0.6, "pop", 0.5), (1.0, "pop", 0.5), (1.4, "fall_burn", 0.5)],
