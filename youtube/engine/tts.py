@@ -248,6 +248,20 @@ def plan(scenes, cfg, work_dir: Path, log=print):
     for sc in scenes:
         sc.start = t
         cur, lines = lead, []
+        if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene" and sc.narration:
+            p_, spans = gemini_scene(list(sc.narration), cfg, cache, log=log)
+            pcm = _pcm(p_)
+            nz = np.where(np.abs(pcm) > 0.01)[0]
+            st0 = nz[0] if len(nz) else 0
+            pcm = pcm[max(0, st0 - 480):]
+            off = max(0, st0 - 480) / SR
+            clips.append((t + cur, pcm))
+            lines = [(cur + max(0.0, a - off), cur + max(0.0, b - off)) for a, b in spans]
+            cur += len(pcm) / SR + gap
+            sc.lines = lines
+            sc.dur = max(cur - gap + tail, sc.spec.get("min_dur", 2.0))
+            t += sc.dur
+            continue
         for text in sc.narration:
             # 첫째 · 둘째 · 셋째는 따로 떼어 차분하게 (쉼표 억양 · [pause] 모두 어색 · EP013 · EP014 피드백)
             text = re.sub(r"(첫째|둘째|셋째|넷째),\s", r"\1 / ", text)
@@ -401,3 +415,81 @@ def gemini_line(text, cfg, cache, log=print):
             break
         log(f"  Gemini 다시 만듦({ratio:.2f}): {text[:30]} {diffs[:2]}")
     return best[1]
+
+
+# ── Gemini 장면 단위 (2026-11-14: 요청 수 1/4 · 블라인드 테스트 1등 방식) ──────────────────────
+def _stt_words(path):
+    """받아쓰기 + 단어별 시작 시각 [(단어, 시작초, 끝초)] — 60초 이하"""
+    import base64 as _b
+    x = _pcm(path)
+    x16 = x[::3]
+    pad = np.zeros(8000, np.float32)
+    raw = (np.clip(np.concatenate([pad, x16, pad]), -1, 1) * 32767).astype("<i2").tobytes()
+    body = {"config": {"encoding": "LINEAR16", "sampleRateHertz": 16000, "languageCode": "ko-KR", "model": "latest_long",
+                       "enableWordTimeOffsets": True},
+            "audio": {"content": _b.b64encode(raw).decode()}}
+    req = urllib.request.Request("https://speech.googleapis.com/v1/speech:recognize", data=json.dumps(body).encode(),
+                                 headers={"Content-Type": "application/json"})
+    res = json.loads(urllib.request.urlopen(req, timeout=120).read())
+    out = []
+    for r in res.get("results", []):
+        for w in r["alternatives"][0].get("words", []):
+            st = float(w["startTime"].rstrip("s")) - 0.5
+            en = float(w["endTime"].rstrip("s")) - 0.5
+            out.append((w["word"], max(0.0, st), max(0.0, en)))
+    return out
+
+
+def _hn(t):
+    return re.sub(r"[^가-힣0-9]", "", speakable(t))
+
+
+def gemini_scene(lines, cfg, cache, log=print):
+    """장면의 문장들을 한 번에 → (wav 경로, [(문장 시작, 문장 끝)] 장면 기준 초). 받아쓰기 일치율이 낮으면 최대 3번."""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parents[1] / "tools"))
+    low = any(l.lstrip().startswith("[낮게]") for l in lines) and all(l.lstrip().startswith("[낮게]") for l in lines)
+    txt = "\n".join(gemini_text(l, cfg.get("say")) for l in lines)
+    speed = "낮고 차분한 톤으로, 한 박자 천천히." if low else cfg.get("speed", "빠르게")
+    best = None
+    for take in range(3):
+        p = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
+        try:
+            words = _stt_words(p)
+        except Exception:
+            words = []
+        heard = "".join(w for w, _, _ in words)
+        import difflib
+        ratio = difflib.SequenceMatcher(None, _hn(" ".join(lines)), _hn(heard)).ratio() if words else 0.5
+        if best is None or ratio > best[0]:
+            best = (ratio, p, words)
+        if ratio >= 0.88:
+            break
+        log(f"  Gemini 장면 다시 만듦({ratio:.2f}): {lines[0][:24]}")
+    ratio, p, words = best
+    dur = len(_pcm(p)) / SR
+    # 문장 경계: 대본 글자 수 누적 비율 ↔ 받아쓰기 단어 글자 수 누적 → 해당 단어의 시작 시각
+    L = [max(1, len(_hn(l))) for l in lines]
+    bounds = [0.0]
+    if words:
+        wl = [max(1, len(_hn(w))) for w, _, _ in words]
+        tot_w, tot_l = sum(wl), sum(L)
+        acc, cum = 0, []
+        for n_ in wl:
+            acc += n_
+            cum.append(acc / tot_w)
+        a = 0
+        for n_ in L[:-1]:
+            a += n_
+            target = a / tot_l
+            i = min(range(len(cum)), key=lambda j: abs(cum[j] - target))
+            nxt = words[i + 1][1] if i + 1 < len(words) else words[i][2]
+            bounds.append((words[i][2] + nxt) / 2)
+    else:
+        a = 0
+        for n_ in L[:-1]:
+            a += n_
+            bounds.append(dur * a / sum(L))
+    bounds.append(dur)
+    return p, [(bounds[i], bounds[i + 1]) for i in range(len(lines))]

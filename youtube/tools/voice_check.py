@@ -142,6 +142,23 @@ def main(ep_dir, quiet=False, use_stt=True):
     import json
     sc_path = ROOT / "out" / ep_dir.name / "stt_cache.json"
     stt_cache = json.loads(sc_path.read_text(encoding="utf-8")) if sc_path.exists() else {}
+    if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene":   # 장면 단위: 이미 만든 장면 음성을 받아쓰기로 확인 (새 요청 없음)
+        import difflib
+        out, bad = [], 0
+        for si, sc in enumerate(ep["scenes"], 1):
+            nar = sc.get("narration", [])
+            if not nar:
+                continue
+            p_, _ = tts.gemini_scene(nar, cfg, cache, log=lambda *a: None)
+            heard = " ".join(w for w, _, _ in tts._stt_words(p_))
+            r = difflib.SequenceMatcher(None, tts._hn(" ".join(nar)), tts._hn(heard)).ratio()
+            if r < 0.85:
+                bad += 1
+                out.append(f"[장면 {si:02d}] 받아쓰기 일치 {r * 100:.0f}% · 들린 말: {heard[:120]}")
+        rep = ROOT / "out" / ep_dir.name / "음성점검.txt"
+        rep.write_text(f"음성 자동 점검(장면 단위) · 장면 {len(ep['scenes'])}개 · 확인 필요 {bad}곳\n\n" + "\n".join(out), encoding="utf-8")
+        print(f"음성 자동 점검: 확인 필요 {bad}곳 → {rep}")
+        return bad
     n = 0
     for si, sc in enumerate(ep["scenes"], 1):
         for text in sc.get("narration", []):
