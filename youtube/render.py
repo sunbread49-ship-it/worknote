@@ -108,7 +108,7 @@ def setup(ep_dir, only=None, log=print):
                 continue
             starts = sorted({round(a - sc.start, 2) for a, b, _ in c.cues if sc.start <= a < sc.start + sc.dur} | {round(a, 2) for a, _ in sc.lines})
             sc._cuts = [x for i, x in enumerate(starts) if i == 0 or x - starts[i - 1] > 0.9]
-            sc.spec["camera"] = "punch"
+            # 점프 컷(줌 튕김)은 '튕겼다 들어갔다' 산만하다는 피드백으로 끔 (2026-11-14) — 요소가 차례로 들어오는 방식 + 움직이는 배경만
             if sc.spec.get("type") not in ("chart", "punch", "kinetic", "title", "outro") and not sc.spec.get("bg"):
                 sc.spec["bg"] = {"kind": "motion", "style": "bokeh", "tone": "navy", "dark": 0.35}
     if only:

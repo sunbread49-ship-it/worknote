@@ -979,8 +979,10 @@ class KPI(Editorial):
                 G.blit(f, bar, (cx - bw / 2, base - hh))
                 G.blit(f, T(b.get("text", str(b["value"])), 44 if hl else 36, self.fg, "Black"), (cx, base - hh - 12), min(1, k * 2), "mb")
                 G.blit(f, T(b["label"], 30, self.fg, "ExtraBold"), (cx, base + 18), min(1, k * 2), "mt")
-        d = ImageDraw.Draw(f)
-        d.line((x0 - 10, base, x1 + 10, base), fill=self.fg + (160,), width=3)
+        kb = G.ease_out((t - t0) / 0.4)   # 막대가 나올 때 기준선도 같이 (미리 그어져 있지 않게 · EP015 피드백)
+        if kb > 0:
+            d = ImageDraw.Draw(f)
+            d.line((x0 - 10, base, x0 - 10 + (x1 - x0 + 20) * kb, base), fill=self.fg + (160,), width=3)
         self.finish(f, t)
 
 
@@ -2345,6 +2347,33 @@ def _figure(name, h, warm=(214, 172, 96), cool=(16, 22, 44)):
     return out
 
 
+@lru_cache(maxsize=8)
+def _visual_src(name):
+    from pathlib import Path
+    d = Path(__file__).resolve().parents[1] / "assets/photos"
+    p = next((d / f"{name}{e}" for e in (".png", ".jpg", ".jpeg") if (d / f"{name}{e}").exists()))
+    return Image.open(p).convert("RGB")
+
+
+def _visual_card(name, t, w=780, h=560):
+    """둥근 모서리 그림 카드 + 그림자 · 천천히 다가감(켄 번스)"""
+    src = _visual_src(name)
+    z = 1.0 + 0.06 * min(1.0, t / 6)
+    sc = max(w / src.width, h / src.height) * z
+    im = src.resize((int(src.width * sc), int(src.height * sc)), Image.BILINEAR)
+    x0, y0 = (im.width - w) // 2, (im.height - h) // 2
+    im = im.crop((x0, y0, x0 + w, y0 + h)).convert("RGBA")
+    m = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(m).rounded_rectangle((0, 0, w - 1, h - 1), 28, fill=255)
+    im.putalpha(m)
+    out = Image.new("RGBA", (w + 80, h + 80), (0, 0, 0, 0))
+    sh = Image.new("RGBA", (w + 80, h + 80), (0, 0, 0, 0))
+    ImageDraw.Draw(sh).rounded_rectangle((40, 52, w + 40, h + 52), 28, fill=(0, 0, 0, 150))
+    out.alpha_composite(sh.filter(ImageFilter.GaussianBlur(18)))
+    out.alpha_composite(im, (40, 40))
+    return out
+
+
 class QA(Editorial):
     """문답(화보형). figure(assets/people/*.png 누끼, 기본 thinker_cut), q, a(**노랑** !!빨강!!), a_on, sub,
     compare: [{label, value, text, color}] (답 아래 가로 막대 도식), vmax"""
@@ -2357,8 +2386,15 @@ class QA(Editorial):
         ImageDraw.Draw(gl).ellipse((-120, 160, 980, 1200), fill=(214, 172, 96, 46))
         f.alpha_composite(gl.filter(ImageFilter.GaussianBlur(160)))
         k = G.ease_out(t / 0.6)
-        fig = _figure(sp.get("figure", "thinker_cut"), sp.get("figure_h", 900))
-        if fig.width > fig.height * 1.6:   # 배 · 차처럼 옆으로 긴 누끼는 왼쪽 가운데에 크게 (바닥에 붙이면 자막에 가림)
+        if sp.get("visual"):   # 2026-11-14: 사람 대신 그림 카드(AI 디오라마 · 사진) — 한 장면에 그림 하나 + 짧은 문답
+            fig = None
+            ph = _visual_card(sp["visual"], t)
+            G.blit(f, ph, (470, 540 + (1 - k) * 30), k, "mm")
+        else:
+            fig = _figure(sp.get("figure", "thinker_cut"), sp.get("figure_h", 900))
+        if fig is None:
+            pass
+        elif fig.width > fig.height * 1.6:   # 배 · 차처럼 옆으로 긴 누끼는 왼쪽 가운데에 크게 (바닥에 붙이면 자막에 가림)
             if fig.width > 820:
                 fig = fig.resize((820, int(fig.height * 820 / fig.width)), Image.LANCZOS)
             G.blit(f, fig, (440 - (1 - k) * 40, 520), k, "mm")
@@ -2405,7 +2441,13 @@ class QA(Editorial):
                     ImageDraw.Draw(f).rounded_rectangle((x, yy + 44, x + max(bw, 6), yy + 44 + 26), 6, fill=col + (255,))
                     G.blit(f, T(c.get("text", ""), 40, col, "Black"), (x + max(bw, 6) + 18, yy + 57), kc, "lm")
                     yy += step
-        if sp.get("figure_credit", True):
+        if sp.get("visual"):
+            import json as _j
+            from pathlib import Path as _P
+            src = _P(__file__).resolve().parents[1] / "assets/photos" / (sp["visual"] + ".json")
+            if src.exists():
+                self.spec.setdefault("credit", _j.loads(src.read_text()).get("credit", ""))
+        elif sp.get("figure_credit", True):
             fn = sp.get("figure", "thinker_cut")
             if fn == "thinker_cut":
                 self.spec.setdefault("credit", "조각: 오귀스트 로댕 '생각하는 사람' · 사진 AndrewHorne, Public domain (Wikimedia Commons)")

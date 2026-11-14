@@ -153,6 +153,7 @@ scenes:
   narration: ['시간을 돌려 볼게요. | 코로나가 덮친 2020년 3월, 한화오션 주가는 바닥이었어요.', '그리고 2026년 1월까지, **15배**가 됐죠. | 1,000만 원이 1억 5천만 원이 된 거예요.', '그런데 거기서 10개월 만에, !!-67%!!.']
 - type: isobars
   chapter: 광풍
+  bg: {kind: parallax, file: ai_shipyard_boom, dark: 0.72, blur: 4}
   kicker: 2020년 3월 코로나 바닥 → 2025~26년 꼭대기
   title: 조선주가 몇 배가 됐나
   highlight: 몇 배
@@ -166,15 +167,10 @@ scenes:
   narration: ['다른 조선주도 마찬가지예요. | 삼성중공업은 11.7배, HD한국조선해양은 7.2배.', '배가 모자라서 몇 년 치 주문이 밀려 있다는 말에, | 다들 슈퍼사이클이라고 불렀죠.']
 - type: qa
   chapter: 광풍
-  figure: worker_stressed_cut
-  figure_h: 900
-  q: '2020년 바닥에서 산 사람은\n**지금 손해**일까?'
-  a: '아니요, 아직 **4.9배**예요.\n꼭대기에서 산 사람만 아파요.'
+  visual: ai_investor_peak
+  q: '2020년 바닥에서 산 사람,\n**지금 손해**일까?'
+  a: '아니요, 아직 **4.9배**.\n아픈 건 꼭대기 근처예요.'
   a_on: 2
-  compare:
-  - {label: '2020.3 바닥 → 2026.1 꼭대기', value: 15.1, text: '15.1배', color: [255, 204, 40]}
-  - {label: '2020.3 바닥 → 지금', value: 4.9, text: '4.9배', color: [90, 220, 170]}
-  vmax: 17
   narration: ['그럼 질문 하나. | 2020년 바닥에서 산 사람은, 지금 손해일까요?', '아니요. 그래도 아직 4.9배예요. | 문제는 꼭대기 근처에서 들어온 사람들이죠.']
 # ── 추락 ──────────────────────────────────────────────
 - type: kpi
@@ -206,9 +202,7 @@ scenes:
   narration: ['증권가가 꼽는 이유를 세 줄로 줄이면 이래요.', '첫째, 3분기 실적이 기대에 못 미쳤어요. | HD현대중공업이 대표적이죠.', '둘째, 중국 조선소가 계속 생산능력을 늘리면서, | 배가 다시 남아돌 거라는 걱정이 커졌어요.', '셋째, 원자재 값과 노조 파업, | 미국과 이란 사이 긴장 같은 바깥 변수까지 겹쳤고요.']
 - type: qa
   chapter: 추락
-  bg: {kind: parallax, file: watermelons, dark: 0.62, blur: 6}
-  figure: container_ship_cut
-  figure_h: 380
+  visual: ai_watermelon_glut
   q: '배가 모자랐는데\n왜 **남아돈다는** 걱정이?'
   a: '수박이 비싸면\n**다들 수박을 심거든요.**'
   a_on: 2
@@ -216,6 +210,7 @@ scenes:
 # ── 2007년의 기억 ──────────────────────────────────────
 - type: kinetic
   chapter: 2007년의 기억
+  bg: {kind: parallax, file: ai_ships_idle, dark: 0.55, blur: 0}
   items:
   - {text: "19년 전,\n같은 장면", on: 1, size: 160, highlight: '같은 장면', hl_color: down}
   narration: ['그리고 이 사이클을, 우리는 이미 한 번 봤어요.', '[낮게]2007년이에요.']
@@ -257,17 +252,10 @@ scenes:
 # ── 반전 ──────────────────────────────────────────────
 - type: qa
   chapter: 반전
-  figure: lng_carrier_cut
-  figure_h: 200
-  q_size: 64
-  a_size: 56
+  visual: ai_stock_ahead
   q: '**배 값이 떨어져서**\n주가가 빠진 걸까?'
   a: '아니요. 배 값은\n**아직 꼭대기 근처**예요.'
   a_on: 2
-  compare:
-  - {label: '신조선가지수 · 2008.9 (역대 꼭대기 근처)', value: 190, text: '약 190', color: [190, 196, 210]}
-  - {label: '신조선가지수 · 2026.7', value: 185.4, text: '185.39', color: [90, 220, 170]}
-  vmax: 210
   narration: ['그런데 여기서 반전이 있어요. | 그럼 지금도, 배 값이 떨어져서 주가가 빠진 걸까요?', '아니에요. 새 배 값을 보여 주는 신조선가지수는, | 올해 7월에도 185로, 2008년 꼭대기 190과 거의 비슷해요.']
 - type: timeline
   chapter: 반전
@@ -286,6 +274,7 @@ scenes:
   narration: ['그런데 2007년에도 그랬어요. | 주가는 2007년 10월에 꼭대기를 찍었는데,', '배 값이 꼭대기를 찍은 건 2008년 9월이었어요. | 거의 1년 뒤죠.', '[낮게]배 값이 꺾이기도 전에, 주가는 이미 반 토막이 나 있었던 거예요.']
 - type: kinetic
   chapter: 반전
+  bg: {kind: parallax, file: ai_stock_ahead, dark: 0.55, blur: 0}
   items:
   - {text: "주가는\n배 값보다\n먼저 움직인다", on: 1, size: 130, highlight: '먼저', hl_color: gold}
   narration: ['주식시장은, 지금이 아니라 2~3년 뒤를 사고팔거든요.', '오늘 배 값이 좋아도, 앞으로 남아돌 것 같으면 | 주가가 먼저 빠지는 거예요.']
@@ -298,27 +287,18 @@ scenes:
   narration: ['그럼 이번에도 2007년처럼 될까요? | 같은 점은 분명히 있어요. 배 값은 높은데, 주가가 먼저 꺾였다는 거죠.', '다른 점도 있어요. | 2008년엔 금융위기가 터지면서 주문 취소가 쏟아졌는데,', '지금은 아직 그런 소식은 없고, | 증권가는 3년 치가 넘는 주문이 쌓여 있다고 봐요.']
 - type: qa
   chapter: 이번엔 다를까
-  bg: {kind: video, file: port_aerial_v, dark: 0.66, blur: 8}
-  figure: worker_stressed_cut
-  figure_h: 900
+  visual: ai_bottom_valley
   q: '그럼 지금이\n**바닥**일까?'
-  a: '아무도 몰라요.\n그래서 **신호**를 봐야 해요.'
+  a: '아무도 몰라요.\n그래서 **신호**를 봐요.'
   a_on: 2
   narration: ['그럼 지금이 바닥일까요?', '솔직히, 그건 아무도 몰라요. | 그래서 날짜를 맞히는 대신, 신호를 봐야 해요.']
 # ── 언제 팔았어야 했나 ────────────────────────────────────
 - type: qa
   chapter: 언제 팔았어야 했나
-  figure: container_ship_cut
-  figure_h: 380
-  q_size: 64
-  a_size: 56
-  q: '고점에서 **-20%** 빠지면 판다,\n이 규칙이면 됐을까?'
-  a: '2020년 바닥에서 산 사람에겐\n**너무 일찍** 울린 경보였어요.'
+  visual: ai_alarm_early
+  q: '**-20%** 빠지면 판다,\n이 규칙이면 됐을까?'
+  a: '2020년 바닥 매수자에겐\n**너무 일찍** 울린 경보.'
   a_on: 2
-  compare:
-  - {label: '2020.3 바닥 매수 · -20% 규칙 (2020.6 매도)', value: 2.09, text: '2.09배', color: [190, 196, 210]}
-  - {label: '2020.3 바닥 매수 · 그냥 보유 (지금)', value: 4.91, text: '4.91배', color: [90, 220, 170]}
-  vmax: 5.5
   narration: ['그럼 이런 규칙은 어땠을까요? | 꼭대기에서 20% 빠지면 무조건 판다.', '2020년 바닥에서 산 사람이 이 규칙을 지켰다면, | 석 달 만인 2020년 6월에 2.09배로 내렸어요.', '그냥 들고 있었다면, 이렇게 빠진 지금도 4.9배인데 말이죠.']
 - type: duel
   chapter: 언제 팔았어야 했나
@@ -338,7 +318,7 @@ scenes:
   title: 지켜볼 신호 세 가지
   highlight: 세 가지
   title_size: 90
-  icon: photo:lng_carrier
+  icon: photo:ai_signals
   icon_on: 1
   icon_x: 1620
   items:

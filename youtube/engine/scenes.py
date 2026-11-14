@@ -669,6 +669,9 @@ class Kinetic(Scene):
 
     def draw(self, f, t):
         sp = self.spec
+        if sp.get("bg") and sp["bg"].get("kind") in ("video", "motion", "parallax"):   # 2026-11-14: 키네틱도 그림 · 영상 배경
+            from . import bgvideo
+            f.paste(bgvideo.at(sp["bg"], getattr(self, "_now", t)).convert("RGBA"), (0, 0))
         if sp.get("bg_word"):
             wm = G.text_img(sp["bg_word"], "Black", sp.get("bg_size", 420), col(sp.get("bg_color"), S.GOLD))
             G.blit(f, wm, (S.W / 2 + 40 - t * 12, S.H / 2 - 40), 0.07, "mm")
