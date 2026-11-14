@@ -103,7 +103,7 @@ def pile_pieces(width=900):
 BIN = (560, 1230)   # 사진 속 계산대 통 바닥 가운데 (focus 1.0 기준)
 
 
-def toss(f, t, t0=0.0, gap=0.2):
+def toss(f, t, t0=0.0, gap=0.2, trail=False):
     """옷 조각들이 제각각 회전하며 떨어져 통 안에 쌓임. 착지한 개수 반환"""
     pieces, (w, h) = pile_pieces()
     ox, oy = BIN[0] - w / 2, BIN[1] - h / 2
@@ -118,6 +118,12 @@ def toss(f, t, t0=0.0, gap=0.2):
         sy = (1 - e) * (-1100 - k * 60)
         im = pc.rotate(rot, expand=True, resample=Image.BICUBIC) if abs(rot) > 0.5 else pc
         cx, cy = ox + x + pc.width / 2 + sx, oy + y + pc.height / 2 + sy
+        if trail and u < 1:   # 휙 날아가는 잔상 (2026-11-14: '던지는 액션'이 보이게)
+            for back, al in ((0.10, 0.28), (0.20, 0.14)):
+                ub = max(0.0, u - back)
+                eb = ub * ub
+                gx, gy = ox + x + pc.width / 2 + (1 - eb) * (-260 + k * 130), oy + y + pc.height / 2 + (1 - eb) * (-1100 - k * 60)
+                G.blit(f, im, (gx, gy), al, "mm")
         K.drop(f, im, (cx, cy), "mm", 1, blur=18, alpha=0.5)
         if u >= 1:
             landed += 1
@@ -143,7 +149,7 @@ def price_panel(f, n, x=60, y=520, o=1.0, check=True):
 def s_hook(f, t, sc):
     """결과 먼저: 실제 계산대 통에 옷을 아무렇게나 휙휙 → 떨어지는 족족 가격이 뜸"""
     full_photo(f, "uq_selfcheck", t, dark=0.12, zoom=0.04, focus=(1.0, 0.5))
-    n = toss(f, t + 0.55, 0.0, 0.18)
+    n = toss(f, t + 0.22, 0.0, 0.2, trail=True)   # 첫 프레임부터 옷이 공중에 (쌓인 더미로 시작하지 않음)
     if n:
         price_panel(f, n, 600, 420)
     big(f, "대충 던졌는데\n가격이 뜬다?", 230, 118, hl="가격이 뜬다")
@@ -321,7 +327,7 @@ def draw_cover(f):
 
 SCENES = [
     {"draw": s_hook, "nohead": True, "min": 2.6, "gap": 0.12, "tail": 0.15,
-     "sfx_t": [(0.0, "pop", 0.45), (0.18, "pop", 0.45), (0.36, "pop", 0.45), (0.54, "pop", 0.45), (0.72, "pop", 0.45), (0.95, "ding", 0.55)],
+     "sfx_t": [(0.23 + 0.2 * k, "pop", 0.5) for k in range(5)] + [(1.25, "ding", 0.6)],
      "narr": ["옷을 통에 던져 넣기만 했는데, / 가격이 바로 뜬다?"]},
     {"draw": s_store, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(1.0, "accent", 0.45)],
      "narr": ["유니클로 셀프계산대, 바코드도 안 찍었는데요? 비밀은 30초면 풀려요."]},
