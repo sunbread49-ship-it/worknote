@@ -294,7 +294,9 @@ def plan(scenes, cfg, work_dir: Path, log=print):
 
 # ══ Gemini TTS (2026-11-14 사용자 결정: 블라인드 테스트에서 '압도적으로' 자연스러움 → 두 채널 모두 사용) ══════════
 # 키: 환경 Network secrets — generativelanguage.googleapis.com / 헤더 x-goog-api-key (요청에 자동으로 붙음)
-GEMINI_MODEL = "gemini-2.5-flash-preview-tts"   # pro 모델은 긴 글에서 502가 잦음
+GEMINI_MODEL = "gemini-2.5-flash-preview-tts"
+GEMINI_MIN_GAP = 7.0   # 초 · 분당 약 8번 (429 방지)
+_G_LAST = 0.0   # pro 모델은 긴 글에서 502가 잦음
 GEMINI_STYLE = ("다음 한국어 대본을 그대로 읽어 줘. 경제 유튜브 진행자 말투로, 친구에게 이야기하듯 자연스럽고 생생하게. "
                 "{speed} 숫자는 또렷하게, 질문은 진짜 궁금한 듯이, 반전 앞에서는 한 박자 쉬어 줘.")
 GEMINI_SPEED = {"보통": "차분하지만 지루하지 않은 보통 속도로.", "빠르게": "템포 빠르고 경쾌하게, 쇼츠처럼 몰입감 있게."}
@@ -323,7 +325,12 @@ def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), sty
                                  "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}}}}
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
     last = None
-    for k in range(6):
+    global _G_LAST
+    for k in range(10):
+        gap = time.time() - _G_LAST
+        if gap < GEMINI_MIN_GAP:   # 분당 요청 한도 → 요청 사이 간격 유지
+            time.sleep(GEMINI_MIN_GAP - gap)
+        _G_LAST = time.time()
         try:
             req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=240) as r:
@@ -335,7 +342,17 @@ def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), sty
                 w.setframerate(24000)
                 w.writeframes(pcm)
             return out
-        except Exception as e:  # 429(잠깐 많음) · 502(서버) → 잠시 뒤 재시도
+        except urllib.error.HTTPError as e:  # 429(잠깐 많음) · 502(서버) → 서버가 말한 만큼 기다렸다 재시도
+            last = e
+            wait = 15 + 15 * k
+            try:
+                m = re.search(r'"retryDelay":\s*"(\d+)', e.read().decode())
+                if m:
+                    wait = int(m.group(1)) + 3
+            except Exception:
+                pass
+            time.sleep(min(wait, 120))
+        except Exception as e:
             last = e
             time.sleep(10 + 10 * k)
     raise RuntimeError(f"Gemini TTS 실패: {last}")
