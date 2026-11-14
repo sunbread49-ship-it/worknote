@@ -6,6 +6,7 @@
 # 음성: Gemini TTS · Umbriel · 빠르게 (2026-11-14 사용자 선택)
 title: '조선 슈퍼사이클, 2007년처럼 끝났을까? 한화오션 -67%'
 series_tag: 조선주
+pace: punchy   # 자막마다 점프 컷 · 움직이는 배경 · 빠른 전환
 tts:
   provider: gemini
   voice: Umbriel

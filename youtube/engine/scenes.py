@@ -138,6 +138,16 @@ class Scene:
         keys = [(0.0, S.W / 2, S.H / 2, 1.0)]
         if cam == "off":
             keys = []
+        elif cam == "punch":   # 2026-11-14: 자막이 바뀔 때마다(2~3초) 구도가 '탁' 바뀌는 점프 컷 + 살짝 튕김
+            pat = [(1.0, 0, 0), (1.09, -50, -25), (1.04, 45, 15), (1.12, 30, -20), (1.06, -40, 20)]
+            cuts = getattr(self, "_cuts", None) or [a for a, _ in self.lines]
+            keys = []
+            for i, tc in enumerate(cuts):
+                z, dx, dy = pat[(i + self.idx) % len(pat)]
+                keys.append((max(0.0, tc), S.W / 2 + dx, S.H / 2 + dy, z))
+            if not keys or keys[0][0] > 0:
+                keys.insert(0, (0.0, S.W / 2, S.H / 2, 1.0))
+            self._punch = True
         elif isinstance(cam, list):
             for c in cam:
                 keys.append((self.line_start(c.get("on", 1)) + c.get("offset", 0), c.get("x", S.W / 2),
@@ -168,6 +178,11 @@ class Scene:
                 prev, cur = cur, k
         if cur is keys[0]:
             return cur[1:]
+        if getattr(self, "_punch", False):   # 탁 바뀌고(0.08초) 살짝 튕김(+3.5% → 0.22초 동안 원래대로)
+            e = G.clamp((t - cur[0]) / 0.08)
+            cx, cy, z = (prev[i] + (cur[i] - prev[i]) * e for i in (1, 2, 3))
+            u = G.clamp((t - cur[0]) / 0.22)
+            return cx, cy, z * (1 + 0.035 * (1 - u) ** 2 if cur[0] > 0 else 1)
         e = G.ease_in_out((t - cur[0]) / self.spec.get("cam_dur", 0.8))
         return tuple(prev[i] + (cur[i] - prev[i]) * e for i in (1, 2, 3))
 

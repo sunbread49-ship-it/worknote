@@ -102,6 +102,15 @@ def setup(ep_dir, only=None, log=print):
     c.ep, c.channel, c.scenes, c.narr, c.mode = ep, channel, scenes, narr, mode
     c.total = scenes[-1].start + scenes[-1].dur
     c.cues = timeline.cues(scenes)
+    if ep.get("pace") == "punchy":   # 2026-11-14 사용자: "단조롭다 → 한 컷당 빠르게 · 통통 튀게"
+        for sc in scenes:
+            if sc.spec.get("type") in ("title", "outro") or sc.spec.get("camera") not in (None, "off"):
+                continue
+            starts = sorted({round(a - sc.start, 2) for a, b, _ in c.cues if sc.start <= a < sc.start + sc.dur} | {round(a, 2) for a, _ in sc.lines})
+            sc._cuts = [x for i, x in enumerate(starts) if i == 0 or x - starts[i - 1] > 0.9]
+            sc.spec["camera"] = "punch"
+            if sc.spec.get("type") not in ("chart", "punch", "kinetic", "title", "outro") and not sc.spec.get("bg"):
+                sc.spec["bg"] = {"kind": "motion", "style": "bokeh", "tone": "navy", "dark": 0.35}
     if only:
         a, b = only
         sel = [s for s in scenes if a <= s.idx <= b]
@@ -111,7 +120,7 @@ def setup(ep_dir, only=None, log=print):
     return c
 
 
-TRANS_T = 0.3
+TRANS_T = 0.22
 TRANS_CYCLE = ["slide", "up", "wipe", "slide", "cut", "up"]
 _last = {}
 
