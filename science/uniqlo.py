@@ -324,7 +324,7 @@ SCENES = [
      "sfx_t": [(0.0, "pop", 0.45), (0.18, "pop", 0.45), (0.36, "pop", 0.45), (0.54, "pop", 0.45), (0.72, "pop", 0.45), (0.95, "ding", 0.55)],
      "narr": ["옷을 통에 던져 넣기만 했는데, / 가격이 바로 뜬다?"]},
     {"draw": s_store, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(1.0, "accent", 0.45)],
-     "narr": ["유니클로 셀프계산대, / 바코드도 안 찍었는데 말이죠."]},
+     "narr": ["유니클로 셀프계산대, 바코드도 안 찍었는데요? 비밀은 30초면 풀려요."]},
     {"draw": s_tag, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.2, "sfx_t": [(0.6, "reveal", 0.55)],
      "narr": ["비밀은 가격표 속에 숨은, / 아주 작은 칩과 안테나예요."]},
     {"draw": s_nobat, "flash": True, "nohead": True, "min": 1.8, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.3, "accent_low", 0.55)],
@@ -347,4 +347,6 @@ SCENES = [
 ]
 
 if __name__ == "__main__":
-    K.run(SCENES, HEAD, OUT, SAY, cover=draw_cover)
+    # 2026-11-14 v2: Gemini 음성(Umbriel · 빠르게) + 5초 안 약속 ("비밀은 30초면 풀려요")
+    OUT = OUT.parent / "uniqlo_v2"
+    K.run(SCENES, HEAD, OUT, {**SAY, "__gemini__": {"voice": "Umbriel", "speed": "빠르게"}}, cover=draw_cover)
