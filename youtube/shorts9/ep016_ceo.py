@@ -58,8 +58,8 @@ def a3(f, t, sc):
 
 def a4(f, t, sc):
     bgp(f, "ai_captain_ship", t, 0.45)
-    big(f, "그런데 다음 날 반응은", 240, 90)
-    big(f, "1년 뒤를\n못 맞혔다", 420, 160, col=GOLD, o=pop(t, 0.3))
+    big(f, "다음 날 주가와\n1년 뒤 주가는", 220, 100)
+    big(f, "완전히\n따로 놀았다", 500, 160, col=GOLD, o=pop(t, 0.3))
 
 
 def a5(f, t, sc):
@@ -82,8 +82,8 @@ S1 = [
      "narr": ["CEO가 쫓겨나면, 주가는 망할까요? 9개 회사로 확인해 봤어요."]},
     {"draw": a3, "nohead": True, "flash": True, "min": 3.0, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.2, "pop", 0.5), (0.6, "pop", 0.5), (1.0, "pop", 0.5), (1.4, "fall_burn", 0.5)],
      "narr": ["떠난 다음 날, 스타벅스는 오히려 24.5% 올랐고, HP는 8% 빠졌어요."]},
-    {"draw": a4, "nohead": True, "flash": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.3, "reveal", 0.5)],
-     "narr": ["그런데 이 다음 날 반응은, 1년 뒤를 거의 못 맞혔어요."]},
+    {"draw": a4, "nohead": True, "flash": True, "min": 3.0, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.3, "reveal", 0.5)],
+     "narr": ["그런데 다음 날 주가와 1년 뒤 주가는, 완전히 따로 놀았어요. 다음 날 올랐다고, 1년 뒤에도 오르는 게 아니었죠."]},
     {"draw": a5, "nohead": True, "flash": True, "min": 2.6, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.2, "pop", 0.5), (0.9, "fall_burn", 0.6)],
      "narr": ["보잉은 CEO 해임 다음 날 올랐는데, 1년 뒤엔 마이너스 33%였죠."]},
     {"draw": a6, "nohead": True, "flash": True, "min": 2.6, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.3, "accent", 0.5)],

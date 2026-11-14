@@ -324,6 +324,10 @@ def gemini_text(text, extra=None):
     for k, v in sorted({**SAY, **(extra or {})}.items(), key=lambda kv: -len(kv[0])):
         t = t.replace(k, v)
     t = re.sub(r"(?<![\d.,])(\d+)\.(\d+)(?![\d.])", lambda m: hangul_num(int(m.group(1))) + "쩜" + "".join(_DIG[int(c)] for c in m.group(2)), t)
+    # 2026-11-14 (EP016 피드백: '9개 회사'를 구 개, '10배'를 십 배, '14년'을 열네 년으로 읽음) → 단위 붙은 작은 숫자는 직접 풀어 줌
+    t = re.sub(r"(?<![\d.,])(\d{1,3})배", lambda m: (native_count(int(m.group(1))) if int(m.group(1)) <= 10 else hangul_num(int(m.group(1)))) + " 배", t)   # 10배 → 열 배 · 110배 → 백십 배
+    t = re.sub(r"(?<![\d.,])(\d{1,2})\s?(명|가지|개|곳|살|마리|군데|시간|가구|번)(?![가-힣]*월)", lambda m: native_count(int(m.group(1))) + " " + m.group(2), t)   # 9개 → 아홉 개
+    t = re.sub(r"(?<![\d.,])(\d{1,2})\s?(년|개월|주|일째)", lambda m: hangul_num(int(m.group(1))) + " " + m.group(2), t)   # 14년 → 십사 년
     return t.strip()
 
 

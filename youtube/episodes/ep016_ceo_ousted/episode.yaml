@@ -457,6 +457,7 @@ scenes:
   signature: 오늘도 감 말고, 숫자로 투자하세요.
   signature_on: 4
   narration: ['여러분은 젠슨 황 없는 엔비디아, 어떻게 보세요? 1985년 애플일까요, 2011년 애플일까요?', '댓글로 생각을 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
+thumb_pick: P08   # 2026-11-14 사용자 확정 (-81%는 썸네일에서 빼고 영상 안에서만)
 thumbs10:
 - {p: P01, photo: jensen_010, top: '창업자가 쫓겨났는데', bottom: '주가는 올랐다?', hl: '올랐다?', sticker: 반전}
 - {p: P02, photo: nvidia_hq, theme: blue, top: '젠슨 황 없는 엔비디아', num: '3', unit: '신호', bottom: '11월 17일 실적부터'}
@@ -465,7 +466,7 @@ thumbs10:
 - {p: P05, photo: jobs_1984, line1: '창업자를 쫓아낸 회사', line2: '주가는', line3: '어떻게 됐을까…', sticker: '실제 주가', chart: {series: aapl, start: '1984-01-01', end: '1998-06-30'}}
 - {p: P06, photo: jensen_010, top: '4조 달러 무너진', bottom: '엔비디아', sticker: '경고!'}
 - {p: P07, photo: nvidia_hq, label: 'CEO 떠난 9개 회사 · 다음 날 주가', top: '스타벅스 +24.5%', bottom: 'HP -8.0%', red: true}
-- {p: P08, face_l: {file: jobs_1984, cx: 0.47, cy: 0.16, scale: 1.6, y: 520, gray: 1.0}, face_r: {file: jensen_010, cx: 0.52, cy: 0.37, scale: 1.0, y: 540}, top_l: ['1985', '잡스 쫓겨남'], top_r: ['2026', '젠슨 황 쫓겨남'], res_l: '그 뒤 10배 → -81%', res_r: '그 뒤는???', bottom: '주가도 똑같이 갈까?', hl: '똑같이'}
+- {p: P08, face_l: {file: jobs_1984, cx: 0.47, cy: 0.16, scale: 1.6, y: 520, gray: 1.0}, face_r: {file: jensen_010, cx: 0.52, cy: 0.37, scale: 1.0, y: 540}, top_l: ['1985', '잡스 쫓겨남'], top_r: ['2026', '젠슨 황 쫓겨남'], res_l: '그 뒤 6년, 10배', res_r: '그 뒤는???', bottom: '주가도 똑같이 갈까?', hl: '똑같이'}
 - {p: P09, photo: nvidia_hq, person: {file: worker_stressed_cut, h: 900, side: right, dy: 60}, bubble: "엔비디아 물렸는데\n이제 망하는 거야??", bottom: '9개 회사 1년 뒤를 봤더니'}
 - {p: P10, photo: jensen_010, label: '(엔비디아 · 10월 고점 → 11.13)', top: '창업자 쫓겨난 엔비디아', bottom: '꼭대기 대비 -32%'}
 shorts9:
