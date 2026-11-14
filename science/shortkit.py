@@ -135,13 +135,13 @@ def plan(scenes, out, say):
     return t, buf, cues
 
 
-SUB_SIZE, SUB_MAXW, SUB_Y = 54, 900, 1365
+SUB_SIZE, SUB_MAXW, SUB_Y = 72, 960, 1350   # 2026-11-14: 크게 · 한 줄만 (두 줄 금지) → 길면 짧게 끊어 빠르게 넘김
 SHIFT = 70  # 영상 내용을 위 고정 제목에서 조금 떼기
 
 
 def _fits(text):
     from engine import style as St
-    return St.font("Bold", SUB_SIZE).getlength(text) <= SUB_MAXW
+    return St.font("Black", SUB_SIZE).getlength(text) <= SUB_MAXW
 
 
 def sub_frames(cues):
@@ -164,7 +164,7 @@ def sub_frames(cues):
             # 한 구절이 한 줄보다 길면 → 단어 단위로 고르게(균형) 나눔
             words = p.split(" ")
             from engine import style as St
-            fnt = St.font("Bold", SUB_SIZE)
+            fnt = St.font("Black", SUB_SIZE)
             k = 2
             while True:
                 target = fnt.getlength(p) / k
@@ -198,10 +198,10 @@ _subc = {}
 
 def subtitle(f, text):
     if text not in _subc:
-        tx = T(text, SUB_SIZE, (14, 16, 24), "Bold")
-        px, py = 34, 16
+        tx = T(text, SUB_SIZE, (14, 16, 24), "Black")
+        px, py = 40, 20
         box = Image.new("RGBA", (tx.width + px * 2, tx.height + py * 2), (0, 0, 0, 0))
-        ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), radius=18, fill=(255, 255, 255, 232))
+        ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), radius=22, fill=(255, 255, 255, 242))
         box.alpha_composite(tx, (px, py))
         _subc[text] = box
     G.blit(f, _subc[text], (W / 2, SUB_Y), 1, "mt")
