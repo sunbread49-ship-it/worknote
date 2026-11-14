@@ -90,6 +90,14 @@ def _gemini_line(line, gem, say, cache):
         if ratio >= 0.88:
             break
         print(f"  다시 만듦({ratio:.2f}): {line[:30]} {diffs[:2]}")
+    tempo = gem.get("tempo", 1.0)   # 2026-11-14: Gemini '빠르게'보다 아주 조금 더 → 후반에서 속도만 올림(음높이 유지)
+    if abs(tempo - 1.0) > 1e-3:
+        tmp_in, tmp_out = cache / "_tmp_in.wav", cache / "_tmp_out.wav"
+        with wave.open(str(tmp_in), "wb") as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(48000)
+            w.writeframes((np.clip(best[1], -1, 1) * 32767).astype("<i2").tobytes())
+        subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(tmp_in), "-af", f"atempo={tempo}", str(tmp_out)], check=True)
+        return pcm(tmp_out)
     return best[1]
 
 
@@ -196,7 +204,7 @@ def sub_frames(cues):
 _subc = {}
 
 
-def subtitle(f, text):
+def subtitle(f, text, dy=0):
     if text not in _subc:
         tx = T(text, SUB_SIZE, (14, 16, 24), "Black")
         px, py = 40, 20
@@ -204,7 +212,36 @@ def subtitle(f, text):
         ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), radius=22, fill=(255, 255, 255, 242))
         box.alpha_composite(tx, (px, py))
         _subc[text] = box
-    G.blit(f, _subc[text], (W / 2, SUB_Y), 1, "mt")
+    G.blit(f, _subc[text], (W / 2, SUB_Y + dy), 1, "mt")
+
+
+BANNER_H = 330
+_ban = {}
+
+
+def banner_img(lines):
+    key = tuple(lines)
+    if key not in _ban:
+        b = Image.new("RGBA", (W, BANNER_H), (0, 0, 0, 255))
+        l1 = T(lines[0], 78, (255, 255, 255), "Black")
+        if l1.width > W - 60:
+            l1 = T(lines[0], int(78 * (W - 60) / l1.width), (255, 255, 255), "Black")
+        G.blit(b, l1, (W / 2, 52), 1, "mt")
+        l2 = T(lines[1], 86, (255, 255, 255), "Black")
+        if l2.width > W - 110:
+            l2 = T(lines[1], int(86 * (W - 110) / l2.width), (255, 255, 255), "Black")
+        box = Image.new("RGBA", (l2.width + 44, l2.height + 22), (226, 32, 38, 255))
+        box.alpha_composite(l2, (22, 11))
+        G.blit(b, box, (W / 2, 52 + l1.height + 22), 1, "mt")
+        _ban[key] = b
+    return _ban[key]
+
+
+def with_banner(f, lines):
+    out = Image.new("RGBA", (W, H), (0, 0, 0, 255))
+    out.alpha_composite(f.crop((0, 0, W, H - BANNER_H)), (0, BANNER_H))
+    out.alpha_composite(banner_img(lines), (0, 0))
+    return out
 
 
 def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None, bgm_cues=None):
@@ -234,9 +271,11 @@ def run(scenes, head, out, say=None, sfx=None, cover=None, argv=None, bgm_cues=N
             f.alpha_composite(Image.new("RGBA", (W, H), BG2 + (int(200 * (1 - lt / 0.18)),)))
             if not sc.get("nohead"):
                 header(f, head)
+        if head.get("banner"):   # 2026-11-14: 위쪽 고정 제목 띠 (검은 띠 + 흰 줄 + 빨간 상자 줄) · 장면은 띠 높이만큼 아래로
+            f = with_banner(f, head["banner"])
         cue = next((c for c in subs if c[0] <= t < c[1] + 0.1), None)
         if cue:
-            subtitle(f, cue[2])
+            subtitle(f, cue[2], dy=BANNER_H if head.get("banner") else 0)   # 장면이 내려간 만큼 자막도 같이 (장면이 비워 둔 자리)
         return f.convert("RGB")
 
     def cover_img():

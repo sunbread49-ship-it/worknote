@@ -438,4 +438,5 @@ SCENES = [
 if __name__ == "__main__":
     # 2026-11-14 v2: Gemini 음성(Umbriel · 빠르게) + 5초 안 약속 ("비밀은 30초면 풀려요")
     OUT = OUT.parent / "uniqlo_v2"
-    K.run(SCENES, HEAD, OUT, {**SAY, "__gemini__": {"voice": "Umbriel", "speed": "빠르게"}}, cover=draw_cover)
+    HEAD = dict(HEAD, banner=["옷을 통에 던지기만 했는데", "가격이 뜨는 비밀"])
+    K.run(SCENES, HEAD, OUT, {**SAY, "__gemini__": {"voice": "Umbriel", "speed": "빠르게", "tempo": 1.08}}, cover=draw_cover)
