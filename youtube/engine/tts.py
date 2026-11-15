@@ -85,6 +85,7 @@ def synth(text, voice, rate=1.0, pitch=0.0, cache_dir=Path("."), lang="ko-KR"):
 
 # 음성용 발음 사전 (자막 글자는 그대로, 읽는 소리만 바뀜). 에피소드 tts.say 로 추가 가능
 SAY = {
+    "산더미": "산떠미",   # 2026-11-15 사용자: 산더미 X · 산떠미 O
     "TQQQ": "티큐큐큐", "SQQQ": "에스큐큐큐", "QQQ": "큐큐큐", "ETF": "이티에프", "S&P500": "에스앤피 오백",
     "VIX": "빅스", "9·11": "구일일", "AI": "에이아이", "SOXL": "속슬",
     "무려, 302배": "무려, 삼백, 이 배", "302배": "삼백 이 배",
@@ -315,6 +316,7 @@ GEMINI_MIN_GAP = 7.0   # 초 · 분당 약 8번 (429 방지)
 _G_LAST = 0.0   # pro 모델은 긴 글에서 502가 잦음
 GEMINI_STYLE = ("다음 한국어 대본을 그대로 읽어 줘. 경제 유튜브 진행자 말투로, 친구에게 이야기하듯 자연스럽고 생생하게. "
                 "{speed} 숫자는 또렷하게, 질문은 진짜 궁금한 듯이, 반전 앞에서는 한 박자 쉬어 줘.")
+GEMINI_PRON = {"물건": "'물건'은 된소리 없이 [물건]으로 읽어 줘 (물껀 X)."}   # 2026-11-15 사용자 피드백
 GEMINI_SPEED = {"보통": "차분하지만 지루하지 않은 보통 속도로.", "빠르게": "템포 빠르고 경쾌하게, 쇼츠처럼 몰입감 있게."}
 
 
@@ -337,6 +339,9 @@ def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), sty
     cache_dir.mkdir(parents=True, exist_ok=True)
     global GEMINI_MODEL
     prompt = (style or GEMINI_STYLE).format(speed=GEMINI_SPEED.get(speed, speed))
+    hints = [h for w_, h in GEMINI_PRON.items() if w_ in text]
+    if hints:   # 철자를 바꿀 수 없는 발음은 지시문으로 (2026-11-15 '물건' → 물껀 X)
+        prompt += " 발음 주의: " + " ".join(hints)
     for m_ in GEMINI_MODELS:   # 어느 모델로 만든 것이든 캐시에 있으면 그대로
         h_ = hashlib.sha1(json.dumps([text, voice, prompt, m_, take], ensure_ascii=False).encode()).hexdigest()[:16]
         if (cache_dir / f"g_{h_}.wav").exists():

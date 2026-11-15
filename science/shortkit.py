@@ -27,7 +27,8 @@ VIOLET = (186, 140, 255)
 BLUE = (96, 168, 255)
 MINT = (120, 230, 190)
 GOLD = (255, 200, 80)
-CTA = "좋아요 누르고, / 친구한테도 물어보세요."  # 2026.11.10 변경: 긴 구독 문구는 끝에서 이탈 → 짧게 + 바로 첫 질문으로 루프
+CTA = "좋아요 누르고, / 친구한테 아는 척해 보세요!"  # 2026-11-15 사용자: '물어보세요'는 답을 물어보는 느낌 → 알려 주기/아는 척
+CTA_OLD2 = "좋아요 누르고, / 친구한테도 물어보세요."  # 2026.11.10~11.15 사용  # 2026.11.10 변경: 긴 구독 문구는 끝에서 이탈 → 짧게 + 바로 첫 질문으로 루프
 CTA_OLD = "더 재밌고 신기한 지식은, 채널 구독하고 우리 함께해요!"  # 2026.11.8~11.10 사용
 # 마지막 '봐요'를 힘차게: 쉼표로 끊고 느낌표 두 개 (자막은 그대로)
 CTA_SAY = {}
@@ -143,7 +144,8 @@ def plan(scenes, out, say):
     return t, buf, cues
 
 
-SUB_SIZE, SUB_MAXW, SUB_Y = 72, 960, 1350   # 2026-11-14: 크게 · 한 줄만 (두 줄 금지) → 길면 짧게 끊어 빠르게 넘김
+SUB_SIZE, SUB_MAXW, SUB_Y = 92, 980, 820   # 2026-11-15 사용자: 하단 자막 상자가 쇼츠 제목 · 채널명과 겹침 → 상자 없이 중하단에 큰 멘트(한 줄 · 빠른 전환)
+# 장면 그림은 화면 y 780~960(장면 좌표) 띠를 비워 둘 것 — 여기에 멘트가 뜬다
 SHIFT = 70  # 영상 내용을 위 고정 제목에서 조금 떼기
 
 
@@ -205,14 +207,13 @@ _subc = {}
 
 
 def subtitle(f, text, dy=0):
+    """중하단 큰 멘트 (상자 없음 · 흰 글씨 + 두꺼운 검은 테두리 + 그림자)"""
     if text not in _subc:
-        tx = T(text, SUB_SIZE, (14, 16, 24), "Black")
-        px, py = 40, 20
-        box = Image.new("RGBA", (tx.width + px * 2, tx.height + py * 2), (0, 0, 0, 0))
-        ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), radius=22, fill=(255, 255, 255, 242))
-        box.alpha_composite(tx, (px, py))
-        _subc[text] = box
-    G.blit(f, _subc[text], (W / 2, SUB_Y + dy), 1, "mt")
+        tx = T(text, SUB_SIZE, (255, 255, 255), "Black", stroke=10, stroke_fill=(0, 0, 0))
+        if tx.width > W - 60:
+            tx = tx.resize((W - 60, int(tx.height * (W - 60) / tx.width)), Image.LANCZOS)
+        _subc[text] = tx
+    drop(f, _subc[text], (W / 2, SUB_Y + dy), "mt", 1, blur=16, alpha=0.7)
 
 
 BANNER_H = 330
