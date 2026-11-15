@@ -66,3 +66,10 @@ python tools/upload.py episodes/ep005_xxx --long --shorts 1,2,3 --publish-at nex
 - 대표 썸네일: `out/<ep>/thumbnail_pick.png` 가 있으면 그걸, 없으면 `thumbnail.png`
 - 올린 기록: `uploads.json` (중복 업로드 방지, 업로드 후 커밋) · 직접 올린 것도 여기 `manual: true`로 적어 둠
 - 하루 할당량(10,000): 업로드 1건 1,600 → 하루 롱폼 1 + 쇼츠 3 정도가 안전
+
+## 공개 직후 댓글 (2026-11-16 사용자 상시 지시 · 주식 · 지식 모두)
+- 롱폼 · 쇼츠가 **공개되자마자** 채널 계정으로 댓글을 단다 (고정은 사용자가 앱에서 직접)
+  · 롱폼: 키워드 질문 댓글 `python tools/seo_boost.py --only comments` (COMMENTS에 영상 id · 문구 추가)
+  · 주식 쇼츠: 롱폼 링크 댓글 `python tools/link_shorts.py`
+  · 지식 쇼츠: 키워드 질문 댓글 `python tools/seo_boost.py --channel science` (SCIENCE_COMMENTS)
+- 예약 업로드할 때마다 **공개 시각 +5분**에 위 명령을 돌리는 예약 메시지(send_later)를 같이 만든다 — 비공개 · 예약 상태에선 댓글이 안 달리므로

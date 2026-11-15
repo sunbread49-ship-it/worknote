@@ -96,6 +96,11 @@ COMMENTS = {
     "TInoIij0V8Y": "한화오션 · 삼성중공업, 조선주 지금은 어떻게 보세요? 조선 슈퍼사이클이나 신조선가에 대해 궁금한 점을 댓글로 남겨 주세요.",
 }
 
+# 지식창고(과학 채널) 쇼츠 키워드 질문 댓글 — python tools/seo_boost.py --channel science --only comments
+SCIENCE_COMMENTS = {
+    "BP-5lznfNno": "여러분은 줄 설 때 사람 수 세세요, 물건 수 세세요? 마트 줄 · 오픈런 꿀팁 더 알고 계시면 댓글로 알려 주세요!",
+}
+
 CH_RE = re.compile(r"^(\s*\d{1,2}:\d{2}(?::\d{2})?\s+)(.+)$", re.M)
 
 
@@ -159,7 +164,12 @@ def playlists(t, log, dry):
 
 
 def comments(t, log, dry):
-    done = log.setdefault("comments", {})
+    global COMMENTS
+    if U.CHANNEL == "SCIENCE":
+        COMMENTS = SCIENCE_COMMENTS
+        done = log.setdefault("science_comments", {})
+    else:
+        done = log.setdefault("comments", {})
     st = {i["id"]: i["status"]["privacyStatus"] for i in
           U.call("GET", U.API + "/youtube/v3/videos?part=status&id=" + ",".join(COMMENTS), t)["items"]}
     for vid, text in COMMENTS.items():
@@ -183,6 +193,9 @@ def comments(t, log, dry):
 def main():
     dry = "--dry-run" in sys.argv
     only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None
+    if "--channel" in sys.argv:   # science = 악어새 지식창고
+        U.CHANNEL = sys.argv[sys.argv.index("--channel") + 1].upper()
+        only = "comments"
     t = U.access_token()
     log = json.loads(LOG.read_text()) if LOG.exists() else {}
     try:
