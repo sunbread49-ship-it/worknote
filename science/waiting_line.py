@@ -6,7 +6,8 @@
   - 확률: 속도가 비슷한 줄 3개 중 내 줄이 가장 빠를 확률 1/3
   - 기다림의 심리: 아무것도 안 하고 기다리는 시간은 더 길게 느껴진다 (David Maister, 'The Psychology of Waiting Lines', 1985)
   - 계산대 시간: 수학 교사 댄 마이어 측정 — 손님 1명당 약 41초(인사 · 결제 · 짐 챙기기), 물건 1개당 약 3초 (CBC · Business Insider 보도, 2016)
-    → 카트 1명(물건 40개) 41+120 = 161초 · 바구니 3명(각 10개) 3×(41+30) = 213초
+    → 산더미 카트 1명(물건 50개) 41+150 = 191초 · 바구니 3명(각 10개) 3×(41+30) = 213초 (사용자 11/15: 극단적 비교)
+사진 · 영상: Pixabay (실사) + AI 점토 그림 섞어서 (사용자 11/15)
 """
 import math
 import random
@@ -51,10 +52,10 @@ def headline_card(f, t, t0, y=640):
 # ── 장면 ─────────────────────────────────────────────
 def s_hook(f, t, sc):
     """첫 1초: 새벽 오픈런 줄 + 기사 제목"""
-    pbg(f, "ai_burger_openrun", t, 0.25, 0.08, (0.4, 0.5))
+    pbg(f, "queue_dawn", t, 0.3, 0.1, (0.35, 0.5))
     big(f, "햄버거 먹으려고\n새벽 2시부터 줄?", 60, 112, hl="새벽 2시")
     headline_card(f, t, 0.5, 860)
-    credit(f, "그림: AI 생성 (Gemini) · 기사 제목: 2026.11.14 보도")
+    credit(f, "사진: Vilkasss (Pixabay) · 기사 제목: 2026.11.14 보도")
 
 
 def s_question(f, t, sc):
@@ -103,13 +104,13 @@ def lanes(f, t, t0, y0=330, labels=("내 줄", "옆 줄 A", "옆 줄 B"), seed=3
 
 
 def s_prob(f, t, sc):
-    vbg(f, "airport_waiting_v", t, 0.7, 6)
+    pbg(f, "grocery_aisle", t, 0.62, 0.06)
     big(f, "① 확률", 50, 110, col=GOLD)
     L = sc["L"]
     lanes(f, t, 0.3)
     if len(L) > 1 and t > L[1]:
         big(f, "3번 중 2번은\n옆 줄이 이긴다", 1000, 96, hl="옆 줄", o=pop(t, L[1]))
-    credit(f, "영상: Life-Of-Vids (Pixabay)")
+    credit(f, "사진: ccipeggy (Pixabay)")
 
 
 def s_grandma(f, t, sc):
@@ -130,14 +131,14 @@ def s_memory(f, t, sc):
 
 
 def s_tip(f, t, sc):
-    vbg(f, "carts_v", t, 0.5, 3)
+    pbg(f, "grocery_carts", t, 0.5, 0.08)
     pill(f, "꿀팁", CX, 120, t, 0.05, bg=GOLD, size=80)
     big(f, "줄 설 땐\n물건 말고\n사람을 세라", 300, 150, hl="사람", hlc=MINT)
-    credit(f, "영상: Kmeel_com (Pixabay)")
+    credit(f, "사진: 652234 (Pixabay)")
 
 
 def s_math(f, t, sc):
-    f.alpha_composite(Image.new("RGBA", (W, H), (16, 20, 34, 255)))
+    pbg(f, "till_receipt", t, 0.78, 0.05)
     L = sc["L"]
     big(f, "계산대 시간을 재 보니", 60, 80)
     rows = [("손님 1명", "약 41초", "인사 · 결제 · 영수증 · 짐 챙기기", RED, 0.2), ("물건 1개", "약 3초", "삑!", BLUE, 0.7)]
@@ -153,10 +154,20 @@ def s_math(f, t, sc):
     credit(f, "자료: 수학 교사 댄 마이어 측정 (CBC · Business Insider 보도)")
 
 
+def s_mountain(f, t, sc):
+    """극단적 비교 문제: 산더미 카트 1명 vs 바구니 3명"""
+    pbg(f, "ai_mountain_cart", t, 0.12, 0.06, (0.5, 0.6))
+    big(f, "어느 줄이\n빠를까?", 40, 130, hl="빠를까?")
+    k = pop(t, 0.4)
+    G.blit(f, G.pill("산더미 카트 1명 · 물건 50개", "Black", 46, DARK, MINT, pad=(22, 10), radius=16), (W * 0.27, 1180), k, "mm")
+    G.blit(f, G.pill("바구니 3명 · 10개씩", "Black", 46, DARK, CREAM, pad=(22, 10), radius=16), (W * 0.75, 1180), pop(t, 0.8), "mm")
+    credit(f, "그림: AI 생성 (Gemini)")
+
+
 def s_compare(f, t, sc):
-    f.alpha_composite(Image.new("RGBA", (W, H), (16, 20, 34, 255)))
-    big(f, "어느 줄이 빠를까?", 60, 100)
-    rows = [("카트 가득 1명", "물건 40개", 161, "2분 41초", MINT), ("바구니 3명", "각 10개", 213, "3분 33초", RED)]
+    pbg(f, "grocery_aisle", t, 0.8, 0.04)
+    big(f, "정답은?", 60, 110)
+    rows = [("산더미 카트 1명", "물건 50개 · 41초 + 50 × 3초", 191, "3분 11초", MINT), ("바구니 3명", "10개씩 · (41초 + 30초) × 3", 213, "3분 33초", RED)]
     for i, (a, b, sec, txt, col) in enumerate(rows):
         k = pop(t, 0.2 + i * 0.5)
         y = 330 + i * 330
@@ -168,8 +179,8 @@ def s_compare(f, t, sc):
         if g > 0.05:
             G.blit(f, T(txt, 66, col, "Black", stroke=6, stroke_fill=(0, 0, 0)), (110 + w, y + 200), 1, "lm")
     if t > 2.0:
-        G.blit(f, T("사람 적은 줄이 이긴다", 84, GOLD, "Black", stroke=7, stroke_fill=(0, 0, 0)), (CX, 1080), pop(t, 2.0), "mm")
-    credit(f, "손님 1명 41초 · 물건 1개 3초로 계산한 예시")
+        G.blit(f, T("산더미 카트가 이긴다", 90, GOLD, "Black", stroke=7, stroke_fill=(0, 0, 0)), (CX, 1080), pop(t, 2.0), "mm")
+    credit(f, "손님 1명 41초 · 물건 1개 3초로 계산한 예시 · 사진: ccipeggy (Pixabay)")
 
 
 def s_cta(f, t, sc):
@@ -206,9 +217,12 @@ SCENES = [
     {"draw": s_math, "flash": True, "nohead": True, "min": 3.0, "gap": 0.1, "tail": 0.25,
      "sfx_fn": lambda sc: [(0.2, "pop", 0.5), (0.7, "pop", 0.5), (sc["L"][1], "reveal", 0.55)],
      "narr": ["한 미국 수학 교사가 계산대 시간을 재 봤더니, / 손님 한 명은 결제랑 인사만으로 약 41초, 물건 하나는 약 3초였어요.", "사람 한 명이 물건 14개랑 맞먹는 거죠."]},
+    {"draw": s_mountain, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.2,
+     "sfx_t": [(0.4, "pop", 0.5), (0.8, "pop", 0.5)],
+     "narr": ["그럼 문제. 물건 50개를 산처럼 쌓은 카트 한 명 줄, / 바구니 든 세 명 줄. 어디가 빠를까요?"]},
     {"draw": s_compare, "flash": True, "nohead": True, "min": 3.0, "gap": 0.1, "tail": 0.25,
      "sfx_t": [(0.2, "pop", 0.5), (0.7, "pop", 0.5), (2.0, "ding", 0.55)],
-     "narr": ["그래서 카트 가득 실은 한 명 줄이, / 바구니 든 세 명 줄보다 빠를 때가 많아요."]},
+     "narr": ["정답은 산더미 카트. 3분 11초 대 3분 33초로, / 사람 적은 줄이 이겨요."]},
     {"draw": s_cta, "flash": True, "nohead": True, "min": 2.2, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "pop", 0.6), (0.45, "pop", 0.6)],
      "narr": ["다음엔 사람 수부터 세 보세요. 좋아요 누르고, 친구한테도 물어보세요."]},
     {"draw": s_question, "nohead": True, "min": 2.0, "gap": 0.1, "tail": 0.15,
