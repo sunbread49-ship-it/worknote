@@ -124,9 +124,9 @@ def s_memory(f, t, sc):
     vbg(f, "clock_anxiety_v", t, 0.45, 2)
     big(f, "③ 기억", 50, 110, col=GOLD)
     L = sc["L"]
-    big(f, "가만히 기다리면\n더 길게 느껴지고", 420, 100, o=pop(t, 0.2))
-    if len(L) > 1 and t > L[1]:
-        big(f, "막힌 날만\n기억에 남는다", 820, 110, hl="막힌 날", hlc=RED, o=pop(t, L[1]))
+    big(f, "빨리 끝난 날은\n잊어버리고", 420, 100, o=pop(t, 0.2))
+    if t > 1.0:
+        big(f, "막힌 날만\n기억에 남는다", 820, 110, hl="막힌 날", hlc=RED, o=pop(t, 1.0))
     credit(f, "영상: kostkarubika005 (Pixabay)")
 
 
@@ -199,34 +199,34 @@ def draw_cover(f):
 SCENES = [
     {"draw": s_hook, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1,
      "sfx_t": [(0.0, "accent", 0.5), (0.5, "pop", 0.5)],
-     "narr": ["햄버거 하나 먹으려고 새벽 2시부터 줄, / 경찰까지 출동했대요."]},
+     "narr": ["햄버거 먹으려고 새벽 2시부터 줄, / 경찰까지 출동?"]},
     {"draw": s_question, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.9, "whoosh", 0.4)],
-     "narr": ["근데 줄 설 때, 왜 꼭 내 줄만 안 줄어들까요? / 마트에서도 옆 줄은 쑥쑥 빠지는데요."]},
+     "narr": ["근데 왜 꼭 내 줄만 안 줄어들까요? / 옆 줄은 쑥쑥 빠지는데."]},
     {"draw": s_promise, "flash": True, "nohead": True, "min": 1.8, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.4, "ding", 0.5)],
-     "narr": ["기분 탓 아니에요. 이유 세 가지랑 꿀팁까지, 30초면 끝나요."]},
+     "narr": ["기분 탓 아니에요. 30초면 이유 나와요."]},
     {"draw": s_prob, "flash": True, "nohead": True, "min": 3.4, "gap": 0.1, "tail": 0.2,
      "sfx_t": [(1.15, "pop", 0.4), (2.15, "pop", 0.4), (3.15, "ding", 0.5)],
-     "narr": ["첫째, 확률. 줄이 세 개면, 내 줄이 제일 빠를 확률은 3분의 1.", "3번 중 2번은 옆 줄이 이기는 게 정상이에요."]},
+     "narr": ["첫째, 줄이 세 개면 내 줄이 1등일 확률은 3분의 1.", "3번 중 2번은 옆 줄이 이겨요."]},
     {"draw": s_grandma, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.2, "sfx_t": [(0.4, "fail", 0.35)],
-     "narr": ["둘째, 앞사람 변수. 쿠폰 찾고, 카드 안 긁히고, / 한 명만 멈춰도 그 줄 전체가 멈춰요.", "줄이 길수록, 이런 분이 끼어 있을 확률도 커지죠."]},
+     "narr": ["둘째, 쿠폰 찾는 한 명만 있어도, / 그 줄은 통째로 멈춰요."]},
     {"draw": s_memory, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.2,
-     "sfx_fn": lambda sc: [(0.2, "tick", 0.4), (sc["L"][1], "accent_low", 0.45)],
-     "narr": ["셋째, 기억. 가만히 서서 기다리면 시간이 더 길게 느껴지고,", "빨리 끝난 날은 금방 잊고, 막힌 날만 기억에 남거든요."]},
+     "sfx_t": [(0.2, "tick", 0.4), (1.0, "accent_low", 0.45)],
+     "narr": ["셋째, 빨리 끝난 날은 잊고, / 막힌 날만 기억에 남거든요."]},
     {"draw": s_tip, "flash": True, "nohead": True, "min": 2.0, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.05, "sparkle", 0.5)],
-     "narr": ["그럼 꿀팁. 마트에선 물건 말고, 사람 수를 세세요."]},
+     "narr": ["꿀팁. 물건 말고, 사람 수를 세세요."]},
     {"draw": s_math, "flash": True, "nohead": True, "min": 3.0, "gap": 0.1, "tail": 0.25,
      "sfx_fn": lambda sc: [(0.2, "pop", 0.5), (0.7, "pop", 0.5), (sc["L"][1], "reveal", 0.55)],
-     "narr": ["한 미국 수학 교사가 계산대 시간을 재 봤더니, / 손님 한 명은 결제랑 인사만으로 약 41초, 물건 하나는 약 3초였어요.", "사람 한 명이 물건 14개랑 맞먹는 거죠."]},
+     "narr": ["실제로 재 보니, 손님 한 명은 결제랑 인사만 약 41초, / 물건 하나는 약 3초.", "사람 한 명이 물건 14개예요."]},
     {"draw": s_mountain, "flash": True, "nohead": True, "min": 2.6, "gap": 0.1, "tail": 0.2,
      "sfx_t": [(0.4, "pop", 0.5), (0.8, "pop", 0.5)],
-     "narr": ["그럼 문제. 물건 50개를 산처럼 쌓은 카트 한 명 줄, / 바구니 든 세 명 줄. 어디가 빠를까요?"]},
+     "narr": ["문제. 산더미 카트 한 명, 바구니 세 명. / 어디가 빠를까요?"]},
     {"draw": s_compare, "flash": True, "nohead": True, "min": 3.0, "gap": 0.1, "tail": 0.25,
      "sfx_t": [(0.2, "pop", 0.5), (0.7, "pop", 0.5), (2.0, "ding", 0.55)],
-     "narr": ["정답은 산더미 카트. 3분 11초 대 3분 33초로, / 사람 적은 줄이 이겨요."]},
+     "narr": ["정답은 산더미 카트. / 사람 적은 줄이 이겨요."]},
     {"draw": s_cta, "flash": True, "nohead": True, "min": 2.2, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "pop", 0.6), (0.45, "pop", 0.6)],
-     "narr": ["다음엔 사람 수부터 세 보세요. 좋아요 누르고, 친구한테도 물어보세요."]},
+     "narr": ["좋아요 누르고, 친구한테도 물어보세요."]},
     {"draw": s_question, "nohead": True, "min": 2.0, "gap": 0.1, "tail": 0.15,
-     "narr": ["근데 줄 설 때, 왜 꼭 내 줄만 안 줄어들까요?"]},
+     "narr": ["근데 왜 꼭 내 줄만 안 줄어들까요?"]},
 ]
 
 if __name__ == "__main__":
