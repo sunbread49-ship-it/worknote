@@ -267,16 +267,29 @@ class Phone(Cutaway):
             pt = G.text_img(f"{hp:+.1f}%", "ExtraBold", 32, hc)
             scr.alpha_composite(pt, (W - 52 - pt.width, yy + 26))
             yy += 108
-        # 알림 배너
-        for nt in sp.get("notes", []):
+        # 누적 입금 줄 (2026-11-16 EP017: 월배당이 쌓이는 장면) income: {label, to, on, dur}
+        inc = sp.get("income")
+        if inc:
+            i0 = self.line_start(inc.get("on", 1)) + inc.get("offset", 0)
+            ki = G.clamp((t - i0) / inc.get("dur", 3.0)) if t >= i0 else 0
+            d.rounded_rectangle((28, 520, W - 28, 600), radius=18, fill=(232, 246, 238, 255))
+            scr.alpha_composite(G.text_img(inc.get("label", "받은 분배금"), "Bold", 28, (40, 120, 70)), (52, 542))
+            iv = G.text_img("+" + _won(inc["to"] * ki).lstrip("+"), "Black", 34, (30, 150, 80))
+            scr.alpha_composite(iv, (W - 52 - iv.width, 538))
+        # 알림 배너 — 새 알림이 위에서 내려오고, 이전 알림은 아래로 밀려 쌓임 (2026-11-16)
+        shown = [nt for nt in sp.get("notes", []) if t >= self.line_start(nt.get("on", 1)) + nt.get("offset", 0)]
+        for j, nt in enumerate(reversed(shown)):
             n0 = self.line_start(nt.get("on", 1)) + nt.get("offset", 0)
-            if t < n0:
-                continue
             kk = G.ease_out((t - n0) / 0.3)
             ban = Image.new("RGBA", (W - 40, 110), (0, 0, 0, 0))
             ImageDraw.Draw(ban).rounded_rectangle((0, 0, W - 41, 109), radius=24, fill=(40, 42, 52, 240))
             ban.alpha_composite(G.text_img(nt["text"], "Bold", 28, (255, 255, 255), max_w=W - 100), (26, 26))
-            scr.alpha_composite(ban, (20, int(-120 + 170 * kk)))
+            if j == 0:
+                scr.alpha_composite(ban, (20, int(-120 + 170 * kk)))
+            elif j < 5:
+                y_ = 50 + j * 122
+                ban.putalpha(ban.getchannel("A").point(lambda a, jj=j: int(a * max(0.35, 1 - 0.15 * jj))))
+                scr.alpha_composite(ban, (20, int(y_)))
 
     # 단톡방
     def _chat(self, scr, t):
@@ -411,4 +424,65 @@ class Media(Cutaway):
         self.draw_fun(f, t)
 
 
-TYPES = {"meme": Meme, "twopanel": TwoPanel, "phone": Phone, "news": News, "media": Media}
+
+class Receipt(Cutaway):
+    """영수증 출력 장면 (2026-11-16 EP017: 내용 자체를 영상처럼). receipts: [{title, sub, lines:[{label, value, on, color}], total:{label, value, on, color}}]
+    한 장 또는 두 장 나란히 · 줄이 '드르륵' 한 줄씩 인쇄되며 영수증이 아래로 길어짐"""
+    default_transition = "zoom"
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.draw_bg(f, t)
+        rs = sp["receipts"]
+        n = len(rs)
+        w = 620 if n > 1 else 760
+        gap = 120
+        x0 = S.W / 2 - (n * w + (n - 1) * gap) / 2
+        if sp.get("heading"):
+            G.blit(f, G.text_img(sp["heading"], "Black", 60, S.FG, highlight=sp.get("highlight", ""), hl_fill=S.GOLD), (S.W / 2, 70), 1, "mt")
+        for i, r in enumerate(rs):
+            rows = r["lines"] + ([r["total"]] if r.get("total") else [])
+            starts = [self.line_start(x.get("on", 1)) + x.get("offset", 0) + j * 0.0 for j, x in enumerate(rows)]
+            m = sum(1 for st in starts if t >= st)
+            lh = 74
+            head_h = 190
+            hcur = head_h + max(m, 0) * lh + 70
+            paper = Image.new("RGBA", (w, hcur), (0, 0, 0, 0))
+            d = ImageDraw.Draw(paper)
+            d.rectangle((0, 0, w - 1, hcur - 1), fill=(250, 250, 246, 255))
+            for zx in range(0, w, 24):   # 찢어진 아래 가장자리
+                d.polygon([(zx, hcur - 1), (zx + 12, hcur - 14), (zx + 24, hcur - 1)], fill=(0, 0, 0, 0))
+            paper.alpha_composite(G.text_img(r.get("title", ""), "Black", 40, (20, 22, 30), max_w=w - 60), (30, 34))
+            paper.alpha_composite(G.text_img(r.get("sub", ""), "SemiBold", 26, (110, 112, 124), max_w=w - 60), (30, 100))
+            d.line((30, 160, w - 30, 160), fill=(180, 180, 180, 255), width=2)
+            for j, x in enumerate(rows[:m]):
+                y = head_h + j * lh
+                tot = r.get("total") is x
+                c = col(x.get("color"), (20, 22, 30))
+                if tot:
+                    d.line((30, y - 6, w - 30, y - 6), fill=(40, 40, 40, 255), width=3)
+                lab = G.text_img(x["label"], "Black" if tot else "Bold", 34 if tot else 30, (20, 22, 30))
+                val = G.text_img(x["value"], "Black", 40 if tot else 32, c)
+                paper.alpha_composite(lab, (30, y + 10))
+                paper.alpha_composite(val, (w - 30 - val.width, y + 6))
+            # 프린터 입구 (위쪽 고정) · 종이가 아래로 나옴
+            px = int(x0 + i * (w + gap))
+            top = 200
+            sh = Image.new("RGBA", (w + 60, hcur + 60), (0, 0, 0, 0))
+            ImageDraw.Draw(sh).rectangle((30, 40, w + 30, hcur + 30), fill=(0, 0, 0, 120))
+            G.blit(f, sh.filter(ImageFilter.GaussianBlur(18)), (px - 30, top - 20), 1)
+            G.blit(f, paper, (px, top), 1)
+            slot = Image.new("RGBA", (w + 60, 34), (0, 0, 0, 0))
+            ImageDraw.Draw(slot).rounded_rectangle((0, 0, w + 59, 33), 14, fill=(40, 44, 56, 255))
+            G.blit(f, slot, (px - 30, top - 30), 1)
+        self.emoji_layer(f, t)
+        self.draw_fun(f, t)
+
+    def sfx_events(self):
+        ev = super().sfx_events()
+        for r in self.spec["receipts"]:
+            for x in r["lines"] + ([r["total"]] if r.get("total") else []):
+                ev.append((self.line_start(x.get("on", 1)) + x.get("offset", 0), "tick", 0.45))
+        return ev
+
+TYPES = {"meme": Meme, "twopanel": TwoPanel, "phone": Phone, "news": News, "media": Media, "receipt": Receipt}
