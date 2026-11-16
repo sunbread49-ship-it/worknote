@@ -100,6 +100,7 @@ COMMENTS = {
 # 지식창고(과학 채널) 쇼츠 키워드 질문 댓글 — python tools/seo_boost.py --channel science --only comments
 SCIENCE_COMMENTS = {
     "BP-5lznfNno": "여러분은 줄 설 때 사람 수 세세요, 물건 수 세세요? 마트 줄 · 오픈런 꿀팁 더 알고 계시면 댓글로 알려 주세요!",
+    "Bwddn30z5Bk": "여러분 비밀번호는 몇 자리세요? 나만 아는 긴 문장 비밀번호, 어떤 걸로 만드셨는지 힌트만 댓글로 남겨 주세요! (진짜 비밀번호는 쓰지 마세요)",
 }
 
 CH_RE = re.compile(r"^(\s*\d{1,2}:\d{2}(?::\d{2})?\s+)(.+)$", re.M)
