@@ -323,7 +323,48 @@ def nps_dca(start="1996-11-01", end="2026-10-01", frac=None):
     return df
 
 
+def _cc_raw(code):
+    """국내 ETF: 네이버 차트 종가는 분배금만큼 과거를 깎은 수정 주가 → 분배금으로 실제 가격 복원 (EP017)"""
+    a = pd.read_csv(DATA / "cc" / f"{code}_price.csv", parse_dates=["date"]).set_index("date")["close"].astype(float)
+    d = pd.read_csv(DATA / "cc" / f"{code}_div.csv", parse_dates=["date"]).set_index("date")
+    r, cum = a.copy(), 1.0
+    for ex, row in d.sort_index(ascending=False).iterrows():
+        before = a.index[a.index < ex]
+        if len(before) == 0:
+            continue
+        b = before[-1]
+        rawp = a.loc[b] / cum + row["amount"]
+        cum *= (rawp - row["amount"]) / rawp
+        r.loc[:b] = a.loc[:b] / cum
+    return a, r, d
+
+
+def cc_series(code, kind="raw", start=None, end=None, base=1000.0):
+    """1,000만 원(=1000) 기준 · kind: raw(원금만) · tr(분배금 재투자) · paid(원금 + 받은 분배금 세후, 재투자 X)"""
+    if code.isdigit():
+        a, r, d = _cc_raw(code)
+        tax = 0.154
+    else:
+        df = pd.read_csv(DATA / "cc" / f"{code.lower()}_raw.csv", parse_dates=["date"]).set_index("date")
+        r, a = df["close"].astype(float), df["adj_close"].astype(float)
+        d = df[df["dividend"] > 0][["dividend"]].rename(columns={"dividend": "amount"})
+        d["taxable"] = d["amount"]
+        tax = 0.15
+    r, a = r.loc[start:end], a.loc[start:end]
+    if kind == "raw":
+        return r / r.iloc[0] * base
+    if kind == "tr":
+        return a / a.iloc[0] * base
+    sh = base / r.iloc[0]
+    dd = d.loc[r.index[0] + pd.Timedelta(days=1):]
+    net = (dd["amount"] - dd["taxable"] * tax).reindex(r.index, fill_value=0).cumsum()
+    return r * sh + net * sh
+
+
 def series(name: str, start=None, end=None) -> pd.Series:
+    if name.startswith("cc:"):   # "cc:486290:raw" · "cc:JEPQ:paid"
+        _, code, kind = name.split(":")
+        return cc_series(code, kind, start, end)
     if name.startswith("peak:"):   # 꼭대기 겹쳐 보기: "peak:hanwha_ocean:2007-10-16" → 꼭대기=100, 날짜는 2000-01-01 + 경과일 (차트 x_days)
         _, nm, pk = name.split(":")
         s_ = series(nm).loc[pk:]

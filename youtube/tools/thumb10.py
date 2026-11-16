@@ -367,8 +367,12 @@ def v3_p02(sp):
     TH.shadowed(f, t, (x, 60))
     n = TH.T(sp["num"], sp.get("num_size", 640), YEL)
     ny = 60 + t.height - 70
-    TH.shadowed(f, n, (x - 10, ny))
     u = txt(sp["unit"], 300, WHITE, maxw=700)
+    room = W - 60 - x   # 2026-11-16: 숫자 + 단위가 화면 밖으로 잘리면 숫자를 줄임 (EP017 '72% 비과세')
+    if n.width + 10 + u.width > room:
+        k = (room - u.width - 10) / n.width
+        n = n.resize((int(n.width * k), int(n.height * k)), Image.LANCZOS)
+    TH.shadowed(f, n, (x - 10, ny))
     TH.shadowed(f, u, (x + n.width + 10, ny + n.height * 0.55 - u.height / 2))
     if sp.get("bottom"):
         TH.shadowed(f, txt(sp["bottom"], 120, YEL, maxw=1050), (x, H - 50), "lb")
