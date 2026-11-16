@@ -14,6 +14,9 @@ tts:
   speed: 빠르게
   say:
     JEPQ: 젭큐
+    KODEX 200: 코덱스 이백
+    코스피200: 코스피 이백
+    200타겟위클리: 이백 타겟위클리
     KODEX: 코덱스
     TIGER: 타이거
     ISA: 아이에스에이
@@ -194,20 +197,22 @@ scenes:
   chapter: 1000만 원의 결과
   mode: account
   bg: dark
-  app: 내 주식 계좌 · TIGER 나스닥100타겟데일리CC
+  app: TIGER 나스닥100CC
+  phone_x: 560
   from: 10000000
   to: 9533000
   drop_on: 2
   drop_dur: 3.0
   holdings:
   - {name: '보유 1,009주 · 원금', pct: -4.7}
-  income: {label: '받은 분배금 · 세후 (28번)', to: 3084000, on: 1, dur: 4.0}
+  income: {label: '받은 분배금(세후)', to: 3084000, on: 1, dur: 4.0}
   notes:
-  - {text: '분배금 입금 · +102,524원 (2024.7)', on: 1}
-  - {text: '분배금 입금 · +99,960원 (2024.8)', on: 1, offset: 0.7}
-  - {text: '분배금 입금 · +100,815원 (2024.9)', on: 1, offset: 1.4}
-  - {text: '분배금 입금 · +105,941원 (2024.10)', on: 1, offset: 2.1}
-  - {text: '분배금 입금 · +114,485원 (2026.9)', on: 2, offset: 0.3}
+  - {text: '2024.7  분배금  +102,524원', on: 1}
+  - {text: '2024.8  분배금  +99,960원', on: 1, offset: 0.7}
+  - {text: '2024.9  분배금  +100,815원', on: 1, offset: 1.4}
+  - {text: '2024.10  분배금  +105,941원', on: 1, offset: 2.1}
+  - {text: '… 2026.9  분배금  +114,485원', on: 2, offset: 0.3}
+  - {text: '2026.10  분배금  +105,941원', on: 2, offset: 0.9}
   side_text: "들어온 돈 +308만\n계좌는 -47만"
   side_highlight: '-47만'
   side_hl_color: down
@@ -225,9 +230,9 @@ scenes:
   kicker: 상장일에 1,000만 원 → 2026.11.13 · 원금 + 받은 분배금 (세후)
   title: 분배금까지 다 더하면
   highlight: 다 더하면
-  title_y: 100
-  bar_h: 32
-  row_gap: 12
+  title_y: 90
+  bar_h: 28
+  row_gap: 8
   vmax: 2700
   rows:
   - {label: '국내 1위 · KODEX 200타겟위클리CC', value: 2009, text: 2009만, color: up, on: 1}

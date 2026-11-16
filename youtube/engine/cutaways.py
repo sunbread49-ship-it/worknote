@@ -243,7 +243,7 @@ class Phone(Cutaway):
         c = S.UP if pct >= 0 else S.DOWN
         scr.alpha_composite(G.text_img(f"{pct:+.1f}%  ({_won(v - a, sign=True)})", "Bold", 30, c), (36, 280))
         # 미니 차트
-        cw, ch, cy = W - 72, 230, 350
+        cw, ch, cy = W - 72, (120 if sp.get("income") else 230), 350
         n = 60
         rng = np.random.default_rng(4)
         path = np.cumsum(rng.normal(0, 1, n))
@@ -259,7 +259,7 @@ class Phone(Cutaway):
         d.line((36, cy + ch + 6, 36 + cw, cy + ch + 6), fill=(220, 222, 230, 255), width=2)
         # 보유 종목
         yy = 620
-        for h in sp.get("holdings", []):
+        for h in ([] if sp.get("income") else sp.get("holdings", [])):
             hp = h["pct"] * k
             hc = S.UP if hp >= 0 else S.DOWN
             d.rounded_rectangle((28, yy, W - 28, yy + 92), radius=18, fill=(255, 255, 255, 255), outline=(232, 234, 240, 255))
@@ -267,29 +267,38 @@ class Phone(Cutaway):
             pt = G.text_img(f"{hp:+.1f}%", "ExtraBold", 32, hc)
             scr.alpha_composite(pt, (W - 52 - pt.width, yy + 26))
             yy += 108
-        # 누적 입금 줄 (2026-11-16 EP017: 월배당이 쌓이는 장면) income: {label, to, on, dur}
+        # 누적 입금 줄 + 입금 내역 목록 (2026-11-16 EP017: 알림이 잔고를 가리지 않게 아래쪽 목록으로)
         inc = sp.get("income")
         if inc:
+            yb = 500
             i0 = self.line_start(inc.get("on", 1)) + inc.get("offset", 0)
             ki = G.clamp((t - i0) / inc.get("dur", 3.0)) if t >= i0 else 0
-            d.rounded_rectangle((28, 520, W - 28, 600), radius=18, fill=(232, 246, 238, 255))
-            scr.alpha_composite(G.text_img(inc.get("label", "받은 분배금"), "Bold", 28, (40, 120, 70)), (52, 542))
+            d.rounded_rectangle((28, yb, W - 28, yb + 84), radius=18, fill=(232, 246, 238, 255))
+            scr.alpha_composite(G.text_img(inc.get("label", "받은 분배금"), "Bold", 26, (40, 120, 70)), (52, yb + 26))
             iv = G.text_img("+" + _won(inc["to"] * ki).lstrip("+"), "Black", 34, (30, 150, 80))
-            scr.alpha_composite(iv, (W - 52 - iv.width, 538))
-        # 알림 배너 — 새 알림이 위에서 내려오고, 이전 알림은 아래로 밀려 쌓임 (2026-11-16)
-        shown = [nt for nt in sp.get("notes", []) if t >= self.line_start(nt.get("on", 1)) + nt.get("offset", 0)]
-        for j, nt in enumerate(reversed(shown)):
+            scr.alpha_composite(iv, (W - 52 - iv.width, yb + 20))
+            scr.alpha_composite(G.text_img("입금 내역", "Bold", 24, (120, 124, 140)), (36, yb + 104))
+            shown = [nt for nt in sp.get("notes", []) if t >= self.line_start(nt.get("on", 1)) + nt.get("offset", 0)]
+            for j, nt in enumerate(list(reversed(shown))[:4]):
+                n0 = self.line_start(nt.get("on", 1)) + nt.get("offset", 0)
+                kk = G.ease_out((t - n0) / 0.3)
+                y_ = yb + 144 + j * 76 - (1 - kk) * 40 * (j == 0)
+                row = Image.new("RGBA", (W - 56, 66), (0, 0, 0, 0))
+                ImageDraw.Draw(row).rounded_rectangle((0, 0, W - 57, 65), radius=16, fill=(255, 255, 255, 255) if j else (255, 248, 214, 255),
+                                                       outline=(232, 234, 240, 255))
+                row.alpha_composite(G.text_img(nt["text"], "Bold", 24, INK, max_w=W - 100), (20, 18))
+                scr.alpha_composite(row, (28, int(y_)))
+            return
+        # 알림 배너
+        for nt in sp.get("notes", []):
             n0 = self.line_start(nt.get("on", 1)) + nt.get("offset", 0)
+            if t < n0:
+                continue
             kk = G.ease_out((t - n0) / 0.3)
             ban = Image.new("RGBA", (W - 40, 110), (0, 0, 0, 0))
             ImageDraw.Draw(ban).rounded_rectangle((0, 0, W - 41, 109), radius=24, fill=(40, 42, 52, 240))
             ban.alpha_composite(G.text_img(nt["text"], "Bold", 28, (255, 255, 255), max_w=W - 100), (26, 26))
-            if j == 0:
-                scr.alpha_composite(ban, (20, int(-120 + 170 * kk)))
-            elif j < 5:
-                y_ = 50 + j * 122
-                ban.putalpha(ban.getchannel("A").point(lambda a, jj=j: int(a * max(0.35, 1 - 0.15 * jj))))
-                scr.alpha_composite(ban, (20, int(y_)))
+            scr.alpha_composite(ban, (20, int(-120 + 170 * kk)))
 
     # 단톡방
     def _chat(self, scr, t):
