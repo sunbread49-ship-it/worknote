@@ -152,7 +152,7 @@ def plan(ep_dir, want_long, want_shorts, publish_at, shorts_every):
 
 
 SLOT_DAYS = (0, 1, 2, 3, 4, 5, 6)   # 2026-11-16~11-29 매일 롱폼 2주 시험 (이전: 화·금·토 (1, 4, 5))
-SLOT_HOUR = 18       # 18:00 KST
+SLOT_HOUR = 16       # 16:00 KST (2026-11-16 사용자: 노출이 몇 시간~며칠 뒤 붙으니 저녁 피크 전에 미리 · 이전 18:00)
 LOG_PATH = ROOT / "uploads.json"  # git에 커밋되는 업로드 기록 (out/ 은 git 제외라 세션이 바뀌면 사라짐)
 
 
