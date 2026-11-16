@@ -161,14 +161,14 @@ def s_power(f, t, sc):
 def s_tip(f, t, sc):
     vbg(f, "typing_hands_v", t, 0.55, 4)
     pill(f, "꿀팁", CX, 60, t, 0.05, bg=GOLD, size=70)
-    sent = "월요일엔악어새가라면먹음"
+    sent = "내비밀번호아무도모르겠지"
     n = min(len(sent), max(0, int((t - 0.3) / 0.11)))
     box = Image.new("RGBA", (W - 120, 150), (0, 0, 0, 0))
     ImageDraw.Draw(box).rounded_rectangle((0, 0, W - 121, 149), 26, fill=(255, 255, 255, 245))
     box.alpha_composite(T(sent[:n] + ("|" if int(t * 4) % 2 else ""), 66, (20, 22, 30), "Black"), (34, 36))
     K.drop(f, box, (CX, 200), "mt", 1, blur=18)
     if n >= len(sent):
-        G.blit(f, T("영문 자판으로 치면 30자리 넘게", 54, MINT, "Black", stroke=5, stroke_fill=(0, 0, 0)), (CX, 400), pop(t, 0.3 + len(sent) * 0.11), "mt")
+        G.blit(f, T("영문 자판으로 치면 25자리 넘게", 54, MINT, "Black", stroke=5, stroke_fill=(0, 0, 0)), (CX, 400), pop(t, 0.3 + len(sent) * 0.11), "mt")
     G.blit(f, T("✗ 생일 · 이름 · 흔한 단어", 52, RED, "Black", stroke=5, stroke_fill=(0, 0, 0)), (CX, 540), pop(t, 1.8), "mt")
     credit(f, "영상: Coverr-Free-Footage (Pixabay)")
 
