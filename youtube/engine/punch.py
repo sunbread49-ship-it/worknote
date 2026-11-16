@@ -97,8 +97,12 @@ def compose(w, h, sp, k=1.0, k_sub=1.0, k_m=1.0, vertical=False):
     """k: 큰 글자 등장 진행(0~1), k_sub: 아래 줄, k_m: 마스코트"""
     tone = sp.get("tone", "up")
     _, _, fg, fg2 = TONES.get(tone, TONES["up"])
-    ph = sp.get("photo")
-    if ph:
+    ph = sp.get("photo") or sp.get("_bgimg")
+    if sp.get("_bgimg") is not None:   # 2026-11-16: 움직이는 배경(영상 · 천천히 다가가는 사진)을 Punch가 넘겨줌
+        f = sp["_bgimg"].convert("RGBA").copy()
+        fg, fg2 = (255, 255, 255), (226, 230, 240)
+        sp = {**sp, "mascot": sp.get("mascot", False)}
+    elif ph:
         if isinstance(ph, str):
             ph = {"file": ph}
         f = photo_background(w, h, tone, ph["file"], tuple(ph.get("focus", (0.5, 0.5))), ph.get("dark", 0.5)).copy()

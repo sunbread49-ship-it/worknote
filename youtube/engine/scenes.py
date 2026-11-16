@@ -735,8 +735,27 @@ class Punch(Scene):
         k = G.clamp((t - t0) / 0.28)
         k_sub = G.appear(t, self.line_start(sp.get("sub_on", sp.get("on", 1))) + 0.35, 0.3)
         k_m = G.appear(t, t0 + 0.3, 0.45)
+        # 2026-11-16 사용자: 화면이 쉬지 않게 — video: 영상 배경 / photo: 천천히 다가가기(켄 번스)
+        if sp.get("video"):
+            from . import bgvideo
+            v = sp["video"] if isinstance(sp["video"], dict) else {"file": sp["video"]}
+            bgim = bgvideo.at({"kind": "video", "dark": 0.55, "blur": 2, **v}, getattr(self, "_now", t))
+            sp = {**sp, "_bgimg": bgim}
+        elif sp.get("photo") and sp.get("zoom", 0.06):
+            if not hasattr(self, "_phbg"):
+                ph = sp["photo"] if isinstance(sp["photo"], dict) else {"file": sp["photo"]}
+                self._phbg = P.photo_background(S.W, S.H, sp.get("tone", "up"), ph["file"], tuple(ph.get("focus", (0.5, 0.5))), ph.get("dark", 0.5))
+            z = 1 + sp.get("zoom", 0.06) * G.clamp(t / max(1.0, getattr(self, "dur", 4.0)))
+            cw, ch = int(S.W / z), int(S.H / z)
+            bgim = self._phbg.crop(((S.W - cw) // 2, (S.H - ch) // 2, (S.W - cw) // 2 + cw, (S.H - ch) // 2 + ch)).resize((S.W, S.H), Image.BILINEAR)
+            sp = {**sp, "_bgimg": bgim}
         im = P.compose(S.W, S.H, sp, k, k_sub, k_m)
         f.paste(im, (0, 0))
+        if sp.get("logo"):   # 2026-11-16: 회사 · 기관 이야기엔 로고(CI)를 위쪽 가운데에
+            from .editorial import logo_chip
+            lg = logo_chip(sp["logo"], 70)
+            if lg is not None:   # 위쪽 띠(채널 표시) 바로 아래 · 라벨 알약보다 위
+                G.blit(f, lg, (S.W / 2, 72), G.clamp((t - t0 + 0.3) / 0.3), "mt")
         # 등장 순간 흰 번쩍임 (0.12초)
         fl = 1 - G.clamp((t - t0) / 0.12)
         if t >= t0 and fl > 0:

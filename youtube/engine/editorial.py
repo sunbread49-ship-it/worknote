@@ -1880,6 +1880,21 @@ TYPES.update({"depthphoto": DepthPhoto})
 
 
 # ── 새 비교 템플릿 (EP011): 순위표 · 폭포형 손익 ─────────────────────────
+def logo_chip(name, h=56, pad=(16, 8)):
+    """로고 · CI를 흰 둥근 판 위에 (2026-11-16 사용자: 기업 · 언론을 말할 때 신뢰도용으로 로고 적극 활용)"""
+    from pathlib import Path
+    d = Path(__file__).resolve().parents[1] / "assets/photos"
+    p = next((d / f"{name}{e}" for e in (".png", ".jpg", ".jpeg") if (d / f"{name}{e}").exists()), None)
+    if p is None:
+        return None
+    im = Image.open(p).convert("RGBA")
+    im = im.resize((max(1, int(im.width * (h - 2 * pad[1]) / im.height)), h - 2 * pad[1]), Image.LANCZOS)
+    chip = Image.new("RGBA", (im.width + 2 * pad[0], h), (0, 0, 0, 0))
+    ImageDraw.Draw(chip).rounded_rectangle((0, 0, chip.width - 1, h - 1), 14, fill=(255, 255, 255, 250))
+    chip.alpha_composite(im, (pad[0], pad[1]))
+    return chip
+
+
 class Leaderboard(Editorial):
     """순위표: 결과가 큰 순서로 1·2·3·4위 줄이 차례로 올라오고, 메달 원 + 가로 막대 + 금액.
     rows: [{label, sub, value, text, color}] (자동 정렬), on(첫 줄 등장 문장), step(줄 간격 초), unit_note"""
@@ -1889,7 +1904,7 @@ class Leaderboard(Editorial):
         self.base(f)
         yy = self.hdr(f, t, y=sp.get("title_y", 150), center=False)
         rows = sorted(sp["rows"], key=lambda r: -float(r["value"]))
-        vmax = max(float(r["value"]) for r in rows) * 1.08
+        vmax = sp.get("vmax") or max(float(r["value"]) for r in rows) * 1.08
         t0 = self.line_start(sp.get("on", 1))
         step = sp.get("step", 0.45)
         x0, y0, rh, bw = S.SAFE_X + 40, sp.get("top", 330), sp.get("row_h", 132), 860
@@ -1921,6 +1936,10 @@ class Leaderboard(Editorial):
             G.blit(f, lab, (x0 + 100, cy - 6), k, "lb")
             if r.get("sub"):
                 G.blit(f, T(r["sub"], 26, (190, 196, 212), "SemiBold"), (x0 + 102, cy + 6), k, "lt")
+            if r.get("logo"):
+                lg = logo_chip(r["logo"], 52)
+                if lg is not None:
+                    G.blit(f, lg, (S.W - S.SAFE_X - 24, cy), k, "rm")
             # 막대 + 금액 (세어 올라감)
             kb = G.ease_out((t - ti - 0.15) / 0.7)
             w = int(bw * float(r["value"]) / vmax * max(kb, 0))
@@ -2844,6 +2863,10 @@ class Clips(Editorial):
         d.rectangle((0, 0, 14, h - 1), fill=(220, 40, 40, 255) if it.get("hl") else (60, 64, 80, 255))
         card.alpha_composite(T(f"{it['outlet']} · {it.get('date', '')}", 28, (110, 112, 124), "Bold"), (50, 26))
         card.alpha_composite(head, (50, 72))
+        if it.get("logo"):
+            lg = logo_chip(it["logo"], 50)
+            if lg is not None:
+                card.alpha_composite(lg, (w - lg.width - 24, 14))
         return card
 
     def draw(self, f, t):
