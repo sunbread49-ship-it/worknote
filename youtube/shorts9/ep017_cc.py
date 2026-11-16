@@ -21,10 +21,10 @@ SAY = {"__gemini__": {"voice": "Umbriel", "speed": "빠르게", "tempo": 1.12}, 
 
 @lru_cache(maxsize=2)
 def _clip_frames(name, w=1080):
-    # 동전 탑이 있는 가운데 부분만 잘라 크게 (가로 18~82% · 세로 20~90%)
-    h = int(w * (1080 * 0.70) / (1920 * 0.64)) // 2 * 2
+    # 동전 탑 + 위 합계 띠까지 (가로 15~85% · 세로 15.5~95%) — 띠가 잘리지 않게 (2026-11-16 사용자)
+    h = int(w * (1080 * 0.795) / (1920 * 0.70)) // 2 * 2
     raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(MEDIA / name), "-vf",
-                          f"fps=30,crop=iw*0.64:ih*0.70:iw*0.18:ih*0.20,scale={w}:{h}",
+                          f"fps=30,crop=iw*0.70:ih*0.795:iw*0.15:ih*0.155,scale={w}:{h}",
                           "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
 
@@ -61,8 +61,7 @@ def a2(f, t, sc):
 
 def a3(f, t, sc):
     f.alpha_composite(Image.new("RGBA", (W, H), (12, 14, 24, 255)))
-    clip(f, "coins_ep017.mp4", t, 110, speed=1.6)
-    big(f, "분배금까지 다 쌓으면?", 40, 70)
+    clip(f, "coins_ep017.mp4", t, 80, speed=1.6)
     if t > 2.6:
         big(f, "그래도 나스닥이 더 높다", 1010, 72, col=GOLD, o=pop(t, 2.6))
 
@@ -138,7 +137,7 @@ def b3(f, t, sc):
 
 def b4(f, t, sc):
     vbg(f, "datacenter_v", t, 0.62)
-    big(f, "단, JEPQ는\n못 담아요", 300, 140, hl="못 담아요", hlc=RED)
+    big(f, "단, JEPQ는\n못 넣어요", 300, 140, hl="못 넣어요", hlc=RED)
 
 
 def b5(f, t, sc):
@@ -157,7 +156,7 @@ S2 = [
     {"draw": b3, "nohead": True, "flash": True, "min": 2.6, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.3, "sparkle", 0.5)],
      "narr": ["나스닥이나 미국형 커버드콜이라면, 연금저축이나 ISA 안에서 사면 세금을 미루거나 줄일 수 있어요."]},
     {"draw": b4, "nohead": True, "flash": True, "min": 1.8, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.2, "fail", 0.35)],
-     "narr": ["단, 미국에 상장된 젭큐는 못 담아요."]},
+     "narr": ["단, 미국에 상장된 젭큐는 이 계좌에 넣을 수 없어요."]},
     {"draw": b5, "nohead": True, "flash": True, "min": 2.4, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.3, "accent", 0.5)],
      "narr": ["그리고 불려야 할 돈이라면, 커버드콜 말고 지수. 건초 더미를 통째로 사라는 말처럼요."]},
     {"draw": lambda f, t, sc: cta(f, t, sc, "풀버전은 채널에서"), "nohead": True, "flash": True, "min": 2.2, "gap": 0.1, "tail": 0.2,

@@ -236,17 +236,17 @@ scenes:
   vmax: 2700
   rows:
   - {label: '국내 1위 · KODEX 200타겟위클리CC', value: 2009, text: 2009만, color: up, on: 1}
-  - {label: '  같은 기간 코스피200', value: 2548, text: 2548만, color: neutral, on: 1, offset: 0.3}
+  - {label: '  KODEX 200 · 같은 1년 11개월', value: 2548, text: 2548만, color: neutral, on: 1, offset: 0.3}
   - {label: '국내 2위 · TIGER 나스닥100타겟데일리CC', value: 1262, text: 1262만, color: up, on: 2}
-  - {label: '  같은 기간 나스닥100', value: 1396, text: 1396만, color: neutral, on: 2, offset: 0.3}
+  - {label: '  TIGER 미국나스닥100 · 같은 2년 5개월', value: 1396, text: 1396만, color: neutral, on: 2, offset: 0.3}
   - {label: '서학개미 1위 · JEPQ', value: 1548, text: 1548만, color: up, hl: true, on: 3}
-  - {label: '  같은 기간 QQQ (나스닥100)', value: 2119, text: 2119만, color: neutral, on: 3, offset: 0.3}
+  - {label: '  QQQ · 같은 4년 6개월 · 달러 기준', value: 2119, text: 2119만, color: neutral, on: 3, offset: 0.3}
   narration: ['코덱스 200타겟위클리는 2,009만 원. 그냥 코스피200은 2,548만 원이에요.', '나스닥 커버드콜은 1,262만 원, 나스닥은 1,396만 원.', '4년 반 들고 있던 젭큐는 1,548만 원. | 같은 기간 나스닥은 !!2,119만 원!!이었어요.']
 - type: duel
   chapter: 1000만 원의 결과
   heading: 서학개미 1위 JEPQ · 4년 6개월 · 1,000만 원
   left: {title: 'JEPQ', value: '1,548만', sub: '원금 +11% · 분배금 514만 → 세후 437만', color: down, on: 1}
-  right: {title: '그냥 나스닥 (QQQ)', value: '2,119만', sub: '원금 +109% · 차이 571만 원', color: up, on: 2}
+  right: {title: '그냥 나스닥 (QQQ)', value: '2,119만', sub: '원금 +109% · 차이 571만 원 · 달러 기준', color: up, on: 2}
   sfx: [{name: 'mx:2182', on: 2, offset: 0.2, vol: 0.7}]
   narration: ['젭큐는 월배당을 514만 원 받았지만, 세금 15%를 떼면 437만 원.', '그 사이 원금은 11%밖에 안 올랐어요. | 그냥 나스닥을 들고 있었다면, !!571만 원!!을 더 벌었죠.']
 - type: kinetic
@@ -312,7 +312,6 @@ scenes:
   face_focus: [0.5, 0.3]
   name: 찰리 멍거
   role: 버크셔 해서웨이 전 부회장 · 워런 버핏의 동반자
-  source: '널리 인용되는 발언'
   en: 'The first rule of compounding: Never interrupt it unnecessarily.'
   ko: '복리의 제1원칙,\n**쓸데없이 끊지 마라.**'
   ko_on: 1
@@ -335,8 +334,8 @@ scenes:
   chapter: 이렇게만 사면 된다
   bg: {kind: video, file: datacenter_v, dark: 0.66, blur: 6}
   items:
-  - {text: "단, JEPQ는\n못 담아요", on: 1, size: 140, highlight: '못 담아요', hl_color: down}
-  narration: ['단, 미국에 상장된 젭큐 같은 상품은 이 계좌들에 못 담아요. | 그래서 국내에 상장된 비슷한 커버드콜을 골라야 해요.']
+  - {text: "단, JEPQ는\n못 넣어요", on: 1, size: 140, highlight: '못 넣어요', hl_color: down}
+  narration: ['단, 미국에 상장된 젭큐 같은 상품은 이 계좌들에 넣을 수 없어요. | 그래서 국내에 상장된 비슷한 커버드콜을 골라야 해요.']
 - type: checklist
   chapter: 이렇게만 사면 된다
   kicker: 월배당 커버드콜
@@ -359,7 +358,6 @@ scenes:
   face_focus: [0.5, 0.2]
   name: 존 보글
   role: 뱅가드 창업자 · 인덱스 펀드의 아버지
-  source: '「모든 주식을 소유하라 (The Little Book of Common Sense Investing)」 · 2007'
   en: "Don't look for the needle in the haystack. Just buy the haystack!"
   ko: '건초 더미에서 바늘을 찾지 마라.\n**건초 더미를 통째로 사라.**'
   ko_on: 1
@@ -386,7 +384,6 @@ scenes:
   face_focus: [0.5, 0.3]
   name: 워런 버핏
   role: 버크셔 해서웨이 회장
-  source: '널리 인용되는 발언'
   en: "Someone's sitting in the shade today because someone planted a tree a long time ago."
   ko: '오늘 누군가 그늘에 앉아 있는 건,\n**오래전 누군가 나무를 심었기 때문이다.**'
   ko_on: 1
