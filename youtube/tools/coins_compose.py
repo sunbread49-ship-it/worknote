@@ -27,9 +27,9 @@ for fi, fp in enumerate(frames):
     G.blit(f, G.pill(data[min(round(pos), len(data) - 1)]["date"].replace("-", "."), "Black", 44, (14, 16, 24), S.GOLD, pad=(22, 10), radius=14), (70, 60), 1, "lt")
     G.blit(f, T("1,000만 원 · 동전 1개 = 50만 원", 32, (200, 206, 220), "Bold"), (70, 140), 1, "lt")
     for x, lab, val, c in ((xs[0], "그냥 나스닥100", v["idx"], (230, 232, 240)), (xs[1], "커버드콜 원금", v["cc"], (230, 232, 240)),
-                           (xs[2], "받은 분배금 (세후)", v["div"], S.GOLD)):
-        G.blit(f, T(lab, 38, c, "Bold"), (W * x, H - 150), 1, "mt")
-        G.blit(f, T(f"{val:,.0f}만", 62, c), (W * x, H - 100), 1, "mt")
+                           (xs[2], "분배금(세후)", v["div"], S.GOLD)):
+        G.blit(f, T(lab, 34, c, "Bold"), (W * x, H - 140), 1, "mt")
+        G.blit(f, T(f"{val:,.0f}만", 56, c), (W * x, H - 96), 1, "mt")
     if fi >= NF - hold:
         k = min(1.0, (fi - (NF - hold)) / 8)
         G.blit(f, G.pill(f"커버드콜 합계 {v['cc'] + v['div']:,.0f}만  vs  나스닥 {v['idx']:,.0f}만", "Black", 46, (14, 16, 24), (255, 255, 255), pad=(26, 12), radius=16), (W / 2, 220), k, "mt")

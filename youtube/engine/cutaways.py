@@ -409,7 +409,10 @@ class Media(Cutaway):
             self.draw_bg(f, t, _bg_colors("white"))
             G.blit(f, meme_text(f"[이미지 자리]\n{sp['file']}", 70), (S.W / 2, S.H / 2), 1, "mm")
         else:
-            fr = self.frames[int(t * S.FPS) % len(self.frames)]
+            if self.spec.get("hold"):   # 2026-11-16: 한 번만 재생 · speed로 늘려 내레이션에 맞추고 마지막 장면 유지 (동전 탑 등)
+                fr = self.frames[min(int(t * S.FPS * self.spec.get("speed", 1.0)), len(self.frames) - 1)]
+            else:
+                fr = self.frames[int(t * S.FPS) % len(self.frames)]
             z = 1 + sp.get("kenburns", 0.08) * G.clamp(t / max(self.dur, 0.1))
             im = fr.resize((int(fr.width * z), int(fr.height * z)), Image.BILINEAR) if z > 1.001 else fr
             G.blit(f, im, (S.W / 2, S.H / 2), 1, "mm")
