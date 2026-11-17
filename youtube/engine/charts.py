@@ -178,7 +178,7 @@ class LineChart:
             for x in range(int(rx), int(rx + rw), 22):
                 d.line((x, y, min(x + 12, rx + rw), y), fill=c + (230,), width=3)
             if h.get("label"):
-                t = G.pill(h["label"], "Bold", 24, (16, 20, 32), c, pad=(14, 6))
+                t = G.pill(h["label"], "Bold", 24, S.ON_ACCENT, c, pad=(14, 6))
                 lx = rx + 12 if h.get("label_side", "left") == "left" else rx + rw - t.width
                 base.alpha_composite(t, (int(lx), int(y - t.height - 10)))
         if self.spec.get("title"):
@@ -254,12 +254,12 @@ class LineChart:
                     G.blit(frame, _dot(16, ln["color"]), (hx, hy), op, "mm")
                     if self.spec.get("live_value"):  # 그려지는 동안 현재 값 표시
                         v = ln["ys"][i]
-                        G.blit(frame, G.pill(_fmt_end(v, self.unit), "ExtraBold", 30, (16, 20, 32), ln["color"],
+                        G.blit(frame, G.pill(_fmt_end(v, self.unit), "ExtraBold", 30, S.ON_ACCENT, ln["color"],
                                              pad=(14, 6)), (hx + 16, hy - 16), op, "lb")
                 elif self.spec.get("end_labels"):
                     v = ln["ys"][-1]
                     txt = (ln["label"] + "  " if ln["label"] else "") + _fmt_end(v, self.unit)
-                    G.blit(frame, G.pill(txt, "ExtraBold", 30, (16, 20, 32), ln["color"], pad=(16, 7)),
+                    G.blit(frame, G.pill(txt, "ExtraBold", 30, S.ON_ACCENT, ln["color"], pad=(16, 7)),
                            (hx + 14, hy + ln["label_dy"]), op, "lm")
         # 마커 + 라벨
         for m in self.spec.get("marks", []):
@@ -271,7 +271,7 @@ class LineChart:
             G.blit(frame, _dot(22, c, ring=True), (mx, my), o, "mm")
             dy = m.get("dy", -110)
             dx = m.get("dx", 0)
-            lab = G.pill(m["label"], "Bold", m.get("size", 28), (12, 16, 28), c, pad=(18, 8))
+            lab = G.pill(m["label"], "Bold", m.get("size", 28), S.ON_ACCENT, c, pad=(18, 8))
             lx, ly = mx + dx, my + dy
             ln_ = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
             ImageDraw.Draw(ln_).line((mx, my + (12 if dy > 0 else -12), lx, ly), fill=c + (220,), width=3)

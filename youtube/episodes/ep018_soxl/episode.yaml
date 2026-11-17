@@ -1,0 +1,417 @@
+# EP018 · 주식 궁금증, 숫자로 풀기 — SOXL 지금 사면 이렇게 된다 (16년 데이터 · 몰빵 vs 반만 담기)
+# 4요소: 감정 = 바람(반도체 바닥에서 3배로 한 번에 복구) → 충격(반도체 -35%인데 SOXL -84% · 하루 -39%)
+#        → 반전(그래도 16년이면 82배 · 단, -90%를 두 번 견딘 사람만) → 해법(반만 담고 반은 현금 · 매달 반반) = 제목의 약속
+#        알고리즘 = 11월 코스피 5000 붕괴(11.17) · 서학개미 11월 초 순매수 68%가 SOXL (한국경제TV 11.7, 예탁결제원)
+# 숫자: SOXL · SOXX 수정 주가(분배 · 분할 반영, Yahoo) + 11.17 미국 종가(네이버 해외 시세) · 반반 = 매달 첫 거래일 50:50 재조정, 현금 이자 0 (보수적)
+# 2주 시험: 롱폼 16:00 + 같은 날 쇼츠 12:00 · 21:00 · 색 조합 08 (요소에만) · 한 목소리 (Umbriel)
+title: 'SOXL 지금 사면 이렇게 된다, 이렇게만 사면 안 망한다 (16년 데이터)'
+series_tag: 반도체 3배 SOXL
+theme: '08'
+pace: punchy
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    SOXL: 속슬
+    SOXX: 속스
+    SOXS: 속스 인버스
+    Direxion: 디렉시온
+    S&P500: 에스앤피 오백
+    SEC: 미국 증권거래위원회
+    ETF: 이티에프
+bgm:
+  volume: 0.24
+  chapters: {인트로: tense, 68%의 선택: drive, 3배의 함정: tense, 과거 4번의 바닥: drive, 이렇게만 사면 산다: hope, 정리: hope}
+chapter_titles:
+  인트로: 'SOXL -84% · 지금 사도 될까?'
+  68%의 선택: '서학개미 순매수 68% SOXL · SOXL이란'
+  3배의 함정: '레버리지 ETF 음의 복리 · 하루 -39%'
+  과거 4번의 바닥: '반도체 -30% 때 SOXL 산 결과 · 회복 기간'
+  이렇게만 사면 산다: 'SOXL 반만 담기 · 매달 리밸런싱 16년 백테스트'
+  정리: '정리: SOXL 이렇게만 사면 된다'
+youtube:
+  title: 'SOXL 지금 사면 이렇게 된다, 이렇게만 사면 안 망한다 (16년 데이터)'
+  description: '반도체가 35% 빠지는 동안 SOXL은 -84%. 그런데 이번 달 서학개미는 미국 주식 순매수의 68%를 SOXL에 넣었습니다.
+
+    지금 SOXL을 사면 어떻게 될까요? 2010년 상장 이후 16년 데이터로, 반도체가 30% 빠졌던 과거 4번의 결과와 "안 망하고 3배를 쓰는 법"을 확인했습니다.
+
+
+    ✔ 서학개미 11월 초 순매수 68% = SOXL
+
+    ✔ 반도체 -35%인데 SOXL -84%? 3배 레버리지의 음의 복리
+
+    ✔ 반도체 -30% 때 SOXL 산 4번, 1년 뒤 결과 (+597%부터 -26%까지)
+
+    ✔ 2021년 고점에 산 사람: -90%, 회복까지 4년 2개월
+
+    ✔ 이렇게만 사면 산다: 반만 담고 반은 현금, 매달 반반 (16년 45배 · 최악 -62%)
+
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·상품의 매수·매도 추천이 아닙니다.
+
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. SOXL 상장일(2010.3.11) ~ 2026.11.17 미국 종가, 분배금 재투자 · 분할 반영 수정 주가, 달러 기준 · 세금 · 환율 · 거래 비용 미반영.
+
+    ※ 반만 담기 = 매달 첫 거래일에 SOXL과 현금을 50:50으로 다시 맞춘 계산이며, 현금 이자는 0으로 보수적으로 계산했습니다.
+
+    ※ 레버리지 ETF는 하루 수익률의 배수를 목표로 하며, 오래 보유하면 기초 지수의 배수와 크게 달라질 수 있습니다 (미국 SEC · FINRA 투자자 경고).
+
+
+    [자료]
+
+    SOXL · SOXX 일별 시세: Yahoo Finance · 11.17 종가: 네이버 해외 시세
+
+    서학개미 순매수: 한국경제TV (2026.11.7, 한국예탁결제원 집계 인용) · 마이너스통장: 세계일보 (2026.11.15) · 코스피: 아시아경제 (2026.11.17)
+
+
+    [3D] 동전 탑: Blender로 직접 제작 (실제 데이터) · [영상] Pixabay — josepht_007 · olenchic · MrWashingt0n · motionstock · Hassas_Arts / [사진] Wikimedia Commons · 로고: Direxion (상표는 해당 회사를 가리키는 용도로만 사용, 제휴 · 추천 아님)
+
+    '
+  tags: [SOXL, 반도체3배, 레버리지ETF, 서학개미, 반도체ETF, SOXX, 리밸런싱, 미국주식, 레버리지, 코스피5000]
+  privacy: private
+checks:
+- {name: SOXL 6.22 고점 → 11.17, kind: ret, series: soxl, start: '2026-06-22', end: '2026-11-17'}
+- {name: SOXX 6.22 고점 → 11.17, kind: ret, series: soxx, start: '2026-06-22', end: '2026-11-17'}
+- {name: SOXL 11.5 하루, kind: day_ret, series: soxl, date: '2026-11-05'}
+- {name: SOXX 11.5 하루, kind: day_ret, series: soxx, date: '2026-11-05'}
+- {name: SOXL 2021.12.27 → 2022.10.14, kind: ret, series: soxl, start: '2021-12-27', end: '2022-10-14'}
+- {name: SOXL 상장 → 11.17 배수, kind: ret, series: soxl, start: '2010-03-11', end: '2026-11-17'}
+- {name: SOXX 같은 기간, kind: ret, series: soxx, start: '2010-03-11', end: '2026-11-17'}
+scenes:
+# ── 인트로: 1초 숫자 · 3초 질문 · 5초 약속 · 빠른 컷 ─────────────────
+- type: punch
+  chapter: 인트로
+  tone: down
+  video: {file: coaster_v, dark: 0.5, blur: 1}
+  credit: '영상: josepht_007 (Pixabay)'
+  label: 반도체 -35% 빠지는 동안 · 서학개미 1위 SOXL은
+  big: '-84%'
+  sub: 6월 고점 → 11월 17일
+  'on': 1
+  sub_on: 1
+  sfx: [{name: 'mx:2182', on: 1, offset: 0.05, vol: 0.85}]
+  shake: [{on: 1, offset: 0.1, amp: 14, dur: 0.4}]
+  narration: ['반도체가 35% 빠지는 동안, | 서학개미가 가장 많이 산 이 ETF는 !!-84%!!가 됐어요.']
+- type: kinetic
+  chapter: 인트로
+  bg: {kind: video, file: casino_v, dark: 0.62, blur: 5}
+  items:
+  - {text: "그런데 이번 달\n또 1조 8천억 원", on: 1, size: 140, highlight: '1조 8천억 원', hl_color: down}
+  narration: ['그런데 이번 달 서학개미는, 여기에 또 1조 8천억 원을 넣었어요. | 지금 사면, 어떻게 될까요?']
+- type: punch
+  chapter: 인트로
+  tone: up
+  video: {file: market_crash_v, dark: 0.5, blur: 2}
+  credit: '영상: MrWashingt0n (Pixabay)'
+  label: 과거 반도체 -30% 때 SOXL을 산 사람 · 1년 뒤 최고
+  big: '+597%'
+  sub: 끝까지 보면, '이렇게만 사면 산다'가 보여요
+  'on': 1
+  sub_on: 2
+  sfx: [{name: 'mx:2003', on: 1, offset: 0.05, vol: 0.7}]
+  narration: ['16년 역사를 보면, 반도체가 30% 빠졌을 때 SOXL을 산 사람은, 1년 뒤 !!597%!!를 번 적도 있어요. | 그런데 한 번은, 거기서 64%가 더 빠졌죠.', '끝까지 보시면, SOXL은 이렇게만 사면 산다, 16년 데이터로 딱 정리해 드릴게요.']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "SOXL 지금 사면\n이렇게 된다"
+  highlight: 이렇게 된다
+  subtitle: 16년 데이터 · 몰빵 vs 반만 담기
+  narration: ['오늘은 반도체 3배, SOXL을 상장 첫날부터 16년치, | 하루도 빼지 않고 계산해 봤어요.']
+# ── 68%의 선택 ─────────────────────────────────────────
+- type: clips
+  chapter: 68%의 선택
+  title: 이번 달 개미들 기사 제목
+  highlight: 개미들
+  bg: {kind: video, file: stock_decline_v, dark: 0.7, blur: 8}
+  items:
+  - {outlet: 아시아경제, date: 2026.11.17, headline: '코스피, 9달 만에 종가 5000선 아래로…외인 1.5조 팔았다', on: 1}
+  - {outlet: 한국경제TV, date: 2026.11.7, headline: "국장 급락에 등 돌린 개미…미국서 '간 큰 베팅'", on: 2, hl: true}
+  - {outlet: 세계일보, date: 2026.11.15, headline: '“주가 떨어질 때 사야”… 개미들 ‘마통’ 11월 급증', on: 3}
+  credit: '기사 제목: 아시아경제 · 한국경제TV · 세계일보 — 보도 그대로'
+  narration: ['요즘 기사, 이래요. | 오늘 코스피는 9달 만에 5000선 아래로 떨어졌고,', '국장에 실망한 개미들은 미국에서 간 큰 베팅을 시작했다는 보도가 나왔죠.', '주가가 떨어질 때 사야 한다며, 마이너스통장까지 늘었어요.']
+- type: punch
+  chapter: 68%의 선택
+  tone: gold
+  photo: {file: stock_monitor, focus: [0.5, 0.5], dark: 0.6}
+  label: 11월 2~5일 서학개미 미국 주식 순매수 중 SOXL
+  big: '68%'
+  sub: 13억 달러 · 약 1조 8천억 원 (한국예탁결제원 집계)
+  'on': 1
+  sub_on: 1
+  sfx: [{name: 'mx:2003', on: 1, offset: 0.05, vol: 0.6}]
+  narration: ['그 간 큰 베팅이 바로 이거예요. | 11월 첫 나흘 동안 서학개미가 산 미국 주식의 !!68%!!가, SOXL 하나였어요.']
+- type: punch
+  chapter: 68%의 선택
+  tone: up
+  video: {file: chip_macro_v, dark: 0.55, blur: 2}
+  credit: '영상: motionstock (Pixabay)'
+  logo: logo_direxion
+  label: SOXL · 운용사 Direxion · 반도체 지수 30개 기업
+  big: '하루 × 3'
+  sub: 오늘 지수가 +1%면 +3%, -1%면 -3%
+  'on': 1
+  sub_on: 1
+  narration: ['SOXL은 디렉시온이 운용하는, 반도체 기업 30곳 지수의 3배 ETF예요.', '정확히는, 지수의 하루 움직임을 3배로 따라가요. | 오늘 1% 오르면 3%, 1% 빠지면 3%.']
+- type: kinetic
+  chapter: 68%의 선택
+  bg: {kind: video, file: coaster2_v, dark: 0.6, blur: 4}
+  items:
+  - {text: "핵심은\n'하루'", on: 1, size: 170, highlight: "'하루'", hl_color: down}
+  narration: ['여기서 핵심은, | 하루라는 단어예요. 이게 오늘 영상의 전부예요.']
+# ── 3배의 함정 ──────────────────────────────────────────
+- type: chart
+  chapter: 3배의 함정
+  chart:
+    lines:
+    - {series: soxx, color: neutral, label: '반도체 (SOXX · 1배)'}
+    - {series: soxl, color: down, label: 'SOXL (3배)'}
+    start: '2026-06-22'
+    end: '2026-11-17'
+    base: 1000
+    end_labels: true
+    rect: [300, 200, 1200, 620]
+    title: 6월 22일 고점에 1,000만 원 (만 원 · 달러 기준)
+    draw: {on: 1, dur: 2.8}
+    source: '자료: Yahoo Finance · 네이버 해외 시세 (수정 주가)'
+  sfx: [{name: fall_burn, on: 2, offset: 0.2, vol: 0.6}]
+  narration: ['6월 22일, 반도체가 꼭대기였던 날 1,000만 원을 넣었다고 해 볼게요.', '회색 반도체는 648만 원. 35% 빠졌어요. | 그럼 3배는 105% 빠져서 0원이 됐어야 할까요?', '아니에요. SOXL은 !!163만 원!!. -84%예요.']
+- type: duel
+  chapter: 3배의 함정
+  heading: 오르고 내렸을 뿐인데 · 100에서 출발
+  left: {title: '반도체 지수', value: '99', sub: '+10% → -10% · 1% 손해', color: neutral, on: 2}
+  right: {title: '3배 (SOXL)', value: '91', sub: '+30% → -30% · 9% 손해 (3배 아니라 9배)', color: down, on: 3}
+  sfx: [{name: 'mx:2182', on: 2, offset: 0.2, vol: 0.7}]
+  narration: ['3배인데 왜 딱 3배가 아닐까요? 이 계산 하나면 끝나요.', '지수가 하루 10% 오르고, 다음 날 10% 빠지면 99. | 1% 손해예요.', '3배는 30% 오르고 30% 빠져서 !!91!!. 손해가 3배가 아니라 9배예요.']
+- type: kinetic
+  chapter: 3배의 함정
+  bg: {kind: video, file: coaster_v, dark: 0.6, blur: 3}
+  items:
+  - {text: "출렁일수록\n녹는다", on: 1, size: 160, highlight: '녹는다', hl_color: down}
+  narration: ['그래서 시장이 오르락내리락 출렁일수록, | 3배는 제자리에서도 녹아요.']
+- type: punch
+  chapter: 3배의 함정
+  tone: down
+  video: {file: stock_decline_v, dark: 0.5, blur: 2}
+  credit: '영상: MrWashingt0n (Pixabay)'
+  label: 11월 5일 하루 · 반도체 -12% 빠진 날 SOXL은
+  big: '-39%'
+  sub: 하루 만에 1,000만 원 → 613만 원
+  'on': 1
+  sub_on: 1
+  sfx: [{name: 'mx:2182', on: 1, offset: 0.05, vol: 0.8}]
+  shake: [{on: 1, offset: 0.1, amp: 12, dur: 0.4}]
+  narration: ['그리고 출렁임이 제일 컸던 날이, 바로 개미들이 사던 11월 5일이에요.', '반도체가 12% 빠진 그날, SOXL은 하루 만에 !!-39%!!.']
+- type: phone
+  chapter: 3배의 함정
+  mode: account
+  bg: dark
+  app: SOXL
+  phone_x: 560
+  from: 10000000
+  to: 7888000
+  drop_on: 2
+  drop_dur: 3.0
+  holdings:
+  - {name: 'SOXL · 11월 2~5일 평균 62.21달러', pct: -21.1}
+  notes:
+  - {text: '11.5  -38.7%', on: 1}
+  - {text: '11.9  +22.3%', on: 1, offset: 0.6}
+  - {text: '11.11  +17.8%', on: 1, offset: 1.2}
+  - {text: '11.13  -11.0%', on: 1, offset: 1.8}
+  - {text: '11.16  -16.4%', on: 2, offset: 0.3}
+  - {text: '11.17  +0.6%  → 49.07달러', on: 2, offset: 0.9}
+  side_text: "2주 만에\n-211만 원"
+  side_highlight: '-211만 원'
+  side_hl_color: down
+  side_on: 3
+  narration: ['그 나흘 동안 개미들이 산 평균 가격에 1,000만 원을 넣었다면,', '그 뒤 2주는 이랬어요. 22% 오른 날도, 18% 오른 날도 있었는데,', '오늘 계좌는 !!789만 원!!. 2주 만에 211만 원이 빠졌어요.']
+- type: media
+  chapter: 3배의 함정
+  file: towers_ep018.mp4
+  fit: cover
+  hold: true
+  speed: 0.6
+  narration: ['동전 탑으로 보면 더 확실해요. 동전 하나가 50만 원이에요. | 6월 꼭대기에 똑같이 1,000만 원씩.', '은색 반도체는 13개가 남았는데, | 빨간 SOXL은 동전 3개만 남았어요. 오른쪽 초록 탑은, 뒤에서 정체를 알려 드릴게요.']
+# ── 과거 4번의 바닥 ───────────────────────────────────────
+- type: kinetic
+  chapter: 과거 4번의 바닥
+  bg: {kind: video, file: chip_board_v, dark: 0.62, blur: 5}
+  items:
+  - {text: "그럼 지금이\n바닥 아니야?", on: 1, size: 150, highlight: '바닥', hl_color: down}
+  narration: ['그럼 이렇게 많이 빠졌으니, | 지금이 바닥 아니냐고요? 역사를 볼게요.']
+- type: hbars
+  chapter: 과거 4번의 바닥
+  kicker: 반도체(SOXX)가 꼭대기에서 -30% 빠진 날 SOXL을 샀다면 · 1년 뒤
+  title: 과거 4번의 바닥
+  highlight: 4번
+  title_y: 90
+  bar_h: 34
+  row_gap: 22
+  vmax: 650
+  rows:
+  - {label: '2011년 8월 · 그 뒤 최악 -5%', value: 49, text: '+49%', color: up, on: 2}
+  - {label: '2020년 3월 코로나 · 그 뒤 최악 -20%', value: 597, text: '+597%', color: up, on: 3}
+  - {label: '2022년 5월 · 그 뒤 최악 -64%', value: -26, text: '-26%', color: down, hl: true, on: 4}
+  - {label: '2025년 4월 관세 · 그 뒤 최악 -28%', value: 397, text: '+397%', color: up, on: 5}
+  narration: ['SOXL이 생긴 뒤로, 반도체가 꼭대기에서 30% 빠진 적은 이번 말고 4번 있었어요.', '2011년엔 1년 뒤 49%.', '2020년 코로나 때는 무려 !!597%!!.', '그런데 2022년 5월엔, 산 뒤에 64%가 더 빠졌고, 1년 뒤에도 -26%였어요.', '작년 4월 관세 충격 때는 397%였죠. | 네 번 중 세 번은 대박, 한 번은 악몽이에요.']
+- type: chart
+  chapter: 과거 4번의 바닥
+  chart:
+    lines:
+    - {series: soxl, color: down, label: SOXL}
+    start: '2021-12-27'
+    end: '2026-03-31'
+    base: 1000
+    end_labels: false
+    rect: [300, 200, 1200, 620]
+    title: 2021년 12월 27일 꼭대기에 1,000만 원 (만 원)
+    draw: {on: 1, dur: 3.0}
+    marks:
+    - {date: '2022-10-14', label: '95만 원 · -90%', color: down, on: 2, dy: -120}
+    - {date: '2026-02-25', label: '4년 2개월 만에 본전', color: up, on: 3, dy: -110, dx: -160}
+    source: '자료: Yahoo Finance (수정 주가)'
+  narration: ['악몽은 이랬어요. 2021년 말 꼭대기에 1,000만 원을 넣은 사람.', '10달 뒤 계좌는 !!95만 원!!. -90%예요.', '본전을 찾기까지, 무려 4년 2개월이 걸렸어요.']
+- type: kinetic
+  chapter: 과거 4번의 바닥
+  bg: {kind: video, file: clock_anxiety_v, dark: 0.6, blur: 4}
+  items:
+  - {text: "-90%를 메우려면\n+900%", on: 1, size: 140, highlight: '+900%', hl_color: down}
+  narration: ['90% 잃으면, 본전까지 900%가 올라야 해요. | 그 4년을 버틴 사람, 솔직히 거의 없죠.']
+- type: saying
+  chapter: 과거 4번의 바닥
+  photo: charlie_munger
+  move: {zoom: 0.1, dx: 0.01, dy: -0.01}
+  focus: [0.5, 0.3]
+  face_focus: [0.5, 0.3]
+  name: 찰리 멍거
+  role: 버크셔 해서웨이 전 부회장 · 워런 버핏의 동반자
+  en: 'Smart men go broke three ways — liquor, ladies and leverage.'
+  ko: '똑똑한 사람이 망하는 길은 세 가지.\n**술, 여자, 그리고 레버리지.**'
+  ko_on: 1
+  narration: ['워런 버핏의 동반자 찰리 멍거는 이렇게 말했어요.', '똑똑한 사람이 망하는 길은 세 가지다. | 술, 여자, 그리고 **레버리지.**']
+# ── 이렇게만 사면 산다 ──────────────────────────────────────
+- type: kinetic
+  chapter: 이렇게만 사면 산다
+  bg: {kind: video, file: money_count_v, dark: 0.62, blur: 5}
+  items:
+  - {text: "그런데 16년이면\n82배", on: 1, size: 150, highlight: '82배', hl_color: up}
+  narration: ['그런데 반전이 있어요. | 상장 첫날 SOXL에 1,000만 원을 넣고 16년을 그냥 버텼다면, 지금 8억 2천만 원. 82배예요.', '문제는 그 사이 -90%를 겪었고, 지금도 -84%라는 거죠. | 그걸 다 버틸 수 있었을까요?']
+- type: hbars
+  chapter: 이렇게만 사면 산다
+  kicker: 2010.3 상장일에 1,000만 원 → 2026.11.17 · 오른쪽은 그 사이 최악의 순간
+  title: 16년 · 같은 1,000만 원
+  highlight: 16년
+  title_y: 90
+  bar_h: 34
+  row_gap: 22
+  vmax: 9800
+  rows:
+  - {label: 'SOXL 몰빵 · 최악 -90%', value: 8170, text: '8.2억', color: down, on: 1}
+  - {label: 'SOXL 반 + 현금 반 · 매달 반반 · 최악 -62%', value: 4520, text: '4.5억', color: up, hl: true, on: 2}
+  - {label: '반도체 1배 (SOXX) · 최악 -46%', value: 3130, text: '3.1억', color: neutral, on: 4}
+  narration: ['그래서 이렇게 비교해 봤어요. 같은 1,000만 원, 같은 16년.', '몰빵은 8억 2천. 대신 최악일 땐 -90%.', '그리고 SOXL을 반만 담고, 나머지 반은 현금으로 들고, | 매달 한 번 반반으로 맞춘 사람. !!4억 5천!!이에요. 최악은 -62%.', '그냥 반도체 1배는 3억 1천. 최악은 -46%였어요.']
+- type: kinetic
+  chapter: 이렇게만 사면 산다
+  bg: {kind: video, file: coaster2_v, dark: 0.62, blur: 5}
+  items:
+  - {text: "반만 담았는데\n1배보다 1.4억 더", on: 1, size: 130, highlight: '1.4억 더', hl_color: up}
+  narration: ['반만 담았는데, 그냥 반도체보다 1억 4천만 원을 더 벌었어요. | 그것도 현금 이자는 0으로 계산했는데요.']
+- type: card
+  chapter: 이렇게만 사면 산다
+  heading: 반만 담기 · 이렇게 해요
+  highlight: 이렇게
+  numbered: true
+  size: 48
+  gap: 34
+  width: 1500
+  bullets:
+  - {text: 'SOXL 500만 원 + 현금 500만 원으로 시작', on: 1}
+  - {text: '매달 한 번, 다시 50 : 50으로 맞추기', highlight: '50 : 50', hl_color: up, on: 2}
+  - {text: '떨어지면 현금으로 SOXL을 더 사고', highlight: 더 사고, hl_color: up, on: 3}
+  - {text: '오르면 SOXL을 팔아 현금을 쌓기', highlight: 현금을 쌓기, hl_color: up, on: 4}
+  credit: '매달 첫 거래일 기준 계산 · 세금 · 거래 비용 미반영'
+  narration: ['방법은 간단해요. SOXL 반, 현금 반으로 시작해서,', '매달 한 번, 다시 반반으로 맞추는 거예요.', '그러면 SOXL이 빠졌을 땐 현금으로 자동으로 더 사게 되고,', '많이 올랐을 땐 자동으로 팔아서 현금을 쌓아요. | 바닥에서 사고 꼭대기에서 파는 걸, 규칙이 대신해 주는 거죠.']
+- type: duel
+  chapter: 이렇게만 사면 산다
+  heading: 2021년 꼭대기에 1,000만 원 · 가장 바닥이던 2022년 10월
+  left: {title: 'SOXL 몰빵', value: '95만', sub: '-90% · 본전까지 4년 2개월', color: down, on: 1}
+  right: {title: '반만 담기', value: '376만', sub: '-62% · 그래도 남은 돈으로 바닥에서 추가 매수', color: up, on: 2}
+  narration: ['최악의 순간에도 차이가 커요. 2021년 꼭대기에서 시작했다면, 바닥에서 몰빵은 95만 원.', '반만 담은 사람은 376만 원이 남아 있었어요. | 그리고 그 남은 현금으로, 바닥에서 계속 사들였죠.']
+- type: media
+  chapter: 이렇게만 사면 산다
+  file: towers_ep018.mp4
+  fit: cover
+  hold: true
+  speed: 0.9
+  narration: ['아까 동전 탑의 초록 탑이 바로 이 반만 담기예요.', '이번 6월 꼭대기에서 시작했어도, 몰빵은 163만 원, 반만 담기는 !!480만 원!!이 남았어요.']
+- type: checklist
+  chapter: 이렇게만 사면 산다
+  kicker: 반도체 3배 SOXL
+  title: 이렇게만 사면 산다
+  highlight: 이렇게만
+  title_size: 90
+  items:
+  - {text: '몰빵 금지 · SOXL은 반만, 나머지는 현금', on: 2, highlight: 반만}
+  - {text: '매달 한 번 · 다시 반반으로', on: 3, highlight: 반반}
+  - {text: '-90%도 버틸 돈만 · 마통 · 생활비는 절대 X', on: 4, highlight: 절대 X}
+  narration: ['정리할게요. SOXL은 이렇게만 사면 살아남아요.', '첫째, 몰빵 금지. SOXL은 반만, 나머지는 현금으로.', '둘째, 매달 한 번, 다시 반반으로 맞추기.', '셋째, -90%가 와도 버틸 수 있는 돈으로만. | 마이너스통장이나 생활비로는 절대 안 돼요. 4년을 기다릴 수 없는 돈이니까요.']
+- type: saying
+  chapter: 이렇게만 사면 산다
+  photo: buffett_2015
+  move: {zoom: 0.1, dx: -0.01, dy: -0.01}
+  focus: [0.5, 0.3]
+  face_focus: [0.5, 0.3]
+  name: 워런 버핏
+  role: 버크셔 해서웨이 회장
+  en: "When leverage works, it magnifies your gains. Your spouse thinks you're clever, and your neighbors get envious. But leverage is addictive."
+  ko: '레버리지가 통하면 배우자는 당신을 똑똑하다 하고,\n이웃은 부러워한다. **하지만 레버리지는 중독된다.**'
+  ko_on: 1
+  narration: ['워런 버핏은 주주 서한에 이렇게 썼어요.', '레버리지가 통하면, 배우자는 당신을 똑똑하다 하고 이웃은 부러워한다. | **하지만 레버리지는 중독된다.**']
+# ── 정리 ───────────────────────────────────────────────
+- type: card
+  chapter: 정리
+  heading: 오늘의 숫자
+  highlight: 숫자
+  numbered: true
+  size: 46
+  gap: 30
+  width: 1500
+  bullets:
+  - {text: '반도체 -35% 동안 SOXL -84% · 출렁일수록 녹는다', highlight: -84%, hl_color: down, on: 3}
+  - {text: '반도체 -30% 때 산 4번 · 1년 뒤 +597%부터 -26%까지', on: 2}
+  - {text: '2021년 꼭대기 몰빵 · -90%, 본전까지 4년 2개월', highlight: 4년 2개월, hl_color: down, on: 4}
+  - {text: '반만 담고 매달 반반 · 16년 4.5억, 최악 -62%', highlight: 반만, hl_color: up, on: 5}
+  narration: ['오늘 숫자를 정리해 볼게요.', '반도체가 35% 빠지는 동안 SOXL은 -84%. 출렁일수록 녹았어요.', '반도체가 30% 빠졌을 때 산 네 번은, 1년 뒤 +597%부터 -26%까지 갈렸고,', '2021년 꼭대기 몰빵은 -90%, 본전까지 4년 2개월.', '하지만 반만 담고 매달 반반으로 맞춘 사람은, | 16년 동안 4억 5천, 최악에도 -62%였어요.']
+- type: kinetic
+  chapter: 정리
+  items:
+  - {text: "3배는 수익이 아니라\n속도다", on: 1, size: 120, highlight: '속도다'}
+  narration: ['3배는 수익이 아니라, 속도예요.', '[낮게]안전벨트를 매야, 끝까지 탈 수 있어요.']
+- type: outro
+  heading: "3배는\n반만 담자"
+  highlight: 반만
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목·상품의 매수·매도 추천이 아닙니다.
+
+    과거 데이터는 미래 수익을 보장하지 않으며 세금 · 환율 · 거래 비용은 반영하지 않았습니다.'
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['여러분은 SOXL, 들고 계세요? 몇 퍼센트나 담으셨나요?', '댓글로 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
+thumbs10:   # 제목 'SOXL 지금 사면 이렇게 된다' · 썸네일은 숫자 충격 + 해법 약속
+- {p: P01, photo: coaster_pov, top: '반도체 -35%인데', bottom: 'SOXL은 -84%', hl: '-84%', sticker: 3배의 함정}
+- {p: P02, photo: stock_monitor, theme: red, top: '반도체 3배 SOXL', num: '-84%', unit: '지금?', bottom: '이렇게만 사면 산다'}
+- {p: P03, photo: coaster_track, theme: red, label: '6월 꼭대기 1,000만 원 · SOXL', before: '1,000만', after: '163만', sub: '반만 담았으면 480만'}
+- {p: P10, name: P04, photo: coaster_pov, label: '(서학개미 11월 순매수 68%)', top: 'SOXL 지금 사면', bottom: '이렇게 된다'}
+- {p: P05, photo: stock_monitor, line1: 'SOXL 16년 백테스트', line2: '몰빵 vs 반만 담기', line3: '결과는…', sticker: '실제 데이터', chart: {series: soxl, start: '2010-03-11', end: '2026-11-17'}}
+- {p: P06, photo: coaster_pov, top: 'SOXL 몰빵하면', bottom: '이렇게 된다', sticker: '경고!'}
+- {p: P07, photo: stock_monitor, label: '반도체 -12% 빠진 날 SOXL', top: '하루 만에', bottom: '-39%', red: true}
+- {p: P08, left: coaster_pov, right: krw_10000, text_l: '몰빵', text_r: '반만', name_l: '최악 -90%', name_r: '최악 -62%', bottom: '16년 뒤 누가 이겼을까?'}
+- {p: P09, photo: stock_monitor, person: {file: worker_stressed_cut, h: 900, side: right, dy: 60}, bubble: "반도체 바닥인데\n3배 몰빵 가즈아??", bottom: '이렇게만 사면 산다'}
+- {p: P10, photo: coaster_track, label: '(SOXL · 반도체 3배)', top: '-90%까지 버틸 자신?', bottom: '반만 담아라'}

@@ -324,7 +324,7 @@ class Title(Scene):
         y = sp.get("y", 300)
         if sp.get("kicker"):
             o = G.appear(t, 0.1)
-            k = G.pill(sp["kicker"], "Bold", 32, (16, 20, 32), S.GOLD, pad=(26, 10))
+            k = G.pill(sp["kicker"], "Bold", 32, S.ON_ACCENT, S.GOLD, pad=(26, 10))
             G.blit(f, k, (S.W / 2, y + (1 - o) * 20), o, "mt")
             y += k.height + 40
         o = G.appear(t, 0.35, 0.6)
@@ -473,7 +473,7 @@ class Outro(Scene):
             G.blit(f, s, (S.W / 2, y), G.appear(t, 0.6), "mt")
             y += s.height + 60
         o = G.appear(t, self.line_start(sp.get("subscribe_on", len(self.narration))))
-        p = G.pill("구독  ·  좋아요  ·  알림 설정", "ExtraBold", 40, (16, 20, 32), S.GOLD, pad=(44, 18))
+        p = G.pill("구독  ·  좋아요  ·  알림 설정", "ExtraBold", 40, S.ON_ACCENT, S.GOLD, pad=(44, 18))
         G.blit(f, p, (S.W / 2, y + 20), o, "mt")
         if sp.get("signature"):
             so = G.appear(t, self.line_start(sp.get("signature_on", len(self.narration))), 0.5)
@@ -543,7 +543,7 @@ def _post_card(p, width):
         meta = G.text_img("u/●●●●●  ·  " + p.get("ago", "3시간 전") + "  ·  댓글 " + p.get("comments", ""),
                           "Medium", 22, S.MUTED)
         fl = p.get("flair")
-        pill = G.pill(fl, "ExtraBold", 22, (16, 20, 32), FLAIR.get(fl, S.GOLD), pad=(12, 4)) if fl else None
+        pill = G.pill(fl, "ExtraBold", 22, S.ON_ACCENT, FLAIR.get(fl, S.GOLD), pad=(12, 4)) if fl else None
         h = 22 + meta.height + 8 + (pill.height + 8 if pill else 0) + title.height + (en.height + 4 if en else 0) + 22
         h = max(h, 170)
         im = G.panel(width, h, (26, 30, 44), 22, outline=(60, 66, 90, 255), alpha=245)
@@ -843,7 +843,7 @@ class YearBars(Scene):
             o = G.appear(t, self.line_start(sp.get("mark_on", 1)))
             cx = x0 + slot * (idx + 0.5)
             v = self.items[idx][1]
-            G.blit(f, G.pill(lab, "Bold", 26, (16, 20, 32), S.GOLD, pad=(14, 6)),
+            G.blit(f, G.pill(lab, "Bold", 26, S.ON_ACCENT, S.GOLD, pad=(14, 6)),
                    (cx, base - min(abs(v), vmax) / vmax * hmax - sp.get("val_size", 26) - 40) if v >= 0 else (cx, base - 50), o, "mb")
         G.blit(f, G.text_img(sp.get("source", "자료: S&P500 지수(배당 제외) · 선거일 종가 → 1년 뒤"), "Regular", 20, S.MUTED),
                (x0 + w, (label_y or base + max([min(abs(v), vmax) / vmax * hmax for _, v in self.items if v < 0] or [0]) + (40 if any(v < 0 for _, v in self.items) else 0)) + 60), 1, "rt")
@@ -868,15 +868,15 @@ def chrome(f, scene, t_global, total, channel):
     lg = _logo(channel.get("name", "채널명"))
     G.blit(f, lg, (34, 26), 0.95)
     if channel.get("_series_tag") and scene.spec["type"] not in ("chart", "bars", "yearbars", "versus"):  # 로고 옆 주제 태그 (상단 제목 있는 장면 제외)
-        G.blit(f, G.pill(channel["_series_tag"], "SemiBold", 28, S.FG, (40, 46, 62), pad=(20, 8)),
+        G.blit(f, G.pill(channel["_series_tag"], "SemiBold", 28, *((S.GREEN08, S.WHITE08) if S.THEME == "08" else (S.FG, (40, 46, 62))), pad=(20, 8)),
                (34 + lg.width + 18, 26 + lg.height / 2 - 20), 0.85, "lt")
     ch = scene.spec.get("chapter")
     if ch:
-        G.blit(f, G.pill(ch, "Bold", 26, S.FG, S.PANEL, pad=(22, 9)), (S.W - S.SAFE_X + 40, 44), 0.95, "rt")
+        G.blit(f, G.pill(ch, "Bold", 26, S.FG, S.GREEN08 if S.THEME == "08" else S.PANEL, pad=(22, 9)), (S.W - S.SAFE_X + 40, 44), 0.95, "rt")
     if channel.get("disclaimer_corner"):
         G.blit(f, G.text_img(channel["disclaimer_corner"], "Regular", 20, S.MUTED), (S.W - S.SAFE_X + 40, 96), 0.7, "rt")
     p = t_global / max(total, 1e-6)
-    bar = Image.new("RGBA", (max(1, int(S.W * p)), 6), S.GOLD + (230,))
+    bar = Image.new("RGBA", (max(1, int(S.W * p)), 6), (S.RED08 if S.THEME == "08" else S.GOLD) + (230,))
     G.blit(f, bar, (0, S.H - 6))
 
 
@@ -916,10 +916,18 @@ def _sub_img(text):
         d = ImageDraw.Draw(tx)
         x = 2
         for t_, c in segs:
+            if S.THEME == "08" and c != S.FG:   # 08: 핵심 단어 = 딥레드 형광펜 상자 + 흰 글자
+                wd = fnt.getlength(t_)
+                d.rounded_rectangle((x - 6, 4, x + wd + 6, asc + desc), radius=8, fill=S.RED08 + (255,))
+                c = S.WHITE08
             d.text((x, 2), t_, font=fnt, fill=c)
             x += fnt.getlength(t_)
         pad = (34, 14)
-        bg = G.panel(tx.width + pad[0] * 2, tx.height + pad[1] * 2, (6, 8, 16), 16, alpha=205)
+        if S.THEME == "08":   # 진초록 상자 + 아래 딥레드 선
+            bg = G.panel(tx.width + pad[0] * 2, tx.height + pad[1] * 2, S.GREEN08, 14, alpha=236)
+            ImageDraw.Draw(bg).rectangle((14, bg.height - 6, bg.width - 14, bg.height), fill=S.RED08 + (255,))
+        else:
+            bg = G.panel(tx.width + pad[0] * 2, tx.height + pad[1] * 2, (6, 8, 16), 16, alpha=205)
         bg.alpha_composite(tx, pad)
         _subs[text] = bg
     return _subs[text]

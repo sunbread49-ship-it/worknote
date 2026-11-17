@@ -392,7 +392,7 @@ def series(name: str, start=None, end=None) -> pd.Series:
         s = _cycle_strategy(name)
     elif name in ("tqqq", "sqqq", "qqq", "ndx", "spx", "nvda", "msft", "aapl", "amd", "kospi",
                   "smh", "soxx", "intc", "mu", "tsm", "skhynix", "samsung",
-                  "mcd", "hpq", "sbux", "dis", "ba") + KR_NAVER:
+                  "mcd", "hpq", "sbux", "dis", "ba", "soxl", "soxs") + KR_NAVER:
         s = _daily(name)
     elif name == "sim3x_ndx":
         s = _sim3x()
@@ -405,7 +405,7 @@ def series(name: str, start=None, end=None) -> pd.Series:
         held &= r.index >= pd.Timestamp("1950-11-01")
         s = (1 + r.where(held, 0)).cumprod()
         s = s / s.loc[:"1950-10-31"].iloc[-1] if name == "halloween_spx" else s / s.loc[:"1985-10-31"].iloc[-1]
-    elif name.endswith("_drawdown") and name[:-9] in ("tqqq", "sqqq", "qqq", "ndx", "sim3x_ndx", "kospi", "spx"):
+    elif name.endswith("_drawdown") and name[:-9] in ("tqqq", "sqqq", "qqq", "ndx", "sim3x_ndx", "kospi", "spx", "soxl", "soxx"):
         p = series(name[:-9])
         s = (p / p.cummax() - 1) * 100
     else:

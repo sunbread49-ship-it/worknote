@@ -206,10 +206,14 @@ def sub_frames(cues):
 _subc = {}
 
 
+THEME08 = __import__("os").environ.get("CH_THEME") == "08"   # 주식 채널 쇼츠: 색 조합 08 (2026-11-17~)
+
+
 def subtitle(f, text, dy=0):
-    """중하단 큰 멘트 (상자 없음 · 흰 글씨 + 두꺼운 검은 테두리 + 그림자)"""
+    """중하단 큰 멘트 (상자 없음 · 흰 글씨 + 두꺼운 검은 테두리 + 그림자) · 08: 테두리 진초록"""
     if text not in _subc:
-        tx = T(text, SUB_SIZE, (255, 255, 255), "Black", stroke=10, stroke_fill=(0, 0, 0))
+        tx = T(text, SUB_SIZE, (251, 251, 249) if THEME08 else (255, 255, 255), "Black", stroke=10,
+               stroke_fill=(1, 46, 30) if THEME08 else (0, 0, 0))
         if tx.width > W - 60:
             tx = tx.resize((W - 60, int(tx.height * (W - 60) / tx.width)), Image.LANCZOS)
         _subc[text] = tx
@@ -223,7 +227,7 @@ _ban = {}
 def banner_img(lines):
     key = tuple(lines)
     if key not in _ban:
-        b = Image.new("RGBA", (W, BANNER_H), (0, 0, 0, 255))
+        b = Image.new("RGBA", (W, BANNER_H), (1, 66, 43, 255) if THEME08 else (0, 0, 0, 255))
         l1 = T(lines[0], 78, (255, 255, 255), "Black")
         if l1.width > W - 60:
             l1 = T(lines[0], int(78 * (W - 60) / l1.width), (255, 255, 255), "Black")
@@ -231,9 +235,11 @@ def banner_img(lines):
         l2 = T(lines[1], 86, (255, 255, 255), "Black")
         if l2.width > W - 110:
             l2 = T(lines[1], int(86 * (W - 110) / l2.width), (255, 255, 255), "Black")
-        box = Image.new("RGBA", (l2.width + 44, l2.height + 22), (226, 32, 38, 255))
+        box = Image.new("RGBA", (l2.width + 44, l2.height + 22), (163, 22, 26, 255) if THEME08 else (226, 32, 38, 255))
         box.alpha_composite(l2, (22, 11))
         G.blit(b, box, (W / 2, 52 + l1.height + 22), 1, "mt")
+        if THEME08:   # 띠 아래 흰 선
+            ImageDraw.Draw(b).rectangle((0, BANNER_H - 8, W, BANNER_H), fill=(251, 251, 249, 255))
         _ban[key] = b
     return _ban[key]
 

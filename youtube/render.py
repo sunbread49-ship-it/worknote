@@ -22,6 +22,13 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
+for _a in sys.argv[1:]:   # 에피소드 YAML의 theme: 08 → 엔진 import 전에 색 토큰 결정
+    _p = Path(_a) / "episode.yaml" if Path(_a).is_dir() else Path(_a)
+    if _p.suffix == ".yaml" and _p.exists():
+        import os as _os, re as _re
+        _m = _re.search(r"^theme:\s*'?(\w+)", _p.read_text(), _re.M)
+        if _m:
+            _os.environ.setdefault("CH_THEME", _m.group(1))
 from engine import bgm, charts, sfx, timeline  # noqa: E402
 from engine import draw as G  # noqa: E402
 from engine import scenes as SC  # noqa: E402

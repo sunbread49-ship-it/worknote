@@ -22,6 +22,16 @@ UP = (240, 84, 84)
 DOWN = (74, 144, 255)
 NEUTRAL = (150, 160, 182)
 
+ON_ACCENT = (16, 20, 32)   # 강조색 알약 위 글자색
+THEME = __import__("os").environ.get("CH_THEME", "")
+if THEME == "08":   # 2026-11-16 사용자 확정: 08 (흰 #FBFBF9 · 진초록 #01422B · 딥레드 #A3161A) — 요소에만, 바탕은 무채색 어둠
+    WHITE08, GREEN08, RED08 = (251, 251, 249), (1, 66, 43), (163, 22, 26)
+    GREEN_L, RED_L = (72, 176, 120), (232, 66, 62)   # 어두운 화면 위 글자 · 선용 밝은 톤
+    BG_TOP, BG_BOT, PANEL = (22, 24, 24), (8, 9, 9), (32, 36, 35)
+    FG, MUTED, FAINT, NEUTRAL = WHITE08, (150, 160, 156), (58, 64, 62), (160, 168, 165)
+    GOLD, UP, DOWN = RED_L, GREEN_L, RED_L   # 빨강 = 손해 · 경고 · 핵심 / 초록 = 기준 · 정답 (사용자 11.16)
+    ON_ACCENT = WHITE08
+
 SAFE_X = 120          # 좌우 여백
 SUB_Y = 1032          # 자막 기준선(하단)
 

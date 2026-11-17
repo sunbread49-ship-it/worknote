@@ -26,6 +26,8 @@ from . import style as S
 
 Y = (255, 204, 40)          # 강조 노랑
 INK = (18, 20, 28)
+if S.THEME == "08":   # 08: 노랑 강조 → 딥레드(밝은 톤)
+    Y = S.RED_L
 TONES = {"navy": (22, 34, 64), "ink": (20, 22, 28), "rust": (176, 84, 36), "olive": (60, 64, 40), "plum": (52, 30, 60)}
 
 
@@ -378,7 +380,7 @@ class HBars(Editorial):
             k = G.ease_out((t - t0) / 0.7)
             hl = r.get("hl")
             c = _col(r.get("color"), self.acc if hl else (self.off if self.paper else (200, 204, 214)))
-            lab = T(r["label"], 36, self.acc if hl else (self.dim if self.paper else (230, 200, 120)), "ExtraBold")
+            lab = T(r["label"], 36, self.acc if hl else (self.dim if self.paper else ((225, 228, 226) if S.THEME == "08" else (230, 200, 120))), "ExtraBold")
             G.blit(f, lab, (x0, y), min(1, k * 2) if k > 0 else 0)
             y += lab.height + 10
             bw = max(8, int(wmax * abs(r["value"]) / vmax * k))
@@ -499,6 +501,8 @@ PAPER = (243, 235, 218)
 NAVY = (30, 42, 92)
 CORAL = (236, 96, 82)
 GOLD = (240, 176, 40)
+if S.THEME == "08":   # 08: 종이 = 흰 #FBFBF9 · 잉크 = 진초록 · 강조 = 딥레드
+    PAPER, NAVY, CORAL = S.WHITE08, S.GREEN08, S.RED08
 RISO = {"navy": NAVY, "coral": CORAL, "gold": GOLD, "teal": (22, 140, 140), "ink": (30, 30, 36)}
 
 
