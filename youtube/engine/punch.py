@@ -131,7 +131,7 @@ def compose(w, h, sp, k=1.0, k_sub=1.0, k_m=1.0, vertical=False):
     lab = None
     if sp.get("label"):
         if ph:
-            lab = G.pill(sp["label"], "Black", 60 if not vertical else 68, (20, 22, 30), (236, 200, 120), pad=(34, 14))
+            lab = G.pill(sp["label"], "Black", 60 if not vertical else 68, *(((251, 251, 249), (1, 66, 43)) if S.THEME == "08" else ((20, 22, 30), (236, 200, 120))), pad=(34, 14))
         else:
             lab = G.pill(sp["label"], "Black", 64 if not vertical else 72,  # 쇼츠 썸네일로 쓰일 때 읽히도록 크게
                          (20, 24, 40) if not dark else (255, 255, 255), (255, 255, 255) if not dark else (20, 24, 40),

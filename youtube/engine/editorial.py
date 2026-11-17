@@ -1075,7 +1075,9 @@ class Duel(Editorial):
             if k <= 0:
                 continue
             col = _rc(c.get("color"), CORAL if j else NAVY)
-            if c.get("color") in ("up",):
+            if S.THEME == "08" and c.get("color") in ("up", "down"):   # 08: 초록 = 기준 · 정답 / 빨강 = 손해
+                col = S.GREEN08 if c.get("color") == "up" else S.RED08
+            elif c.get("color") in ("up",):
                 col = CORAL
             elif c.get("color") in ("down",):
                 col = (60, 110, 200)
@@ -1086,7 +1088,7 @@ class Duel(Editorial):
             im = Image.new("RGBA", ((W2 + 24) * kk, (H2 + 24) * kk), (0, 0, 0, 0))
             d = ImageDraw.Draw(im)
             d.rectangle((20 * kk, 22 * kk, (W2 + 20) * kk, (H2 + 22) * kk), fill=(30, 30, 40, 70))
-            d.rectangle((0, 0, W2 * kk, H2 * kk), fill=(252, 248, 238, 255), outline=col + (255,), width=6 * kk)
+            d.rectangle((0, 0, W2 * kk, H2 * kk), fill=(S.WHITE08 if S.THEME == "08" else (252, 248, 238)) + (255,), outline=col + (255,), width=6 * kk)
             d.rectangle((0, 0, W2 * kk, 70 * kk), fill=col + (255,))
             im = im.resize((W2 + 24, H2 + 24), Image.LANCZOS)
             tt = T(c.get("title", ""), 40, PAPER, "ExtraBold")
@@ -1484,7 +1486,9 @@ class Duel(Editorial):
             if k <= 0:
                 continue
             col = _rc(c.get("color"), CORAL if j else NAVY)
-            if c.get("color") in ("up",):
+            if S.THEME == "08" and c.get("color") in ("up", "down"):   # 08: 초록 = 기준 · 정답 / 빨강 = 손해
+                col = S.GREEN08 if c.get("color") == "up" else S.RED08
+            elif c.get("color") in ("up",):
                 col = CORAL
             elif c.get("color") in ("down",):
                 col = (60, 110, 200)
@@ -1495,7 +1499,7 @@ class Duel(Editorial):
             im = Image.new("RGBA", ((W2 + 24) * kk, (H2 + 24) * kk), (0, 0, 0, 0))
             d = ImageDraw.Draw(im)
             d.rectangle((20 * kk, 22 * kk, (W2 + 20) * kk, (H2 + 22) * kk), fill=(30, 30, 40, 70))
-            d.rectangle((0, 0, W2 * kk, H2 * kk), fill=(252, 248, 238, 255), outline=col + (255,), width=6 * kk)
+            d.rectangle((0, 0, W2 * kk, H2 * kk), fill=(S.WHITE08 if S.THEME == "08" else (252, 248, 238)) + (255,), outline=col + (255,), width=6 * kk)
             d.rectangle((0, 0, W2 * kk, 70 * kk), fill=col + (255,))
             im = im.resize((W2 + 24, H2 + 24), Image.LANCZOS)
             tt = T(c.get("title", ""), 40, PAPER, "ExtraBold")
