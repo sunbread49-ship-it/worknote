@@ -249,9 +249,9 @@ scenes:
   row_gap: 22
   vmax: 160
   rows:
-  - {label: '검은사막 모바일', value: 148, text: '+148%', color: up, on: 1}
-  - {label: '쿠키런: 킹덤', value: 83, text: '+83%', color: up, on: 1, offset: 0.25}
-  - {label: '붉은사막', value: 78, text: '+78%', color: up, hl: true, on: 1, offset: 0.5}
+  - {label: '검은사막 모바일', value: 148, text: '+148%', color: up, on: 2}
+  - {label: '쿠키런: 킹덤', value: 83, text: '+83%', color: up, on: 2, offset: 0.25}
+  - {label: '붉은사막', value: 78, text: '+78%', color: up, hl: true, on: 2, offset: 0.5}
   - {label: '아이온2', value: 38, text: '+38%', color: up, on: 2}
   - {label: '미르4 글로벌', value: 37, text: '+37%', color: up, on: 2, offset: 0.25}
   note: '그 밖에 오딘 +29% · 인조이 +5% · 제2의 나라 +4% / 마이너스: 블소2 -19% · 리니지W -25% · 우마무스메 -31%'
