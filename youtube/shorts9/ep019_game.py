@@ -115,11 +115,11 @@ def b2(f, t, sc):
 
 def b3(f, t, sc):
     vbg(f, "money_count_v", t, 0.7)
-    big(f, "대작 11개 · 1,000만 원", 120, 76)
-    big(f, "출시 전날 사면", 260, 96, o=pop(t, 0.1))
-    big(f, "1년 뒤 -29%", 380, 130, col=RD, o=pop(t, 0.4))
-    big(f, "6달 전 사서 2주 전 팔면", 560, 80, o=pop(t, 1.2))
-    big(f, "+29%", 680, 150, col=GRN, o=pop(t, 1.6))
+    big(f, "대작 11개 · 1,000만 원", 60, 70)
+    big(f, "출시 전날 사면", 160, 84, o=pop(t, 0.1))
+    big(f, "1년 뒤 -29%", 260, 120, col=RD, o=pop(t, 0.4))
+    big(f, "6달 전 사서 2주 전 팔면", 420, 74, o=pop(t, 1.2))
+    big(f, "+29%", 510, 130, col=GRN, o=pop(t, 1.6))
     K.credit(f, "영상: Hassas_Arts (Pixabay) · 중간값")
 
 
