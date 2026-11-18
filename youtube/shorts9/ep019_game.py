@@ -50,10 +50,10 @@ def cta(f, t, sc, line="풀버전은 오늘 오후 4시"):
 
 # ── 쇼츠 1 (12:00): 600만 장인데 -60% ─────────────────────
 def a1(f, t, sc):
-    vbg(f, "gamepad_v", t, 0.5)
-    big(f, "600만 장 팔린 게임\n펄어비스 주가는", 170, 100)
+    vbg(f, "crimson_trailer_v", t, 0.45)
+    big(f, "600만 장 팔린 붉은사막\n펄어비스 주가는", 170, 100)
     big(f, "-60%", 440, 280, col=RD, o=pop(t, 0.1, 0.25))
-    K.credit(f, "영상: zakariacomputer222 (Pixabay)")
+    K.credit(f, "게임 영상: 붉은사막 © Pearl Abyss (Steam 공식 트레일러)")
 
 
 def a2(f, t, sc):
@@ -102,10 +102,10 @@ S1 = [
 
 # ── 쇼츠 2 (21:00): 6달 전에 사서 2주 전에 판다 ────────────────
 def b1(f, t, sc):
-    vbg(f, "gaming_setup_v", t, 0.6)
+    vbg(f, "crimson_trailer_v", t, 0.55)
     big(f, "게임주 꼭대기는", 200, 100)
     big(f, "출시 전", 360, 190, col=RD, o=pop(t, 0.2))
-    K.credit(f, "영상: Graphitage1 (Pixabay)")
+    K.credit(f, "게임 영상: 붉은사막 © Pearl Abyss (Steam 공식 트레일러)")
 
 
 def b2(f, t, sc):

@@ -58,7 +58,7 @@ youtube:
     일별 종가: 네이버 차트 · 붉은사막 판매량 · 리뷰 · 차기작 일정: MTN (2026.3.20) · 헤럴드경제 (2026.5.22 · 6.14) · 게임대상: 2026.11.18 보도
 
 
-    [3D] 주가 롤러코스터: Blender로 직접 제작 (실제 주가) · [영상] Pixabay — zakariacomputer222 · Graphitage1 · SlimeyFox · MrWashingt0n · Dimitri_K · Hassas_Arts · kostkarubika005 / [사진] Wikimedia Commons — nrkbeta (CC BY-SA 2.0)
+    [게임 화면 · 영상] 붉은사막 © Pearl Abyss (Steam 공식 스크린샷 · 트레일러, 보도 · 비평 목적 인용) · 로고: Pearl Abyss (상표는 해당 회사를 가리키는 용도로만 사용, 제휴 · 추천 아님) · [3D] 주가 롤러코스터: Blender로 직접 제작 (실제 주가) · [영상] Pixabay — zakariacomputer222 · Graphitage1 · SlimeyFox · MrWashingt0n · Dimitri_K · Hassas_Arts · kostkarubika005 / [사진] Wikimedia Commons — nrkbeta (CC BY-SA 2.0)
 
     '
   tags: [펄어비스, 붉은사막, 게임주, 엔씨소프트, 크래프톤, 넷마블, 카카오게임즈, 데브시스터즈, 위메이드, 주식타이밍]
@@ -74,8 +74,9 @@ scenes:
 - type: punch
   chapter: 인트로
   tone: down
-  video: {file: gamepad_v, dark: 0.5, blur: 1}
-  credit: '영상: zakariacomputer222 (Pixabay)'
+  video: {file: crimson_trailer_v, dark: 0.45, blur: 0}
+  credit: '게임 영상: 붉은사막 © Pearl Abyss (Steam 공식 트레일러)'
+  logo: logo_pearlabyss
   label: 600만 장 팔린 펄어비스 붉은사막 · 출시 직후 꼭대기에서
   big: '-60%'
   sub: 4월 1일 7만 2천 원 → 11월 18일 2만 8,600원
@@ -86,7 +87,8 @@ scenes:
   narration: ['600만 장이 팔리고, 게임대상 8관왕까지 휩쓴 붉은사막. | 그런데 펄어비스 주가는 !!-60%!!예요.']
 - type: kinetic
   chapter: 인트로
-  bg: {kind: video, file: gaming_setup_v, dark: 0.62, blur: 5}
+  bg: {kind: photo, file: crimson_18, dark: 0.55}
+  credit: '게임 화면: 붉은사막 © Pearl Abyss (Steam 공식 스크린샷)'
   items:
   - {text: "게임은 대박인데\n주가는 왜?", on: 1, size: 150, highlight: '왜?', hl_color: down}
   narration: ['게임은 대박인데, 주가는 왜 이럴까요?']
@@ -133,7 +135,7 @@ scenes:
   chapter: 근거 · 붉은사막
   title: 붉은사막 기사 제목
   highlight: 붉은사막
-  bg: {kind: video, file: gaming_setup_v, dark: 0.7, blur: 8}
+  bg: {kind: video, file: crimson_trailer_v, dark: 0.7, blur: 6}
   items:
   - {outlet: MTN, date: 2026.3.20, headline: "7년 기다렸는데 폭락…펄어비스 '붉은사막' 어쩌나", on: 1}
   - {outlet: 헤럴드경제, date: 2026.6.14, headline: '“600만장이나 팔아 치웠는데” 대박난 줄 알았더니…‘14만→ 4만원’ 대폭락 어쩌나', on: 2, hl: true}
@@ -305,10 +307,10 @@ scenes:
   narration: ['여러분은 다음에 어떤 게임 출시를 기다리고 계세요? 그 회사 주식도 들고 계신가요?', '댓글로 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
 thumb_pick: P01   # 2026-11-18 사용자: 1번 + 스티커 '게임주 어떻게 사면 될까?'
 thumbs10:
-- {p: P01, photo: game_pad, top: '600만 장 팔렸는데', bottom: '펄어비스 -60%', hl: '-60%', sticker: '게임주 어떻게 사면 될까?'}
-- {p: P02, photo: game_pad, theme: red, top: '펄어비스 붉은사막', num: '-60%', unit: '왜?', bottom: '게임주는 이렇게 사야 한다'}
+- {p: P01, photo: crimson_18, top: '600만 장 팔렸는데', bottom: '펄어비스 -60%', hl: '-60%', sticker: '게임주 어떻게 사면 될까?'}
+- {p: P02, photo: crimson_09, theme: red, top: '펄어비스 붉은사막', num: '-60%', unit: '왜?', bottom: '게임주는 이렇게 사야 한다'}
 - {p: P03, photo: gaming_desk, theme: red, label: '펄어비스 · 출시 6개월 전 1,000만 원', before: '1,000만', after: '1,890만', sub: '출시 직전에 판 사람'}
-- {p: P10, name: P04, photo: game_pad, label: '(대작 게임 11개 · 출시 전날 매수)', top: '1년 뒤 9개가', bottom: '마이너스'}
+- {p: P10, name: P04, photo: crimson_00, label: '(대작 게임 11개 · 출시 전날 매수)', top: '1년 뒤 9개가', bottom: '마이너스'}
 - {p: P05, photo: gaming_desk, line1: '펄어비스 붉은사막', line2: '출시 날 샀더니', line3: '결과는…', sticker: '실제 데이터', chart: {series: pearlabyss, start: '2025-09-19', end: '2026-11-18'}}
 - {p: P06, photo: game_pad, top: '게임주 출시 날 사면', bottom: '이렇게 된다', sticker: '경고!'}
 - {p: P07, photo: gaming_desk, label: '펄어비스 붉은사막 리뷰 공개 날', top: '하루 만에', bottom: '-30%', red: true}
