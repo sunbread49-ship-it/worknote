@@ -124,11 +124,11 @@ def b2(f, t, sc):
     im = Image.fromarray(fr[min(int(t * 30), len(fr) - 1)]).convert("RGBA")
     fr2 = Image.new("RGBA", (972, 552), WH + (255,))
     fr2.alpha_composite(im, (6, 6))
-    f.alpha_composite(Image.new("RGBA", (972, 552), (1, 66, 43, 255)), (66, 116))
-    f.alpha_composite(fr2, (54, 104))
-    G.blit(f, G.pill("붉은사막", "Black", 46, WH, (1, 66, 43), pad=(22, 10), radius=8), (84, 130), 1, "lt")
-    G.blit(f, G.pill("출시 직전 = 꼭대기", "Black", 56, WH, (1, 66, 43), pad=(24, 12), radius=8), (CXS, 690), pop(t, 0.4), "mt")
-    G.blit(f, G.pill("리뷰 날 하루 -30%", "Black", 56, WH, (163, 22, 26), pad=(24, 12), radius=8), (CXS, 800), pop(t, 1.6), "mt")
+    f.alpha_composite(Image.new("RGBA", (972, 552), (1, 66, 43, 255)), (66, 52))
+    f.alpha_composite(fr2, (54, 40))
+    G.blit(f, G.pill("붉은사막", "Black", 46, WH, (1, 66, 43), pad=(22, 10), radius=8), (84, 66), 1, "lt")
+    G.blit(f, G.pill("출시 직전 = 꼭대기", "Black", 56, WH, (1, 66, 43), pad=(24, 12), radius=8), (CXS, 330), pop(t, 0.4), "mt")
+    G.blit(f, G.pill("리뷰 날 하루 -30%", "Black", 56, WH, (163, 22, 26), pad=(24, 12), radius=8), (CXS, 440), pop(t, 1.6), "mt")
     K.credit(f, "게임 영상: 붉은사막 © Pearl Abyss (Steam 공식 트레일러)")
 
 
