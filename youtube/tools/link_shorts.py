@@ -40,7 +40,7 @@ def main(dry=False):
     for lid, sids in MAP.items():
         lt = meta[lid]["snippet"]["title"]
         dur = meta[lid]["contentDetails"]["duration"].replace("PT", "").split("M")[0]
-        line = f"{MARK}({dur}분): {lt}\nhttps://youtu.be/{lid}"
+        line = f"{MARK}({dur}분): {lt}\nhttps://youtu.be/{lid}" if dur.isdigit() else f"{MARK}: {lt}\nhttps://youtu.be/{lid}"   # 업로드 직후엔 길이가 'P0D' (2026-11-18)
         items = U.call("GET", U.API + "/youtube/v3/videos?part=snippet,status&id=" + ",".join(sids), t)["items"]
         for it in items:
             sid, sn, st = it["id"], it["snippet"], it["status"]["privacyStatus"]
