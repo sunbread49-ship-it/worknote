@@ -2925,12 +2925,12 @@ class Showcase(Editorial):
         bd, _ = backdrop({"kind": "grain", "tone": "ink"})
         f.paste(bd, (0, 0))
         self.paper = False
-        pw, ph = sp.get("w", 1300), sp.get("h", 731)
-        x0, y0 = int((S.W - pw) / 2) - sp.get("shift", 140), sp.get("y", 120)
+        pw, ph = sp.get("w", 1180), sp.get("h", 664)
+        x0, y0 = int((S.W - pw) / 2) - sp.get("shift", 230), sp.get("y", 130)
         now = getattr(self, "_now", t)
         if sp.get("media"):
             from . import bgvideo
-            fr = bgvideo.at({**sp["media"], "dark": sp["media"].get("dark", 0.0)}, now).convert("RGB")
+            fr = bgvideo.at({**sp["media"], "dark": sp["media"].get("dark", 0.0), "blur": sp["media"].get("blur", 0), "sat": sp["media"].get("sat", 1.0)}, now).convert("RGB")
         else:
             names = sp["photos"]
             per = sp.get("per", 2.6)
@@ -2963,7 +2963,7 @@ class Showcase(Editorial):
             if o <= 0:
                 continue
             col = red if it.get("color") == "down" else green
-            p = G.pill(it["text"], "Black", it.get("size", 40), white, col, pad=(22, 12), radius=8)
+            p = G.pill(it["text"], "Black", it.get("size", 42), white, col, pad=(22, 12), radius=8)
             G.blit(f, p, (kx + (1 - G.ease_out(o)) * 40, ky), o, "lt")
             ky += p.height + 18
         self.finish(f, t)

@@ -198,9 +198,9 @@ scenes:
   gap: 34
   width: 1500
   bullets:
-  - {text: '기대가 이미 주가에 · 6개월 만에 두 배', highlight: 이미, hl_color: down, on: 2}
-  - {text: '리뷰 점수 · 기대보다 낮았다', on: 3}
-  - {text: '다음 작품은 2028년 · 그 사이가 빈다', highlight: 2028년, hl_color: down, on: 4}
+  - {text: '기대가 이미 주가에 · 6개월 만에 두 배', highlight: 이미, hl_color: down, on: 1}
+  - {text: '리뷰 점수 · 기대보다 낮았다', on: 2}
+  - {text: '다음 작품은 2028년 · 그 사이가 빈다', highlight: 2028년, hl_color: down, on: 2}
   credit: '보도 종합 (MTN · 헤럴드경제) · 다음 작품 일정은 회사 발표'
   narration: ['증권가가 꼽은 이유는 세 가지. | 기대가 이미 주가에 다 들어가 있었고,', '리뷰는 기대보다 낮았고, | 다음 작품은 2028년이라 그 사이가 비어 보였죠.']
 # ── 대작 11개의 결과 ─────────────────────────────────────
