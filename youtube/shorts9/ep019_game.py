@@ -110,7 +110,7 @@ def b1(f, t, sc):
 
 def b2(f, t, sc):
     f.alpha_composite(Image.new("RGBA", (W, H), (10, 11, 11, 255)))
-    clip(f, "towers_ep019.mp4", t, 40, speed=1.7)
+    clip(f, "track_ep019.mp4", t, 40, speed=1.4)
 
 
 def b3(f, t, sc):
@@ -141,7 +141,7 @@ S2 = [
     {"draw": b1, "nohead": True, "min": 2.0, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.2, "mx:2003", 0.7)],
      "narr": ["게임주 꼭대기는, 출시 전이었어요."]},
     {"draw": b2, "nohead": True, "flash": True, "min": 3.6, "gap": 0.1, "tail": 0.2, "sfx_t": [(0.2, "tick", 0.4), (2.6, "reveal", 0.5)],
-     "narr": ["펄어비스를 6달 전에 사서 출시 직전에 판 사람은 1,890만 원. 출시 날 산 사람은 689만 원이에요."]},
+     "narr": ["펄어비스 주가를 레일로 타 보면, 출시 6달 전부터 쭉 오르다가 출시 직전이 꼭대기. 그다음은 낭떠러지예요."]},
     {"draw": b3, "nohead": True, "flash": True, "min": 3.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.4, "mx:2182", 0.5), (1.6, "ding", 0.5)],
      "narr": ["대작 11개로 봐도, 출시 전날 사면 1년 뒤 마이너스 29%. 6달 전에 사서 2주 전에 팔면 플러스 29%."]},
     {"draw": b4, "nohead": True, "flash": True, "min": 2.2, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.3, "sparkle", 0.5)],

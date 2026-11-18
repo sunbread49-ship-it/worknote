@@ -58,7 +58,7 @@ youtube:
     일별 종가: 네이버 차트 · 붉은사막 판매량 · 리뷰 · 차기작 일정: MTN (2026.3.20) · 헤럴드경제 (2026.5.22 · 6.14) · 게임대상: 2026.11.18 보도
 
 
-    [3D] 동전 탑: Blender로 직접 제작 (실제 데이터) · [영상] Pixabay — zakariacomputer222 · Graphitage1 · SlimeyFox · MrWashingt0n · Dimitri_K · Hassas_Arts · kostkarubika005 / [사진] Wikimedia Commons — nrkbeta (CC BY-SA 2.0)
+    [3D] 주가 롤러코스터: Blender로 직접 제작 (실제 주가) · [영상] Pixabay — zakariacomputer222 · Graphitage1 · SlimeyFox · MrWashingt0n · Dimitri_K · Hassas_Arts · kostkarubika005 / [사진] Wikimedia Commons — nrkbeta (CC BY-SA 2.0)
 
     '
   tags: [펄어비스, 붉은사막, 게임주, 엔씨소프트, 크래프톤, 넷마블, 카카오게임즈, 데브시스터즈, 위메이드, 주식타이밍]
@@ -189,8 +189,8 @@ scenes:
   title: 대작 게임 · 출시 전날 샀다면 ②
   highlight: 출시 전날
   title_y: 90
-  bar_h: 26
-  row_gap: 10
+  bar_h: 34
+  row_gap: 26
   vmax: 360
   rows:
   - {label: '검은사막 모바일 (펄어비스 · 2018.2)', value: -27, text: '-27%', color: down, on: 1}
@@ -226,11 +226,11 @@ scenes:
   narration: ['예외 두 개는 출시 직후부터 달랐어요. 쿠키런 킹덤은 2주 만에 +121%,', '미르4 글로벌은 2주 만에 +65%.', '둘 다, 출시 전 기대보다 훨씬 크게 터진 게임이었죠. | 대부분의 대작은, 기대가 이미 주가에 다 들어가 있었고요.']
 - type: media
   chapter: 대작 11개의 결과
-  file: towers_ep019.mp4
+  file: track_ep019.mp4
   fit: cover
   hold: true
-  speed: 0.6
-  narration: ['붉은사막으로 다시 볼게요. 동전 하나가 100만 원이에요.', '초록은 출시 6개월 전에 사서 출시 직전에 판 사람, | 은색은 그냥 계속 들고 있던 사람, 빨강은 출시 날 산 사람이에요.', '지금 초록은 !!1,890만 원!!, 빨강은 689만 원이에요.']
+  speed: 0.75
+  narration: ['펄어비스 주가를 롤러코스터 레일로 만들어 직접 타 볼게요.', '출시 6개월 전, 3만 4,700원에서 출발해서 | 출시 직전 꼭대기까지 쭉 올라가요.', '그리고 리뷰가 공개된 날, 낭떠러지. | 잠깐 반등했다가, 지금까지 쭉 내리막이에요.']
 # ── 이렇게 사야 한다 ─────────────────────────────────────
 - type: hbars
   chapter: 이렇게 사야 한다
@@ -316,9 +316,9 @@ scenes:
   signature: 오늘도 감 말고, 숫자로 투자하세요.
   signature_on: 4
   narration: ['여러분은 다음에 어떤 게임 출시를 기다리고 계세요? 그 회사 주식도 들고 계신가요?', '댓글로 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
-thumb_pick: P02
+thumb_pick: P01   # 2026-11-18 사용자: 1번 + 스티커 '게임주 어떻게 사면 될까?'
 thumbs10:
-- {p: P01, photo: game_pad, top: '600만 장 팔렸는데', bottom: '펄어비스 -60%', hl: '-60%', sticker: 붉은사막}
+- {p: P01, photo: game_pad, top: '600만 장 팔렸는데', bottom: '펄어비스 -60%', hl: '-60%', sticker: '게임주 어떻게 사면 될까?'}
 - {p: P02, photo: game_pad, theme: red, top: '펄어비스 붉은사막', num: '-60%', unit: '왜?', bottom: '게임주는 이렇게 사야 한다'}
 - {p: P03, photo: gaming_desk, theme: red, label: '펄어비스 · 출시 6개월 전 1,000만 원', before: '1,000만', after: '1,890만', sub: '출시 직전에 판 사람'}
 - {p: P10, name: P04, photo: game_pad, label: '(대작 게임 11개 · 출시 전날 매수)', top: '1년 뒤 9개가', bottom: '마이너스'}
