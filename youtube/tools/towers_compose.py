@@ -50,7 +50,7 @@ for fi, fp in enumerate(frames):
     mk = mk.filter(ImageFilter.GaussianBlur(30))
     f.paste(sm, (int((W - sm.width) / 2), OY), mk)
     G.blit(f, G.pill(rows[min(round(pos), len(rows) - 1)]["date"].replace("-", "."), "Black", 44, WHITE, GREEN, pad=(24, 10), radius=10), (W / 2, 40), 1, "mt")
-    G.blit(f, T("1,000만 원씩 · 동전 1개 = 50만 원", 30, (210, 214, 212), "Bold"), (W / 2, 122), 1, "mt")
+    G.blit(f, T("" + D.get("note", "1,000만 원씩 · 동전 1개 = 50만 원") + "", 30, (210, 214, 212), "Bold"), (W / 2, 122), 1, "mt")
     for x, lab, val, c in zip(xs, labels, v, cols):
         G.blit(f, tag(lab, val, c), (W * x, 740), 1, "mt")
     if fi >= NF - hold and D.get("summary"):
