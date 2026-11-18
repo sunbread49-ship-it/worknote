@@ -2911,3 +2911,62 @@ class Clips(Editorial):
 
 
 TYPES.update({"clips": Clips})
+
+
+# ════════════════════════════════════════════════════════════════
+# 쇼케이스 (2026-11-18 사용자): 게임 화면 · 영상을 '배경'이 아니라 작게 줄인 '내용'으로 —
+# 가운데 액자(영상 또는 사진 넘김) + 왼쪽 위 핵심 키워드 태그 · 오른쪽에 쌓이는 키워드 박스. 귀는 내레이션, 눈은 화면.
+#   media: {kind: video, file: crimson_trailer_v} | photos: [crimson_00, crimson_09, ...] (사진은 per초마다 넘김 · 천천히 확대)
+#   tag: '붉은사막'  ·  keys: [{text, on, color: up|down}]  ·  logo: logo_crimson (액자 오른쪽 위)
+# ════════════════════════════════════════════════════════════════
+class Showcase(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        bd, _ = backdrop({"kind": "grain", "tone": "ink"})
+        f.paste(bd, (0, 0))
+        self.paper = False
+        pw, ph = sp.get("w", 1300), sp.get("h", 731)
+        x0, y0 = int((S.W - pw) / 2) - sp.get("shift", 140), sp.get("y", 120)
+        now = getattr(self, "_now", t)
+        if sp.get("media"):
+            from . import bgvideo
+            fr = bgvideo.at({**sp["media"], "dark": sp["media"].get("dark", 0.0)}, now).convert("RGB")
+        else:
+            names = sp["photos"]
+            per = sp.get("per", 2.6)
+            k = int(t / per) % len(names)
+            u = (t % per) / per
+            fr, cr = photo_backdrop({"file": names[k], "dark": 0.0, "gray": 0.0})
+            fr = fr.convert("RGB")
+            z = 1.0 + 0.06 * u
+            cw, ch = int(S.W / z), int(S.H / z)
+            fr = fr.crop(((S.W - cw) // 2, (S.H - ch) // 2, (S.W - cw) // 2 + cw, (S.H - ch) // 2 + ch))
+            if cr and not sp.get("credit"):
+                sp["credit"] = cr
+        fr = fr.resize((pw, ph), Image.LANCZOS).convert("RGBA")
+        green = getattr(S, "GREEN08", (1, 66, 43)); white = getattr(S, "WHITE08", (251, 251, 249)); red = getattr(S, "RED08", (163, 22, 26))
+        sh = Image.new("RGBA", (pw + 12, ph + 12), green + (255,))
+        f.alpha_composite(sh, (x0 + 14, y0 + 14))
+        fr2 = Image.new("RGBA", (pw + 12, ph + 12), white + (255,))
+        fr2.alpha_composite(fr, (6, 6))
+        f.alpha_composite(fr2, (x0, y0))
+        if sp.get("tag"):
+            G.blit(f, G.pill(sp["tag"], "Black", 44, white, green, pad=(24, 10), radius=8), (x0 + 30, y0 + 30), 1, "lt")
+        if sp.get("logo"):
+            lg = logo_chip(sp["logo"], 70) if sp.get("logo_plate", True) else None
+            if lg is not None:
+                G.blit(f, lg, (x0 + pw - 24, y0 + 30), 1, "rt")
+        kx = x0 + pw + 46
+        ky = y0 + 20
+        for it in sp.get("keys", []):
+            o = G.appear(t, self.line_start(it.get("on", 1)) + it.get("offset", 0), 0.3)
+            if o <= 0:
+                continue
+            col = red if it.get("color") == "down" else green
+            p = G.pill(it["text"], "Black", it.get("size", 40), white, col, pad=(22, 12), radius=8)
+            G.blit(f, p, (kx + (1 - G.ease_out(o)) * 40, ky), o, "lt")
+            ky += p.height + 18
+        self.finish(f, t)
+
+
+TYPES.update({"showcase": Showcase})

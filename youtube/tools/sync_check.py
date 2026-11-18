@@ -85,13 +85,17 @@ def fix(ep_dir, found):
     s = p.read_text(encoding="utf-8")
     blocks = s.split("\n- type: ")
     n = 0
+    done = set()   # 2026-11-18: 한 번 고친 줄은 다시 안 건드림 (비슷한 항목끼리 on이 뒤바뀌던 버그)
     for si, kind, txt, on, best, _ in found:
         b = blocks[si]
-        key = re.sub(r"\s.*", "", txt)[:8]
+        key = txt[:14]   # 첫 단어만 보면 '출시 6개월 전' · '출시 2주 전'처럼 같은 단어로 시작하는 항목을 혼동
         lines = b.split("\n")
         for i, ln in enumerate(lines):
+            if (si, i) in done:
+                continue
             if key in ln and re.search(r"'?on'?: %d\b" % on, ln):
                 lines[i] = re.sub(r"('?on'?): %d\b" % on, r"\g<1>: %d" % best, ln, count=1)
+                done.add((si, i))
                 n += 1
                 break
         blocks[si] = "\n".join(lines)

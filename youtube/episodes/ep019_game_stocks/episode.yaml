@@ -40,7 +40,9 @@ youtube:
 
     ✔ 예외: 쿠키런: 킹덤 · 미르4 글로벌
 
-    ✔ 게임주는 이렇게 사야 한다: 출시 6개월 전에 사서, 출시 2주 전에 판다 (11개 중 8개 플러스, 중간값 +29%)
+    ✔ 게임주는 이렇게 사야 한다: 출시 6개월 전에 사서, 출시 2주 전에 판다 (11개 중 8개 플러스, 중간값 +29%) · 대작 출시일은 캘린더에 · 6개월 전 알림
+
+    ✔ 붉은사막은 어떤 게임? 개발 7년 · 개발비 1,500억 원+ (업계 추정) · 4일 만에 300만 장 · 펄어비스 이야기
 
 
     궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
@@ -55,10 +57,10 @@ youtube:
 
     [자료]
 
-    일별 종가: 네이버 차트 · 붉은사막 판매량 · 리뷰 · 차기작 일정: MTN (2026.3.20) · 헤럴드경제 (2026.5.22 · 6.14) · 게임대상: 2026.11.18 보도
+    일별 종가: 네이버 차트 · 붉은사막 판매량 · 리뷰 · 개발비 · 차기작 일정: MTN (2026.3.20) · 한국경제 (2026.3.19) · 게임뷰 · 아이뉴스24 (2026.3.24) · 헤럴드경제 (2026.5.22 · 6.14) · 게임대상: 2026.11.18 보도
 
 
-    [게임 화면 · 영상] 붉은사막 © Pearl Abyss (Steam 공식 스크린샷 · 트레일러, 보도 · 비평 목적 인용) · 로고: Pearl Abyss (상표는 해당 회사를 가리키는 용도로만 사용, 제휴 · 추천 아님) · [3D] 주가 롤러코스터: Blender로 직접 제작 (실제 주가) · [영상] Pixabay — zakariacomputer222 · Graphitage1 · SlimeyFox · MrWashingt0n · Dimitri_K · Hassas_Arts · kostkarubika005 / [사진] Wikimedia Commons — nrkbeta (CC BY-SA 2.0)
+    [게임 화면 · 영상] 붉은사막 © Pearl Abyss (Steam 공식 스크린샷 · 트레일러, 보도 · 비평 목적 인용) · 로고: Pearl Abyss (상표는 해당 회사를 가리키는 용도로만 사용, 제휴 · 추천 아님) · [영상] Pixabay — zakariacomputer222 · Graphitage1 · SlimeyFox · MrWashingt0n · Dimitri_K · Hassas_Arts · kostkarubika005
 
     '
   tags: [펄어비스, 붉은사막, 게임주, 엔씨소프트, 크래프톤, 넷마블, 카카오게임즈, 데브시스터즈, 위메이드, 주식타이밍]
@@ -70,7 +72,7 @@ checks:
 - {name: 리니지W 출시 전날 → 1년, kind: ret, series: ncsoft, start: '2021-11-03', end: '2022-11-04'}
 - {name: 쿠키런 출시 전날 → 1년, kind: ret, series: devsisters, start: '2021-01-20', end: '2022-01-21'}
 scenes:
-# 2026-11-18 사용자: 결론 먼저 → 근거(사례 · 백테스트) 순서 (시청 지속)
+# 2026-11-18 사용자 2차: 결론 먼저 · 나열 요약 · 게임 화면은 쇼케이스(액자 + 태그) · 3D 롤러코스터 삭제 · 엔딩 짧게
 - type: punch
   chapter: 인트로
   tone: down
@@ -118,12 +120,13 @@ scenes:
   kicker: 게임주 매매 타이밍
   title: 이렇게 사야 한다
   highlight: 이렇게
-  title_size: 90
+  title_size: 84
   items:
-  - {text: '출시 6개월 전 · 기대가 작을 때 산다', on: 3, highlight: 6개월 전}
-  - {text: '출시 2주 전 · 리뷰 · 점수 나오기 전에 판다', on: 2, highlight: 2주 전}
+  - {text: '출시 6개월 전 · 기대가 작을 때 산다', on: 2, highlight: 6개월 전}
+  - {text: '출시 2주 전 · 리뷰 · 점수 나오기 전에 판다', on: 3, highlight: 2주 전}
   - {text: '회사 주가가 이미 내리막이면 · 대작이어도 거른다', on: 4, highlight: 내리막}
-  narration: ['결론부터 말할게요. 게임주는 이렇게 사야 해요.', '첫째, 출시 6개월 전, 아직 기대가 작을 때 산다.', '둘째, 출시 2주 전, 리뷰와 점수가 나오기 전에 판다. 붉은사막은 리뷰 하루에 30%가 빠졌죠.', '셋째, 회사 주가가 이미 내리막이면, 대작이어도 거른다.', '왜 그런지, 지금부터 숫자로 보여 드릴게요.']
+  - {text: '대작 출시일 · 캘린더에 적고 6개월 전 알림', on: 5, highlight: 캘린더}
+  narration: ['결론부터 말할게요. 게임주는 이렇게 사야 해요.', '첫째, 출시 6개월 전, 아직 기대가 작을 때 산다.', '둘째, 출시 2주 전, 리뷰와 점수가 나오기 전에 판다.', '셋째, 회사 주가가 이미 내리막이면, 대작이어도 거른다.', '넷째, 그래서 대작 출시일은 캘린더에 적어 두고, 6개월 전에 알림을 맞춰 두세요. | 왜 그런지, 지금부터 보여 드릴게요.']
 - type: duel
   chapter: 결론부터
   heading: 같은 대작 11개 · 1,000만 원
@@ -131,6 +134,20 @@ scenes:
   right: {title: '6개월 전 사서 2주 전 매도', value: '중간값 +29%', sub: '11개 중 8개 플러스', color: up, on: 2}
   sfx: [{name: 'mx:2003', on: 2, offset: 0.2, vol: 0.6}]
   narration: ['대작 게임 11개로 확인해 보면, | 출시 전날 산 사람은 1년 뒤 중간값 -29%.', '6개월 전에 사서 2주 전에 판 사람은 !!+29%!!. 산 날과 판 날만 바꿨을 뿐이에요.']
+- type: showcase
+  chapter: 근거 · 붉은사막
+  media: {kind: video, file: crimson_trailer_v}
+  tag: 붉은사막
+  logo: logo_pearlabyss
+  credit: '게임 영상: 붉은사막 © Pearl Abyss (Steam 공식 트레일러)'
+  keys:
+  - {text: '개발 7년', on: 1}
+  - {text: '개발비 1,500억+ (추정)', on: 1, offset: 0.8}
+  - {text: '개발진 200명 미만', on: 1, offset: 1.6}
+  - {text: '4일 만에 300만 장', on: 2}
+  - {text: '지금 600만 장', on: 2, offset: 0.8}
+  - {text: '게임대상 8관왕', on: 2, offset: 1.6}
+  narration: ['이유 첫째, 붉은사막이에요. 펄어비스가 7년 동안 만든 오픈월드 액션 게임이죠. | 개발비는 업계 추정 1,500억 원이 넘고, 개발진은 200명도 안 됐대요.', '손익분기점이 250만 장이었는데, 출시 나흘 만에 300만 장. | 지금은 600만 장이 넘었고, 게임대상 8관왕까지 받았어요.']
 - type: clips
   chapter: 근거 · 붉은사막
   title: 붉은사막 기사 제목
@@ -140,7 +157,7 @@ scenes:
   - {outlet: MTN, date: 2026.3.20, headline: "7년 기다렸는데 폭락…펄어비스 '붉은사막' 어쩌나", on: 1}
   - {outlet: 헤럴드경제, date: 2026.6.14, headline: '“600만장이나 팔아 치웠는데” 대박난 줄 알았더니…‘14만→ 4만원’ 대폭락 어쩌나', on: 2, hl: true}
   credit: '기사 제목: MTN · 헤럴드경제 — 보도 그대로'
-  narration: ['이유 첫째, 붉은사막이에요. | 7년을 기다렸는데 폭락, 600만 장을 팔았는데 대폭락.']
+  narration: ['기사 제목도 이랬죠. | 7년 기다렸는데 폭락, 600만 장 팔았는데 대폭락.']
 - type: chart
   chapter: 근거 · 붉은사막
   chart:
@@ -151,13 +168,27 @@ scenes:
     end_labels: false
     rect: [300, 200, 1200, 620]
     title: 펄어비스 주가 (원 · 출시 6개월 전부터)
-    draw: {on: 1, dur: 3.2}
+    draw: {on: 1, dur: 2.4}
     marks:
-    - {date: '2026-03-18', label: '출시 직전 6만 5,600원', color: up, on: 2, dy: -110, dx: -220}
-    - {date: '2026-03-19', label: '리뷰 공개 · 하루 -30%', color: down, on: 3, dy: 110, dx: 60}
-    - {date: '2026-11-18', label: '2만 8,600원', color: down, on: 4, dy: -100, dx: -60}
+    - {date: '2026-03-18', label: '출시 직전 6만 5,600원', color: up, on: 1, dy: -110, dx: -220}
+    - {date: '2026-03-19', label: '리뷰 공개 · 하루 -30%', color: down, on: 2, dy: 110, dx: 60}
+    - {date: '2026-11-18', label: '2만 8,600원', color: down, on: 2, dy: -100, dx: -60}
     source: '자료: 네이버 차트 (일별 종가)'
-  narration: ['펄어비스 주가를 볼게요. 출시 6개월 전엔 3만 4,700원.', '기대감에 쭉 올라서, 출시 직전엔 6만 5,600원. 거의 두 배였죠.', '그런데 출시 전날 리뷰 점수가 공개되자, | 하루 만에 !!-30%!!.', '판매 소식에 잠깐 반등했지만, 지금은 2만 8,600원이에요.']
+  narration: ['주가로 보면, 출시 6개월 전 3만 4,700원에서 출시 직전 6만 5,600원. 거의 두 배였죠.', '그런데 리뷰가 공개된 날 하루 !!-30%!!. 지금은 2만 8,600원이에요.']
+- type: showcase
+  chapter: 근거 · 붉은사막
+  photos: [crimson_05, crimson_11, crimson_09, crimson_01]
+  per: 2.4
+  tag: 펄어비스는?
+  logo: logo_pearlabyss
+  credit: '게임 화면: 붉은사막 © Pearl Abyss (Steam 공식 스크린샷)'
+  keys:
+  - {text: '2010 창업', on: 1}
+  - {text: '2014 검은사막 대박', on: 1, offset: 0.7}
+  - {text: '2017 코스닥 상장', on: 2}
+  - {text: '7년 · 붉은사막 올인', on: 3, color: down}
+  - {text: '다음 작품 2028년', on: 3, offset: 0.9, color: down}
+  narration: ['펄어비스는 2010년에 창업해서, 2014년 검은사막 하나로 대박이 난 회사예요.', '2017년 코스닥에 상장했고요.', '그리고 7년 동안, 사실상 붉은사막 하나에 회사를 걸었어요. | 그런데 다음 작품은 2028년. 그래서 이 게임 하나에 주가가 이렇게 출렁인 거예요.']
 - type: card
   chapter: 근거 · 붉은사막
   heading: 왜 떨어졌을까 · 증권가 분석
@@ -171,16 +202,8 @@ scenes:
   - {text: '리뷰 점수 · 기대보다 낮았다', on: 3}
   - {text: '다음 작품은 2028년 · 그 사이가 빈다', highlight: 2028년, hl_color: down, on: 4}
   credit: '보도 종합 (MTN · 헤럴드경제) · 다음 작품 일정은 회사 발표'
-  narration: ['왜 그랬을까요? 증권가가 꼽은 이유는 세 가지예요.', '첫째, 기대가 이미 주가에 다 들어가 있었어요. 6개월 만에 두 배였으니까요.', '둘째, 리뷰 점수가 기대보다 낮았고,', '셋째, 다음 작품이 2028년이라, 그 사이가 비어 보였죠.']
+  narration: ['증권가가 꼽은 이유는 세 가지. | 기대가 이미 주가에 다 들어가 있었고,', '리뷰는 기대보다 낮았고, | 다음 작품은 2028년이라 그 사이가 비어 보였죠.']
 # ── 대작 11개의 결과 ─────────────────────────────────────
-- type: media
-  chapter: 근거 · 붉은사막
-  file: track_ep019.mp4
-  fit: cover
-  hold: true
-  speed: 0.75
-  narration: ['펄어비스 주가를 롤러코스터 레일로 만들어 직접 타 볼게요.', '출시 6개월 전, 3만 4,700원에서 출발해서 | 출시 직전 꼭대기까지 쭉 올라가요.', '그리고 리뷰가 공개된 날, 낭떠러지. | 잠깐 반등했다가, 지금까지 쭉 내리막이에요.']
-# ── 이렇게 사야 한다 ─────────────────────────────────────
 - type: hbars
   chapter: 근거 · 대작 11개
   kicker: 출시 전날 1,000만 원 → 1년 뒤 (%)
@@ -191,13 +214,13 @@ scenes:
   row_gap: 10
   vmax: 60
   rows:
-  - {label: '블레이드&소울2 (엔씨 · 2021.8)', value: -55, text: '-55%', color: down, on: 2}
-  - {label: '제2의 나라 (넷마블 · 2021.6)', value: -50, text: '-50%', color: down, on: 2, offset: 0.3}
-  - {label: '우마무스메 (카카오게임즈 · 2022.6)', value: -39, text: '-39%', color: down, on: 2}
-  - {label: '붉은사막 (펄어비스 · 2026.3 · 지금까지)', value: -38, text: '-38%', color: down, hl: true, on: 3, offset: 0.3}
-  - {label: '인조이 (크래프톤 · 2025.3)', value: -30, text: '-30%', color: down, on: 3}
-  - {label: '리니지W (엔씨 · 2021.11)', value: -29, text: '-29%', color: down, on: 3, offset: 0.3}
-  narration: ['이유 둘째, 붉은사막만 그런 게 아니에요. 대작 11개를 출시 전날 샀다면, 1년 뒤예요.', '블레이드앤소울2는 -55%, 제2의 나라는 -50%.', '우마무스메 -39%, 붉은사막은 지금까지 -38%.', '인조이 -30%, 리니지더블유도 -29%.']
+  - {label: '블레이드&소울2 (엔씨 · 2021.8)', value: -55, text: '-55%', color: down, on: 1, offset: 0.6}
+  - {label: '제2의 나라 (넷마블 · 2021.6)', value: -50, text: '-50%', color: down, on: 1, offset: 0.6}
+  - {label: '우마무스메 (카카오게임즈 · 2022.6)', value: -39, text: '-39%', color: down, on: 1, offset: 0.6}
+  - {label: '붉은사막 (펄어비스 · 2026.3 · 지금까지)', value: -38, text: '-38%', color: down, hl: true, on: 1, offset: 0.6}
+  - {label: '인조이 (크래프톤 · 2025.3)', value: -30, text: '-30%', color: down, on: 1, offset: 0.6}
+  - {label: '리니지W (엔씨 · 2021.11)', value: -29, text: '-29%', color: down, on: 1, offset: 0.6}
+  narration: ['이유 둘째, 붉은사막만 그런 게 아니에요. 대작 11개를 출시 전날 샀다면, | 블소2 -55%부터 리니지더블유 -29%까지, 줄줄이 마이너스.']
 - type: hbars
   chapter: 근거 · 대작 11개
   kicker: 출시 전날 1,000만 원 → 1년 뒤 (%)
@@ -211,9 +234,9 @@ scenes:
   - {label: '검은사막 모바일 (펄어비스 · 2018.2)', value: -27, text: '-27%', color: down, on: 1}
   - {label: '아이온2 (엔씨 · 2025.11)', value: -15, text: '-15%', color: down, on: 1, offset: 0.3}
   - {label: '오딘 (카카오게임즈 · 2021.6)', value: -10, text: '-10%', color: down, on: 1, offset: 0.6}
-  - {label: '미르4 글로벌 (위메이드 · 2021.8)', value: 53, text: '+53%', color: up, on: 2}
-  - {label: '쿠키런: 킹덤 (데브시스터즈 · 2021.1)', value: 355, text: '+355%', color: up, hl: true, on: 2, offset: 0.3}
-  narration: ['검은사막 모바일 -27%, 아이온2 -15%, 오딘 -10%.', '플러스는 딱 둘. 미르4 글로벌 +53%, | 그리고 쿠키런 킹덤 !!+355%!!.']
+  - {label: '미르4 글로벌 (위메이드 · 2021.8)', value: 53, text: '+53%', color: up, on: 1, offset: 1.0}
+  - {label: '쿠키런: 킹덤 (데브시스터즈 · 2021.1)', value: 355, text: '+355%', color: up, hl: true, on: 1, offset: 1.3}
+  narration: ['플러스는 딱 둘. | 미르4 글로벌, 그리고 쿠키런 킹덤 !!+355%!!뿐이에요.']
 - type: punch
   chapter: 근거 · 대작 11개
   tone: down
@@ -235,10 +258,10 @@ scenes:
   width: 1500
   bullets:
   - {text: '쿠키런: 킹덤 · 출시 2주 만에 +121%', highlight: +121%, hl_color: up, on: 1}
-  - {text: '미르4 글로벌 · 출시 2주 만에 +65%', highlight: +65%, hl_color: up, on: 2}
-  - {text: '둘 다 출시 전 기대보다 훨씬 크게 터진 게임', highlight: 기대보다, hl_color: up, on: 3}
+  - {text: '미르4 글로벌 · 출시 2주 만에 +65%', highlight: +65%, hl_color: up, on: 1, offset: 0.5}
+  - {text: '둘 다 출시 전 기대보다 훨씬 크게 터진 게임', highlight: 기대보다, hl_color: up, on: 1, offset: 1.0}
   credit: '출시 전날 → 10거래일 뒤 · 네이버 차트'
-  narration: ['예외 두 개는 출시 직후부터 달랐어요. 쿠키런 킹덤은 2주 만에 +121%,', '미르4 글로벌은 2주 만에 +65%.', '둘 다, 출시 전 기대보다 훨씬 크게 터진 게임이었죠. | 대부분의 대작은, 기대가 이미 주가에 다 들어가 있었고요.']
+  narration: ['예외 둘은 출시 2주 만에 이미 크게 터진 게임이었어요. | 나머지 대작은, 기대가 이미 주가에 다 들어가 있었고요.']
 - type: hbars
   chapter: 근거 · 대작 11개
   kicker: 6개월 전 매수 → 2주 전 매도 · 11개 중 8개 플러스
@@ -249,51 +272,19 @@ scenes:
   row_gap: 22
   vmax: 160
   rows:
-  - {label: '검은사막 모바일', value: 148, text: '+148%', color: up, on: 2}
-  - {label: '쿠키런: 킹덤', value: 83, text: '+83%', color: up, on: 2, offset: 0.25}
+  - {label: '검은사막 모바일', value: 148, text: '+148%', color: up, on: 1, offset: 1.0}
+  - {label: '쿠키런: 킹덤', value: 83, text: '+83%', color: up, on: 1, offset: 1.2}
   - {label: '붉은사막', value: 78, text: '+78%', color: up, hl: true, on: 2, offset: 0.5}
-  - {label: '아이온2', value: 38, text: '+38%', color: up, on: 2}
-  - {label: '미르4 글로벌', value: 37, text: '+37%', color: up, on: 2, offset: 0.25}
+  - {label: '아이온2', value: 38, text: '+38%', color: up, on: 1, offset: 1.0}
+  - {label: '미르4 글로벌', value: 37, text: '+37%', color: up, on: 1, offset: 1.2}
   note: '그 밖에 오딘 +29% · 인조이 +5% · 제2의 나라 +4% / 마이너스: 블소2 -19% · 리니지W -25% · 우마무스메 -31%'
-  narration: ['이유 셋째, 거꾸로 출시 6개월 전에 사서, 출시 2주 전에 팔았다면요.', '검은사막 모바일 +148%, 쿠키런 +83%, 붉은사막 +78%.', '11개 중 8개가 플러스, 중간값 !!+29%!!예요.', '마이너스 셋은 엔씨와 카카오게임즈 주가가, 이미 내리막이던 때였어요.']
+  narration: ['이유 셋째, 거꾸로 6개월 전에 사서 2주 전에 팔았다면, | 11개 중 8개가 플러스. 중간값 !!+29%!!예요.']
 - type: kinetic
   chapter: 정리
   bg: {kind: video, file: money_count_v, dark: 0.62, blur: 5}
   items:
   - {text: "소문에 사서\n출시에 판다", on: 1, size: 150, highlight: '출시에 판다', hl_color: up}
-  narration: ['월가에 이런 말이 있어요. 소문에 사서, 뉴스에 팔아라.', '게임주로 바꾸면, 소문에 사서 출시에 파는 거예요.']
-- type: saying
-  chapter: 정리
-  photo: kahneman
-  move: {zoom: 0.1, dx: 0.01, dy: -0.01}
-  focus: [0.5, 0.3]
-  face_focus: [0.5, 0.3]
-  name: 대니얼 카너먼
-  role: 노벨 경제학상 수상자 · 행동경제학의 아버지
-  en: 'Nothing in life is as important as you think it is, while you are thinking about it.'
-  ko: '인생의 어떤 것도, 그것을 생각하는 동안\n**생각하는 만큼 중요하지 않다.**'
-  ko_on: 1
-  narration: ['노벨 경제학상을 받은 대니얼 카너먼은 이렇게 말했어요.', '인생의 어떤 것도, 그것을 생각하는 동안 생각하는 만큼 중요하지 않다. | 출시를 기다릴 때의 기대가, 딱 그래요.']
-# ── 정리 ───────────────────────────────────────────────
-- type: card
-  chapter: 정리
-  heading: 오늘의 숫자
-  highlight: 숫자
-  numbered: true
-  size: 46
-  gap: 30
-  width: 1500
-  bullets:
-  - {text: '붉은사막 600만 장 · 펄어비스 출시 직후 꼭대기에서 -60%', highlight: -60%, hl_color: down, on: 2}
-  - {text: '대작 11개 출시 전날 매수 · 1년 뒤 9개 마이너스, 중간값 -29%', on: 3}
-  - {text: '6개월 전 매수 · 2주 전 매도 · 8개 플러스, 중간값 +29%', highlight: +29%, hl_color: up, on: 4}
-  - {text: '회사 주가가 내리막이면 대작이어도 거른다', on: 5}
-  narration: ['오늘 숫자를 정리해 볼게요.', '붉은사막은 600만 장이 팔렸지만, 펄어비스는 꼭대기에서 -60%.', '대작 11개를 출시 전날 샀다면, 1년 뒤 9개가 마이너스였고,', '6개월 전에 사서 2주 전에 팔았다면, 8개가 플러스, 중간값 +29%.', '그리고 회사 주가가 이미 내리막이면, 대작이어도 거르기.']
-- type: kinetic
-  chapter: 정리
-  items:
-  - {text: "게임주는 출시가\n꼭대기다", on: 1, size: 120, highlight: '꼭대기다'}
-  narration: ['게임주는, 출시가 꼭대기예요.', '[낮게]기대를 사고, 출시 전에 파세요.']
+  narration: ['한 줄로 정리하면, 게임주는 소문에 사서 출시에 판다.', '[낮게]출시 날은 축제지만, 주가에겐 꼭대기예요.']
 - type: outro
   heading: "게임주는\n출시 전에 팔자"
   highlight: 출시 전에
@@ -301,10 +292,10 @@ scenes:
   disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목·상품의 매수·매도 추천이 아닙니다.
 
     과거 데이터는 미래 수익을 보장하지 않으며 세금 · 거래 비용은 반영하지 않았습니다.'
-  subscribe_on: 3
+  subscribe_on: 1
   signature: 오늘도 감 말고, 숫자로 투자하세요.
-  signature_on: 4
-  narration: ['여러분은 다음에 어떤 게임 출시를 기다리고 계세요? 그 회사 주식도 들고 계신가요?', '댓글로 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
+  signature_on: 2
+  narration: ['여러분은 어떤 게임 출시를 기다리세요? 댓글로 남겨 주세요.', '오늘도 감 말고, 숫자로 투자하세요.']
 thumb_pick: P01   # 2026-11-18 사용자: 1번 + 스티커 '게임주 어떻게 사면 될까?'
 thumbs10:
 - {p: P01, photo: crimson_18, top: '600만 장 팔렸는데', bottom: '펄어비스 -60%', hl: '-60%', sticker: '게임주 어떻게 사면 될까?'}

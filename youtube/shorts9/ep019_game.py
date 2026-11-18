@@ -17,7 +17,8 @@ from ep015_ship import K, G, T, W, H, ROOT, vbg, big, pop, bgp, disclaimer, line
 
 OUT = ROOT / "youtube" / "out" / "ep019_game_stocks" / "shorts9"
 MEDIA = ROOT / "youtube" / "assets" / "media"
-WH, GRN, RD = (251, 251, 249), (72, 176, 120), (232, 66, 62)   # 08 · 어두운 화면용 밝은 톤
+WH, GRN, RD = (251, 251, 249), (72, 176, 120), (232, 66, 62)
+CXS = 540   # 08 · 어두운 화면용 밝은 톤
 SAY = {"__gemini__": {"voice": "Umbriel", "speed": "빠르게", "tempo": 1.12}}
 
 
@@ -28,9 +29,17 @@ def pill(f, text, y, t, t0=0.0, size=56):
 
 @lru_cache(maxsize=2)
 def _clip_frames(name, w=1080):
+    src = MEDIA / name if (MEDIA / name).exists() else MEDIA.parent / "video" / name
     h = int(w * (1080 * 0.95) / (1920 * 0.70)) // 2 * 2
-    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(MEDIA / name), "-vf",
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(src), "-vf",
                           f"fps=30,crop=iw*0.70:ih*0.95:iw*0.15:0,scale={w}:{h}",
+                          "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
+
+
+@lru_cache(maxsize=2)
+def _full_frames(name, w=960, h=540):
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(MEDIA.parent / "video" / name), "-t", "12", "-vf", f"fps=30,scale={w}:{h}",
                           "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
 
@@ -109,8 +118,18 @@ def b1(f, t, sc):
 
 
 def b2(f, t, sc):
-    f.alpha_composite(Image.new("RGBA", (W, H), (10, 11, 11, 255)))
-    clip(f, "track_ep019.mp4", t, 40, speed=1.4)
+    """붉은사막 영상을 액자처럼 작게 + 키워드 태그 (3D 대신 · 2026-11-18 사용자)"""
+    f.alpha_composite(Image.new("RGBA", (W, H), (12, 13, 13, 255)))
+    fr = _full_frames("crimson_trailer_v.mp4")
+    im = Image.fromarray(fr[min(int(t * 30), len(fr) - 1)]).convert("RGBA")
+    fr2 = Image.new("RGBA", (972, 552), WH + (255,))
+    fr2.alpha_composite(im, (6, 6))
+    f.alpha_composite(Image.new("RGBA", (972, 552), (1, 66, 43, 255)), (66, 116))
+    f.alpha_composite(fr2, (54, 104))
+    G.blit(f, G.pill("붉은사막", "Black", 46, WH, (1, 66, 43), pad=(22, 10), radius=8), (84, 130), 1, "lt")
+    G.blit(f, G.pill("출시 직전 = 꼭대기", "Black", 56, WH, (1, 66, 43), pad=(24, 12), radius=8), (CXS, 690), pop(t, 0.4), "mt")
+    G.blit(f, G.pill("리뷰 날 하루 -30%", "Black", 56, WH, (163, 22, 26), pad=(24, 12), radius=8), (CXS, 800), pop(t, 1.6), "mt")
+    K.credit(f, "게임 영상: 붉은사막 © Pearl Abyss (Steam 공식 트레일러)")
 
 
 def b3(f, t, sc):
@@ -141,7 +160,7 @@ S2 = [
     {"draw": b1, "nohead": True, "min": 2.0, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.2, "mx:2003", 0.7)],
      "narr": ["게임주 꼭대기는, 출시 전이었어요."]},
     {"draw": b2, "nohead": True, "flash": True, "min": 3.6, "gap": 0.1, "tail": 0.2, "sfx_t": [(0.2, "tick", 0.4), (2.6, "reveal", 0.5)],
-     "narr": ["펄어비스 주가를 레일로 타 보면, 출시 6달 전부터 쭉 오르다가 출시 직전이 꼭대기. 그다음은 낭떠러지예요."]},
+     "narr": ["붉은사막도 출시 직전이 꼭대기였어요. 리뷰가 나온 날, 하루 만에 30%가 빠졌죠."]},
     {"draw": b3, "nohead": True, "flash": True, "min": 3.4, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.4, "mx:2182", 0.5), (1.6, "ding", 0.5)],
      "narr": ["대작 11개로 봐도, 출시 전날 사면 1년 뒤 마이너스 29%. 6달 전에 사서 2주 전에 팔면 플러스 29%."]},
     {"draw": b4, "nohead": True, "flash": True, "min": 2.2, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.3, "sparkle", 0.5)],
