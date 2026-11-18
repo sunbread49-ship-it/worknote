@@ -2970,3 +2970,108 @@ class Showcase(Editorial):
 
 
 TYPES.update({"showcase": Showcase})
+
+
+# ════════════════════════════════════════════════════════════════
+# 허브 도식 (2026-11-18 사용자: '핸즈오프' 개념도처럼 — 사람들은 글보다 그림 · 도식에 끌린다)
+# 흰 카드 위에 아이콘 노드 여러 개 → 점선 곡선(점이 흘러감) → 가운데 목표 상자 하나로 모임 (direction: out 이면 반대로 퍼짐)
+#   kicker: 'HANDS OFF'  ·  nodes: [{icon: 이모지이름 | logo: 로고사진 | text: '가', label, on}]
+#   target: {icon | logo | text, label, color: up|down, on}  ·  caption: 카드 아래 한 줄
+# ════════════════════════════════════════════════════════════════
+class Hub(Editorial):
+    def _glyph(self, it, size):
+        from . import illust as I
+        if it.get("icon"):
+            return I.emoji(it["icon"], size)
+        if it.get("logo"):
+            return logo_chip(it["logo"], int(size * 0.6))
+        return T(it.get("text", "?"), int(size * 0.55), getattr(S, "GREEN08", (1, 66, 43)), "Black")
+
+    def draw(self, f, t):
+        sp = self.spec
+        green = getattr(S, "GREEN08", (1, 66, 43)); white = getattr(S, "WHITE08", (251, 251, 249)); red = getattr(S, "RED08", (163, 22, 26))
+        ink = (30, 34, 33)
+        bd, _ = backdrop(sp.get("bg") or {"kind": "grain", "tone": "ink"})
+        f.paste(bd, (0, 0))
+        self.paper = False
+        cw, ch = sp.get("w", 1320), sp.get("h", 740)
+        cx0, cy0 = (S.W - cw) // 2, sp.get("y", 110)
+        k_in = G.ease_out(min(1.0, t / 0.4))
+        card = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+        ImageDraw.Draw(card).rounded_rectangle((0, 0, cw - 1, ch - 1), 36, fill=white + (255,))
+        sh = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+        ImageDraw.Draw(sh).rounded_rectangle((0, 0, cw - 1, ch - 1), 36, fill=(0, 0, 0, 120))
+        f.alpha_composite(sh.filter(ImageFilter.GaussianBlur(24)), (cx0, cy0 + 18))
+        f.alpha_composite(card, (cx0, cy0))
+        if sp.get("kicker"):
+            kp = G.pill("• " + sp["kicker"], "Black", 30, green, white, pad=(22, 8), radius=24)
+            ring = Image.new("RGBA", (kp.width + 6, kp.height + 6), (0, 0, 0, 0))
+            ImageDraw.Draw(ring).rounded_rectangle((0, 0, ring.width - 1, ring.height - 1), 26, outline=green + (255,), width=3)
+            ring.alpha_composite(kp, (3, 3))
+            G.blit(f, ring, (S.W / 2, cy0 - 26), k_in, "mt")
+        nodes = sp.get("nodes", [])
+        out = sp.get("direction", "in") == "out"
+        n = max(1, len(nodes))
+        r = sp.get("node_r", 66)
+        ny = cy0 + (ch - 170 if out else 150)
+        ty = cy0 + (200 if out else ch - 170)
+        xs = [cx0 + cw * (i + 1) / (n + 1) for i in range(n)]
+        tg = sp.get("target", {})
+        tw, th = sp.get("target_w", 560), 150
+        tx = S.W / 2
+        # 점선 곡선 + 흐르는 점
+        lay = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        d = ImageDraw.Draw(lay)
+        for i, (x, it) in enumerate(zip(xs, nodes)):
+            o = G.appear(t, self.line_start(it.get("on", 1)) + it.get("offset", 0) + 0.25, 0.4)
+            if o <= 0:
+                continue
+            p0 = (x, ny + (-r - 56 if out else r + 56))   # 이름표 아래(위)에서 출발
+            p3 = (tx + (i - (n - 1) / 2) * 60, ty + (th / 2 if out else -th / 2))
+            if out:
+                p0, p3 = p3, p0
+            p1, p2 = (p0[0], (p0[1] + p3[1]) / 2), (p3[0], (p0[1] + p3[1]) / 2)
+            pts = []
+            for j in range(61):
+                u = j / 60
+                pts.append(((1 - u) ** 3 * p0[0] + 3 * (1 - u) ** 2 * u * p1[0] + 3 * (1 - u) * u * u * p2[0] + u ** 3 * p3[0],
+                            (1 - u) ** 3 * p0[1] + 3 * (1 - u) ** 2 * u * p1[1] + 3 * (1 - u) * u * u * p2[1] + u ** 3 * p3[1]))
+            for j in range(0, 60, 2):
+                d.line((pts[j], pts[j + 1]), fill=green + (int(150 * o),), width=4)
+            u = ((t * 0.7 + i * 0.17) % 1.0)
+            q = pts[int(u * 60)]
+            d.ellipse((q[0] - 9, q[1] - 9, q[0] + 9, q[1] + 9), fill=(red if tg.get("color") == "down" else green) + (int(255 * o),))
+        f.alpha_composite(lay)
+        # 노드
+        for x, it in zip(xs, nodes):
+            o = G.appear(t, self.line_start(it.get("on", 1)) + it.get("offset", 0), 0.3)
+            if o <= 0:
+                continue
+            c = Image.new("RGBA", (r * 2 + 8, r * 2 + 8), (0, 0, 0, 0))
+            cd = ImageDraw.Draw(c)
+            cd.ellipse((4, 4, r * 2 + 3, r * 2 + 3), fill=white + (255,), outline=green + (255,), width=5)
+            g = self._glyph(it, int(r * 1.15))
+            c.alpha_composite(g, (r + 4 - g.width // 2, r + 4 - g.height // 2))
+            G.blit(f, c, (x, ny), o, "mm")
+            if it.get("label"):
+                G.blit(f, T(it["label"], 30, ink, "Bold"), (x, ny + (r + 14 if not out else -r - 14)), o, "mt" if not out else "mb")
+        # 목표 상자
+        o = G.appear(t, self.line_start(tg.get("on", 1)) + tg.get("offset", 0), 0.4)
+        if o > 0 and tg:
+            col = red if tg.get("color") == "down" else green
+            box = Image.new("RGBA", (tw, th), (0, 0, 0, 0))
+            ImageDraw.Draw(box).rounded_rectangle((0, 0, tw - 1, th - 1), 26, fill=col + (255,))
+            g = self._glyph(tg, 92) if (tg.get("icon") or tg.get("logo")) else None
+            lab = T(tg.get("label", tg.get("text", "")), 54, white, "Black", max_w=tw - (150 if g else 60))
+            gx = (tw - (lab.width + (110 if g else 0))) // 2
+            if g:
+                box.alpha_composite(g, (gx, (th - g.height) // 2)); gx += 110
+            box.alpha_composite(lab, (gx, (th - lab.height) // 2))
+            G.blit(f, box, (tx, ty), o, "mm")
+        if sp.get("caption"):
+            oc = G.appear(t, self.line_start(sp.get("caption_on", 1)) + 0.4, 0.4)
+            G.blit(f, T(sp["caption"], 36, (225, 228, 226), "Bold"), (S.W / 2, cy0 + ch + 34), oc, "mt")
+        self.finish(f, t)
+
+
+TYPES.update({"hub": Hub})

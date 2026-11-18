@@ -1,0 +1,16 @@
+title: 허브 도식 데모
+theme: '08'
+pace: punchy
+tts: {provider: none}
+scenes:
+- type: hub
+  chapter: 데모
+  kicker: HANDS OFF
+  nodes:
+  - {icon: rocket, label: 트레일러, on: 1}
+  - {icon: megaphone, label: 출시일 발표, on: 1, offset: 0.4}
+  - {icon: receipt, label: 사전예약, on: 1, offset: 0.8}
+  - {icon: sparkles, label: 체험판, on: 1, offset: 1.2}
+  target: {icon: up, label: '기대 → 주가', color: up, on: 1, offset: 1.8}
+  caption: 6개월 동안 좋은 소식이 쌓이며 주가로 들어간다
+  narration: ['테스트']
