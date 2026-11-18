@@ -87,7 +87,7 @@ scenes:
   narration: ['600만 장이 팔리고, 게임대상 8관왕까지 휩쓴 붉은사막. | 그런데 펄어비스 주가는 !!-60%!!예요.']
 - type: kinetic
   chapter: 인트로
-  bg: {kind: photo, file: crimson_18, dark: 0.55}
+  bg: {kind: parallax, file: crimson_18, dark: 0.55}
   credit: '게임 화면: 붉은사막 © Pearl Abyss (Steam 공식 스크린샷)'
   items:
   - {text: "게임은 대박인데\n주가는 왜?", on: 1, size: 150, highlight: '왜?', hl_color: down}
@@ -241,20 +241,20 @@ scenes:
   narration: ['예외 두 개는 출시 직후부터 달랐어요. 쿠키런 킹덤은 2주 만에 +121%,', '미르4 글로벌은 2주 만에 +65%.', '둘 다, 출시 전 기대보다 훨씬 크게 터진 게임이었죠. | 대부분의 대작은, 기대가 이미 주가에 다 들어가 있었고요.']
 - type: hbars
   chapter: 근거 · 대작 11개
-  kicker: 출시 6개월 전 1,000만 원 → 출시 2주 전 (%) · 11개 중 8개 플러스
+  kicker: 6개월 전 매수 → 2주 전 매도 · 11개 중 8개 플러스
   title: 6개월 전에 사서 2주 전에 팔았다면
   highlight: 2주 전
   title_y: 90
-  bar_h: 26
-  row_gap: 10
+  bar_h: 34
+  row_gap: 22
   vmax: 160
   rows:
-  - {label: '검은사막 모바일', value: 148, text: '+148%', color: up, on: 2}
-  - {label: '쿠키런: 킹덤', value: 83, text: '+83%', color: up, on: 2, offset: 0.25}
-  - {label: '붉은사막', value: 78, text: '+78%', color: up, hl: true, on: 2, offset: 0.5}
-  - {label: '아이온2 · 미르4 글로벌', value: 38, text: '+38% · +37%', color: up, on: 2}
-  - {label: '오딘 · 인조이 · 제2의 나라', value: 29, text: '+29% · +5% · +4%', color: up, on: 2, offset: 0.3}
-  - {label: '블소2 · 리니지W · 우마무스메', value: -31, text: '-19% · -25% · -31%', color: down, on: 3}
+  - {label: '검은사막 모바일', value: 148, text: '+148%', color: up, on: 1}
+  - {label: '쿠키런: 킹덤', value: 83, text: '+83%', color: up, on: 1, offset: 0.25}
+  - {label: '붉은사막', value: 78, text: '+78%', color: up, hl: true, on: 1, offset: 0.5}
+  - {label: '아이온2', value: 38, text: '+38%', color: up, on: 2}
+  - {label: '미르4 글로벌', value: 37, text: '+37%', color: up, on: 2, offset: 0.25}
+  note: '그 밖에 오딘 +29% · 인조이 +5% · 제2의 나라 +4% / 마이너스: 블소2 -19% · 리니지W -25% · 우마무스메 -31%'
   narration: ['이유 셋째, 거꾸로 출시 6개월 전에 사서, 출시 2주 전에 팔았다면요.', '검은사막 모바일 +148%, 쿠키런 +83%, 붉은사막 +78%.', '11개 중 8개가 플러스, 중간값 !!+29%!!예요.', '마이너스 셋은 엔씨와 카카오게임즈 주가가, 이미 내리막이던 때였어요.']
 - type: kinetic
   chapter: 정리
