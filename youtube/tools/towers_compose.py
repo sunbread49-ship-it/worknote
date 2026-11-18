@@ -17,7 +17,7 @@ frames = sorted(src.glob("f*.png"))
 NF, hold = len(frames), 25
 out = S.ROOT / "assets" / "media" / f"{name}.mp4"
 W, H = 1920, 1080
-SC, OY = 0.82, 84
+SC, OY = 0.74, 40
 p = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", "30", "-i", "-",
                       "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", str(out)], stdin=subprocess.PIPE)
 T = lambda txt, sz, c, w="Black": G.text_img(txt, w, sz, c)
@@ -52,7 +52,7 @@ for fi, fp in enumerate(frames):
     G.blit(f, G.pill(rows[min(round(pos), len(rows) - 1)]["date"].replace("-", "."), "Black", 44, WHITE, GREEN, pad=(24, 10), radius=10), (W / 2, 40), 1, "mt")
     G.blit(f, T("1,000만 원씩 · 동전 1개 = 50만 원", 30, (210, 214, 212), "Bold"), (W / 2, 122), 1, "mt")
     for x, lab, val, c in zip(xs, labels, v, cols):
-        G.blit(f, tag(lab, val, c), (W * x, 812), 1, "mt")
+        G.blit(f, tag(lab, val, c), (W * x, 740), 1, "mt")
     if fi >= NF - hold and D.get("summary"):
         k = min(1.0, (fi - (NF - hold)) / 8)
         G.blit(f, G.pill(D["summary"], "Black", 46, WHITE, RED, pad=(26, 12), radius=10), (W / 2, 176), k, "mt")

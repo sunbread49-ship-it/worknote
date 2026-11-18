@@ -69,7 +69,7 @@ youtube:
     서학개미 순매수: 한국경제TV (2026.11.7, 한국예탁결제원 집계 인용) · 마이너스통장: 세계일보 (2026.11.15) · 코스피: 아시아경제 (2026.11.17)
 
 
-    [3D] 동전 탑: Blender로 직접 제작 (실제 데이터) · [영상] Pixabay — josepht_007 · olenchic · MrWashingt0n · motionstock · Hassas_Arts / [사진] Wikimedia Commons · 로고: Direxion (상표는 해당 회사를 가리키는 용도로만 사용, 제휴 · 추천 아님)
+    [3D] 동전 탑: Blender로 직접 제작 (실제 데이터) · [영상] Pixabay — josepht_007 · ChristianBodhi · olenchic · MrWashingt0n · motionstock · Dimitri_K · AdisResic · kostkarubika005 · Hassas_Arts / [사진] Pixabay — 3844328 · Wikimedia Commons — Nick (CC BY 2.0) · USA International Trade Administration (Public domain)
 
     '
   tags: [SOXL, 반도체3배, 레버리지ETF, 서학개미, 반도체ETF, SOXX, 리밸런싱, 미국주식, 레버리지, 코스피5000]
@@ -151,7 +151,6 @@ scenes:
   tone: up
   video: {file: chip_macro_v, dark: 0.55, blur: 2}
   credit: '영상: motionstock (Pixabay)'
-  logo: logo_direxion
   label: SOXL · 운용사 Direxion · 반도체 지수 30개 기업
   big: '하루 × 3'
   sub: 오늘 지수가 +1%면 +3%, -1%면 -3%
@@ -218,7 +217,7 @@ scenes:
   drop_on: 2
   drop_dur: 3.0
   holdings:
-  - {name: 'SOXL · 11월 2~5일 평균 62.21달러', pct: -21.1}
+  - {name: 'SOXL · 평균 62.21$', pct: -21.1}
   notes:
   - {text: '11.5  -38.7%', on: 1}
   - {text: '11.9  +22.3%', on: 1, offset: 0.6}
@@ -247,7 +246,7 @@ scenes:
   narration: ['그럼 이렇게 많이 빠졌으니, | 지금이 바닥 아니냐고요? 역사를 볼게요.']
 - type: hbars
   chapter: 과거 4번의 바닥
-  kicker: 반도체(SOXX)가 꼭대기에서 -30% 빠진 날 SOXL을 샀다면 · 1년 뒤
+  kicker: 반도체 -30% 빠진 날 SOXL을 샀다면 · 1년 뒤
   title: 과거 4번의 바닥
   highlight: 4번
   title_y: 90
@@ -304,7 +303,7 @@ scenes:
   narration: ['그런데 반전이 있어요. | 상장 첫날 SOXL에 1,000만 원을 넣고 16년을 그냥 버텼다면, 지금 8억 2천만 원. 82배예요.', '문제는 그 사이 -90%를 겪었고, 지금도 -84%라는 거죠. | 그걸 다 버틸 수 있었을까요?']
 - type: hbars
   chapter: 이렇게만 사면 산다
-  kicker: 2010.3 상장일에 1,000만 원 → 2026.11.17 · 오른쪽은 그 사이 최악의 순간
+  kicker: 2010.3 상장일 → 2026.11.17 · 최악 = 그 사이 가장 깊은 낙폭
   title: 16년 · 같은 1,000만 원
   highlight: 16년
   title_y: 90
