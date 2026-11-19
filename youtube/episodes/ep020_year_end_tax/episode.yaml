@@ -1,0 +1,355 @@
+# EP020 · 주식 궁금증, 숫자로 풀기 — 미국 주식, 12월에 이렇게 팔면 세금 0원 (서학개미 연말 절세)
+# 기승전결: 간질거림(매년 250만 원 쿠폰이 불탄다 · 올해 하락장이 오히려 찬스) → 기(세금 구조 · 쿠폰 비유)
+#   → 승(매년 쿠폰 쓰면 QQQ 10년 세금 422만 원 차이) → 전(그런데 올해 계좌가 마이너스? → 손실도 쿠폰 · 하락장 찬스)
+#   → 결(체크리스트 · 마감일 · 주의 · RIA 보너스) → 질문
+# 숫자: 해외주식 양도세 = 연간 실현 손익 합산 - 250만 원 공제, 22%(지방세 포함) · 손익통산 같은 해만 · 이월 X · 결제일 기준
+#   QQQ 2015.12.31 → 2025.12.31 수정 주가(달러 기준 · 환율 미반영) 1,000만 원 → 5,905만 원: 한 번에 팔면 세금 1,024만 원 · 매년 12월 250만 원 실현 후 재매수 602만 원
+#   2026 마감: 미국 현지 12.29(화) 매도 → 결제 12.31 → 2026 귀속 (12.30 매도는 2027 결제) — 증권사 공지 확인 전제
+#   RIA(국내시장 복귀계좌) 2026 한시 · 8~12월 매도분 양도세 50% 감면 · 국내 주식 1년 이상 · 세부 증권사 확인
+title: '미국 주식, 12월에 이렇게 팔면 세금 0원 (서학개미 연말 절세)'
+series_tag: 서학개미 연말 절세
+theme: '08'
+pace: punchy
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    QQQ: 큐큐큐
+    SOXL: 속슬
+    RIA: 리아
+    ETF: 이티에프
+    S&P500: 에스앤피 오백
+bgm:
+  volume: 0.24
+  chapters: {인트로: tense, 미국 주식 세금은 쿠폰: drive, 쿠폰을 매년 쓰면: hope, 올해는 하락장이 찬스: tense, 이렇게만 하면 된다: hope, 정리: hope}
+chapter_titles:
+  인트로: '해외주식 양도세 250만 원 공제 · 연말 절세'
+  미국 주식 세금은 쿠폰: '미국 주식 양도소득세 22% · 결제일 기준'
+  쿠폰을 매년 쓰면: '매년 250만 원 실현하고 재매수 · 10년 절세 효과'
+  올해는 하락장이 찬스: '손익통산 · 손실 종목 매도로 세금 0원'
+  이렇게만 하면 된다: '2026 해외주식 매도 마감일 · 체크리스트 · RIA'
+  정리: '정리: 서학개미 연말 절세'
+youtube:
+  title: '미국 주식, 12월에 이렇게 팔면 세금 0원 (서학개미 연말 절세)'
+  description: '서학개미 대부분이 매년 연말, 250만 원짜리 세금 쿠폰을 그냥 버리고 있습니다. 그리고 올해처럼 미국 증시가 빠진 해는, 오히려 세금을 줄일 최고의 찬스입니다.
+
+
+    ✔ 미국 주식 세금 구조: 1년 실현 손익 - 250만 원 공제, 22% · 판 날(결제일) 기준
+
+    ✔ QQQ 1,000만 원 10년: 한 번에 팔면 세금 1,024만 원 vs 매년 12월 250만 원씩 팔고 다시 사면 602만 원
+
+    ✔ 하락장 찬스: 손실 난 종목을 연말에 팔고 다시 사면, 이익과 상계해서 세금 0원
+
+    ✔ 2026년 마감: 미국 현지 12월 29일(화)까지 매도 (결제일 기준 · 증권사 공지 확인)
+
+    ✔ 올해만: 국내시장 복귀계좌(RIA)
+
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+
+    ※ 본 영상은 투자 · 세무 교육 목적이며, 특정 종목의 매수 · 매도 추천이나 세무 자문이 아닙니다. 개인 상황(국내주식 대주주 여부 · 증여 · 환율 등)에 따라 세금이 달라지니 증권사 · 국세청 · 세무 전문가에게 확인하세요.
+
+    ※ 계산은 달러 기준 수정 주가로 단순화했으며 환율 · 수수료 · 배당은 반영하지 않았습니다. 마감일은 결제일 기준 예시이며 증권사마다 공지가 다를 수 있습니다. RIA 세부 요건 · 한도는 증권사 안내를 확인하세요.
+
+
+    [자료]
+
+    해외주식 양도세 구조 · 결제일 기준: 국세청 안내 · 보도 종합 / RIA: 택스타임즈 · 뉴시스 · 스마트투데이 (2026) / 주가: Yahoo Finance · 네이버 해외 시세 / 미국 증시: Washington Post (2026.11.17)
+
+
+    [영상] Pixabay — konstantinrotkevich · Activedia · conte_public · RainMeditateHub · Dimitri_K · Hassas_Arts · MrWashingt0n
+
+    '
+  tags: [해외주식양도세, 미국주식세금, 연말절세, 서학개미, 250만원공제, 손익통산, 양도소득세, RIA계좌, 미국주식, 절세]
+  privacy: private
+checks:
+- {name: QQQ 2015.12.31 → 2025.12.31 배수, kind: ret, series: qqq, start: '2015-12-31', end: '2025-12-31'}
+- {name: SOXL 6.22 → 11.17, kind: ret, series: soxl, start: '2026-06-22', end: '2026-11-17'}
+scenes:
+# ── 인트로: 간질거림 ────────────────────────────────────
+- type: punch
+  chapter: 인트로
+  tone: down
+  video: {file: paper_burn_v, dark: 0.35, blur: 0}
+  credit: '영상: konstantinrotkevich (Pixabay)'
+  label: 서학개미 대부분이 매년 연말에 그냥 버리는 것
+  big: '250만 원'
+  sub: 세금 0원 쿠폰
+  'on': 1
+  sub_on: 1
+  sfx: [{name: 'mx:2182', on: 1, offset: 0.05, vol: 0.8}]
+  narration: ['미국 주식 하는 분들 대부분이, 매년 연말 !!250만 원!!짜리 쿠폰을 그냥 태워 버려요. | 세금을 0원으로 만들어 주는 쿠폰이요.']
+- type: kinetic
+  chapter: 인트로
+  bg: {kind: video, file: liberty_v, dark: 0.55, blur: 3}
+  items:
+  - {text: "그런데 올해처럼\n빠진 해가\n오히려 찬스", on: 1, size: 130, highlight: '찬스', hl_color: up}
+  narration: ['그리고 이번 주 미국 증시가 5개월 만에 최저로 빠졌죠. | 그런데 올해처럼 빠진 해가, 오히려 세금을 줄일 찬스예요.']
+- type: punch
+  chapter: 인트로
+  tone: up
+  video: {file: money_count_v, dark: 0.5, blur: 2}
+  credit: '영상: Hassas_Arts (Pixabay)'
+  label: QQQ 1,000만 원 · 10년 · 똑같이 들고 있었는데
+  big: '세금 422만 원 차이'
+  sub: 12월 마지막 주 전에, 이것만 하면 돼요
+  'on': 1
+  sub_on: 2
+  sfx: [{name: 'mx:2003', on: 1, offset: 0.05, vol: 0.7}]
+  narration: ['똑같은 주식을 10년 들고 있었는데, 세금이 !!422만 원!!이나 차이 난 사람들이 있어요.', '차이는 딱 하나, 12월에 뭘 했느냐였죠. | 마감이 한 달 남았으니, 지금 바로 알려 드릴게요.']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "미국 주식\n12월에 이렇게 팔아라"
+  highlight: 12월
+  subtitle: 250만 원 쿠폰 · 손실 활용 · 2026년 마감일
+  narration: ['미국 주식 세금, 어렵게 느껴지시죠? 편의점 쿠폰이라고 생각하면 아주 쉬워요.']
+# ── 기: 세금은 쿠폰 ────────────────────────────────────
+- type: card
+  chapter: 미국 주식 세금은 쿠폰
+  heading: 미국 주식 세금 · 딱 세 줄
+  highlight: 세 줄
+  numbered: true
+  size: 52
+  gap: 40
+  width: 1500
+  bullets:
+  - {text: '1년에 번 돈 250만 원까지는 · 세금 0원', highlight: 0원, hl_color: up, on: 1}
+  - {text: '넘는 부분만 · 22%', highlight: 22%, hl_color: down, on: 2}
+  - {text: '번 날이 아니라 · 판 날 기준', highlight: 판 날, hl_color: down, on: 3}
+  credit: '해외주식 양도소득세 · 국내외 주식 양도차익 합산 연 250만 원 공제 · 지방소득세 포함 22%'
+  narration: ['딱 세 줄이면 돼요. 첫째, 1년 동안 미국 주식으로 번 돈이 250만 원까지면, 세금이 0원이에요. 이게 바로 매년 새로 생기는 쿠폰이죠.', '둘째, 250만 원을 넘는 부분에만 22%를 내요.', '셋째, 중요한 건 언제 벌었느냐가 아니라, 언제 팔았느냐예요. | 아무리 올라도 안 팔면 그해 번 돈은 0원으로 쳐요.']
+- type: kinetic
+  chapter: 미국 주식 세금은 쿠폰
+  bg: {kind: video, file: paper_burn_v, dark: 0.3, blur: 0}
+  items:
+  - {text: "안 팔면\n쿠폰이 불탄다", on: 1, size: 150, highlight: '불탄다', hl_color: down}
+  narration: ['그래서 그해에 안 팔면, 그해 쿠폰은 그냥 불타 없어져요. | 내년으로 넘어가지도 않고요.']
+# ── 승: 쿠폰을 매년 쓰면 ──────────────────────────────
+- type: hub
+  chapter: 쿠폰을 매년 쓰면
+  kicker: 12월에 딱 한 번
+  nodes:
+  - {icon: chart, label: 오른 주식 250만 원어치, on: 1}
+  - {icon: hands, label: 팔았다가, on: 1, offset: 0.6}
+  - {icon: rocket, label: 바로 다시 산다, on: 1, offset: 1.2}
+  target: {icon: moneybag, label: '주식 그대로 · 산 가격만 ↑', color: up, on: 2}
+  caption: 다음에 팔 때 '번 돈'이 그만큼 줄어든다
+  narration: ['방법은 간단해요. 12월에 오른 주식을, 수익 250만 원어치만 팔았다가 바로 다시 사는 거예요.', '같은 날 바로 다시 사니까 가격 차이도 거의 없어요. 그러면 내 주식은 그대로인데, 산 가격만 올라가요. | 그래서 나중에 팔 때 세금 매길 번 돈이 줄어들죠.']
+- type: duel
+  chapter: 쿠폰을 매년 쓰면
+  heading: QQQ에 1,000만 원 · 2016 → 2025 · 5,905만 원이 됐을 때
+  left: {title: '10년 들고 한 번에 판 사람', value: '세금 1,024만', sub: '쿠폰 10장 중 1장만 씀', color: down, on: 2}
+  right: {title: '매년 12월 쿠폰 쓴 사람', value: '세금 602만', sub: '팔고 바로 다시 사기 · 주식은 그대로', color: up, on: 3}
+  sfx: [{name: 'mx:2003', on: 2, offset: 0.2, vol: 0.6}]
+  narration: ['진짜 숫자로 볼게요. 나스닥 대표 ETF인 큐큐큐에 10년 전 1,000만 원을 넣었다면, 지금 5,905만 원이에요.', '10년 들고 있다가 한 번에 팔면, 10년 동안 생긴 쿠폰 열 장 중에 딱 한 장만 쓰는 거예요. 세금이 1,024만 원.', '그런데 매년 12월 쿠폰을 쓴 사람은 602만 원이에요. | 똑같은 주식을 들고도 !!422만 원!!을 아낀 거죠.']
+- type: chart
+  chapter: 쿠폰을 매년 쓰면
+  chart:
+    lines:
+    - {series: qqq, color: up, label: QQQ}
+    start: '2015-12-31'
+    end: '2025-12-31'
+    base: 1000
+    end_labels: false
+    rect: [300, 200, 1200, 620]
+    title: QQQ 1,000만 원 (만 원 · 달러 기준)
+    draw: {on: 1, dur: 2.4}
+    marks:
+    - {date: '2016-12-30', label: '12월 · 250만 원 팔고 다시 사기', color: up, on: 1, offset: 1.0, dy: -120, dx: 200}
+    - {date: '2020-12-31', label: '매년 반복', color: up, on: 2, dy: -120, dx: -60}
+    - {date: '2025-12-31', label: '5,905만 원', color: up, on: 2, offset: 0.8, dy: -100, dx: -100}
+    source: '자료: Yahoo Finance (수정 주가) · 환율 · 수수료 미반영'
+  narration: ['차트로 보면 이래요. 매년 12월마다 이 점에서 팔았다가 바로 다시 사요.', '주식은 계속 들고 가니까, 수익률은 똑같아요. | 달라지는 건 세금뿐이죠.']
+# ── 전: 올해는 하락장이 찬스 ───────────────────────────
+- type: kinetic
+  chapter: 올해는 하락장이 찬스
+  bg: {kind: video, file: stock_decline_v, dark: 0.6, blur: 5}
+  items:
+  - {text: "그런데 올해\n계좌가 마이너스라면?", on: 1, size: 130, highlight: '마이너스', hl_color: down}
+  narration: ['그런데 올해 계좌가 마이너스인 분, 많으시죠? | 이번 주 미국 증시는 5개월 만에 최저였고, 반도체 3배 SOXL은 6월 꼭대기에서 -84%예요.']
+- type: hub
+  chapter: 올해는 하락장이 찬스
+  kicker: 손실도 쿠폰이 된다
+  nodes:
+  - {icon: up, label: '엔비디아 +700만 원', on: 1}
+  - {icon: down, label: 'SOXL -700만 원', on: 1, offset: 0.8}
+  target: {text: '=', label: '올해 번 돈 0원', color: up, on: 2}
+  caption: 같은 해 미국 주식끼리는 이익과 손실을 더해서 세금을 매긴다
+  narration: ['여기서 반전. 세금은 같은 해 미국 주식끼리, 이익과 손실을 더해서 매겨요.', '엔비디아로 700만 원을 벌었고, SOXL로 700만 원을 잃었다면, | 올해 번 돈은 0원이 되는 거죠.']
+- type: receipt
+  chapter: 올해는 하락장이 찬스
+  bg: dark
+  heading: 내년 5월 세금 영수증 · 비교
+  highlight: 영수증
+  receipts:
+  - title: 'SOXL 그냥 들고 있으면'
+    sub: '엔비디아만 팔아서 +700만 원 실현'
+    lines:
+    - {label: 번 돈, value: '700만 원', on: 1}
+    - {label: '쿠폰 공제', value: '-250만 원', on: 1, offset: 0.6}
+    - {label: '세금 (22%)', value: '99만 원', color: down, on: 1, offset: 1.2}
+    total: {label: 낼 세금, value: '99만 원', color: down, on: 1, offset: 1.8}
+  - title: '12월에 SOXL 팔고 다시 사면'
+    sub: '-700만 원 손실도 실현'
+    lines:
+    - {label: 번 돈, value: '700만 - 700만 = 0원', on: 2}
+    - {label: '쿠폰 공제', value: '남음', on: 2, offset: 0.6}
+    - {label: '세금', value: '0원', color: up, on: 2, offset: 1.2}
+    total: {label: 낼 세금, value: '0원', color: up, on: 2, offset: 1.8}
+  narration: ['영수증으로 비교해 볼게요. SOXL을 그냥 들고 있으면, 엔비디아 이익 700만 원에서 쿠폰 250만 원을 빼고, 세금 !!99만 원!!.', '12월에 SOXL을 팔았다가 바로 다시 사면, 이익과 손실이 상쇄돼서 세금 0원이에요.']
+- type: kinetic
+  chapter: 올해는 하락장이 찬스
+  bg: {kind: video, file: liberty_v, dark: 0.55, blur: 3}
+  items:
+  - {text: "주식은 그대로\n세금만 0원", on: 1, size: 150, highlight: '세금만 0원', hl_color: up}
+  narration: ['장기 투자하시는 분이라면, 어차피 계속 들고 갈 주식이잖아요. | 하루 사이에 팔았다 다시 사서, 주식은 그대로, 세금만 줄이는 거예요.', '그래서 시장이 빠진 해가 오히려 찬스예요. | 마이너스가 쿠폰으로 바뀌니까요.']
+- type: kinetic
+  chapter: 올해는 하락장이 찬스
+  bg: {kind: video, file: accountant_v, dark: 0.6, blur: 4}
+  credit: '영상: RainMeditateHub (Pixabay)'
+  items:
+  - {text: "미국 부자들은\n매년 12월에 한다", on: 1, size: 130, highlight: '매년 12월', hl_color: up}
+  narration: ['이건 꼼수가 아니에요. 미국에선 택스 로스 하베스팅, 손실 수확이라고 부르면서, 자산가들이 매년 12월마다 하는 기본 중의 기본이에요.', '은행 자산관리 서비스들이 연말이면 알아서 해 주는 일이죠. | 우리는 그걸 직접 하면 되는 거예요.']
+# ── 결: 이렇게만 하면 된다 ─────────────────────────────
+- type: checklist
+  chapter: 이렇게만 하면 된다
+  kicker: 서학개미 12월 절세
+  title: 이렇게만 하면 된다
+  highlight: 이렇게만
+  title_size: 84
+  items:
+  - {text: '증권사 앱에서 · 올해 실현 손익 확인', on: 2, highlight: 실현 손익}
+  - {text: '250만 원보다 적으면 · 오른 주식 팔고 다시 사기', on: 3, highlight: 팔고 다시 사기}
+  - {text: '250만 원보다 많으면 · 손실 주식 팔고 다시 사기', on: 4, highlight: 손실 주식}
+  - {text: '수수료가 아끼는 세금보다 크면 · 하지 않기', on: 5, highlight: 수수료}
+  narration: ['정리하면, 12월엔 이렇게만 하면 돼요.', '첫째, 증권사 앱에서 올해 이미 판 주식의 손익부터 확인하세요. 양도세 메뉴에 다 나와요.', '둘째, 번 돈이 250만 원보다 적으면, 오른 주식을 남은 쿠폰만큼 팔았다가 다시 사세요.', '셋째, 250만 원보다 많으면, 손실 난 주식을 팔았다가 다시 사서 이익을 깎으세요.', '넷째, 사고팔 때 드는 수수료가 아끼는 세금보다 크면, 굳이 하지 마세요.']
+- type: phone
+  chapter: 이렇게만 하면 된다
+  mode: account
+  bg: dark
+  app: 올해 실현 손익
+  phone_x: 560
+  from: 7000000
+  to: 0
+  drop_on: 2
+  drop_dur: 2.5
+  holdings:
+  - {name: '엔비디아 · 매도 완료', pct: 70.0}
+  - {name: 'SOXL · 12월 매도 → 재매수', pct: -70.0}
+  notes:
+  - {text: '① 앱 → 해외주식 양도세 메뉴', on: 1}
+  - {text: '② 올해 실현 손익 +700만 원 확인', on: 1, offset: 0.8}
+  - {text: '③ SOXL 매도 · 바로 재매수', on: 2, offset: 0.3}
+  - {text: '④ 실현 손익 0원 · 세금 0원', on: 2, offset: 1.2}
+  side_text: "주식은 그대로\n세금은 0원"
+  side_highlight: '세금은 0원'
+  side_hl_color: up
+  side_on: 3
+  narration: ['실제로 해 보면 이래요. 증권사 앱에서 해외주식 양도세 메뉴를 열면, 올해 이미 판 주식의 손익이 나와요. 예를 들어 플러스 700만 원.', '여기서 손실 난 SOXL을 팔고, 같은 날 바로 다시 사면, | 올해 실현 손익이 0원으로 떨어져요.', '내 계좌의 주식 수는 그대로인데, 내년 5월 낼 세금만 사라진 거죠.']
+- type: punch
+  chapter: 이렇게만 하면 된다
+  tone: down
+  video: {file: calendar_dec_v, dark: 0.55, blur: 4}
+  credit: '영상: Nasrullah_Khan (Pixabay)'
+  label: 2026년 마감 · 미국 현지 기준 (결제일이 올해여야 함)
+  big: '12월 29일'
+  sub: 30일에 팔면 결제가 내년이라 내년 세금으로 넘어가요
+  'on': 1
+  sub_on: 2
+  sfx: [{name: 'mx:2182', on: 1, offset: 0.05, vol: 0.7}]
+  narration: ['그리고 마감일. 세금은 판 날이 아니라, 돈이 실제로 오가는 결제일 기준이에요.', '그래서 올해는 미국 현지 시간으로 12월 29일 장이 끝나기 전까지 팔아야 해요. 우리 시간으로는 30일 새벽이죠. | 30일에 팔면 결제가 내년이라, 내년 세금으로 넘어가요. 증권사마다 마감 시간을 따로 공지하니까, 꼭 확인하세요.']
+- type: card
+  chapter: 이렇게만 하면 된다
+  heading: 주의 · 이건 해당 안 돼요
+  highlight: 주의
+  numbered: true
+  size: 46
+  gap: 30
+  width: 1560
+  bullets:
+  - {text: '국내 상장 미국 ETF (TIGER · KODEX 미국…) · 방식이 달라요', highlight: 국내 상장, hl_color: down, on: 1}
+  - {text: '올해 손실 · 내년으로 못 넘겨요', on: 2}
+  - {text: '내년 5월 · 양도세 신고 잊지 말기', highlight: 5월, hl_color: down, on: 3}
+  credit: '국내 상장 해외 ETF는 매매 차익이 배당소득세 대상 · 개인별 상황은 세무 전문가 확인'
+  narration: ['주의할 점도 세 가지. 우리나라 증권시장에 상장된 미국 ETF, 타이거나 코덱스 미국 같은 건 세금 방식이 달라서 해당 안 돼요.', '올해 생긴 손실은 내년으로 못 넘기고,', '번 돈이 250만 원을 넘었다면, 내년 5월에 꼭 신고하세요.']
+- type: hub
+  chapter: 이렇게만 하면 된다
+  kicker: 꿀팁 ① 쿠폰은 1인당
+  direction: out
+  nodes:
+  - {icon: hands, label: '나 250만 원', on: 1}
+  - {icon: sparkles, label: '배우자 250만 원', on: 1, offset: 0.5}
+  - {icon: seedling, label: '성인 자녀 250만 원', on: 1, offset: 1.0}
+  target: {icon: moneybag, label: '각자 계좌 · 각자 쿠폰', color: up, on: 1}
+  caption: 본인 명의 계좌에서 본인이 번 돈 기준 (증여는 별도 규칙)
+  narration: ['꿀팁 몇 가지 더. 첫째, 이 쿠폰은 한 사람에 한 장씩이에요. | 가족이 각자 자기 계좌로 미국 주식을 하고 있다면, 각자 250만 원씩 쿠폰이 있는 거죠.']
+- type: duel
+  chapter: 이렇게만 하면 된다
+  heading: '꿀팁 ② 팔고 다시 사는 비용 vs 아끼는 세금'
+  left: {title: '1,000만 원 팔고 다시 사기', value: '약 2만 원', sub: '수수료 0.1% 안팎 × 2번 · 증권사마다 다름', color: down, on: 1}
+  right: {title: '쿠폰 250만 원 다 쓰면', value: '최대 55만 원', sub: '250만 원 × 22% · 아끼는 세금', color: up, on: 1, offset: 1.2}
+  narration: ['둘째, 팔고 다시 사는 비용이요. 1,000만 원어치를 팔았다 다시 사도, 수수료는 보통 2만 원 안팎이에요.', '쿠폰 250만 원을 다 쓰면 아끼는 세금은 최대 55만 원. | 대부분은 할수록 이득이에요. 다만 수수료가 비싼 증권사라면 꼭 계산해 보세요.']
+- type: receipt
+  chapter: 이렇게만 하면 된다
+  bg: dark
+  heading: '꿀팁 ③ 주가는 그대로인데 세금이?'
+  highlight: 세금이?
+  receipts:
+  - title: '1,000달러어치 살 때'
+    sub: '환율 1,300원'
+    lines:
+    - {label: 원화로, value: '130만 원', on: 1}
+    total: {label: 산 가격, value: '130만 원', on: 1, offset: 0.6}
+  - title: '주가 그대로 1,000달러에 팔 때'
+    sub: '환율 1,450원'
+    lines:
+    - {label: 원화로, value: '145만 원', on: 2}
+    total: {label: 세금 매길 번 돈, value: '+15만 원', color: down, on: 2, offset: 0.6}
+  narration: ['셋째, 반전 하나. 미국 주식 세금은 원화로 계산해요. 환율 1,300원일 때 1,000달러어치를 샀는데,', '주가는 그대로여도 환율이 1,450원으로 오르면, 원화로는 15만 원을 번 걸로 쳐요. | 그래서 환율이 많이 오른 해엔, 손익을 꼭 원화로 확인하세요.']
+- type: card
+  chapter: 이렇게만 하면 된다
+  heading: '올해만 · 국내시장 복귀계좌 (RIA)'
+  highlight: 올해만
+  size: 46
+  gap: 30
+  width: 1560
+  bullets:
+  - {text: '미국 주식을 RIA 계좌에서 팔고 · 국내 주식에 1년 이상 투자하면', on: 2}
+  - {text: '지금(8~12월) 팔면 · 양도세 50% 감면', highlight: 50%, hl_color: up, on: 1, offset: 0.8}
+  - {text: '2026년 12월 31일까지 한시 · 한도 · 조건은 증권사 확인', highlight: 한시, hl_color: down, on: 2}
+  credit: '조세특례제한법 국내시장 복귀계좌 과세특례 (2026 한시) · 택스타임즈 · 뉴시스 · 스마트투데이 보도 종합'
+  narration: ['그리고 올해만 있는 보너스도 있어요. 국내시장 복귀계좌, 리아 계좌예요.', '미국 주식을 이 계좌에서 팔고, 그 돈으로 국내 주식에 1년 이상 투자하면, 지금 파는 분은 양도세를 절반 깎아 줘요. | 올해 말까지만 있는 제도라, 한도와 조건은 증권사에서 꼭 확인하세요.']
+# ── 정리 ─────────────────────────────────────────────
+- type: kinetic
+  chapter: 정리
+  bg: {kind: video, file: money_count_v, dark: 0.6, blur: 3}
+  credit: '영상: Hassas_Arts (Pixabay)'
+  items:
+  - {text: "세금도\n수익이다", on: 1, size: 160, highlight: '수익이다', hl_color: up}
+  narration: ['한 줄로 정리하면, 세금도 수익이에요.', '[낮게]12월 29일 전에, 쿠폰부터 챙기세요.']
+- type: outro
+  heading: "12월엔\n쿠폰부터"
+  highlight: 쿠폰부터
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: '본 영상은 투자 · 세무 교육 목적이며, 매수 · 매도 추천이나 세무 자문이 아닙니다.
+
+    개인 상황에 따라 세금이 달라지니 증권사 · 국세청 · 세무 전문가에게 확인하세요.'
+  subscribe_on: 2
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 3
+  narration: ['여러분은 올해 미국 주식, 실현 손익이 플러스예요, 마이너스예요? 어떤 종목으로 절세하실 건가요?', '댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.', '오늘도 감 말고, 숫자로 투자하세요.']
+thumb_pick: P01
+thumbs10:
+- {p: P01, photo: nyse_floor, top: '미국 주식 12월에 이렇게 팔면', bottom: '세금 0원', hl: '0원', sticker: '마감 12/29'}
+- {p: P02, photo: nyse_floor, theme: red, top: '서학개미 매년 버리는 돈', num: '250만', unit: '원', bottom: '12월에 이것만 하세요'}
+- {p: P03, photo: krw_10000, theme: green, label: '미국 주식 수익 700만 원 · 내년 5월 세금', before: '99만', after: '0원', sub: '손실 주식 팔고 다시 샀을 뿐'}
+- {p: P10, name: P04, photo: nyse_floor, label: '(QQQ 1,000만 원 · 10년)', top: '똑같이 들고 있었는데', bottom: '세금 422만 원 차이'}
+- {p: P06, photo: nyse_floor, top: '미국 주식 안 팔고 버티면', bottom: '세금 폭탄', sticker: '경고!'}
+- {p: P09, photo: stock_monitor, person: {file: worker_stressed_cut, h: 900, side: right, dy: 60}, bubble: "미국 주식 마이너스인데\n이게 찬스라고??", bottom: '12월에 이렇게 팔아라'}
+- {p: P08, left: nyse_floor, right: krw_10000, text_l: '그냥 보유', text_r: '12월 매도', name_l: '세금 99만', name_r: '세금 0원', bottom: '주식은 그대로인데?'}
