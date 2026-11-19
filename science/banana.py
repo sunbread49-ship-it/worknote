@@ -25,7 +25,7 @@ from engine import illust as I  # noqa: E402
 OUT = K.HERE / "out" / "banana"
 HEAD = {"kicker": "생활 속 과학", "title": "바나나", "highlight": "바나나",
         "banner": ["바나나 몇 개 먹으면", "방사능 위험?"]}
-SAY = {"__gemini__": {"voice": "Umbriel", "speed": "빠르게", "tempo": 1.12}, "칼륨-40": "칼륨 사십", "Bq": "베크렐", "μSv": "마이크로시버트",
+SAY = {"__gemini__": {"voice": "Umbriel", "speed": "빠르게", "tempo": 1.18}, "칼륨-40": "칼륨 사십", "Bq": "베크렐", "μSv": "마이크로시버트",
        "mSv": "밀리시버트", "Sv": "시버트", "CT": "씨티", "X선": "엑스선"}
 CX = W / 2
 RED = (240, 70, 70)
@@ -88,9 +88,17 @@ def s_atoms(f, t, sc):
             else:
                 d.ellipse((x - r, y - r, x + r, y + r), fill=(150, 170, 200, 200))
     f.alpha_composite(lay)
-    G.blit(f, G.pill("칼륨 1만 개 중 1개 = 칼륨-40", "Black", 50, DARK, YEL, pad=(22, 10), radius=14), (CX, 170), pop(t, 0.3), "mt")
+    G.blit(f, G.pill("칼륨 알갱이 1만 개 중 1개는 '불안정'", "Black", 46, DARK, YEL, pad=(22, 10), radius=14), (CX, 170), pop(t, 0.3), "mt")
+    if t > 2.0:   # 불안정한 알갱이가 작은 에너지 총알을 '퓽'
+        k = (t * 1.6) % 1.0
+        ang = (int(t * 1.6) * 2.4) % (2 * math.pi)
+        x0, y0 = CX, 470
+        x1, y1 = x0 + math.cos(ang) * 420 * k, y0 + math.sin(ang) * 280 * k
+        dd = ImageDraw.Draw(f)
+        dd.line((x0, y0, x1, y1), fill=(255, 240, 120, int(255 * (1 - k))), width=8)
+        G.blit(f, T("퓽!", 70, (255, 240, 120), "Black", stroke=6, stroke_fill=(0, 0, 0)), (x1, y1), 1 - k * 0.6, "mm")
     if t > 2.6:
-        G.blit(f, T("1초에 원자 15개가 '딱'", 64, CREAM, "Black", stroke=6, stroke_fill=(0, 0, 0)), (CX, 690), pop(t, 2.6), "mt")
+        G.blit(f, T("바나나 1개 = 1초에 15번 퓽", 62, CREAM, "Black", stroke=6, stroke_fill=(0, 0, 0)), (CX, 690), pop(t, 2.6), "mt")
 
 
 LADDER = [("바나나 1개", 0.1, "1개", YEL), ("흉부 X선", 70, "700개", CREAM), ("1년 자연방사선", 3000, "3만 개", CREAM),
@@ -134,50 +142,50 @@ def body_shape(h=560):
 
 def s_body(f, t, sc):
     f.alpha_composite(Image.new("RGBA", (W, H), (10, 12, 18, 255)))
-    big(f, "반전", 30, 90, col=YEL)
+    big(f, "반전 · 내 몸도 퓽!", 30, 84, hl="퓽!", hlc=YEL)
     b = body_shape(520)
-    glow = int(120 + 80 * math.sin(t * 5))
-    halo = b.copy(); halo.putalpha(b.getchannel("A").point(lambda v: v * glow // 255))
-    from PIL import ImageFilter
-    G.blit(f, halo.filter(ImageFilter.GaussianBlur(24)), (CX - 200, 170), pop(t, 0.1), "mt")
-    G.blit(f, b, (CX - 200, 170), pop(t, 0.1), "mt")
-    ban = I.emoji("banana", 70) if (K.HERE.parent / "youtube/assets/emoji/banana.png").exists() else None
-    G.blit(f, T("내 몸속", 56, CREAM, "Black"), (CX + 180, 220), pop(t, 0.3), "lt")
-    G.blit(f, T("칼륨-40", 56, CREAM, "Black"), (CX + 180, 290), pop(t, 0.3), "lt")
-    G.blit(f, T("약 4,300Bq", 64, YEL, "Black", stroke=5, stroke_fill=(0, 0, 0)), (CX + 180, 380), pop(t, 0.8), "lt")
-    G.blit(f, G.pill("= 바나나 290개", "Black", 64, DARK, YEL, pad=(24, 10), radius=14), (CX, 740), pop(t, sc["L"][1] if len(sc["L"]) > 1 else 1.6), "mt")
+    bx, by = CX - b.width / 2, 160
+    G.blit(f, b, (bx, by), pop(t, 0.1), "lt")
+    rnd = np.random.default_rng(int(t * 12))
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    if t > 0.4:   # 몸 여기저기서 퓽퓽 (1초에 4천 번 넘게)
+        for _ in range(26):
+            x = bx + rnd.uniform(0.25, 0.75) * b.width
+            y = by + rnd.uniform(0.08, 0.95) * b.height
+            a = rnd.uniform(0, 2 * math.pi); L_ = rnd.uniform(30, 70)
+            d.line((x, y, x + math.cos(a) * L_, y + math.sin(a) * L_), fill=(255, 255, 255, 230), width=4)
+            d.ellipse((x - 5, y - 5, x + 5, y + 5), fill=(255, 70, 70, 255))
+    f.alpha_composite(lay)
+    G.blit(f, G.pill("내 몸에서 1초에 4,300번 퓽", "Black", 50, DARK, YEL, pad=(22, 10), radius=14), (CX, 700), pop(t, 0.9), "mt")
+    L = sc["L"]
+    if len(L) > 1 and t > L[1]:
+        G.blit(f, G.pill("= 바나나 290개를 늘 들고 다니는 셈", "Black", 46, DARK, CREAM, pad=(22, 10), radius=14), (CX, 790), pop(t, L[1]), "mt")
 
 
 def s_balance(f, t, sc):
-    """먹은 만큼 나간다: 바나나 → 몸 → 콩팥 → 소변 (흐름 도식)"""
+    """몸속 칼륨 = 늘 같은 높이로 차 있는 물통 · 바나나를 부으면 넘친 만큼 배수구(콩팥)로"""
     f.alpha_composite(Image.new("RGBA", (W, H), (10, 12, 18, 255)))
-    vbg(f, "banana_plant_v", t, 0.85, 8)
-    big(f, "먹어도 쌓이지 않는다", 30, 84, hl="쌓이지 않는다", hlc=GREEN)
-    xs = [180, CX, W - 180]
-    labels = [("바나나", "먹은 칼륨"), ("내 몸", "늘 같은 양"), ("콩팥", "남는 만큼 배출")]
-    for i, (x, (a, b)) in enumerate(zip(xs, labels)):
-        k = pop(t, 0.2 + i * 0.5, 0.35)
-        if k <= 0:
-            continue
-        c = Image.new("RGBA", (260, 260), (0, 0, 0, 0))
-        ImageDraw.Draw(c).ellipse((0, 0, 259, 259), fill=(30, 36, 40, 255), outline=GREEN + (255,), width=8)
-        c.alpha_composite(T(a, 54, CREAM, "Black"), (130 - T(a, 54, CREAM, "Black").width // 2, 96))
-        G.blit(f, c, (x, 330), k, "mm")
-        G.blit(f, T(b, 40, MINT, "Bold"), (x, 480), k, "mt")
-    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    d = ImageDraw.Draw(lay)
-    for i in range(2):
-        if t < 0.7 + i * 0.5:
-            continue
-        x0, x1 = xs[i] + 135, xs[i + 1] - 135
-        for j in range(5):
-            u = ((t * 0.9 + j / 5) % 1.0)
-            x = x0 + (x1 - x0) * u
-            d.ellipse((x - 10, 320, x + 10, 340), fill=GREEN + (230,))
-    f.alpha_composite(lay)
-    if t > 1.8:
-        G.blit(f, T("그래서 바나나 피폭은 '0.1μSv'라고 해도\n실제로는 쌓이지 않아요", 46, CREAM, "Bold", align="center"), (CX, 600), pop(t, 1.8), "mt")
-    K.credit(f, "영상: Matthias_Groeneveld (Pixabay) · 몸속 칼륨 항상성")
+    big(f, "몸은 칼륨 물통", 30, 90, hl="물통", hlc=GREEN)
+    d = ImageDraw.Draw(f)
+    x0, x1, y0, y1 = 260, 820, 250, 720
+    level = 400 + 6 * math.sin(t * 3)
+    d.rectangle((x0, level, x1, y1), fill=(60, 150, 230, 255))
+    d.line((x0, y0, x0, y1), fill=CREAM + (255,), width=10); d.line((x1, y0, x1, y1), fill=CREAM + (255,), width=10)
+    d.line((x0, y1, x1, y1), fill=CREAM + (255,), width=10)
+    d.line((x0 - 20, 400, x0 + 30, 400), fill=YEL + (255,), width=6)
+    G.blit(f, T("늘 이 높이", 38, YEL, "Black"), (x0 - 30, 400), 1, "rm")
+    d.rectangle((x1, 392, x1 + 140, 412), fill=CREAM + (255,))
+    for i in range(3):   # 넘친 물 → 배수구(콩팥)
+        u = (t * 1.2 + i / 3) % 1.0
+        d.ellipse((x1 + 140 - 10, 412 + u * 260 - 10, x1 + 140 + 10, 412 + u * 260 + 10), fill=(60, 150, 230, 255))
+    G.blit(f, G.pill("콩팥 → 소변", "Black", 40, DARK, GREEN, pad=(18, 8), radius=12), (x1 + 140, 690), 1, "mt")
+    ban = I.emoji("banana", 110)
+    for i in range(2):   # 위에서 바나나 퐁당
+        u = (t * 0.8 + i * 0.5) % 1.0
+        G.blit(f, ban.rotate(u * 200, expand=True), ((x0 + x1) / 2 + (i - 0.5) * 160, 120 + u * 260), 1 - max(0, u - 0.8) * 5, "mm")
+    if t > 1.6:
+        G.blit(f, T("더 먹어도 넘친 만큼 빠져나가서\n방사능이 쌓이지 않아요", 46, CREAM, "Bold", align="center"), (CX, 760), pop(t, 1.6), "mt")
 
 
 def s_end(f, t, sc):
@@ -208,15 +216,15 @@ SCENES = [
     {"draw": s_question, "flash": True, "nohead": True, "min": 1.8, "gap": 0.1, "tail": 0.1, "sfx_t": [(0.3, "ding", 0.5)],
      "narr": ["그럼 몇 개 먹으면 위험할까요?"]},
     {"draw": s_atoms, "flash": True, "nohead": True, "min": 3.4, "gap": 0.1, "tail": 0.2, "sfx_t": [(1.2, "zoom_in", 0.5), (2.6, "accent", 0.5)],
-     "narr": ["범인은 칼륨이에요. 칼륨 원자 1만 개 중 1개가, / 방사성 칼륨-40이거든요.", "그래서 바나나 하나에서, / 1초에 원자 15개가 붕괴해요."]},
+     "narr": ["범인은 바나나 속 영양소, 칼륨이에요. / 칼륨 알갱이 1만 개 중 1개는 성격이 불안정해서,", "가만히 있다가 아주 작은 에너지 총알을 퓽 쏘고 얌전해져요. 이게 방사선이에요. / 바나나 하나에선 1초에 15번 퓽. 그래서 15베크렐이에요."]},
     {"draw": s_ladder, "flash": True, "nohead": True, "min": 3.6, "gap": 0.1, "tail": 0.25,
      "sfx_fn": lambda sc: [(0.2 + 0.45 * i, "pop", 0.45) for i in range(3)] + [(sc["L"][1], "pop", 0.45), (sc["L"][1] + 0.6, "fail", 0.4)],
-     "narr": ["바나나로 환산하면, / 흉부 엑스선 한 번이 바나나 700개, / 1년 동안 자연에서 받는 방사선이 3만 개예요.",
+     "narr": ["이제 방사선 양을 바나나 개수로 바꿔 볼게요. / 병원 가슴 엑스레이 한 번이 바나나 700개, / 그냥 1년 동안 살면서 자연에서 받는 게 3만 개예요.",
               "흉부 CT는 4만 4천 개, / 그리고 몸에 증상이 나타나려면, / 한 번에 1,000만 개를 먹어야 해요."]},
     {"draw": s_body, "flash": True, "nohead": True, "min": 3.0, "gap": 0.1, "tail": 0.2, "sfx_fn": lambda sc: [(0.8, "reveal", 0.5), (sc["L"][1], "ding", 0.5)],
-     "narr": ["그런데 반전. / 우리 몸에도 칼륨-40이 이미 4천 베크렐 넘게 있어요.", "바나나 290개를 늘 품고 사는 셈이죠."]},
+     "narr": ["그런데 반전. / 칼륨은 원래 우리 몸에도 많아요. 그래서 지금 이 순간에도, / 내 몸에서 1초에 4천 번 넘게 퓽퓽 하고 있어요.", "바나나 290개를 늘 들고 다니는 셈이죠."]},
     {"draw": s_balance, "flash": True, "nohead": True, "min": 3.0, "gap": 0.1, "tail": 0.2, "sfx_t": [(0.2 + 0.5 * i, "pop", 0.4) for i in range(3)],
-     "narr": ["게다가 우리 몸은 칼륨 양을 늘 똑같이 유지해요. / 더 먹으면, 콩팥이 남는 만큼 내보내죠. / 그래서 바나나 방사능은 쌓이지 않아요."]},
+     "narr": ["게다가 우리 몸은, 늘 같은 높이로 물이 차 있는 물통 같아요. / 바나나를 먹어서 칼륨을 더 부으면, / 넘친 만큼 콩팥이 소변으로 내보내요. 그래서 바나나 방사능은 쌓이지 않아요."]},
     {"draw": s_end, "flash": True, "nohead": True, "min": 2.4, "gap": 0.1, "tail": 0.2, "sfx_t": [(0.3, "boom", 0.4), (1.4, "pop", 0.4)],
      "narr": ["결국 1,000만 개를 먹기 전에, / 배가 먼저 터져요. / 단, 콩팥이 안 좋은 분은 칼륨을 의사와 상담하세요."]},
     {"draw": s_cta, "flash": True, "nohead": True, "min": 2.0, "gap": 0.1, "tail": 0.15, "sfx_t": [(0.05, "pop", 0.6), (0.45, "pop", 0.6)],

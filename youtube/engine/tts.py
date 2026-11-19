@@ -311,6 +311,10 @@ def plan(scenes, cfg, work_dir: Path, log=print):
 # 키: 환경 Network secrets — generativelanguage.googleapis.com / 헤더 x-goog-api-key (요청에 자동으로 붙음)
 GEMINI_MODEL = "gemini-2.5-flash-preview-tts"
 GEMINI_MODELS = ["gemini-2.5-flash-preview-tts", "gemini-2.5-pro-preview-tts"]   # 하루 한도가 모델마다 따로 (Tier 1: 각 100번)
+import os as _os
+if _os.environ.get("GEMINI_ONLY"):   # 2026-11-19: 한 영상 = 한 모델 — 다른 모델로 만든 캐시도 안 씀 (톤 통일)
+    GEMINI_MODEL = _os.environ["GEMINI_ONLY"]
+    GEMINI_MODELS = [GEMINI_MODEL]
 _G_DEAD = set()
 GEMINI_MIN_GAP = 7.0   # 초 · 분당 약 8번 (429 방지)
 _G_LAST = 0.0   # pro 모델은 긴 글에서 502가 잦음
