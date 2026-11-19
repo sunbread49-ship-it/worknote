@@ -233,15 +233,14 @@ scenes:
   chapter: 이렇게만 하면 된다
   mode: account
   bg: dark
-  app: 올해 실현 손익
+  app: 해외주식 양도세
+  label: 올해 실현 손익
+  hide_pct: true
   phone_x: 560
   from: 7000000
   to: 0
   drop_on: 2
   drop_dur: 2.5
-  holdings:
-  - {name: '엔비디아 · 매도 완료', pct: 70.0}
-  - {name: 'SOXL · 12월 매도 → 재매수', pct: -70.0}
   notes:
   - {text: '① 앱 → 해외주식 양도세 메뉴', on: 1}
   - {text: '② 올해 실현 손익 +700만 원 확인', on: 1, offset: 0.8}
@@ -255,8 +254,8 @@ scenes:
 - type: punch
   chapter: 이렇게만 하면 된다
   tone: down
-  video: {file: calendar_dec_v, dark: 0.55, blur: 4}
-  credit: '영상: Nasrullah_Khan (Pixabay)'
+  video: {file: calc_surprise_v, dark: 0.5, blur: 2}
+  credit: '영상: conte_public (Pixabay)'
   label: 2026년 마감 · 미국 현지 기준 (결제일이 올해여야 함)
   big: '12월 29일'
   sub: 30일에 팔면 결제가 내년이라 내년 세금으로 넘어가요
@@ -293,7 +292,7 @@ scenes:
   chapter: 이렇게만 하면 된다
   heading: '꿀팁 ② 팔고 다시 사는 비용 vs 아끼는 세금'
   left: {title: '1,000만 원 팔고 다시 사기', value: '약 2만 원', sub: '수수료 0.1% 안팎 × 2번 · 증권사마다 다름', color: down, on: 1}
-  right: {title: '쿠폰 250만 원 다 쓰면', value: '최대 55만 원', sub: '250만 원 × 22% · 아끼는 세금', color: up, on: 1, offset: 1.2}
+  right: {title: '쿠폰 250만 원 다 쓰면', value: '최대 55만 원', sub: '250만 원 × 22% · 아끼는 세금', color: up, on: 2, offset: 1.2}
   narration: ['둘째, 팔고 다시 사는 비용이요. 1,000만 원어치를 팔았다 다시 사도, 수수료는 보통 2만 원 안팎이에요.', '쿠폰 250만 원을 다 쓰면 아끼는 세금은 최대 55만 원. | 대부분은 할수록 이득이에요. 다만 수수료가 비싼 증권사라면 꼭 계산해 보세요.']
 - type: receipt
   chapter: 이렇게만 하면 된다

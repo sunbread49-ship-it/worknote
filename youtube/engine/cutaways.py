@@ -233,7 +233,7 @@ class Phone(Cutaway):
         W = scr.width
         scr.paste((248, 249, 252, 255), (0, 0, W, scr.height))
         scr.alpha_composite(G.text_img(sp.get("app", "내 주식 계좌"), "ExtraBold", 34, INK), (36, 90))
-        scr.alpha_composite(G.text_img("총 평가금액", "SemiBold", 26, (120, 124, 140)), (36, 160))
+        scr.alpha_composite(G.text_img(sp.get("label", "총 평가금액"), "SemiBold", 26, (120, 124, 140)), (36, 160))
         t0 = self.line_start(sp.get("drop_on", 1)) + 0.2
         k = G.ease_in_out((t - t0) / sp.get("drop_dur", 2.2)) if t >= t0 else 0
         a, b = sp["from"], sp["to"]
@@ -241,7 +241,8 @@ class Phone(Cutaway):
         scr.alpha_composite(G.text_img(_won(v), "Black", 60, INK), (36, 196))
         pct = (v / a - 1) * 100
         c = S.UP if pct >= 0 else S.DOWN
-        scr.alpha_composite(G.text_img(f"{pct:+.1f}%  ({_won(v - a, sign=True)})", "Bold", 30, c), (36, 280))
+        if not sp.get("hide_pct"):   # 2026-11-19: 실현 손익처럼 %가 어색한 화면은 숨김
+            scr.alpha_composite(G.text_img(f"{pct:+.1f}%  ({_won(v - a, sign=True)})", "Bold", 30, c), (36, 280))
         # 미니 차트
         cw, ch, cy = W - 72, (120 if sp.get("income") else 230), 350
         n = 60
