@@ -94,12 +94,12 @@ scenes:
   chapter: 인트로
   photos: [bts_wh, skz_gda, bp_toronto]
   logos: [logo_hybe, logo_jyp, logo_yg]
-  per: 2.4
-  credit: '사진: The White House (퍼블릭 도메인) · K-POPIT (CC BY 4.0) · Those Hoomans (CC BY 3.0) · Wikimedia Commons'
+  sync: true
+  credit: '사진: Wikimedia Commons (퍼블릭 도메인 · CC BY)'
   keys:
-  - {text: 'BTS 뒤엔 · 방시혁', on: 2}
-  - {text: '스트레이 키즈 · 트와이스 뒤엔 · 박진영', on: 2, offset: 1.4}
-  - {text: '블랙핑크 뒤엔 · 양현석', on: 2, offset: 2.8}
+  - {text: 'BTS → 방시혁', on: 2}
+  - {text: '스키즈 · 트와이스 → 박진영', on: 2, offset: 1.9}
+  - {text: '블랙핑크 → 양현석', on: 2, offset: 3.9}
   narration: ['우리나라 메이저 엔터 4사 대표님들, 1년에 돈을 얼마나 벌까요? 한 번쯤 궁금하셨죠?', '비티에스 뒤에는 방시혁, 스트레이 키즈와 트와이스 뒤에는 박진영, | 블랙핑크 뒤에는 양현석이 있죠.']
 - type: leaderboard
   chapter: 인트로
@@ -108,8 +108,8 @@ scenes:
   highlight: 누구일까?
   'on': 1
   step: 0.3
-  top: 300
-  row_h: 104
+  top: 360
+  row_h: 98
   rows:
   - {label: '? ? ?', sub: '어느 회사, 누구일까?', value: 27.6, text: '27.6억', color: [255, 204, 40]}
   - {label: '? ? ?', sub: '', value: 26.6, text: '26.6억', color: [210, 214, 224]}
@@ -131,8 +131,8 @@ scenes:
   chapter: 엔터 4사
   photos: [bts_wh, aespa_klink, skz_gda, babymonster_sea]
   logos: [logo_hybe, logo_sm, logo_jyp, logo_yg]
-  per: 2.9
-  credit: '사진: The White House (PD) · plumflower snow (CC BY-SA 2.0) · K-POPIT (CC BY 4.0) · David Lee (CC BY 4.0) · Wikimedia Commons'
+  sync: true
+  credit: '사진: Wikimedia Commons (퍼블릭 도메인 · CC BY · CC BY-SA)'
   keys:
   - {text: 'BTS · 세븐틴 · 투바투', on: 1}
   - {text: '에스파 · NCT · 라이즈', on: 2}
@@ -145,6 +145,7 @@ scenes:
   title: 누가 제일 많이 팔았나
   highlight: 제일 많이
   logo_as_label: true
+  top: 360
   'on': 1
   rows:
   - {label: '', logo: logo_hybe, sub: 'BTS · 세븐틴 · 투바투', value: 2.65, text: '2조 6,499억', color: [255, 204, 40]}
@@ -159,6 +160,7 @@ scenes:
   title: 많이 판 회사 ≠ 많이 남긴 회사
   highlight: 많이 남긴
   logo_as_label: true
+  top: 360
   'on': 1
   rows:
   - {label: '', logo: logo_jyp, sub: '영업이익 1,552억', value: 1888, text: '1,888원', color: [120, 220, 180]}
@@ -191,8 +193,8 @@ scenes:
   logo_as_label: true
   'on': 1
   step: 0.9
-  top: 300
-  row_h: 104
+  top: 360
+  row_h: 98
   rows:
   - {label: '양현석 · 총괄 프로듀서', logo: logo_yg, value: 27.6, text: '27.6억', color: [255, 204, 40]}
   - {label: '박진영 · 창업자', logo: logo_jyp, value: 26.6, text: '26.6억', color: [210, 214, 224]}
@@ -241,6 +243,8 @@ scenes:
   title: 창업자 주식, 지금 얼마?
   highlight: 지금 얼마?
   logo_as_label: true
+  top: 370
+  row_h: 118
   'on': 1
   rows:
   - {label: 방시혁, logo: logo_hybe, sub: '1,315만 주 · 30.86%', value: 2.48, text: '2조 4,764억', color: [255, 204, 40]}

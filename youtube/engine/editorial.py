@@ -1940,15 +1940,17 @@ class Leaderboard(Editorial):
             num = T(str(i + r0), 46, (20, 22, 30), "Black")
             md.alpha_composite(num, (md.width // 2 - num.width // 2, md.height // 2 - num.height // 2 - 2))
             G.blit(f, md, (cx, cy), k, "mm")
-            ci = logo_chip(r["logo"], 64) if (r.get("logo") and sp.get("logo_as_label")) else None
-            if ci is not None:   # 2026-11-20 사용자: 회사 이름 대신 CI
-                G.blit(f, ci, (x0 + 100, cy - 4), k, "lb")
+            ci = logo_chip(r["logo"], 54) if (r.get("logo") and sp.get("logo_as_label")) else None
+            if ci is not None:   # 2026-11-20 사용자: 회사 이름 대신 CI (CI 위 · 이름은 아래 작은 줄)
+                if ci.width > 380:
+                    ci = ci.resize((380, int(ci.height * 380 / ci.width)), Image.LANCZOS)
+                G.blit(f, ci, (x0 + 100, cy + 2), k, "lb")
                 if r.get("label"):
-                    G.blit(f, T(r["label"], 30, S.FG, "Black"), (x0 + 110 + ci.width, cy - 14), k, "lb")
+                    G.blit(f, T(r["label"], 28, S.FG, "Black"), (x0 + 102, cy + 8), k, "lt")
             else:
                 lab = T(r["label"], 44, S.FG, "Black")
                 G.blit(f, lab, (x0 + 100, cy - 6), k, "lb")
-            if r.get("sub"):
+            if r.get("sub") and not (ci is not None and r.get("label")):
                 G.blit(f, T(r["sub"], 26, (190, 196, 212), "SemiBold"), (x0 + 102, cy + 6), k, "lt")
             if r.get("logo") and ci is None:
                 lg = logo_chip(r["logo"], 52)
@@ -2942,6 +2944,13 @@ class Showcase(Editorial):
             per = sp.get("per", 2.6)
             k = int(t / per) % len(names)
             u = (t % per) / per
+            if sp.get("sync"):   # 2026-11-20: 사진 = 지금 나온 마지막 키 (말하는 가수와 사진이 같게)
+                starts = [self.line_start(it.get("on", 1)) + it.get("offset", 0) for it in sp.get("keys", [])]
+                k = max([0] + [j for j, st in enumerate(starts) if t >= st])
+                k = min(k, len(names) - 1)
+                st0 = starts[k] if starts and t >= starts[0] else 0
+                u = min(1.0, (t - st0) / 4)
+            self._k = k
             fr, cr = photo_backdrop({"file": names[k], "dark": 0.0, "gray": 0.0})
             fr = fr.convert("RGB")
             z = 1.0 + 0.06 * u
@@ -2960,7 +2969,7 @@ class Showcase(Editorial):
             G.blit(f, G.pill(sp["tag"], "Black", 44, white, green, pad=(24, 10), radius=8), (x0 + 30, y0 + 30), 1, "lt")
         lg_name = sp.get("logo")
         if sp.get("logos") and not sp.get("media"):   # 사진마다 다른 CI (사진 순서와 같게)
-            lg_name = sp["logos"][int(t / sp.get("per", 2.6)) % len(sp["logos"])]
+            lg_name = sp["logos"][getattr(self, "_k", 0) % len(sp["logos"])]
         if lg_name:
             lg = logo_chip(lg_name, 70) if sp.get("logo_plate", True) else None
             if lg is not None:
