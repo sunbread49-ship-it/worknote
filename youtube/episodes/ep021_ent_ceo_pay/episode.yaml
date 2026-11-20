@@ -418,8 +418,16 @@ scenes:
   signature: 오늘도 감 말고, 숫자로 투자하세요.
   signature_on: 3
   narration: ['여러분이 지금 엔터주를 산다면, 어느 회사 효자 가수 달력을 보시겠어요? 지금은 공백기일까요, 축제일까요?', '댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.', '오늘도 감 말고, 숫자로 투자하세요.']
-thumb_pick: P01
+thumb_pick: T01
+# 2026-11-20 사용자: 시안 더 많이 · '이마 짚은 여자' 사진 금지 · 27.6억 스티커 대신 엔터 4사 이름 · 시청자 궁금증(누가 제일 많이 벌까?) 반영
 thumbs10:
-- {p: P01, photo: concert_stage, top: '엔터 사장님 연봉 공시로 까 보니', bottom: '1등은 사장이 아니다', hl: '사장이 아니다', sticker: '27.6억'}
-- {p: P02, photo: concert_stage, theme: red, top: '회장님 연봉 공시에 이름 없음', num: '5억', unit: '미만', bottom: '대신 하루에 7천억'}
-- {p: P10, name: P03, photo: concert_stage, label: '(하이브 · SM · JYP · YG · 2025 사업보고서)', top: '엔터 4사 사장님 연봉', bottom: '직원의 47배'}
+- {p: P01, name: T01, photo: concert_stage, chips: [하이브, SM, JYP, YG], top: '엔터 4사 사장님 연봉', bottom: '누가 제일 많이 벌까?', hl: '제일 많이'}
+- {p: P01, name: T02, photo: concert_lights, chips: [하이브, SM, JYP, YG], top: '엔터 4사 연봉 1등은', bottom: '사장님이 아니었다', hl: '아니었다'}
+- {p: P01, name: T03, photo: festival_crowd, chips: [하이브, SM, JYP, YG], top: '엔터 사장님 연봉 공시로 까 보니', bottom: '1등은 사장이 아니다', hl: '사장이 아니다'}
+- {p: P01, name: T04, photo: concert_lights, chips: [하이브, SM, JYP, YG], top: '하이브 회장님 연봉', bottom: '공시에 이름이 없다?', hl: '이름이 없다?'}
+- {p: P02, name: T05, photo: concert_stage, theme: red, chips: [하이브, SM, JYP, YG], chips_y: 820, top: '엔터 사장님 연봉 1등', num: '27억', unit: '누구?', bottom: ''}
+- {p: P03, name: T06, photo: concert_stage, chips: [하이브, SM, JYP, YG], before: '8억', after: '27억', sub: '같은 회사, 사장님보다 3배 받는 사람'}
+- {p: P08, name: T07, left: concert_stage, right: concert_lights, text_l: 사장님, text_r: 창업자, name_l: '대표이사 연봉', name_r: '회사 만든 사람', bottom: '엔터 4사, 누가 더 벌까?'}
+- {p: P10, name: T08, photo: concert_stage, chips: [하이브, SM, JYP, YG], label: '(2025 사업보고서 · 금감원 공시)', top: '엔터 4사 사장님 연봉', bottom: '직원의 47배'}
+- {p: P06, name: T09, photo: festival_crowd, chips: [하이브, SM, JYP, YG], chips_y: 160, top: 'BTS 컴백 · 역대 최대 실적인데', bottom: '주가는 -45%', sticker: '왜?'}
+- {p: P01, name: T10, photo: festival_crowd, chips: [하이브, SM, JYP, YG], top: '회장님 월급은 연봉이 아니다', bottom: '하루에 7천억이 움직인다', hl: '7천억'}

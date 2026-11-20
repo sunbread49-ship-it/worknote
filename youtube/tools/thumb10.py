@@ -588,7 +588,16 @@ def main(ep_dir):
     od.mkdir(parents=True, exist_ok=True)
     outs = []
     for sp in ep["thumbs10"]:
-        f = TH.finish(P[sp["p"]](sp), frame=False)
+        f = P[sp["p"]](sp)
+        if sp.get("chips"):   # 2026-11-20: 회사 · 브랜드 이름 칩 한 줄 (예: 하이브 · SM · JYP · YG)
+            row = [G.pill(c, "Black", sp.get("chip_size", 78), BLACK, WHITE, pad=(34, 14), radius=18) for c in sp["chips"]]
+            gap = 26
+            tw_ = sum(r.width for r in row) + gap * (len(row) - 1)
+            x = (W - tw_) / 2
+            for r in row:
+                TH.shadowed(f, r, (x, sp.get("chips_y", 46)))
+                x += r.width + gap
+        f = TH.finish(f, frame=False)
         nm = sp.get("name", sp["p"])   # 같은 패턴 여러 시안: name: P04b
         path = od / f"{nm}.png"
         f.convert("RGB").resize((1280, 720), Image.LANCZOS).save(path)
