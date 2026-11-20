@@ -102,6 +102,56 @@ def _gemini_line(line, gem, say, cache):
     return best[1]
 
 
+def line_words(a, cache):
+    """2026-11-20 사용자: 자막 전환 = 실제 음성 단어 시작에 맞춤 → 받아쓰기 단어 시각 [(단어, 시작, 끝)] (줄 기준 초 · 캐시)"""
+    import hashlib, json as _j
+    key = hashlib.sha1(a[::97].tobytes()).hexdigest()[:16]
+    f = cache / f"words_{key}.json"
+    if f.exists():
+        return [tuple(x) for x in _j.loads(f.read_text())]
+    tmp = cache / f"_w_{key}.wav"
+    with wave.open(str(tmp), "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(48000)
+        w.writeframes((np.clip(a, -1, 1) * 32767).astype("<i2").tobytes())
+    try:
+        words = TTS._stt_words(tmp)
+    except Exception as e:
+        print("  받아쓰기 시각 실패 → 소리 쉼 기준:", e)
+        words = []
+    tmp.unlink(missing_ok=True)
+    f.write_text(_j.dumps(words, ensure_ascii=False))
+    return words
+
+
+def _hn(t):
+    import re as _re
+    return _re.sub(r"[^가-힣0-9A-Za-z]", "", TTS.speakable(t))
+
+
+def _bounds(chunks, s, e, words):
+    """조각 경계 시각: 대본 글자 누적 비율 ↔ 받아쓰기 단어 글자 누적 → 다음 조각 첫 단어가 '들리기 시작하는' 시각"""
+    L = [max(1, len(_hn(c))) for c in chunks]
+    tot = sum(L)
+    if not words:
+        out, tt = [s], s
+        for n_ in L[:-1]:
+            tt += (e - s) * n_ / tot
+            out.append(tt)
+        return out + [e]
+    wl = [len(_hn(w)) for w, _, _ in words]   # 받아쓰기 조각('▁'로 시작 = 단어 시작)
+    tw = max(1, sum(wl))
+    before = [sum(wl[:j]) / tw for j in range(len(wl))]   # 조각 j 앞까지 누적 비율
+    starts = [j for j, (w, _, _) in enumerate(words) if w.startswith("▁") and j + 1 < len(words)] or list(range(len(words)))
+    out, acc = [s], 0
+    for n_ in L[:-1]:
+        acc += n_
+        target = acc / tot
+        j = min(starts, key=lambda k: abs(before[k] - target))   # 단어 시작 조각에만 맞춤 (말 중간에서 안 끊김)
+        b = max(out[-1] + 0.25, words[j][1] - 0.04)
+        out.append(min(b, e - 0.2))
+    return out + [e]
+
+
 def plan(scenes, out, say):
     say = {**CTA_SAY, **say}
     rate = say.pop("__rate__", RATE)
@@ -116,7 +166,8 @@ def plan(scenes, out, say):
                 sc["L"].append(cur)
                 a = _gemini_line(line, gem, say, cache)
                 clips.append((t + cur, a))
-                cues.append((t + cur, t + cur + len(a) / 48000, line.replace(" // ", " ").replace(" / ", " ").replace(" | ", " ").replace("|", "")))
+                wd = [(w, t + cur + a0, t + cur + a1) for w, a0, a1 in line_words(a, cache)]
+                cues.append((t + cur, t + cur + len(a) / 48000, line.replace(" // ", " ").replace(" / ", " ").replace(" | ", " ").replace("|", ""), wd))
                 cur += len(a) / 48000 + sc.get("gap", 0.25)
                 continue
             # ' / ' = 짧게 띄기(0.12초), ' // ' = 한 템포 쉬기(0.3초): 조각마다 따로 읽어 이어 붙임 → 쉼표 쉼 기호가 만드는 이상한 소리 방지
@@ -154,10 +205,61 @@ def _fits(text):
     return St.font("Black", SUB_SIZE).getlength(text) <= SUB_MAXW
 
 
+_GOOD_END = ("은", "는", "이", "가", "을", "를", "에", "의", "도", "만", "서", "고", "면", "데", "게", "로", "와", "과",
+             "요", "다", "죠", "까", "지", "니까", "며", "듯", "처럼", "보다", "부터", "까지", "에서", "한테", "씩", ",", "?", ".", "!")
+_ADVERB_I = ("같이", "많이", "높이", "깊이", "빨리", "멀리", "천천히", "가득히", "똑같이")
+
+
+def _phrase_split(p):
+    """단어 경계 중 '좋은 끊김(조사·어미 뒤)'을 우선, 각 줄이 한 줄 폭에 들어가고 길이가 고르게 — 작은 DP"""
+    from engine import style as St
+    fnt = St.font("Black", SUB_SIZE)
+    ws = p.split(" ")
+    n = len(ws)
+    width = lambda i, j: fnt.getlength(" ".join(ws[i:j]))
+    total = width(0, n)
+    best = None
+    for k in range(2, 7):
+        tgt = total / k
+        # dp[j][m] = (비용, 이전 끊김) : 앞 j단어를 m줄로
+        INF = float("inf")
+        dp = [[(INF, -1)] * (k + 1) for _ in range(n + 1)]
+        dp[0][0] = (0.0, -1)
+        for j in range(1, n + 1):
+            for m in range(1, k + 1):
+                for i in range(m - 1, j):
+                    if dp[i][m - 1][0] == INF:
+                        continue
+                    w_ = width(i, j)
+                    if w_ > SUB_MAXW:
+                        continue
+                    c = dp[i][m - 1][0] + ((w_ - tgt) / tgt) ** 2
+                    if j < n and (not ws[j - 1].endswith(_GOOD_END) or ws[j - 1].rstrip(",.?!") in _ADVERB_I):
+                        c += 0.6   # 의미 중간에서 끊김 벌점
+                    if len(" ".join(ws[i:j])) < 5:
+                        c += 0.8   # 너무 짧은 줄 (깜빡 지나감)
+                    if j < n and len(ws[j - 1]) == 1:
+                        c += 0.4   # 한 글자 단어 뒤 끊김 벌점 ('툭 / 튀어나온')
+                    if c < dp[j][m][0]:
+                        dp[j][m] = (c, i)
+        if dp[n][k][0] < INF:
+            cuts, j, m = [], n, k
+            while m > 0:
+                i = dp[j][m][1]
+                cuts.append(" ".join(ws[i:j]))
+                j, m = i, m - 1
+            cand = (dp[n][k][0] + 0.15 * k, cuts[::-1])
+            if best is None or cand[0] < best[0]:
+                best = cand
+    return best[1] if best else [p]
+
+
 def sub_frames(cues):
     """자막은 항상 한 줄: 구두점 → 단어 단위로 잘라 한 줄 폭에 맞게 여러 번 나눠 보여 줌"""
     out = []
-    for s, e, txt in cues:
+    for cue in cues:
+        s, e, txt = cue[:3]
+        heard = cue[3] if len(cue) > 3 else []
         parts = [p.strip() for p in txt.replace("? ", "?|").replace(". ", ".|").replace(", ", ",|").split("|") if p.strip()]
         chunks, cur = [], ""
         for p in parts:
@@ -171,35 +273,15 @@ def sub_frames(cues):
             if _fits(p):
                 cur = p
                 continue
-            # 한 구절이 한 줄보다 길면 → 단어 단위로 고르게(균형) 나눔
-            words = p.split(" ")
-            from engine import style as St
-            fnt = St.font("Black", SUB_SIZE)
-            k = 2
-            while True:
-                target = fnt.getlength(p) / k
-                groups, g = [], ""
-                for w_ in words:
-                    c2 = (g + " " + w_).strip()
-                    if g and fnt.getlength(c2) > target * 1.08 and len(groups) < k - 1:
-                        groups.append(g)
-                        g = w_
-                    else:
-                        g = c2
-                groups.append(g)
-                if all(_fits(x) for x in groups) or k > 6:
-                    break
-                k += 1
+            # 한 구절이 한 줄보다 길면 → 단어 단위로 나누되, 조사 · 어미 뒤(의미 단위)에서 끊고 길이는 고르게 (2026-11-20)
+            groups = _phrase_split(p)
             chunks.extend(groups[:-1])
             cur = groups[-1]
         if cur:
             chunks.append(cur)
-        n = sum(len(c) for c in chunks)
-        tt = s
-        for c in chunks:
-            d = (e - s) * len(c) / n
-            out.append((tt, tt + d, c))
-            tt += d
+        b = _bounds(chunks, s, e, heard)
+        for i, c in enumerate(chunks):
+            out.append((b[i], b[i + 1], c))
     return out
 
 
