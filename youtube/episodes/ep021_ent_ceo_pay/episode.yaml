@@ -433,13 +433,13 @@ scenes:
   signature: 오늘도 감 말고, 숫자로 투자하세요.
   signature_on: 3
   narration: ['여러분이 지금 엔터주를 산다면, 어느 회사 효자 가수 달력을 보시겠어요? 지금은 공백기일까요, 축제일까요?', '댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.', '오늘도 감 말고, 숫자로 투자하세요.']
-thumb_pick: T01
+thumb_pick: T04
 # 2026-11-20 사용자: 회사 이름 → CI 로고 · 알아볼 수 없는 외국 가수 배경 금지(국내 아이돌 사진 또는 깔끔한 배경) · '엔터주 언제 살까?' 포인트 · 궁금증 문구
 thumbs10:
 - {p: P01, name: T01, photo: plain_navy, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터 4사 대표님 연봉', bottom: '누가 제일 많이 벌까?', hl: '제일 많이', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
 - {p: P01, name: T02, photo: bts_wh, focus: [0.5, 0.3], logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터 4사 대표님 연봉', bottom: '누가 제일 많이 벌까?', hl: '제일 많이', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
 - {p: P01, name: T03, photo: plain_green, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터 4사 연봉 1등은', bottom: '사장님이 아니었다', hl: '아니었다', point: '+ 엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
-- {p: P01, name: T04, photo: bp_toronto, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: 'BTS · 블랙핑크 · 스키즈 대표님', bottom: '1년에 얼마 벌까?', hl: '얼마', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T04, photo: bp_toronto, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: 'BTS · 블랙핑크 · 스키즈 대표는', bottom: '1년에 얼마 벌까?', hl: '얼마', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
 - {p: P02, name: T05, photo: plain_navy, theme: blue, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], logo_box: [260, 96], chips_y: 850, top: '엔터 대표님 연봉 1등', num: '27억', unit: '누구?', bottom: ''}
 - {p: P01, name: T06, photo: skz_gda, focus: [0.5, 0.3], logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '사장님보다 3배 받는 사람', bottom: '엔터 연봉 1등은 누구?', hl: '누구?', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
 - {p: P01, name: T07, photo: plain_green, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '방시혁 · 박진영 · 양현석', bottom: '연봉 순위 공개', hl: '순위 공개', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
