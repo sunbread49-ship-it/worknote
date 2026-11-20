@@ -34,6 +34,26 @@ def photo_bg(f, name, t, dark=0.55, fallback="concert_lights_v"):
         vbg(f, fallback, t, dark)
 
 
+def logo_row(f, t, y, t0=0.0, h=70, names=("logo_hybe", "logo_sm", "logo_jyp", "logo_yg")):
+    """엔터 4사 CI 한 줄 (흰 판)"""
+    k = pop(t, t0)
+    if k <= 0:
+        return
+    chips = []
+    for n in names:
+        lg = Image.open(PH / f"{n}.png").convert("RGBA")
+        sc = min(190 / lg.width, h / lg.height)
+        lg = lg.resize((int(lg.width * sc), int(lg.height * sc)), Image.LANCZOS)
+        c = Image.new("RGBA", (214, h + 24), (0, 0, 0, 0))
+        ImageDraw.Draw(c).rounded_rectangle((0, 0, c.width - 1, c.height - 1), 14, fill=(255, 255, 255, 245))
+        c.alpha_composite(lg, ((c.width - lg.width) // 2, (c.height - lg.height) // 2))
+        chips.append(c)
+    x = (W - (len(chips) * 214 + (len(chips) - 1) * 18)) / 2
+    for c in chips:
+        G.blit(f, c, (x, y), k, "lt")
+        x += 214 + 18
+
+
 def rank_rows(f, t, rows, y0=120, t0=0.2, step=0.45, gap=118):
     for i, (name, val, col) in enumerate(rows):
         k = pop(t, t0 + i * step)
@@ -45,7 +65,7 @@ def rank_rows(f, t, rows, y0=120, t0=0.2, step=0.45, gap=118):
 
 
 def cta(f, t, sc, q="여러분이라면\n연봉? 지분?", line="풀버전은 오늘 오후 4시"):
-    vbg(f, "festival_crowd_v", t, 0.62)
+    photo_bg(f, "skz_gda", t, 0.62)
     big(f, q, 260, 120, hl=q.split("\n")[-1], hlc=YEL)
     pill(f, line, 620, t, 0.2)
     disclaimer(f)
@@ -53,19 +73,19 @@ def cta(f, t, sc, q="여러분이라면\n연봉? 지분?", line="풀버전은 �
 
 # ── 쇼츠 1 (12:00): 연봉 1등은 사장님이 아니다 ─────────────────
 def a1(f, t, sc):
-    vbg(f, "concert_lights_v", t, 0.55)
-    big(f, "엔터 회사 연봉 1등", 150, 96)
-    big(f, "27.6억", 300, 230, col=RD, o=pop(t, 0.2, 0.25))
-    big(f, "그런데 사장님이 아니다", 590, 76, o=pop(t, 0.8))
-    K.credit(f, "영상: Coverr-Free-Footage (Pixabay)")
+    photo_bg(f, "bp_toronto", t, 0.55)
+    logo_row(f, t, 40)
+    big(f, "엔터 회사 연봉 1등", 190, 96)
+    big(f, "27.6억", 330, 230, col=RD, o=pop(t, 0.2, 0.25))
+    big(f, "그런데 사장님이 아니다", 610, 76, o=pop(t, 0.8))
 
 
 def a2(f, t, sc):
-    vbg(f, "concert_stage_v", t, 0.75)
+    photo_bg(f, "bts_live_55161609401", t, 0.78)
     big(f, "2025년 연봉 (금감원 공시)", 30, 60)
     rank_rows(f, t, [("양현석 · YG 프로듀서", "27.6억", RD), ("박진영 · JYP 창업자", "26.6억", RD), ("이재상 · 하이브 대표", "16.5억", WH),
                      ("정욱 · JYP 대표", "15.0억", WH), ("양민석 · YG 사장", "8.4억", WH)], y0=140, t0=0.3, step=0.55)
-    K.credit(f, "영상: Republica (Pixabay) · 자료: 각사 2025 사업보고서 (DART)")
+
 
 
 def a3(f, t, sc):
@@ -77,7 +97,7 @@ def a3(f, t, sc):
 
 
 def a4(f, t, sc):
-    photo_bg(f, "bts_arirang1", t, 0.6)
+    photo_bg(f, "bts_wh2", t, 0.6)
     big(f, "하이브 방시혁 의장", 140, 86)
     big(f, "연봉 5억 미만", 280, 140, col=YEL, o=pop(t, 0.2))
     big(f, "공시 명단에 이름 없음", 470, 76, o=pop(t, 0.8))
@@ -109,10 +129,9 @@ S1 = [
 
 # ── 쇼츠 2 (21:00): BTS 컴백했는데 하이브 -45%? ─────────────────
 def b1(f, t, sc):
-    photo_bg(f, "bts_arirang2", t, 0.55)
+    photo_bg(f, "bts_wh", t, 0.55)
     big(f, "BTS 컴백 · 역대 최대 실적", 150, 76)
     big(f, "주가 -45%", 290, 200, col=RD, o=pop(t, 0.3))
-    K.credit(f, K.credit_of("bts_arirang2") if (PH / "bts_arirang2.json").exists() else "영상: Coverr-Free-Footage (Pixabay)")
 
 
 def b2(f, t, sc):
@@ -123,26 +142,25 @@ def b2(f, t, sc):
 
 
 def b3(f, t, sc):
-    vbg(f, "concert_lights_v", t, 0.66)
+    photo_bg(f, "bts_live_55161609401", t, 0.66)
     big(f, "엔터주는", 120, 80)
     big(f, "기대로 오르고\n뉴스에 판다", 240, 120, hl="뉴스에 판다", hlc=RD, o=pop(t, 0.2))
     big(f, "컴백 직후 하루 -15.6%", 560, 70, o=pop(t, 1.0))
-    K.credit(f, "영상: Coverr-Free-Footage (Pixabay)")
 
 
 def b4(f, t, sc):
-    vbg(f, "festival_crowd_v", t, 0.66)
+    photo_bg(f, "bts_wh2", t, 0.66)
     big(f, "BTS 쉬어 간다 발표 다음 날", 100, 66)
     big(f, "14만 5천 원에 샀다면", 210, 84, o=pop(t, 0.2))
     big(f, "→ 40만 원 (2.8배)", 360, 110, col=GRN, o=pop(t, 1.0))
-    K.credit(f, "영상: Dukefilmmaker (Pixabay) · 하이브 2022.6.15 → 2026.2.19 종가")
+
 
 
 def b5(f, t, sc):
-    vbg(f, "concert_stage_v", t, 0.62)
-    big(f, "효자 가수\n공백기에 사고", 150, 120, hl="공백기에 사고", hlc=GRN)
-    big(f, "컴백 축제에 판다", 470, 100, col=RD, o=pop(t, 0.8))
-    K.credit(f, "영상: Republica (Pixabay)")
+    photo_bg(f, "aespa_klink", t, 0.62)
+    logo_row(f, t, 40)
+    big(f, "효자 가수\n공백기에 사고", 190, 120, hl="공백기에 사고", hlc=GRN)
+    big(f, "컴백 축제에 판다", 510, 100, col=RD, o=pop(t, 0.8))
 
 
 S2 = [
@@ -160,10 +178,26 @@ S2 = [
      "tail": 0.2, "sfx_t": [(0.05, "pop", 0.6)], "narr": ["지금 엔터주는 공백기일까요, 축제일까요? 좋아요 누르고, 친구한테 아는 척해 보세요!"]},
 ]
 
+def cover1(f):
+    photo_bg(f, "bp_toronto", 1.0, 0.5)
+    logo_row(f, 1.0, 60)
+    big(f, "엔터 회사\n연봉 1등", 230, 130)
+    big(f, "27.6억", 560, 260, col=RD)
+    big(f, "사장님이 아니다?", 880, 100, col=YEL)
+
+
+def cover2(f):
+    photo_bg(f, "bts_wh", 1.0, 0.5)
+    big(f, "BTS 컴백했는데", 230, 120)
+    big(f, "하이브\n-45%", 420, 230, col=RD)
+    big(f, "엔터주 언제 살까?", 900, 96, col=YEL)
+
+
 SETS = {1: (S1, ["엔터 회사 연봉 1등", "사장님이 아니다?"], [(0, "tense"), (3, "drive")]),
         2: (S2, ["BTS 컴백했는데", "하이브 -45%?"], [(0, "tense"), (4, "hope")])}
+COVERS = {1: cover1, 2: cover2}
 
 if __name__ == "__main__":
     n = int(sys.argv[1])
     sc, ban, cues = SETS[n]
-    K.run(sc, {"kicker": "", "title": "", "banner": ban}, OUT / f"s{n}", say=dict(SAY), argv=sys.argv[2:], bgm_cues=cues)
+    K.run(sc, {"kicker": "", "title": "", "banner": ban}, OUT / f"s{n}", say=dict(SAY), cover=COVERS[n], argv=sys.argv[2:], bgm_cues=cues)
