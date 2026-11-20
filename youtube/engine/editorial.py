@@ -1940,11 +1940,17 @@ class Leaderboard(Editorial):
             num = T(str(i + r0), 46, (20, 22, 30), "Black")
             md.alpha_composite(num, (md.width // 2 - num.width // 2, md.height // 2 - num.height // 2 - 2))
             G.blit(f, md, (cx, cy), k, "mm")
-            lab = T(r["label"], 44, S.FG, "Black")
-            G.blit(f, lab, (x0 + 100, cy - 6), k, "lb")
+            ci = logo_chip(r["logo"], 64) if (r.get("logo") and sp.get("logo_as_label")) else None
+            if ci is not None:   # 2026-11-20 사용자: 회사 이름 대신 CI
+                G.blit(f, ci, (x0 + 100, cy - 4), k, "lb")
+                if r.get("label"):
+                    G.blit(f, T(r["label"], 30, S.FG, "Black"), (x0 + 110 + ci.width, cy - 14), k, "lb")
+            else:
+                lab = T(r["label"], 44, S.FG, "Black")
+                G.blit(f, lab, (x0 + 100, cy - 6), k, "lb")
             if r.get("sub"):
                 G.blit(f, T(r["sub"], 26, (190, 196, 212), "SemiBold"), (x0 + 102, cy + 6), k, "lt")
-            if r.get("logo"):
+            if r.get("logo") and ci is None:
                 lg = logo_chip(r["logo"], 52)
                 if lg is not None:
                     G.blit(f, lg, (S.W - S.SAFE_X - 24, cy), k, "rm")
@@ -2952,8 +2958,11 @@ class Showcase(Editorial):
         f.alpha_composite(fr2, (x0, y0))
         if sp.get("tag"):
             G.blit(f, G.pill(sp["tag"], "Black", 44, white, green, pad=(24, 10), radius=8), (x0 + 30, y0 + 30), 1, "lt")
-        if sp.get("logo"):
-            lg = logo_chip(sp["logo"], 70) if sp.get("logo_plate", True) else None
+        lg_name = sp.get("logo")
+        if sp.get("logos") and not sp.get("media"):   # 사진마다 다른 CI (사진 순서와 같게)
+            lg_name = sp["logos"][int(t / sp.get("per", 2.6)) % len(sp["logos"])]
+        if lg_name:
+            lg = logo_chip(lg_name, 70) if sp.get("logo_plate", True) else None
             if lg is not None:
                 G.blit(f, lg, (x0 + pw - 24, y0 + 30), 1, "rt")
         kx = x0 + pw + 46

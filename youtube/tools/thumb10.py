@@ -589,8 +589,23 @@ def main(ep_dir):
     outs = []
     for sp in ep["thumbs10"]:
         f = P[sp["p"]](sp)
-        if sp.get("chips"):   # 2026-11-20: 회사 · 브랜드 이름 칩 한 줄 (예: 하이브 · SM · JYP · YG)
-            row = [G.pill(c, "Black", sp.get("chip_size", 78), BLACK, WHITE, pad=(34, 14), radius=18) for c in sp["chips"]]
+        if sp.get("logos"):   # 2026-11-20 사용자: 회사 이름 대신 CI (흰 판 위 로고)
+            bw, bh = sp.get("logo_box", (330, 120))
+            row = []
+            for n in sp["logos"]:   # 로고마다 같은 상자에 맞춤 (가로로 긴 YG · 정사각 SM 이 비슷한 존재감)
+                lg = Image.open(TH.ROOT / "assets/photos" / f"{n}.png").convert("RGBA")
+                k = min(bw / lg.width, bh / lg.height)
+                lg = lg.resize((int(lg.width * k), int(lg.height * k)), Image.LANCZOS)
+                chip = Image.new("RGBA", (bw + 44, bh + 30), (0, 0, 0, 0))
+                ImageDraw.Draw(chip).rounded_rectangle((0, 0, chip.width - 1, chip.height - 1), 18, fill=(255, 255, 255, 250))
+                chip.alpha_composite(lg, ((chip.width - lg.width) // 2, (chip.height - lg.height) // 2))
+                row.append(chip)
+            sp["_row"] = row
+        if sp.get("point"):   # 보조 포인트 문구 (예: 엔터주 언제 살까?)
+            pt = G.pill(sp["point"], "Black", sp.get("point_size", 74), WHITE, (205, 25, 30), pad=(34, 14), radius=16)
+            TH.shadowed(f, pt, tuple(sp.get("point_xy", (W - 60, H * 0.40))), "rm")
+        if sp.get("chips") or sp.get("_row"):   # 2026-11-20: 회사 · 브랜드 이름 칩 한 줄 (예: 하이브 · SM · JYP · YG)
+            row = sp.get("_row") or [G.pill(c, "Black", sp.get("chip_size", 78), BLACK, WHITE, pad=(34, 14), radius=18) for c in sp["chips"]]
             gap = 26
             tw_ = sum(r.width for r in row) + gap * (len(row) - 1)
             x = (W - tw_) / 2

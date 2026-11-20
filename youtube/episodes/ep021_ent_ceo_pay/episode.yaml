@@ -76,7 +76,9 @@ youtube:
     금융감독원 전자공시 DART: 하이브 · 에스엠 · JYP Ent. · 와이지엔터테인먼트 2025 사업보고서 (임원의 보수 · 직원 현황 · 최대주주 · 배당) / 실적: 네이버 금융 · 각사 2026년 3분기 실적 보도(아시아경제 · 한국경제 · 머니투데이) / 주가: 네이버 차트
 
 
-    [영상] Pixabay — Coverr-Free-Footage · Republica · Dukefilmmaker
+    [사진] Wikimedia Commons — The White House (퍼블릭 도메인) · 이정우/문화체육관광부 (CC BY-SA 4.0) · K-POPIT (CC BY 4.0) · Those Hoomans (CC BY 3.0) · plumflower snow (CC BY-SA 2.0) · David Lee (CC BY 4.0) / 로고: 각 사 CI
+
+    [영상] Pixabay — Hassas_Arts · Dimitri_K
 
     '
   tags: [엔터주, 하이브, 방시혁, 박진영, 양현석, JYP, YG, SM엔터, 연봉공시, BTS]
@@ -87,84 +89,89 @@ checks:
 - {name: YG 올해, kind: ret, series: ygent, start: '2026-01-02', end: '2026-11-20'}
 - {name: SM 올해, kind: ret, series: sment, start: '2026-01-02', end: '2026-11-20'}
 scenes:
-# ── 인트로: 간질거림 ────────────────────────────────────
-- type: duel
+# ── 인트로: 궁금증 → 답 살짝 (회사는 가림) ─────────────────
+- type: showcase
   chapter: 인트로
-  heading: 같은 회사 · 2025년 연봉 (금감원 공시)
-  left: {title: '이 회사 사장님', value: '8억', sub: '대표이사', color: neutral, on: 1}
-  right: {title: '그런데 이 사람', value: '27억', sub: '사장님의 3배 넘게', color: down, on: 2}
-  sfx: [{name: 'mx:2182', on: 2, offset: 0.1, vol: 0.7}]
-  narration: ['연봉 8억 원인 사장님이 있는 회사에, | 그 3배가 넘는 !!27억!!을 받는 사람이 있어요.', '그런데 더 이상한 건 따로 있어요.']
-- type: punch
+  photos: [bts_wh, skz_gda, bp_toronto]
+  logos: [logo_hybe, logo_jyp, logo_yg]
+  per: 2.4
+  credit: '사진: The White House (퍼블릭 도메인) · K-POPIT (CC BY 4.0) · Those Hoomans (CC BY 3.0) · Wikimedia Commons'
+  keys:
+  - {text: 'BTS 뒤엔 · 방시혁', on: 2}
+  - {text: '스트레이 키즈 · 트와이스 뒤엔 · 박진영', on: 2, offset: 1.4}
+  - {text: '블랙핑크 뒤엔 · 양현석', on: 2, offset: 2.8}
+  narration: ['우리나라 메이저 엔터 4사 대표님들, 1년에 돈을 얼마나 벌까요? 한 번쯤 궁금하셨죠?', '비티에스 뒤에는 방시혁, 스트레이 키즈와 트와이스 뒤에는 박진영, | 블랙핑크 뒤에는 양현석이 있죠.']
+- type: leaderboard
   chapter: 인트로
-  tone: down
-  video: {file: concert_lights_v, dark: 0.55, blur: 2}
-  credit: '영상: Coverr-Free-Footage (Pixabay)'
-  label: 우리나라에서 가장 큰 엔터 회사의 회장님
-  big: '연봉 공시에 이름 없음'
-  sub: 그런데 올해, 하루 만에 7천억 원이 사라졌다
+  kicker: 엔터 4사 · 2025년 연봉 TOP 5 (금감원 공시)
+  title: 1등은 누구일까?
+  highlight: 누구일까?
   'on': 1
-  sub_on: 2
-  sfx: [{name: 'mx:2782', on: 2, offset: 0.05, vol: 0.7}]
-  narration: ['우리나라에서 제일 큰 엔터 회사 회장님은, 연봉 공시 명단에 이름조차 없어요.', '그런데 올해, 이분 재산이 하루 만에 7천억 원 넘게 사라진 날이 있었죠. | 오늘은 엔터 회사 사장님들 지갑을, 공시로 까 볼게요.']
+  step: 0.3
+  top: 300
+  row_h: 104
+  rows:
+  - {label: '? ? ?', sub: '어느 회사, 누구일까?', value: 27.6, text: '27.6억', color: [255, 204, 40]}
+  - {label: '? ? ?', sub: '', value: 26.6, text: '26.6억', color: [210, 214, 224]}
+  - {label: '? ? ?', sub: '', value: 16.5, text: '16.5억', color: [205, 140, 80]}
+  - {label: '? ? ?', sub: '', value: 15.0, text: '15.0억', color: [150, 160, 180]}
+  - {label: '? ? ?', sub: '', value: 9.8, text: '9.8억', color: [150, 160, 180]}
+  vmax: 31
+  narration: ['결론부터 살짝 보여 드릴게요. 엔터 4사 연봉 1등은 !!27억 6천만 원!!.', '그런데 이 1등, 사장님이 아니에요. 누군지는 조금 뒤에 공개할게요.']
 - type: title
   skyline: true
   y: 250
   kicker: 주식 궁금증, 숫자로 풀기
-  title: "엔터 4사\n사장님 연봉"
-  highlight: 사장님 연봉
-  subtitle: 하이브 · SM · JYP · YG · 실적 · 효자 가수 · 주가
-  narration: ['하이브, 에스엠, 제이와이피, 와이지. | 연봉부터 실적, 효자 가수, 그리고 그래서 엔터주는 언제 사야 하는지까지요.']
+  title: "엔터 4사 대표님 지갑\n공시로 낱낱이"
+  highlight: 낱낱이
+  subtitle: 연봉 · 실적 · 효자 가수 · 그래서 엔터주는 언제 살까
+  narration: ['오늘은 회사들이 금융감독원에 낸 공시로, 대표님들 지갑을 낱낱이 까 볼게요. | 그리고 끝까지 보시면, 엔터주는 언제 사야 하는지도 알려 드릴게요.']
 # ── 기: 엔터 4사 ──────────────────────────────────────
 - type: showcase
   chapter: 엔터 4사
-  media: {kind: video, file: concert_stage_v}
-  tag: 엔터 4사
-  credit: '영상: Republica (Pixabay)'
+  photos: [bts_wh, aespa_klink, skz_gda, babymonster_sea]
+  logos: [logo_hybe, logo_sm, logo_jyp, logo_yg]
+  per: 2.9
+  credit: '사진: The White House (PD) · plumflower snow (CC BY-SA 2.0) · K-POPIT (CC BY 4.0) · David Lee (CC BY 4.0) · Wikimedia Commons'
   keys:
-  - {text: '하이브 · BTS · 세븐틴 · 투바투 · 엔하이픈 · 르세라핌', on: 1}
-  - {text: 'SM · 에스파 · NCT · 라이즈 · 레드벨벳', on: 2}
-  - {text: 'JYP · 스트레이 키즈 · 트와이스 · 있지 · 엔믹스', on: 3}
-  - {text: 'YG · 블랙핑크 · 베이비몬스터 · 트레저', on: 4}
+  - {text: 'BTS · 세븐틴 · 투바투', on: 1}
+  - {text: '에스파 · NCT · 라이즈', on: 2}
+  - {text: '스트레이 키즈 · 트와이스', on: 3}
+  - {text: '블랙핑크 · 베이비몬스터', on: 4}
   narration: ['먼저 선수 소개. 하이브는 비티에스, 세븐틴, 투바투, 엔하이픈, 르세라핌이 있는 회사예요.', '에스엠은 에스파, 엔시티, 라이즈, 레드벨벳.', '제이와이피는 스트레이 키즈, 트와이스, 있지, 엔믹스.', '와이지는 블랙핑크, 베이비몬스터, 트레저죠.']
 - type: leaderboard
   chapter: 엔터 4사
   kicker: 2025년 연간 매출 (연결 · 네이버 금융)
   title: 누가 제일 많이 팔았나
   highlight: 제일 많이
+  logo_as_label: true
   'on': 1
   rows:
-  - {label: 하이브, sub: 'BTS · 세븐틴 · 투바투', value: 2.65, text: '2조 6,499억', color: [255, 204, 40]}
-  - {label: SM, sub: '에스파 · NCT · 라이즈', value: 1.17, text: '1조 1,749억', color: [150, 180, 240]}
-  - {label: JYP, sub: '스트레이 키즈 · 트와이스', value: 0.82, text: '8,219억', color: [120, 220, 180]}
-  - {label: YG, sub: '블랙핑크 · 베이비몬스터', value: 0.55, text: '5,454억', color: [200, 206, 220]}
+  - {label: '', logo: logo_hybe, sub: 'BTS · 세븐틴 · 투바투', value: 2.65, text: '2조 6,499억', color: [255, 204, 40]}
+  - {label: '', logo: logo_sm, sub: '에스파 · NCT · 라이즈', value: 1.17, text: '1조 1,749억', color: [150, 180, 240]}
+  - {label: '', logo: logo_jyp, sub: '스트레이 키즈 · 트와이스', value: 0.82, text: '8,219억', color: [120, 220, 180]}
+  - {label: '', logo: logo_yg, sub: '블랙핑크 · 베이비몬스터', value: 0.55, text: '5,454억', color: [200, 206, 220]}
   vmax: 3.2
   narration: ['작년 매출부터 볼게요. 4위 와이지 5,454억, 3위 제이와이피 8,219억.', '2위 에스엠 1조 1,749억. | 그리고 1위 하이브는 !!2조 6,499억!!. 나머지 셋을 합친 것보다 많아요.']
-- type: matrix
+- type: leaderboard
   chapter: 엔터 4사
-  kicker: 2025년 · 1만 원어치 팔면 얼마 남았나
+  kicker: 2025년 · 1만 원어치 팔면 남은 돈 (영업이익 ÷ 매출)
   title: 많이 판 회사 ≠ 많이 남긴 회사
   highlight: 많이 남긴
-  best: false
-  top: 430
-  row_h: 110
-  font: 46
-  label_w: 520
-  head_font: 40
-  cols:
-  - {label: 영업이익, 'on': 1}
-  - {label: 1만 원당 남은 돈, 'on': 2}
+  logo_as_label: true
+  'on': 1
   rows:
-  - {label: JYP, values: [1552, 1888], texts: ['1,552억', '1,888원']}
-  - {label: SM, values: [1830, 1558], texts: ['1,830억', '1,558원']}
-  - {label: YG, values: [713, 1307], texts: ['713억', '1,307원']}
-  - {label: 하이브, values: [493, 186], texts: ['493억', '186원']}
-  note: '영업이익 ÷ 매출 (영업이익률) · 2025년 연결 · 네이버 금융'
-  narration: ['그런데 남긴 돈은 완전히 달라요. 1만 원어치 팔아서, 제이와이피는 1,888원을 남겼어요.', '에스엠 1,558원, 와이지 1,307원. | 그런데 매출 1등 하이브는 !!186원!!. 붕어빵 1만 원어치 팔고 한 마리 값만 남은 셈이죠.']
+  - {label: '', logo: logo_jyp, sub: '영업이익 1,552억', value: 1888, text: '1,888원', color: [120, 220, 180]}
+  - {label: '', logo: logo_sm, sub: '영업이익 1,830억', value: 1558, text: '1,558원', color: [150, 180, 240]}
+  - {label: '', logo: logo_yg, sub: '영업이익 713억', value: 1307, text: '1,307원', color: [200, 206, 220]}
+  - {label: '', logo: logo_hybe, sub: '영업이익 493억', value: 186, text: '186원', color: [232, 66, 62]}
+  vmax: 2300
+  note: '2025년 연결 · 네이버 금융'
+  narration: ['그런데 남긴 돈은 완전히 달라요. 1만 원어치 팔아서, 제이와이피는 1,888원을 남겼어요.', '에스엠 1,558원, 와이지 1,307원. | 그런데 매출 1등 하이브는 !!186원!!. 천 원짜리 붕어빵 열 마리를 팔고, 한 마리 값도 못 남긴 셈이죠.']
 # ── 승: 사장님 연봉 ───────────────────────────────────
 - type: card
   chapter: 사장님 연봉
-  heading: 사장님 연봉 · 누구나 볼 수 있다
+  heading: 대표님 연봉 · 누구나 볼 수 있다
   highlight: 누구나
   numbered: true
   size: 50
@@ -176,30 +183,32 @@ scenes:
   - {text: '금감원 DART에서 · 무료로 검색', highlight: 무료로, hl_color: up, on: 3}
   credit: '자본시장법 · 보수 5억 원 이상 등기임원 및 상위 5명 개인별 보수 공시 · 금융감독원 전자공시시스템 DART'
   narration: ['이 연봉, 어떻게 아냐고요? 주식시장에 상장된 회사는 매년 3월, 회사 성적표인 사업보고서를 내요.', '여기엔 연봉 5억 원이 넘는 임원 이름과 금액까지 다 적혀 있어요.', '금융감독원 다트에서 누구나 공짜로 볼 수 있죠. | 오늘 숫자는 전부 여기서 가져왔어요.']
-- type: hbars
+- type: leaderboard
   chapter: 사장님 연봉
-  kicker: 2025년 보수 (사업보고서 · 근로소득)
-  title: 엔터 4사 · 연봉 순위
-  highlight: 연봉 순위
-  title_y: 90
-  bar_h: 22
-  row_gap: 6
-  vmax: 32
+  kicker: 2025년 보수 TOP 5 (사업보고서 · 근로소득)
+  title: 정답 공개 · 연봉 순위
+  highlight: 정답 공개
+  logo_as_label: true
+  'on': 1
+  step: 0.9
+  top: 300
+  row_h: 104
   rows:
-  - {label: '양현석 · YG 총괄 프로듀서', value: 27.6, text: '27.6억', color: down, hl: true, on: 3}
-  - {label: '박진영 · JYP 창업자 · 사내이사', value: 26.6, text: '26.6억', color: down, on: 3, offset: 0.4}
-  - {label: '이재상 · 하이브 대표', value: 16.5, text: '16.5억', color: up, on: 2}
-  - {label: '정욱 · JYP 대표', value: 15.0, text: '15.0억', color: up, on: 2, offset: 0.4}
-  - {label: '탁영준 · SM 공동대표', value: 9.8, text: '9.8억', color: neutral, on: 1}
-  - {label: '장철혁 · SM 공동대표', value: 8.8, text: '8.8억', color: neutral, on: 1, offset: 0.3}
-  - {label: '양민석 · YG 사장', value: 8.4, text: '8.4억', color: neutral, on: 1, offset: 0.6}
-  narration: ['자, 순위 공개. 아래부터 에스엠 공동대표 두 분이 9.8억, 8.8억. 와이지 양민석 사장이 8.4억이에요.', '하이브 이재상 대표가 16.5억, 제이와이피 정욱 대표가 15억.', '그리고 1, 2위는 사장님이 아니에요. | 와이지 양현석 총괄 프로듀서 !!27.6억!!, 제이와이피 창업자 박진영 26.6억.']
+  - {label: '양현석 · 총괄 프로듀서', logo: logo_yg, value: 27.6, text: '27.6억', color: [255, 204, 40]}
+  - {label: '박진영 · 창업자', logo: logo_jyp, value: 26.6, text: '26.6억', color: [210, 214, 224]}
+  - {label: '이재상 · 대표', logo: logo_hybe, value: 16.5, text: '16.5억', color: [205, 140, 80]}
+  - {label: '정욱 · 대표', logo: logo_jyp, value: 15.0, text: '15.0억', color: [150, 160, 180]}
+  - {label: '탁영준 · 공동대표', logo: logo_sm, value: 9.8, text: '9.8억', color: [150, 160, 180]}
+  vmax: 31
+  note: 'SM 장철혁 공동대표 8.8억 · YG 양민석 사장 8.4억'
+  narration: ['자, 정답 공개. 5위 에스엠 탁영준 공동대표 9.8억, 4위 제이와이피 정욱 대표 15억.', '3위 하이브 이재상 대표 16.5억.', '그리고 1, 2위는 사장님이 아니에요. | 2위 제이와이피 창업자 박진영 26.6억, 1위는 와이지 양현석 총괄 프로듀서, !!27.6억!!.']
 - type: kinetic
   chapter: 사장님 연봉
-  bg: {kind: video, file: concert_lights_v, dark: 0.6, blur: 4}
+  bg: {kind: parallax, file: bp_toronto, dark: 0.62, blur: 6}
+  credit: '사진: Those Hoomans (CC BY 3.0, Wikimedia Commons)'
   items:
   - {text: "1등은\n사장님이 아니라\n창업자", on: 1, size: 120, highlight: '창업자', hl_color: down}
-  narration: ['처음 말한 27억 원이 바로 양현석 프로듀서예요. | 동생인 양민석 사장보다 3배 넘게 받았죠.', '두 회사 모두, 회사를 만든 사람이 사장님보다 더 받아요. | 노래를 만드는 사람이 곧 회사의 엔진이니까요.']
+  narration: ['와이지 사장은 동생 양민석 사장인데, 8.4억이에요. 형인 양현석 프로듀서가 3배 넘게 받았죠.', '두 회사 모두, 회사를 만든 창업자가 사장님보다 더 받아요. | 가수를 뽑고, 키우고, 데뷔시키는 결정을 창업자가 하니까요.']
 - type: duel
   chapter: 사장님 연봉
   heading: 직원 평균 연봉 · 2025 (사업보고서)
@@ -209,34 +218,35 @@ scenes:
 - type: punch
   chapter: 사장님 연봉
   tone: gold
-  video: {file: festival_crowd_v, dark: 0.55, blur: 3}
-  credit: '영상: Dukefilmmaker (Pixabay)'
+  photo: {file: bts_wh2, focus: [0.5, 0.4], dark: 0.6}
+  logo: logo_hybe
   label: 하이브 방시혁 의장 (사내이사 · 최대주주)
   big: '5억 원 미만'
   sub: 연봉 5억이 안 되면 공시 명단에 안 나온다
   'on': 1
   sub_on: 2
   sfx: [{name: 'mx:2003', on: 1, offset: 0.05, vol: 0.6}]
-  narration: ['그럼 하이브 방시혁 의장은요? | 하이브 이사인데, 5억 원 이상 명단에 이름이 없어요.', '연봉이 5억 원이 안 된다는 뜻이죠. | 하이브 임직원 상위 5명은 9억에서 16억 원을 받았는데도요.']
-# ── 전: 진짜 돈은 주식 ────────────────────────────────
+  credit: '사진: The White House (퍼블릭 도메인, Wikimedia Commons)'
+  narration: ['그럼 비티에스를 만든 하이브 방시혁 의장은요? | 하이브 이사인데, 5억 원 이상 명단에 이름이 없어요.', '연봉이 5억 원이 안 된다는 뜻이죠. | 하이브 임직원 상위 5명은 9억에서 16억 원을 받았는데도요.']
 - type: kinetic
   chapter: 진짜 돈은 주식
   bg: {kind: video, file: money_count_v, dark: 0.6, blur: 3}
   credit: '영상: Hassas_Arts (Pixabay)'
   items:
-  - {text: "회장님의 진짜 월급은\n주식", on: 1, size: 130, highlight: '주식', hl_color: up}
-  narration: ['왜 그럴까요? 회장님 진짜 돈은 연봉이 아니라, 주식이거든요.']
+  - {text: "그런데\n이게 다가 아니다", on: 2, size: 140, highlight: '다가 아니다', hl_color: up}
+  narration: ['직원 평균 연봉 5천만 원도 부러운데, 연봉 27억이라니. | 역시 연예계는 우리랑 다른 세계죠.', '그런데 진짜 놀라운 건 따로 있어요. 이분들 지갑은 연봉이 다가 아니거든요. | 진짜 돈은, 회사 주식이에요.']
 - type: leaderboard
   chapter: 진짜 돈은 주식
   kicker: 최대주주 지분 × 2026.11.20 종가 (사업보고서 2025.12.31 주식 수)
   title: 창업자 주식, 지금 얼마?
   highlight: 지금 얼마?
+  logo_as_label: true
   'on': 1
   rows:
-  - {label: 방시혁 · 하이브, sub: '1,315만 주 · 30.86%', value: 2.48, text: '2조 4,764억', color: [255, 204, 40]}
-  - {label: 박진영 · JYP, sub: '546만 주 · 15.37%', value: 0.27, text: '2,685억', color: [120, 220, 180]}
-  - {label: 양현석 · YG, sub: '361만 주 · 19.33%', value: 0.17, text: '1,740억', color: [200, 206, 220]}
-  - {label: SM · 최대주주는 카카오, sub: '창업자 이수만은 지분 정리 · 사장님은 월급쟁이', value: 0.02, text: '-', color: [150, 180, 240]}
+  - {label: 방시혁, logo: logo_hybe, sub: '1,315만 주 · 30.86%', value: 2.48, text: '2조 4,764억', color: [255, 204, 40]}
+  - {label: 박진영, logo: logo_jyp, sub: '546만 주 · 15.37%', value: 0.27, text: '2,685억', color: [120, 220, 180]}
+  - {label: 양현석, logo: logo_yg, sub: '361만 주 · 19.33%', value: 0.17, text: '1,740억', color: [200, 206, 220]}
+  - {label: 최대주주는 카카오, logo: logo_sm, sub: '창업자 이수만은 지분 정리 · 사장님은 월급쟁이', value: 0.02, text: '-', color: [150, 180, 240]}
   vmax: 3.0
   narration: ['창업자들이 가진 주식을, 오늘 주가로 계산해 봤어요. 방시혁 의장 !!2조 4,764억!!. 박진영 2,685억, 양현석 1,740억.', '에스엠은 최대주주가 카카오라서, 사장님은 주식이 거의 없는 월급쟁이 사장님이에요.']
 - type: receipt
@@ -334,7 +344,8 @@ scenes:
 # ── 결: 엔터주 사는 법 ────────────────────────────────
 - type: kinetic
   chapter: 엔터주 사는 법
-  bg: {kind: video, file: concert_lights_v, dark: 0.55, blur: 3}
+  bg: {kind: parallax, file: bts_live_55161609401, dark: 0.6, blur: 5}
+  credit: '사진: 이정우 / 문화체육관광부 (CC BY-SA 4.0, Wikimedia Commons)'
   items:
   - {text: "효자 가수의 공백기에 사고\n컴백 축제에 판다", on: 1, size: 110, highlight: '공백기에 사고', hl_color: up}
   narration: ['그래서 엔터주는 이렇게 사야 해요. | 효자 가수가 쉬는 공백기, 다들 무서워할 때 사고, 컴백 축제 날 판다.']
@@ -402,8 +413,8 @@ scenes:
 # ── 정리 ─────────────────────────────────────────────
 - type: kinetic
   chapter: 정리
-  bg: {kind: video, file: festival_crowd_v, dark: 0.6, blur: 3}
-  credit: '영상: Dukefilmmaker (Pixabay)'
+  bg: {kind: parallax, file: aespa_klink, dark: 0.62, blur: 6}
+  credit: '사진: plumflower snow (CC BY-SA 2.0, Wikimedia Commons)'
   items:
   - {text: "사장님 연봉 말고\n가수 달력을 보라", on: 1, size: 130, highlight: '가수 달력', hl_color: up}
   narration: ['한 줄로 정리하면, 엔터주는 사장님 연봉 말고, 가수 달력을 보세요.', '[낮게]회장님도 주가로 월급을 받으니까요.']
@@ -419,15 +430,15 @@ scenes:
   signature_on: 3
   narration: ['여러분이 지금 엔터주를 산다면, 어느 회사 효자 가수 달력을 보시겠어요? 지금은 공백기일까요, 축제일까요?', '댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.', '오늘도 감 말고, 숫자로 투자하세요.']
 thumb_pick: T01
-# 2026-11-20 사용자: 시안 더 많이 · '이마 짚은 여자' 사진 금지 · 27.6억 스티커 대신 엔터 4사 이름 · 시청자 궁금증(누가 제일 많이 벌까?) 반영
+# 2026-11-20 사용자: 회사 이름 → CI 로고 · 알아볼 수 없는 외국 가수 배경 금지(국내 아이돌 사진 또는 깔끔한 배경) · '엔터주 언제 살까?' 포인트 · 궁금증 문구
 thumbs10:
-- {p: P01, name: T01, photo: concert_stage, chips: [하이브, SM, JYP, YG], top: '엔터 4사 사장님 연봉', bottom: '누가 제일 많이 벌까?', hl: '제일 많이'}
-- {p: P01, name: T02, photo: concert_lights, chips: [하이브, SM, JYP, YG], top: '엔터 4사 연봉 1등은', bottom: '사장님이 아니었다', hl: '아니었다'}
-- {p: P01, name: T03, photo: festival_crowd, chips: [하이브, SM, JYP, YG], top: '엔터 사장님 연봉 공시로 까 보니', bottom: '1등은 사장이 아니다', hl: '사장이 아니다'}
-- {p: P01, name: T04, photo: concert_lights, chips: [하이브, SM, JYP, YG], top: '하이브 회장님 연봉', bottom: '공시에 이름이 없다?', hl: '이름이 없다?'}
-- {p: P02, name: T05, photo: concert_stage, theme: red, chips: [하이브, SM, JYP, YG], chips_y: 820, top: '엔터 사장님 연봉 1등', num: '27억', unit: '누구?', bottom: ''}
-- {p: P03, name: T06, photo: concert_stage, chips: [하이브, SM, JYP, YG], before: '8억', after: '27억', sub: '같은 회사, 사장님보다 3배 받는 사람'}
-- {p: P08, name: T07, left: concert_stage, right: concert_lights, text_l: 사장님, text_r: 창업자, name_l: '대표이사 연봉', name_r: '회사 만든 사람', bottom: '엔터 4사, 누가 더 벌까?'}
-- {p: P10, name: T08, photo: concert_stage, chips: [하이브, SM, JYP, YG], label: '(2025 사업보고서 · 금감원 공시)', top: '엔터 4사 사장님 연봉', bottom: '직원의 47배'}
-- {p: P06, name: T09, photo: festival_crowd, chips: [하이브, SM, JYP, YG], chips_y: 160, top: 'BTS 컴백 · 역대 최대 실적인데', bottom: '주가는 -45%', sticker: '왜?'}
-- {p: P01, name: T10, photo: festival_crowd, chips: [하이브, SM, JYP, YG], top: '회장님 월급은 연봉이 아니다', bottom: '하루에 7천억이 움직인다', hl: '7천억'}
+- {p: P01, name: T01, photo: plain_navy, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터 4사 대표님 연봉', bottom: '누가 제일 많이 벌까?', hl: '제일 많이', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T02, photo: bts_wh, focus: [0.5, 0.3], logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터 4사 대표님 연봉', bottom: '누가 제일 많이 벌까?', hl: '제일 많이', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T03, photo: plain_green, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터 4사 연봉 1등은', bottom: '사장님이 아니었다', hl: '아니었다', point: '+ 엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T04, photo: bp_toronto, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: 'BTS · 블랙핑크 · 스키즈 대표님', bottom: '1년에 얼마 벌까?', hl: '얼마', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P02, name: T05, photo: plain_navy, theme: blue, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], logo_box: [260, 96], chips_y: 850, top: '엔터 대표님 연봉 1등', num: '27억', unit: '누구?', bottom: ''}
+- {p: P01, name: T06, photo: skz_gda, focus: [0.5, 0.3], logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '사장님보다 3배 받는 사람', bottom: '엔터 연봉 1등은 누구?', hl: '누구?', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T07, photo: plain_green, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '방시혁 · 박진영 · 양현석', bottom: '연봉 순위 공개', hl: '순위 공개', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T08, photo: bts_wh2, focus: [0.5, 0.35], logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: 'BTS 컴백 · 역대 최대 실적인데', bottom: '주가는 왜 -45%?', hl: '-45%?', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T09, photo: plain_navy, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터 4사 공시로 까 보니', bottom: '대표님 연봉 = 직원의 47배', hl: '47배', point: '엔터주 언제 살까?', point_xy: [1860, 430], point_size: 92}
+- {p: P01, name: T10, photo: aespa_klink, logos: [logo_hybe, logo_sm, logo_jyp, logo_yg], chips_y: 60, top: '엔터주, 아이돌 보고 샀다간', bottom: '언제 사야 할까?', hl: '언제', point: '대표님 연봉 순위도', point_xy: [1860, 430], point_size: 92}
