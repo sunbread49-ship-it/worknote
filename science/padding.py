@@ -192,5 +192,7 @@ SCENES = [
      "narr": ["패딩 속은 90% 넘게 공기예요."]},
 ]
 
+K.SUB_HL = ["90%", "공기", "20배", "민들레 씨앗", "꽉 붙잡아요", "몸의 열", "추워요", "물이", "거위털 vs 오리털"]
+
 if __name__ == "__main__":
     K.run(SCENES, HEAD, OUT, SAY, cover=draw_cover, bgm_cues=[(0, "hope"), (2, "drive"), (5, "hope")])

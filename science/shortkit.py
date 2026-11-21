@@ -195,7 +195,7 @@ def plan(scenes, out, say):
     return t, buf, cues
 
 
-SUB_SIZE, SUB_MAXW, SUB_Y = 92, 980, 820   # 2026-11-15 사용자: 하단 자막 상자가 쇼츠 제목 · 채널명과 겹침 → 상자 없이 중하단에 큰 멘트(한 줄 · 빠른 전환)
+SUB_SIZE, SUB_MAXW, SUB_Y = 104, 1000, 960   # 2026-11-21 사용자: 자막이 그림(알약 문구)과 겹침 → 더 아래 · 더 크게 (이전 92 · 820)   # 2026-11-15 사용자: 하단 자막 상자가 쇼츠 제목 · 채널명과 겹침 → 상자 없이 중하단에 큰 멘트(한 줄 · 빠른 전환)
 # 장면 그림은 화면 y 780~960(장면 좌표) 띠를 비워 둘 것 — 여기에 멘트가 뜬다
 SHIFT = 70  # 영상 내용을 위 고정 제목에서 조금 떼기
 
@@ -291,11 +291,25 @@ _subc = {}
 THEME08 = __import__("os").environ.get("CH_THEME") == "08"   # 주식 채널 쇼츠: 색 조합 08 (2026-11-17~)
 
 
+SUB_HL = []   # 2026-11-21 사용자: 자막 핵심 단어 하나에 색 포인트 — 각 편에서 K.SUB_HL = ["공기", "20배", ...] (없으면 숫자)
+SUB_HL_COL = (110, 232, 140)   # 지식창고: 밝은 초록 · 08(주식): 노랑
+
+
+def _sub_hl(text):
+    for w in SUB_HL:
+        if w in text:
+            return w
+    import re as _re
+    m = _re.search(r"[0-9][0-9,.]*\s?(%|배|만|억|조|원|개|년|초|분|도|명)?", text)
+    return m.group(0).strip() if m else ""
+
+
 def subtitle(f, text, dy=0):
-    """중하단 큰 멘트 (상자 없음 · 흰 글씨 + 두꺼운 검은 테두리 + 그림자) · 08: 테두리 진초록"""
+    """중하단 큰 멘트 (상자 없음 · 흰 글씨 + 두꺼운 검은 테두리 + 그림자) · 08: 테두리 진초록 · 핵심 단어 색"""
     if text not in _subc:
         tx = T(text, SUB_SIZE, (251, 251, 249) if THEME08 else (255, 255, 255), "Black", stroke=10,
-               stroke_fill=(1, 46, 30) if THEME08 else (0, 0, 0))
+               stroke_fill=(1, 46, 30) if THEME08 else (0, 0, 0), highlight=_sub_hl(text),
+               hl_fill=(255, 204, 40) if THEME08 else SUB_HL_COL)
         if tx.width > W - 60:
             tx = tx.resize((W - 60, int(tx.height * (W - 60) / tx.width)), Image.LANCZOS)
         _subc[text] = tx
