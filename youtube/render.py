@@ -54,6 +54,7 @@ def read_yaml(path):
 def load(ep_dir):
     ep = read_yaml(ep_dir / "episode.yaml")
     channel = read_yaml(ROOT / "channel.yaml")
+    channel.update(ep.get("channel") or {})   # 2026-11-21: 지식창고 롱폼 등 다른 채널 이름 · 문구
     if ep.get("series_tag"):
         channel["_series_tag"] = ep["series_tag"]
     return ep, channel
@@ -407,12 +408,16 @@ def main():
     ap.add_argument("episode")
     ap.add_argument("--script", action="store_true")
     ap.add_argument("--stills", action="store_true")
+    ap.add_argument("--draft", action="store_true", help="음성 없이 초안 슬라이드(스틸 + 대본) — 검수용, 음성 비용 0")
     ap.add_argument("--scenes", help="예: 5-7")
     ap.add_argument("--workers", type=int, default=mp.cpu_count())
     ap.add_argument("--tts", help="AI 음성 사용. 예: --tts ko-KR-Chirp3-HD-Charon (녹음 파일이 있으면 녹음 우선)")
     ap.add_argument("--rate", type=float, help="AI 음성 속도 (기본 1.0)")
     a = ap.parse_args()
     global TTS_OVERRIDE
+    if a.draft:   # 2026-11-21 사용자: 렌더 전에 초안 슬라이드로 먼저 검수
+        TTS_OVERRIDE = {"enabled": False}
+        a.stills = True
     if a.tts or a.rate:
         TTS_OVERRIDE = {k: v for k, v in (("voice", a.tts), ("rate", a.rate)) if v}
     ep_dir = Path(a.episode).resolve()
@@ -461,9 +466,41 @@ def main():
             t = sc.start + max(0.0, sc.dur - 0.6)
             frame_at(c, t).save(st / f"{sc.idx:02d}.png")
         print("스틸 →", st)
+        if a.draft:
+            draft_sheets(c, out, only)
         return
     final = render_video(c, ep_dir, out, only, a.workers)
     print("완료 →", final)
+
+
+def draft_sheets(c, out, only=None):
+    """초안 슬라이드: 문장마다 그 문장 끝 무렵 화면 + 아래에 대본 (휴대폰으로 넘겨 보며 검수) → draft/NN_k.jpg + draft.pdf"""
+    dr = out / "draft"
+    shutil.rmtree(dr, ignore_errors=True)
+    dr.mkdir()
+    pages = []
+    for sc in c.scenes:
+        if only and not (only[0] <= sc.idx <= only[1]):
+            continue
+        lines = sc.lines or [(0.0, sc.dur)]
+        for k, (a0, a1) in enumerate(lines):
+            t = sc.start + min(sc.dur - 0.05, a0 + max(0.8, (a1 - a0) * 0.7))   # 그 문장이 말해지는 동안의 화면
+            im = frame_at(c, t).convert("RGB").resize((1440, 810), Image.LANCZOS)
+            page = Image.new("RGB", (1440, 1080), (250, 248, 242))
+            page.paste(im, (0, 0))
+            txt = sc.narration[k] if k < len(sc.narration) else ""
+            txt = txt.replace("!!", "").replace("**", "").replace(" | ", " ").replace("|", "")
+            head = f"[장면 {sc.idx:02d} · {sc.spec.get('type')} · {sc.spec.get('chapter', '')}]  문장 {k + 1}/{len(lines)}"
+            d = ImageDraw.Draw(page)
+            d.text((30, 830), head, fill=(120, 110, 90), font=S.font("Bold", 26))
+            d.multiline_text((30, 878), "\n".join(G.wrap(txt, S.font("SemiBold", 34), 1380)) if hasattr(G, "wrap") else txt,
+                             fill=(20, 22, 30), font=S.font("SemiBold", 34), spacing=10)
+            fn = dr / f"{sc.idx:02d}_{k + 1}.jpg"
+            page.save(fn, quality=82)
+            pages.append(page)
+    if pages:
+        pages[0].save(out / "draft.pdf", save_all=True, append_images=pages[1:], resolution=96)
+    print(f"초안 슬라이드 {len(pages)}장 →", dr, "·", out / "draft.pdf")
 
 
 if __name__ == "__main__":

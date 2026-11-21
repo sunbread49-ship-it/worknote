@@ -17,6 +17,7 @@
 from functools import lru_cache
 
 import json
+import math
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
@@ -3093,3 +3094,187 @@ class Hub(Editorial):
 
 
 TYPES.update({"hub": Hub})
+
+
+# ── 서울 지도 (2026-11-21 지식창고 롱폼 '서울 25개 구 한 번에') ─────────────────
+_SEOUL = {}
+REGIONS = {   # 서울시 5대 생활권
+    "도심권": (["종로구", "중구", "용산구"], (255, 170, 90)),
+    "동북권": (["성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구"], (120, 200, 255)),
+    "서북권": (["은평구", "서대문구", "마포구"], (190, 150, 255)),
+    "서남권": (["양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구"], (110, 220, 160)),
+    "동남권": (["서초구", "강남구", "송파구", "강동구"], (255, 120, 150)),
+}
+GU_REGION = {g: (r, c) for r, (gs, c) in REGIONS.items() for g in gs}
+
+
+def _seoul():
+    if not _SEOUL:
+        from pathlib import Path
+        geo = json.loads((Path(__file__).resolve().parents[1] / "assets/geo/seoul_gu.json").read_text())
+        for ft in geo["features"]:
+            g = ft["geometry"]
+            polys = g["coordinates"] if g["type"] == "MultiPolygon" else [g["coordinates"]]
+            _SEOUL[ft["properties"]["name"]] = [p[0] for p in polys]
+        lm = Path(__file__).resolve().parents[1] / "assets/geo/seoul_landmarks.json"
+        _SEOUL["_lm"] = json.loads(lm.read_text()) if lm.exists() else {}
+        _SEOUL["_lm"].setdefault("숙정문", [37.5947, 126.9824])
+    return _SEOUL
+
+
+class SeoulMap(Editorial):
+    """서울 지도 무대: 구 하나씩 불 켜기 · 생활권 색 · 오른쪽 카드 · 궁궐/4대문 표시 · 숫자 지도
+    spec: focus: [구…](확대) · regions: true(생활권 색) · steps: [{gu, on, offset, card:{kicker,title,eng,lines:[[라벨,값]],count}}]
+          markers: [{name, kind: palace|gate, on, offset, label}] · values: {구: 값} + fmt · quiz: [{label, value, on}]"""
+
+    def _proj(self, focus):
+        d = _seoul()
+        names = focus or [k for k in d if not k.startswith("_")]
+        pts = [pt for n in names for poly in d[n] for pt in poly]
+        lon0, lon1 = min(p[0] for p in pts), max(p[0] for p in pts)
+        lat0, lat1 = min(p[1] for p in pts), max(p[1] for p in pts)
+        k = math.cos(math.radians(37.55))
+        box = self.spec.get("box", (90, 150, 1150, 860) if self.spec.get("card_side", True) else (260, 140, 1660, 860))   # 아래 자막 자리 비움
+        bw, bh = box[2] - box[0], box[3] - box[1]
+        sc = min(bw / ((lon1 - lon0) * k), bh / (lat1 - lat0)) * 0.94
+        cx, cy = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
+        mx, my = (lon0 + lon1) / 2, (lat0 + lat1) / 2
+        return lambda lon, lat: (cx + (lon - mx) * k * sc, cy - (lat - my) * sc)
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        d0 = _seoul()
+        P = self._proj(sp.get("focus"))
+        steps = sp.get("steps", [])
+        starts = [self.line_start(s.get("on", 1)) + s.get("offset", 0) for s in steps]
+        cur = max([-1] + [i for i, st in enumerate(starts) if t >= st])
+        lit = {s["gu"] for i, s in enumerate(steps[:cur + 1])}
+        now = steps[cur]["gu"] if cur >= 0 else None
+        vals = sp.get("values", {})
+        vmax = max(vals.values()) if vals else 1
+        lay = Image.new("RGBA", (S.W * 2, S.H * 2), (0, 0, 0, 0))
+        d = ImageDraw.Draw(lay)
+        for name, polys in d0.items():
+            if name.startswith("_"):
+                continue
+            reg_col = GU_REGION.get(name, ("", (150, 160, 190)))[1]
+            if sp.get("regions"):
+                rs = sp.get("region_on")   # {생활권: 문장번호}
+                show = (not rs) or (GU_REGION[name][0] in rs and t >= self.line_start(rs[GU_REGION[name][0]]))
+                fill = reg_col + (235,) if show else (52, 60, 84, 255)
+            elif vals:
+                v = vals.get(name, 0) / vmax
+                k = G.ease_out(G.clamp((t - self.line_start(sp.get("values_on", 1))) / 1.2))
+                base = (52, 60, 84)
+                tgt = tuple(sp.get("value_color", (255, 200, 80)))
+                fill = tuple(int(base[i] + (tgt[i] - base[i]) * v * k) for i in range(3)) + (255,)
+            elif name == now:
+                fill = (255, 214, 60, 255)
+            elif name in lit:
+                fill = reg_col + (210,) if sp.get("lit_region_color", True) else (120, 140, 180, 255)
+            elif sp.get("focus") and name in sp["focus"]:
+                fill = (64, 74, 104, 255)
+            else:
+                fill = (40, 46, 66, 255)
+            for poly in polys:
+                xy = [tuple(v * 2 for v in P(lon, lat)) for lon, lat in poly]
+                d.polygon(xy, fill=fill, outline=(14, 18, 34, 255), width=4)
+        if sp.get("river", True):
+            pass
+        f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
+        # 구 이름 (지도 위)
+        show_names = sp.get("names", "lit")
+        for name, polys in d0.items():
+            if name.startswith("_"):
+                continue
+            if show_names == "none" or (show_names == "lit" and name not in lit and not vals and not sp.get("regions")):
+                continue
+            big = max(polys, key=len)
+            xs = [P(lon, lat) for lon, lat in big]
+            cx, cy = sum(p[0] for p in xs) / len(xs), sum(p[1] for p in xs) / len(xs)
+            cx += sp.get("nudge", {}).get(name, [0, 0])[0]
+            cy += sp.get("nudge", {}).get(name, [0, 0])[1]
+            sz = sp.get("name_size", 26)
+            txt = name if not vals else f"{name}\n{sp.get('fmt', '{:,}').format(vals.get(name, 0))}"
+            col = (20, 22, 30) if (name == now) else (245, 245, 250)
+            G.blit(f, T(txt, sz, col, "Black", align="center", stroke=0 if name == now else 4, stroke_fill=(14, 18, 34)), (cx, cy), 1, "mm")
+        # 궁궐 · 4대문
+        for mk in sp.get("markers", []):
+            o = G.appear(t, self.line_start(mk.get("on", 1)) + mk.get("offset", 0), 0.3)
+            if o <= 0:
+                continue
+            lat, lon = d0["_lm"][mk["name"]]
+            x, y = P(lon, lat)
+            gate = mk.get("kind") == "gate"
+            col = (255, 120, 90) if gate else (255, 214, 60)
+            r = 18
+            dot = Image.new("RGBA", (r * 4, r * 4), (0, 0, 0, 0))
+            dd = ImageDraw.Draw(dot)
+            if gate:
+                dd.rectangle((r, r, r * 3, r * 3), fill=col + (255,), outline=(14, 18, 34, 255), width=4)
+            else:
+                dd.ellipse((r, r, r * 3, r * 3), fill=col + (255,), outline=(14, 18, 34, 255), width=4)
+            G.blit(f, dot, (x, y), o, "mm")
+            lab = G.pill(mk.get("label", mk["name"]), "Black", mk.get("size", 30), (20, 22, 30), col, pad=(14, 6), radius=10)
+            dx, dy = mk.get("dx", 0), mk.get("dy", -46)
+            G.blit(f, lab, (x + dx, y + dy), o, "mm")
+        # 오른쪽 카드
+        card = steps[cur].get("card") if cur >= 0 else sp.get("card")
+        if card:
+            o = G.appear(t, starts[cur] if cur >= 0 else self.line_start(1), 0.3)
+            self._card(f, card, o)
+        # 퀴즈 / 정답 칸
+        for i, q in enumerate(sp.get("quiz", [])):
+            o = G.appear(t, self.line_start(q.get("on", 1)) + q.get("offset", 0), 0.3)
+            if o <= 0:
+                continue
+            y = 260 + i * 210
+            box = Image.new("RGBA", (620, 170), (0, 0, 0, 0))
+            ImageDraw.Draw(box).rounded_rectangle((0, 0, 619, 169), 24, fill=(24, 30, 52, 240), outline=(255, 214, 60, 200), width=3)
+            box.alpha_composite(T(q["label"], 36, (200, 206, 222), "Bold"), (34, 24))
+            ans = q.get("answer") if (q.get("reveal_on") and t >= self.line_start(q["reveal_on"]) + q.get("reveal_offset", 0)) else "?"
+            box.alpha_composite(T(ans, 64, (255, 214, 60), "Black"), (34, 76))
+            G.blit(f, box, (S.W - 160 - 620 + (1 - o) * 40, y), o, "lt")
+        self.finish(f, t)
+
+    def _card(self, f, c, o):
+        if o <= 0:
+            return
+        w, h = 600, 640
+        card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        dd = ImageDraw.Draw(card)
+        dd.rounded_rectangle((0, 0, w - 1, h - 1), 30, fill=(22, 28, 50, 245), outline=(255, 214, 60, 180), width=3)
+        y = 34
+        if c.get("kicker"):
+            card.alpha_composite(G.pill(c["kicker"], "Black", 28, (20, 22, 30), tuple(c.get("kcol", (255, 214, 60))), pad=(14, 6), radius=8), (36, y))
+        if c.get("count"):
+            ct = T(c["count"], 28, (170, 178, 200), "Bold")
+            card.alpha_composite(ct, (w - 36 - ct.width, y + 4))
+        y += 70
+        if c.get("icon"):
+            try:
+                from . import illust as I
+                ic = I.emoji(c["icon"], 120)
+                card.alpha_composite(ic, ((w - 120) // 2, y))
+                y += 136
+            except SystemExit:
+                pass
+        tt = T(c["title"], 84, (255, 255, 255), "Black")
+        card.alpha_composite(tt, ((w - tt.width) // 2, y))
+        y += tt.height + 6
+        if c.get("eng"):
+            e = T(c["eng"], 28, (170, 178, 200), "SemiBold")
+            card.alpha_composite(e, ((w - e.width) // 2, y))
+            y += e.height + 22
+        dd.line((40, y, w - 40, y), fill=(255, 255, 255, 50), width=2)
+        y += 22
+        for lab, val in c.get("lines", []):
+            card.alpha_composite(T(lab, 28, (170, 178, 200), "Bold"), (40, y + 6))
+            vt = T(val, 34, (255, 214, 60) if lab in ("대표", "핵심") else (240, 242, 248), "Black", max_w=w - 190)
+            card.alpha_composite(vt, (170, y))
+            y += max(vt.height, 40) + 16
+        G.blit(f, card, (S.W - 150 - w + (1 - o) * 40, 170), o, "lt")
+
+
+TYPES.update({"seoulmap": SeoulMap})

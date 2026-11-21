@@ -1,0 +1,914 @@
+title: 서울 25개 구 한 번에 정리 | 지도로 보는 구별 특징 · 궁궐과 4대문
+series_tag: 한 번에 정리
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    N서울타워: 엔서울타워
+    IT: 아이티
+    DMC: 디엠씨
+    ㎢: 제곱킬로미터
+    4·19: 사일구
+bgm:
+  volume: 0.2
+  chapters:
+    인트로: hope
+    5대 생활권: hope
+    도심권: hope
+    궁궐과 4대문: tense
+    동북권: drive
+    서북권: drive
+    서남권: drive
+    동남권: drive
+    정답 공개: hope
+    숫자로 보는 서울: hope
+youtube:
+  title: 서울 25개 구 한 번에 정리 | 지도로 보는 구별 특징 · 궁궐과 4대문
+  description: ''
+  tags:
+  - 서울
+  - 서울25개구
+  - 서울지도
+  - 한양도성
+  - 4대문
+  - 5대궁궐
+  - 서울구
+  - 지식
+  privacy: private
+scenes:
+- type: seoulmap
+  chapter: 인트로
+  names: all
+  card_side: true
+  steps:
+  - gu: 종로구
+    'on': 1
+    offset: 0.0
+  - gu: 중구
+    'on': 1
+    offset: 0.12
+  - gu: 용산구
+    'on': 1
+    offset: 0.24
+  - gu: 성동구
+    'on': 1
+    offset: 0.36
+  - gu: 광진구
+    'on': 1
+    offset: 0.48
+  - gu: 동대문구
+    'on': 1
+    offset: 0.6
+  - gu: 중랑구
+    'on': 1
+    offset: 0.72
+  - gu: 성북구
+    'on': 1
+    offset: 0.84
+  - gu: 강북구
+    'on': 1
+    offset: 0.96
+  - gu: 도봉구
+    'on': 1
+    offset: 1.08
+  - gu: 노원구
+    'on': 1
+    offset: 1.2
+  - gu: 은평구
+    'on': 1
+    offset: 1.3199999999999998
+  - gu: 서대문구
+    'on': 1
+    offset: 1.44
+  - gu: 마포구
+    'on': 1
+    offset: 1.56
+  - gu: 양천구
+    'on': 1
+    offset: 1.68
+  - gu: 강서구
+    'on': 1
+    offset: 1.7999999999999998
+  - gu: 구로구
+    'on': 1
+    offset: 1.92
+  - gu: 금천구
+    'on': 1
+    offset: 2.04
+  - gu: 영등포구
+    'on': 1
+    offset: 2.16
+  - gu: 동작구
+    'on': 1
+    offset: 2.28
+  - gu: 관악구
+    'on': 1
+    offset: 2.4
+  - gu: 서초구
+    'on': 1
+    offset: 2.52
+  - gu: 강남구
+    'on': 1
+    offset: 2.6399999999999997
+  - gu: 송파구
+    'on': 1
+    offset: 2.76
+  - gu: 강동구
+    'on': 1
+    offset: 2.88
+  lit_region_color: true
+  quiz:
+  - label: 가장 넓은 구
+    'on': 2
+  - label: 사람이 가장 많은 구
+    'on': 2
+    offset: 0.6
+  - label: 가장 작은 구
+    'on': 2
+    offset: 1.2
+  narration:
+  - 서울에는 구가 25개 있어요. 혹시 다 말할 수 있나요?
+  - 가장 넓은 구, 사람이 가장 많은 구, 가장 작은 구는 어디일까요? | 정답은 끝에서 공개할게요.
+- type: title
+  skyline: true
+  y: 250
+  kicker: 악어새 지식창고 · 한 번에
+  title: '서울 25개 구
+
+    한 번에 정리'
+  highlight: 25개 구
+  subtitle: 지도로 보는 구별 특징 · 궁궐과 4대문
+  narration:
+  - 오늘은 지도를 따라 서울 25개 구를 한 바퀴 돌아볼게요.
+- type: seoulmap
+  chapter: 5대 생활권
+  regions: true
+  names: all
+  name_size: 22
+  region_on:
+    도심권: 2
+    동북권: 2
+    서북권: 2
+    서남권: 2
+    동남권: 2
+  card:
+    kicker: 5대 생활권
+    title: 서울 = 5조각
+    lines:
+    - - 도심권
+      - 3개 구
+    - - 동북권
+      - 8개 구
+    - - 서북권
+      - 3개 구
+    - - 서남권
+      - 7개 구
+    - - 동남권
+      - 4개 구
+  narration:
+  - 서울시는 25개 구를 생활권 다섯 개로 묶어요.
+  - 도심권 3개, 동북권 8개, 서북권 3개, 서남권 7개, 동남권 4개. | 이 순서대로 돌아볼게요.
+- type: seoulmap
+  chapter: 도심권
+  focus:
+  - 종로구
+  - 중구
+  - 용산구
+  steps:
+  - gu: 종로구
+    'on': 2
+    card:
+      kicker: 도심권
+      kcol:
+      - 255
+      - 170
+      - 90
+      count: 1/25
+      icon: crown
+      title: 종로구
+      eng: Jongno-gu
+      lines:
+      - - 대표
+        - 경복궁 · 북촌 · 광화문
+      - - 한 줄
+        - 조선 600년 서울의 심장
+  - gu: 중구
+    'on': 3
+    card:
+      kicker: 도심권
+      kcol:
+      - 255
+      - 170
+      - 90
+      count: 2/25
+      icon: shopping_bags
+      title: 중구
+      eng: Jung-gu
+      lines:
+      - - 대표
+        - 명동 · 남대문시장 · 서울역
+      - - 한 줄
+        - 서울 한가운데 쇼핑 1번지
+  - gu: 용산구
+    'on': 4
+    card:
+      kicker: 도심권
+      kcol:
+      - 255
+      - 170
+      - 90
+      count: 3/25
+      icon: tokyo_tower
+      title: 용산구
+      eng: Yongsan-gu
+      lines:
+      - - 대표
+        - N서울타워 · 이태원 · 국립중앙박물관
+      - - 한 줄
+        - 남산과 한강 사이
+  names: lit
+  narration:
+  - 먼저 서울의 한가운데, 도심권이에요.
+  - 종로구는 조선 600년 서울의 심장이에요. 경복궁, 북촌, 광화문이 다 여기 있죠.
+  - 중구는 명동과 남대문시장, 서울역이 있는 서울 한가운데예요.
+  - 용산구는 남산 N서울타워부터 이태원, 국립중앙박물관까지, 남산과 한강 사이에 있어요.
+- type: seoulmap
+  chapter: 궁궐과 4대문
+  focus:
+  - 종로구
+  - 중구
+  names: all
+  name_size: 40
+  steps:
+  - gu: 종로구
+    'on': 1
+  - gu: 중구
+    'on': 1
+  lit_region_color: true
+  markers:
+  - name: 경복궁
+    kind: palace
+    'on': 2
+    offset: 0.0
+    dx: -10
+    dy: -44
+  - name: 창덕궁
+    kind: palace
+    'on': 2
+    offset: 0.5
+    dx: 30
+    dy: -44
+  - name: 창경궁
+    kind: palace
+    'on': 2
+    offset: 1.0
+    dx: 100
+    dy: 14
+  - name: 경희궁
+    kind: palace
+    'on': 2
+    offset: 1.5
+    dx: -110
+    dy: -30
+  - name: 덕수궁
+    kind: palace
+    'on': 2
+    offset: 2.0
+    dx: -110
+    dy: 10
+  - name: 숭례문
+    kind: gate
+    label: 남대문 숭례문
+    'on': 3
+    offset: 0.0
+    dx: 0
+    dy: 46
+  - name: 흥인지문
+    kind: gate
+    label: 동대문 흥인지문
+    'on': 3
+    offset: 0.5
+    dx: 0
+    dy: 48
+  - name: 숙정문
+    kind: gate
+    label: 북대문 숙정문
+    'on': 3
+    offset: 1.0
+    dx: 0
+    dy: -46
+  - name: 돈의문
+    kind: gate
+    label: 서대문 돈의문 (터)
+    'on': 3
+    offset: 1.5
+    dx: -190
+    dy: -6
+  card:
+    kicker: 한양도성
+    icon: castle
+    title: 궁궐 5 · 대문 4
+    lines:
+    - - 궁궐
+      - 덕수궁만 중구
+    - - 대문
+      - 숭례문만 중구
+    - - 반전
+      - 동대문구엔 동대문 X
+  narration:
+  - 잠깐, 여기가 조선의 수도 한양이었어요.
+  - 조선의 5대 궁궐, 경복궁, 창덕궁, 창경궁, 경희궁, 덕수궁. | 그중 덕수궁만 중구, 나머지 넷은 모두 종로구에 있어요.
+  - 한양을 둘러싼 4대문도 볼까요? 남대문 숭례문은 중구. | 동대문 흥인지문, 북대문 숙정문, 그리고 지금은 터만 남은 서대문 돈의문은, 모두 종로구예요.
+  - 그러니까 동대문구에는 동대문이 없고, 서대문구에는 서대문이 없어요.
+  nudge:
+    종로구:
+    - 60
+    - -120
+    중구:
+    - 110
+    - 10
+- type: seoulmap
+  chapter: 동북권
+  focus:
+  - 성동구
+  - 광진구
+  - 동대문구
+  - 중랑구
+  - 성북구
+  - 강북구
+  - 도봉구
+  - 노원구
+  steps:
+  - gu: 성동구
+    'on': 2
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 4/25
+      icon: coffee
+      title: 성동구
+      eng: Seongdong-gu
+      lines:
+      - - 대표
+        - 성수동 · 서울숲
+      - - 한 줄
+        - 공장 골목이 카페 거리로
+  - gu: 광진구
+    'on': 3
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 5/25
+      icon: ferris_wheel
+      title: 광진구
+      eng: Gwangjin-gu
+      lines:
+      - - 대표
+        - 건대 · 어린이대공원 · 뚝섬 한강공원
+      - - 한 줄
+        - 대학가와 한강
+  - gu: 동대문구
+    'on': 4
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 6/25
+      icon: shopping_cart
+      title: 동대문구
+      eng: Dongdaemun-gu
+      lines:
+      - - 대표
+        - 경동시장 · 청량리역 · 경희대
+      - - 한 줄
+        - 동대문은 옆 종로구에
+  - gu: 중랑구
+    'on': 5
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 7/25
+      icon: tree
+      title: 중랑구
+      eng: Jungnang-gu
+      lines:
+      - - 대표
+        - 중랑천 · 망우역사문화공원
+      - - 한 줄
+        - 서울 동쪽 물길
+  - gu: 성북구
+    'on': 6
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 8/25
+      icon: graduation_cap
+      title: 성북구
+      eng: Seongbuk-gu
+      lines:
+      - - 대표
+        - 고려대 · 성신여대 · 성북동
+      - - 한 줄
+        - 대학가와 옛 골목
+  - gu: 강북구
+    'on': 7
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 9/25
+      icon: mountain
+      title: 강북구
+      eng: Gangbuk-gu
+      lines:
+      - - 대표
+        - 북한산 · 국립4·19민주묘지
+      - - 한 줄
+        - 북한산 아래 동네
+  - gu: 도봉구
+    'on': 8
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 10/25
+      icon: dinosaur
+      title: 도봉구
+      eng: Dobong-gu
+      lines:
+      - - 대표
+        - 도봉산 · 쌍문동 둘리뮤지엄
+      - - 한 줄
+        - 둘리의 고향
+  - gu: 노원구
+    'on': 9
+    card:
+      kicker: 동북권
+      kcol:
+      - 120
+      - 200
+      - 255
+      count: 11/25
+      icon: apartment
+      title: 노원구
+      eng: Nowon-gu
+      lines:
+      - - 대표
+        - 중계동 학원가 · 불암산
+      - - 한 줄
+        - 아파트 숲
+  names: lit
+  narration:
+  - 이제 동북권 8개 구로 넘어가 볼게요.
+  - 성동구 성수동은 낡은 공장 골목이 카페와 팝업 거리로 변했어요. 바로 옆엔 서울숲이 있죠.
+  - 광진구는 건대 앞 먹자골목과 어린이대공원, 뚝섬 한강공원이 있어요.
+  - 동대문구는 경동시장과 청량리역이 있는 동네. 이름은 동대문구지만, 동대문은 바로 옆 종로구에 있죠.
+  - 중랑구는 중랑천이 흐르고, 망우역사문화공원이 있는 서울 동쪽 동네예요.
+  - 성북구는 고려대, 성신여대 같은 대학가와 성북동 옛 골목이 함께 있어요.
+  - 강북구는 북한산 아래, 국립4·19민주묘지가 있는 곳이에요.
+  - 도봉구는 도봉산, 그리고 아기공룡 둘리가 사는 쌍문동이 있어요.
+  - 노원구는 거대한 아파트 단지와 중계동 학원가로 유명해요.
+- type: seoulmap
+  chapter: 서북권
+  focus:
+  - 은평구
+  - 서대문구
+  - 마포구
+  steps:
+  - gu: 은평구
+    'on': 2
+    card:
+      kicker: 서북권
+      kcol:
+      - 190
+      - 150
+      - 255
+      count: 12/25
+      icon: house_garden
+      title: 은평구
+      eng: Eunpyeong-gu
+      lines:
+      - - 대표
+        - 은평한옥마을 · 진관사
+      - - 한 줄
+        - 북한산 자락 한옥마을
+  - gu: 서대문구
+    'on': 3
+    card:
+      kicker: 서북권
+      kcol:
+      - 190
+      - 150
+      - 255
+      count: 13/25
+      icon: prison
+      title: 서대문구
+      eng: Seodaemun-gu
+      lines:
+      - - 대표
+        - 신촌 · 독립문 · 서대문형무소역사관
+      - - 한 줄
+        - 서대문은 종로구에
+  - gu: 마포구
+    'on': 4
+    card:
+      kicker: 서북권
+      kcol:
+      - 190
+      - 150
+      - 255
+      count: 14/25
+      icon: tv
+      title: 마포구
+      eng: Mapo-gu
+      lines:
+      - - 대표
+        - 홍대 · 망원시장 · 상암 DMC
+      - - 한 줄
+        - 젊음과 방송의 거리
+  names: lit
+  narration:
+  - 다음은 서북권 3개 구예요.
+  - 은평구에는 북한산 자락에 은평한옥마을과 진관사가 있어요.
+  - 서대문구는 연세대, 이화여대가 있는 신촌, 그리고 독립문과 서대문형무소역사관이 있어요. 그런데 서대문은 여기 없죠.
+  - 마포구는 홍대 거리와 망원시장, 그리고 방송사들이 모인 상암동이 있어요.
+- type: seoulmap
+  chapter: 서남권
+  focus:
+  - 양천구
+  - 강서구
+  - 구로구
+  - 금천구
+  - 영등포구
+  - 동작구
+  - 관악구
+  steps:
+  - gu: 양천구
+    'on': 2
+    card:
+      kicker: 서남권
+      kcol:
+      - 110
+      - 220
+      - 160
+      count: 15/25
+      icon: books
+      title: 양천구
+      eng: Yangcheon-gu
+      lines:
+      - - 대표
+        - 목동 · 목동 학원가
+      - - 한 줄
+        - 아파트와 학원가
+  - gu: 강서구
+    'on': 3
+    card:
+      kicker: 서남권
+      kcol:
+      - 110
+      - 220
+      - 160
+      count: 16/25
+      icon: airplane
+      title: 강서구
+      eng: Gangseo-gu
+      lines:
+      - - 대표
+        - 김포공항 · 마곡지구
+      - - 한 줄
+        - 서울의 하늘길
+  - gu: 구로구
+    'on': 4
+    card:
+      kicker: 서남권
+      kcol:
+      - 110
+      - 220
+      - 160
+      count: 17/25
+      icon: computer
+      title: 구로구
+      eng: Guro-gu
+      lines:
+      - - 대표
+        - 구로디지털단지 · 고척스카이돔
+      - - 한 줄
+        - 공장에서 IT 단지로
+  - gu: 금천구
+    'on': 5
+    card:
+      kicker: 서남권
+      kcol:
+      - 110
+      - 220
+      - 160
+      count: 18/25
+      icon: office
+      title: 금천구
+      eng: Geumcheon-gu
+      lines:
+      - - 대표
+        - 가산디지털단지
+      - - 한 줄
+        - 1995년 구로구에서 독립
+  - gu: 영등포구
+    'on': 6
+    card:
+      kicker: 서남권
+      kcol:
+      - 110
+      - 220
+      - 160
+      count: 19/25
+      icon: bank
+      title: 영등포구
+      eng: Yeongdeungpo-gu
+      lines:
+      - - 대표
+        - 여의도 국회 · 증권가 · 63빌딩
+      - - 한 줄
+        - 정치와 금융의 섬
+  - gu: 동작구
+    'on': 7
+    card:
+      kicker: 서남권
+      kcol:
+      - 110
+      - 220
+      - 160
+      count: 20/25
+      icon: fish
+      title: 동작구
+      eng: Dongjak-gu
+      lines:
+      - - 대표
+        - 노량진 수산시장 · 국립서울현충원
+      - - 한 줄
+        - 수산시장과 현충원
+  - gu: 관악구
+    'on': 8
+    card:
+      kicker: 서남권
+      kcol:
+      - 110
+      - 220
+      - 160
+      count: 21/25
+      icon: school
+      title: 관악구
+      eng: Gwanak-gu
+      lines:
+      - - 대표
+        - 서울대 · 신림동 · 관악산
+      - - 한 줄
+        - 청년들의 동네
+  names: lit
+  narration:
+  - 한강 아래 서쪽, 서남권 7개 구예요.
+  - 양천구는 목동 아파트 단지와 학원가로 유명하죠.
+  - 강서구에는 김포공항과 마곡 산업단지가 있어요. 그리고 꽤 넓어요.
+  - 구로구는 옛 공장 단지가 IT 회사들이 모인 구로디지털단지로 바뀌었어요.
+  - 바로 옆 금천구는 가산디지털단지가 있고, 1995년 구로구에서 나뉜 형제 구예요.
+  - 영등포구 여의도에는 국회와 증권가가 모여 있어요.
+  - 동작구는 노량진 수산시장과 국립서울현충원이 있는 곳이에요.
+  - 관악구는 서울대와 관악산, 그리고 혼자 사는 청년이 많은 신림동이 있어요.
+- type: seoulmap
+  chapter: 동남권
+  focus:
+  - 서초구
+  - 강남구
+  - 송파구
+  - 강동구
+  steps:
+  - gu: 서초구
+    'on': 2
+    card:
+      kicker: 동남권
+      kcol:
+      - 255
+      - 120
+      - 150
+      count: 22/25
+      icon: theater
+      title: 서초구
+      eng: Seocho-gu
+      lines:
+      - - 대표
+        - 예술의전당 · 서초동 법원 · 양재
+      - - 한 줄
+        - 법원과 예술
+  - gu: 강남구
+    'on': 3
+    card:
+      kicker: 동남권
+      kcol:
+      - 255
+      - 120
+      - 150
+      count: 23/25
+      icon: office
+      title: 강남구
+      eng: Gangnam-gu
+      lines:
+      - - 대표
+        - 테헤란로 · 코엑스 · 압구정
+      - - 한 줄
+        - 1975년 성동구에서 독립
+  - gu: 송파구
+    'on': 4
+    card:
+      kicker: 동남권
+      kcol:
+      - 255
+      - 120
+      - 150
+      count: 24/25
+      icon: stadium
+      title: 송파구
+      eng: Songpa-gu
+      lines:
+      - - 대표
+        - 롯데월드타워 · 올림픽공원 · 석촌호수
+      - - 한 줄
+        - 123층 랜드마크
+  - gu: 강동구
+    'on': 5
+    card:
+      kicker: 동남권
+      kcol:
+      - 255
+      - 120
+      - 150
+      count: 25/25
+      icon: pottery
+      title: 강동구
+      eng: Gangdong-gu
+      lines:
+      - - 대표
+        - 암사동 선사유적지 · 고덕
+      - - 한 줄
+        - 6천 년 전 신석기 마을
+  names: lit
+  narration:
+  - 마지막은 동남권 4개 구예요.
+  - 서초구는 예술의전당과 법원들이 모인 서초동이 있어요.
+  - 강남구는 테헤란로와 코엑스. 그런데 원래는 성동구 땅이었다가, 1975년에 나뉘었어요.
+  - 송파구는 123층 롯데월드타워와 올림픽공원이 있어요.
+  - 강동구 암사동에는 6천 년 전 신석기 사람들이 살던 집터가 남아 있어요.
+- type: seoulmap
+  chapter: 정답 공개
+  names: all
+  name_size: 20
+  values:
+    종로구: 23.91
+    중구: 9.96
+    용산구: 21.87
+    성동구: 16.86
+    광진구: 17.06
+    동대문구: 14.22
+    중랑구: 18.5
+    성북구: 24.57
+    강북구: 23.6
+    도봉구: 20.65
+    노원구: 35.44
+    은평구: 29.71
+    서대문구: 17.63
+    마포구: 23.85
+    양천구: 17.41
+    강서구: 41.45
+    구로구: 20.12
+    금천구: 13.02
+    영등포구: 24.55
+    동작구: 16.35
+    관악구: 29.57
+    서초구: 46.97
+    강남구: 39.51
+    송파구: 33.88
+    강동구: 24.59
+  fmt: '{:.1f}'
+  values_on: 1
+  value_color:
+  - 255
+  - 200
+  - 80
+  quiz:
+  - label: 가장 넓은 구
+    'on': 1
+    answer: 서초구 46.97㎢
+    reveal_on: 2
+  - label: 가장 작은 구
+    'on': 1
+    answer: 중구 9.96㎢
+    reveal_on: 3
+  credit: '면적: 서울특별시 기본통계 (2024)'
+  narration:
+  - 자, 정답 공개! 먼저 넓이예요. 색이 진할수록 넓은 구예요.
+  - 가장 넓은 구는 서초구, 46.97제곱킬로미터. | 2위는 김포공항이 있는 강서구죠.
+  - 가장 작은 구는 중구. 서초구의 5분의 1 정도예요.
+- type: seoulmap
+  chapter: 정답 공개
+  names: all
+  name_size: 20
+  values:
+    종로구: 13.6
+    중구: 11.7
+    용산구: 19.9
+    성동구: 27.4
+    광진구: 33.0
+    동대문구: 35.3
+    중랑구: 37.7
+    성북구: 42.1
+    강북구: 27.7
+    도봉구: 29.7
+    노원구: 47.9
+    은평구: 45.2
+    서대문구: 29.9
+    마포구: 35.6
+    양천구: 42.0
+    강서구: 54.8
+    구로구: 38.2
+    금천구: 22.2
+    영등포구: 37.1
+    동작구: 36.9
+    관악구: 47.7
+    서초구: 42.4
+    강남구: 55.1
+    송파구: 64.7
+    강동구: 49.7
+  fmt: '{:.1f}만'
+  values_on: 1
+  value_color:
+  - 120
+  - 220
+  - 255
+  quiz:
+  - label: 사람이 가장 많은 구
+    'on': 1
+    answer: 송파구 64.7만 명
+    reveal_on: 2
+  - label: 사람이 가장 적은 구
+    'on': 1
+    answer: 중구 11.7만 명
+    reveal_on: 3
+  credit: '인구: 행정안전부 주민등록 인구통계 (2026년 10월 말)'
+  narration:
+  - 이번엔 사람 수예요.
+  - 사람이 가장 많은 구는 송파구, 64만 7천 명. 웬만한 도시 하나 크기죠.
+  - 가장 적은 구는 이번에도 중구, 11만 7천 명이에요. | 덤으로, 가구 수가 가장 많은 구는 관악구. 혼자 사는 사람이 많아서예요.
+- type: card
+  chapter: 숫자로 보는 서울
+  heading: 서울 · 숫자로 한 번에
+  highlight: 숫자로
+  numbered: true
+  size: 50
+  gap: 36
+  width: 1500
+  bullets:
+  - text: 25개 구 · 427개 행정동
+    'on': 1
+  - text: 인구 927만 명 · 면적 605㎢
+    'on': 2
+  - text: 1943년 7개 구 → 1995년 25개 구
+    highlight: 25개 구
+    hl_color: up
+    'on': 3
+  credit: 서울특별시 기본통계 · 행정안전부 주민등록 인구통계 (2026.10)
+  narration:
+  - 숫자로 정리하면, 서울은 25개 구, 427개 동이에요.
+  - 인구는 927만 명, 넓이는 605제곱킬로미터.
+  - 처음엔 구가 7개뿐이었는데, 도시가 커지면서 쪼개지고 쪼개져서, 1995년에 지금의 25개가 됐어요.
+- type: outro
+  heading: 여러분이 사는 구는?
+  highlight: 사는 구는?
+  sub: 우리 구 자랑 한 줄, 댓글로 남겨 주세요
+  subscribe_on: 2
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  signature_on: 3
+  narration:
+  - 여러분이 사는 구는 어디예요? 우리 구 자랑 한 줄, 댓글로 남겨 주세요.
+  - 다른 도시도 한 번에 정리해 드릴게요.
+  - 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
