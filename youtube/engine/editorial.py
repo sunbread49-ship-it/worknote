@@ -3159,7 +3159,13 @@ class SeoulMap(Editorial):
             if name.startswith("_"):
                 continue
             reg_col = GU_REGION.get(name, ("", (150, 160, 190)))[1]
-            if sp.get("regions"):
+            paper = getattr(self, "paper", False)
+            if sp.get("groups"):   # {가족 이름: {gus: [...], color: [r,g,b], on: 문장}}
+                fill = (226, 216, 196, 255) if paper else (52, 60, 84, 255)
+                for gname, gg in sp["groups"].items():
+                    if name in gg["gus"] and t >= self.line_start(gg.get("on", 1)) + gg.get("offset", 0) + 0.15 * gg["gus"].index(name):
+                        fill = tuple(gg["color"]) + (255,)
+            elif sp.get("regions"):
                 rs = sp.get("region_on")   # {생활권: 문장번호}
                 show = (not rs) or (GU_REGION[name][0] in rs and t >= self.line_start(rs[GU_REGION[name][0]]))
                 fill = reg_col + (235,) if show else (52, 60, 84, 255)
@@ -3177,9 +3183,11 @@ class SeoulMap(Editorial):
                 fill = (64, 74, 104, 255)
             else:
                 fill = (40, 46, 66, 255)
+            if getattr(self, "paper", False) and fill[:3] in ((40, 46, 66), (52, 60, 84), (64, 74, 104)):
+                fill = (226, 216, 196, 255)
             for poly in polys:
                 xy = [tuple(v * 2 for v in P(lon, lat)) for lon, lat in poly]
-                d.polygon(xy, fill=fill, outline=(14, 18, 34, 255), width=4)
+                d.polygon(xy, fill=fill, outline=(40, 44, 60, 255) if getattr(self, "paper", False) else (14, 18, 34, 255), width=5)
         if sp.get("river", True):
             pass
         f.alpha_composite(lay.resize((S.W, S.H), Image.LANCZOS))
@@ -3219,6 +3227,26 @@ class SeoulMap(Editorial):
             lab = G.pill(mk.get("label", mk["name"]), "Black", mk.get("size", 30), (20, 22, 30), col, pad=(14, 6), radius=10)
             dx, dy = mk.get("dx", 0), mk.get("dy", -46)
             G.blit(f, lab, (x + dx, y + dy), o, "mm")
+        # 악어새 가이드 (채널 캐릭터가 지도 위에서 콕 집어 말함)
+        gd = sp.get("guide")
+        if gd:
+            from pathlib import Path as _P
+            o = G.appear(t, self.line_start(gd.get("on", 1)) + gd.get("offset", 0), 0.35)
+            if o > 0:
+                ch = Image.open(_P(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png").convert("RGBA")
+                hh = gd.get("size", 300)
+                ch = ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
+                gx, gy = gd.get("xy", (110, S.H - 120))
+                bob = 6 * math.sin(t * 3)
+                G.blit(f, ch, (gx, gy + bob), o, "lb")
+                bub = T(gd["text"], gd.get("font", 40), (20, 22, 30), "Black", max_w=520)
+                bw_, bh_ = bub.width + 56, bub.height + 40
+                b = Image.new("RGBA", (bw_, bh_ + 26), (0, 0, 0, 0))
+                bd = ImageDraw.Draw(b)
+                bd.rounded_rectangle((0, 0, bw_ - 1, bh_ - 1), 26, fill=(255, 255, 255, 250), outline=(20, 22, 30, 255), width=4)
+                bd.polygon([(40, bh_ - 4), (90, bh_ - 4), (30, bh_ + 24)], fill=(255, 255, 255, 250))
+                b.alpha_composite(bub, (28, 20))
+                G.blit(f, b, (gx + ch.width * 0.55, gy - hh - 10 + bob), o, "lb")
         # 오른쪽 카드
         card = steps[cur].get("card") if cur >= 0 else sp.get("card")
         if card:

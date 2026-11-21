@@ -1,0 +1,174 @@
+title: 목업
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+series_tag: 한 번에 정리
+scenes:
+- type: seoulmap
+  chapter: 족보
+  bg:
+    kind: paper
+  names: all
+  name_size: 22
+  groups:
+    성동구 가족:
+      gus:
+      - 성동구
+      - 광진구
+      - 강남구
+      - 서초구
+      - 송파구
+      - 강동구
+      color:
+      - 232
+      - 96
+      - 76
+      'on': 2
+    동대문구 가족:
+      gus:
+      - 동대문구
+      - 성북구
+      - 도봉구
+      - 노원구
+      - 강북구
+      - 중랑구
+      color:
+      - 70
+      - 140
+      - 220
+      'on': 2
+      offset: 1.2
+    영등포구 가족:
+      gus:
+      - 영등포구
+      - 관악구
+      - 동작구
+      - 강서구
+      - 양천구
+      - 구로구
+      - 금천구
+      color:
+      - 60
+      - 170
+      - 110
+      'on': 2
+      offset: 2.4
+    서대문구 가족:
+      gus:
+      - 서대문구
+      - 마포구
+      - 은평구
+      color:
+      - 150
+      - 110
+      - 210
+      'on': 2
+      offset: 3.6
+    원조 그대로:
+      gus:
+      - 종로구
+      - 중구
+      - 용산구
+      color:
+      - 240
+      - 180
+      - 60
+      'on': 3
+  guide:
+    text: '서울 25개 구,
+
+      엄마는 딱 7명!'
+    'on': 1
+    xy:
+    - 1260
+    - 860
+    size: 330
+    font: 44
+  narration:
+  - 서울 25개 구, 사실 엄마는 딱 7명이에요.
+  - 1943년 처음 생긴 구 7개가, 서울이 커질 때마다 쪼개지고 또 쪼개졌거든요.
+  - 종로구, 중구, 용산구만 처음 모습 그대로 남았어요.
+  box:
+  - 90
+  - 150
+  - 1150
+  - 860
+- type: hub
+  chapter: 족보
+  kicker: 강남 3구의 엄마는?
+  direction: out
+  nodes:
+  - label: '광진구
+
+      1995'
+    'on': 2
+  - label: '강남구
+
+      1975'
+    'on': 1
+    offset: 0.4
+  - label: '서초구
+
+      1988'
+    'on': 2
+    offset: 0.4
+  - label: '송파구
+
+      1988'
+    'on': 2
+    offset: 0.8
+  - label: '강동구
+
+      1979'
+    'on': 2
+    offset: 1.2
+  target:
+    text: 성동구
+    label: 엄마 구 · 1943
+    color: up
+    'on': 1
+  caption: '자료: 서울특별시 행정구역 연혁 (구 신설 · 분리)'
+  narration:
+  - 강남구, 서초구, 송파구. 이른바 강남 3구의 엄마가 누군지 아세요? | 바로 성수동이 있는 성동구예요.
+  - 1975년 성동구에서 강남구가 나오고, 거기서 다시 강동구, 서초구, 송파구가 태어났어요.
+- type: seoulmap
+  chapter: 족보
+  bg:
+    kind: paper
+  focus:
+  - 도봉구
+  - 노원구
+  - 강북구
+  - 성북구
+  names: lit
+  steps:
+  - gu: 도봉구
+    'on': 1
+    card:
+      kicker: 동대문구 가족 · 손주
+      kcol:
+      - 70
+      - 140
+      - 220
+      count: 1973년생
+      icon: dinosaur
+      title: 도봉구
+      eng: Dobong-gu
+      lines:
+      - - 대표
+        - 도봉산 · 쌍문동 둘리뮤지엄
+      - - 족보
+        - 동대문 → 성북 → 도봉
+  guide:
+    text: '둘리 고향이
+
+      여기였어?'
+    'on': 1
+    offset: 0.8
+    xy:
+    - 700
+    - 860
+    size: 260
+    font: 40
+  narration:
+  - 도봉구는 동대문구의 손주예요. 동대문구에서 성북구가, 성북구에서 도봉구가 나왔거든요. 아기공룡 둘리가 사는 쌍문동이 바로 여기예요.
