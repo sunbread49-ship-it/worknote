@@ -1,7 +1,7 @@
 """롱폼 → 구간 쇼츠 (2026-11-21 사용자 전략: 롱폼 1편 = 쇼츠 9개 · 새로 만들지 않고 구간만 잘라 9:16 + 상단 후킹 문구)
   python tools/clip_shorts.py <에피소드 폴더명>        → out/<ep>/clips/c1.mp4 … + cover · desc
 에피소드 yaml 의 clips: [{start, end, hook, hl}] 사용 (초 단위 · 롱폼 video.mp4 기준)
-화면(1080x1920): 흐린 배경 · 위 후킹 문구 · 가운데 롱폼 화면(아래 자막띠 잘라냄) · 큰 자막(captions.srt) · '풀버전은 아래 영상 버튼'
+화면(1080x1920): 흐린 배경 · 위 후킹 문구 · 가운데 롱폼 화면 전체(자막 포함 · 2026-11-21 사용자: 잘리면 어색) · 큰 자막(captions.srt) · '풀버전은 아래 영상 버튼'
 """
 import re
 import subprocess
@@ -39,7 +39,7 @@ def overlay(hook, hl, theme, out):
         im.alpha_composite(t, ((W - t.width) // 2, y))
         y += t.height + 10
     pill = G.pill("▶ 풀버전은 아래 영상 버튼", "Black", 44, (20, 22, 30), acc, pad=(26, 12), radius=14)
-    im.alpha_composite(pill, ((W - pill.width) // 2, 1340))
+    im.alpha_composite(pill, ((W - pill.width) // 2, 1365))
     im.save(out)
 
 
@@ -63,7 +63,7 @@ def ass_for(cues, s, e, path):
     L = ["[Script Info]", "ScriptType: v4.00+", "PlayResX: 1080", "PlayResY: 1920", "",
          "[V4+ Styles]",
          "Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV",
-         "Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,640", "",
+         "Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590", "",
          "[Events]", "Format: Layer, Start, End, Style, Text"]
     for a, b, t in cues:
         if b <= s or a >= e:
@@ -84,7 +84,7 @@ def make(ep, i, clip, theme, video, cues, od):
     overlay(clip["hook"], clip.get("hl", ""), theme, ov)
     ass_for(cues, s, e, ass)
     fc = ("[0:v]split[a][b];[a]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=24:2,eq=brightness=-0.28[bg];"
-          "[b]crop=1720:860:100:30,scale=1080:540[fg];[bg][fg]overlay=0:540[v1];[v1][1:v]overlay=0:0[v2];"
+          "[b]scale=1080:608[fg];[bg][fg]overlay=0:540[v1];[v1][1:v]overlay=0:0[v2];"
           f"[v2]subtitles={ass}:fontsdir={FONTS}[v]")
     out = od / f"c{i}.mp4"
     subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-ss", f"{s}", "-to", f"{e}", "-i", str(video), "-i", str(ov),
@@ -97,7 +97,7 @@ def make(ep, i, clip, theme, video, cues, od):
     from PIL import ImageFilter, ImageEnhance
     bg = src.resize((int(1920 * 1920 / 1080), 1920)).crop((0, 0, 1080, 1920)).filter(ImageFilter.GaussianBlur(24))
     bg = ImageEnhance.Brightness(bg).enhance(0.72).convert("RGBA")
-    bg.alpha_composite(src.crop((100, 30, 1820, 890)).resize((1080, 540)).convert("RGBA"), (0, 540))
+    bg.alpha_composite(src.resize((1080, 608)).convert("RGBA"), (0, 540))
     bg.alpha_composite(Image.open(ov))
     bg.convert("RGB").save(od / f"c{i}_cover.jpg", quality=90)
     fr.unlink(missing_ok=True)
