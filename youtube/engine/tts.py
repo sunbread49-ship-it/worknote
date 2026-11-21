@@ -258,6 +258,8 @@ def plan(scenes, cfg, work_dir: Path, log=print):
                     subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(p_), "-af", f"atempo={tempo}", str(tp)], check=True)
                 p_, spans = tp, [(a / tempo, b / tempo) for a, b in spans]
             pcm = _pcm(p_)
+            if spans:   # 대본 끝 뒤 덧붙은 말 제거 (마지막 문장 끝 + 0.25초)
+                pcm = pcm[:int((spans[-1][1] + 0.25) * SR)]
             nz = np.where(np.abs(pcm) > 0.01)[0]
             st0 = nz[0] if len(nz) else 0
             pcm = pcm[max(0, st0 - 480):]
@@ -495,10 +497,29 @@ def gemini_scene(lines, cfg, cache, log=print):
     if words:
         wl = [max(1, len(_hn(w))) for w, _, _ in words]
         tot_w, tot_l = sum(wl), sum(L)
+        # 2026-11-21: 대본 끝 뒤에 Gemini가 덧붙인 말(숨소리 · '그래서…') 찾기 — 대본 마지막 3글자가 들린 곳 뒤에 말이 더 있으면 잘라냄
+        heard = ""
+        owner = []
+        for wi, (w, _, _) in enumerate(words):
+            h = _hn(w)
+            heard += h
+            owner += [wi] * len(h)
+        tail = _hn(lines[-1])[-3:]
+        pos = heard.rfind(tail) if len(tail) == 3 else -1
+        cut_at = None
+        if pos >= 0:
+            wl_end = owner[pos + len(tail) - 1]
+            rest = heard[pos + len(tail):]
+            if len(rest) >= 2 and wl_end + 1 < len(words):
+                cut_at = wl_end
+        extra = 0
+        scale = tot_w
+        if cut_at is not None:
+            scale = sum(wl[:cut_at + 1])
         acc, cum = 0, []
         for n_ in wl:
             acc += n_
-            cum.append(acc / tot_w)
+            cum.append(acc / scale)
         a = 0
         for n_ in L[:-1]:
             a += n_
@@ -506,6 +527,13 @@ def gemini_scene(lines, cfg, cache, log=print):
             i = min(range(len(cum)), key=lambda j: abs(cum[j] - target))
             nxt = words[i + 1][1] if i + 1 < len(words) else words[i][2]
             bounds.append((words[i][2] + nxt) / 2)
+        if cut_at is not None:
+            cut = min(dur, (words[cut_at][2] + words[cut_at + 1][1]) / 2 + 0.12)
+            log(f"  덧붙은 말 잘라냄 ({dur - cut:.1f}초): …{lines[-1][-14:]} | 뒤: {''.join(w for w, _, _ in words[cut_at + 1:])[:20]}")
+            dur = cut
+        elif words and dur - words[-1][2] > 0.6:   # 마지막 단어 뒤 숨소리 · 잡음 정리
+            log(f"  끝 숨소리 정리 ({dur - words[-1][2] - 0.4:.1f}초): …{lines[-1][-14:]}")
+            dur = words[-1][2] + 0.4
     else:
         a = 0
         for n_ in L[:-1]:
