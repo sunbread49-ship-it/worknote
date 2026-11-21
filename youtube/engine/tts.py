@@ -251,6 +251,12 @@ def plan(scenes, cfg, work_dir: Path, log=print):
         cur, lines = lead, []
         if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene" and sc.narration:
             p_, spans = gemini_scene(list(sc.narration), cfg, cache, log=log)
+            tempo = float(cfg.get("tempo", 1.0))   # 2026-11-21: 지식창고 롱폼 = 쇼츠(1.2)의 0.9 → 1.08 (음높이 유지)
+            if abs(tempo - 1.0) > 1e-3:
+                tp = Path(str(p_) + f".t{tempo:.3f}.wav")
+                if not tp.exists():
+                    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(p_), "-af", f"atempo={tempo}", str(tp)], check=True)
+                p_, spans = tp, [(a / tempo, b / tempo) for a, b in spans]
             pcm = _pcm(p_)
             nz = np.where(np.abs(pcm) > 0.01)[0]
             st0 = nz[0] if len(nz) else 0
