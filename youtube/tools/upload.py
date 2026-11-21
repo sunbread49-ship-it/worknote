@@ -86,7 +86,7 @@ def upload_video(token, path, title, desc, tags, publish_at=None, category="27")
     meta = {"snippet": {"title": title[:100], "description": desc[:5000], "tags": tags[:30], "categoryId": category,
                         "defaultLanguage": "ko", "defaultAudioLanguage": "ko"}, "status": status}
     size = Path(path).stat().st_size
-    r = call("POST", f"{API}/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status", token, meta,
+    r = call("POST", f"{API}/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status&notifySubscribers=true", token, meta,
              {"X-Upload-Content-Type": "video/mp4", "X-Upload-Content-Length": str(size)}, raw=True)
     loc = r.headers["Location"]
     with open(path, "rb") as fp:
