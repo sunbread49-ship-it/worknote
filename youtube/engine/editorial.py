@@ -4444,24 +4444,29 @@ class Accent(Editorial):
         self.paper = True
         P = ACCENT[sp.get("palette", "notyet")]
         a, b, c = P["a"], P["b"], P["c"]
+        sw = sp.get("soft", 0.35)   # 2026-11-22 사용자: 과하다 → 종이색 쪽으로 섞어 순하게
+        if sw:
+            mix = lambda col: tuple(int(v * (1 - sw) + pv * sw) for v, pv in zip(col, tone["paper"]))
+            a, b, c = mix(a), mix(b), mix(c)
         # 왼쪽: 색 견본 3장
         for i, (col, nm) in enumerate(zip((a, b, c), P["names"])):
             k = G.ease_out((t - 0.1 - i * 0.15) / 0.4)
             if k <= 0:
                 continue
-            ch = Image.new("RGBA", (220, 220), (0, 0, 0, 0))
+            ch = Image.new("RGBA", (220, 220), (0, 0, 0, 0)) if not sp.get("small_chips", True) else Image.new("RGBA", (160, 160), (0, 0, 0, 0))
             d = ImageDraw.Draw(ch)
-            d.rectangle((0, 0, 219, 219), fill=(255, 255, 255, 255))
-            d.rectangle((0, 0, 219, 156), fill=col + (255,))
-            d.rectangle((0, 0, 219, 219), outline=(210, 204, 192, 255), width=2)
-            ch.alpha_composite(T(nm, 20, (30, 30, 34), "Black"), (14, 172))
-            sh = Image.new("RGBA", (240, 244), (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle((10, 14, 230, 234), fill=(0, 0, 0, 40))
+            W_ = ch.width
+            d.rectangle((0, 0, W_ - 1, W_ - 1), fill=(255, 255, 255, 255))
+            d.rectangle((0, 0, W_ - 1, int(W_ * 0.71)), fill=col + (255,))
+            d.rectangle((0, 0, W_ - 1, W_ - 1), outline=(210, 204, 192, 255), width=2)
+            ch.alpha_composite(T(nm, 16 if W_ < 200 else 20, (90, 86, 80), "Bold"), (12, int(W_ * 0.78)))
+            sh = Image.new("RGBA", (ch.width + 20, ch.height + 24), (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle((10, 14, ch.width + 10, ch.height + 14), fill=(0, 0, 0, 30))
             sh = sh.filter(ImageFilter.GaussianBlur(8)); sh.alpha_composite(ch, (0, 0))
-            G.blit(f, sh, (230, 140 + i * 245 + (1 - k) * 30), k, "lt")
+            G.blit(f, sh, (300, 220 + i * (ch.width + 30) + (1 - k) * 30), k, "lt")
         # 오른쪽: 포스터
         k = G.ease_out((t - 0.3) / 0.5)
         if k > 0:
-            PW, PH = 1060, 760
+            PW, PH = sp.get("poster_wh", (960, 680))
             po = Image.new("RGBA", (PW, PH), sp.get("bg_color", a) + (255,) if isinstance(sp.get("bg_color"), tuple) else a + (255,))
             bgk = sp.get("bg", "a")
             po = Image.new("RGBA", (PW, PH), {"a": a, "b": b, "c": c}[bgk] + (255,))
@@ -4481,19 +4486,19 @@ class Accent(Editorial):
                 for l in art["lines"]:
                     pts = [(bx[0] + (p[0] - lo0) * kx * scl, bx[3] - (p[1] - la0) * scl) for p in M["lines"][str(l)]]
                     n = min(len(pts), max(2, int(len(pts) * kd) + 1))
-                    pd.line(pts[:n], fill=pop + (255,), width=26, joint="curve")
+                    pd.line(pts[:n], fill=pop + (255,), width=16, joint="curve")
                     for e in (pts[0], pts[n - 1]):
-                        pd.ellipse((e[0] - 22, e[1] - 22, e[0] + 22, e[1] + 22), fill={"a": a, "b": b, "c": c}[sp.get("bg", "a")] + (255,), outline=pop + (255,), width=10)
+                        pd.ellipse((e[0] - 15, e[1] - 15, e[0] + 15, e[1] + 15), fill={"a": a, "b": b, "c": c}[sp.get("bg", "a")] + (255,), outline=pop + (255,), width=7)
             elif art.get("kind") == "big":
                 bt = T(art["text"], art.get("size", 520), pop, "Black")
-                if bt.width > PW * 0.56:
-                    bt = bt.resize((int(PW * 0.56), int(bt.height * PW * 0.56 / bt.width)), Image.LANCZOS)
+                if bt.width > PW * 0.46:
+                    bt = bt.resize((int(PW * 0.46), int(bt.height * PW * 0.46 / bt.width)), Image.LANCZOS)
                 po.alpha_composite(bt, (PW - bt.width - 30, PH - bt.height - 50))
             if sp.get("kicker"):
                 po.alpha_composite(T(sp["kicker"], 30, ink, "Bold"), (60, 54))
             y = 110
             for ln in sp["headline"].split("\n"):
-                hh = T(ln, sp.get("size", 104), ink, "Black")
+                hh = T(ln, sp.get("size", 88), ink, "ExtraBold")
                 po.alpha_composite(hh, (54, y))
                 y += hh.height - 6
             if sp.get("sub"):
@@ -4503,7 +4508,7 @@ class Accent(Editorial):
                 po.alpha_composite(T(sp["foot"], 24, ink, "Bold"), (60, PH - 60))
             sh = Image.new("RGBA", (PW + 40, PH + 40), (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle((14, 20, PW + 14, PH + 20), fill=(0, 0, 0, 60))
             sh = sh.filter(ImageFilter.GaussianBlur(14)); sh.alpha_composite(po, (0, 0))
-            G.blit(f, sh, (560, 110 + (1 - k) * 40), k, "lt")
+            G.blit(f, sh, (560, 150 + (1 - k) * 40), k, "lt")
         self.finish(f, t)
 
 

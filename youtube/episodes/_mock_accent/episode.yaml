@@ -10,9 +10,9 @@ tts:
 scenes:
 - type: accent
   palette: neon
-  bg: a
+  bg: b
   ink: c
-  pop: c
+  pop: a
   kicker: 9호선 노선색 후보 · 2006
   headline: '투표로
 
@@ -23,15 +23,15 @@ scenes:
   art:
     kind: big
     text: 47%
-    size: 300
+    size: 240
     dy: -20
   foot: 서울시 선호도 조사 · 일반인 500명 + 전문가 200명
   narration:
   - 9호선 색은 투표로 뽑았어요.
 - type: accent
   palette: dinner
-  bg: a
-  ink: b
+  bg: b
+  ink: a
   pop: c
   kicker: 8호선 · 1992년 12월 23일
   headline: '분홍은
@@ -79,7 +79,7 @@ scenes:
   art:
     kind: big
     text: RED
-    size: 420
+    size: 240
     dy: 30
   foot: 빨강의 귀환은 2011년 신분당선
   narration:
