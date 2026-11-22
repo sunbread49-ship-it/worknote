@@ -80,7 +80,7 @@ def call(method, url, token, data=None, headers=None, raw=False):
 
 # ── 업로드 동작 ───────────────────────────────────────────────────
 # AI 표시(변경·합성 콘텐츠) · 채널별 (2026-11-22 사용자: AI 음성 사용 표시)
-AI_LABEL = {"": False, "SCIENCE": True}
+AI_LABEL = {"": True, "SCIENCE": True}
 
 
 def upload_video(token, path, title, desc, tags, publish_at=None, category="27"):

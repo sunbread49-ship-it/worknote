@@ -1904,6 +1904,29 @@ def logo_chip(name, h=56, pad=(16, 8)):
     return chip
 
 
+@lru_cache(maxsize=32)
+def _face_circle(name, d, focus=None):
+    im = _photo_src(name)
+    fx, fy = focus or (0.5, 0.3)
+    side = min(im.width, im.height)
+    cx, cy = im.width * fx, im.height * fy
+    x0 = int(min(max(0, cx - side / 2), im.width - side)); y0 = int(min(max(0, cy - side / 2), im.height - side))
+    sq = im.crop((x0, y0, x0 + side, y0 + side)).resize((d * 2, d * 2), Image.LANCZOS)
+    m = Image.new("L", sq.size, 0); ImageDraw.Draw(m).ellipse((0, 0, d * 2 - 1, d * 2 - 1), fill=255)
+    out = Image.new("RGBA", sq.size, (0, 0, 0, 0)); out.paste(sq, (0, 0), m)
+    ImageDraw.Draw(out).ellipse((2, 2, d * 2 - 3, d * 2 - 3), outline=(255, 255, 255, 230), width=5)
+    return out.resize((d, d), Image.LANCZOS)
+
+
+def _photo_src(name):
+    from pathlib import Path
+    p = Path(__file__).resolve().parent.parent / "assets" / "photos"
+    for ext in (".jpg", ".png", ".jpeg"):
+        if (p / (name + ext)).exists():
+            return Image.open(p / (name + ext)).convert("RGB")
+    raise FileNotFoundError(name)
+
+
 class Leaderboard(Editorial):
     """순위표: 결과가 큰 순서로 1·2·3·4위 줄이 차례로 올라오고, 메달 원 + 가로 막대 + 금액.
     rows: [{label, sub, value, text, color}] (자동 정렬), on(첫 줄 등장 문장), step(줄 간격 초), unit_note"""
@@ -1949,9 +1972,20 @@ class Leaderboard(Editorial):
                 if r.get("label"):
                     G.blit(f, T(r["label"], 28, S.FG, "Black"), (x0 + 102, cy + 8), k, "lt")
             else:
-                lab = T(r["label"], 44, S.FG, "Black")
-                G.blit(f, lab, (x0 + 100, cy - 6), k, "lb")
-            if r.get("sub") and not (ci is not None and r.get("label")):
+                lx = x0 + 100
+                if r.get("face"):   # 2026-11-22: 인물 동그라미 사진
+                    fc = _face_circle(r["face"], rh - 40, tuple(r["face_focus"]) if r.get("face_focus") else None)
+                    G.blit(f, fc, (lx, cy), k, "lm")
+                    lx += fc.width + 18
+                # 2026-11-22 사용자: 이름·설명이 줄 상자 선 위로 삐져나옴 → 상자 안 세로 가운데 정렬
+                lab = T(r["label"], 40 if r.get("sub") else 44, S.FG, "Black")
+                sb = T(r["sub"], 24, (190, 196, 212), "SemiBold") if r.get("sub") and ci is None else None
+                hh = lab.height + (sb.height + 2 if sb is not None else 0)
+                top = cy - hh / 2
+                G.blit(f, lab, (lx, top), k, "lt")
+                if sb is not None:
+                    G.blit(f, sb, (lx + 2, top + lab.height + 2), k, "lt")
+            if r.get("sub") and ci is not None and not r.get("label"):
                 G.blit(f, T(r["sub"], 26, (190, 196, 212), "SemiBold"), (x0 + 102, cy + 6), k, "lt")
             if r.get("logo") and ci is None:
                 lg = logo_chip(r["logo"], 52)
@@ -3500,13 +3534,12 @@ def _doc_img(name):
 class Doc(Editorial):
     def draw(self, f, t):
         sp = self.spec
-        f.paste(paper_bg(), (0, 0))
-        self.paper = True
-        ink, acc = NAVY, CORAL
+        self.base(f)   # 2026-11-22 사용자: 흰 종이 배경 X → 채널 기본 어두운 배경 위에 문서 한 장
+        ink, acc = S.FG, (S.RED_L if S.THEME == "08" else Y)
         # 왼쪽 위 작은 머리말 + 가는 선
         y0 = 150
         if sp.get("kicker"):
-            G.blit(f, T(sp["kicker"], 30, (120, 112, 98), "Bold"), (230, y0), G.appear(t, 0, 0.3))
+            G.blit(f, T(sp["kicker"], 30, (200, 204, 214), "Bold"), (230, y0), G.appear(t, 0, 0.3))
             d = ImageDraw.Draw(f)
             d.line((230, y0 + 50, 230 + 120, y0 + 50), fill=acc, width=4)
         if sp.get("title"):
@@ -3544,17 +3577,17 @@ class Doc(Editorial):
                 ld.line((x0, y_1 + 2, x0 + (x1 - x0) * kk, y_1 + 2), fill=acc + (255,), width=6)
                 card.alpha_composite(lay)
         sh = Image.new("RGBA", card.size, (0, 0, 0, 0))
-        ImageDraw.Draw(sh).rectangle((14, 18, w + 26, h + 30), fill=(40, 34, 24, 60))
+        ImageDraw.Draw(sh).rectangle((14, 18, w + 26, h + 30), fill=(0, 0, 0, 150))
         sh = sh.filter(ImageFilter.GaussianBlur(10))
         sh.alpha_composite(card)
         sh = sh.rotate(sp.get("tilt", -0.8), resample=Image.BICUBIC, expand=True)
         G.blit(f, sh, (cx + dx, cy + dy), G.appear(t, 0.1, 0.35), "mm")
         if sp.get("tag") and hl:
             ts = self.line_start(sp.get("on", 1))
-            tg = G.pill(sp["tag"], "Black", 44, S.WHITE08 if S.THEME == "08" else (255, 255, 255), acc, pad=(28, 12))
+            tg = G.pill(sp["tag"], "Black", 44, (255, 255, 255), S.RED08 if S.THEME == "08" else CORAL, pad=(28, 12))
             G.blit(f, tg, (S.W - 150, sp.get("tag_y", y0 + 140)), G.appear(t, ts + 0.45, 0.25), "rb")
         cr = sp.get("credit") or "자료: 금융감독원 전자공시 DART · 2025 사업보고서"
-        G.blit(f, T(cr, 22, (120, 112, 98), "SemiBold"), (cx + w / 2, cy + h / 2 + 34), G.appear(t, 0.3, 0.3), "rt")
+        G.blit(f, T(cr, 22, (190, 196, 212), "SemiBold"), (cx + w / 2, cy + h / 2 + 34), G.appear(t, 0.3, 0.3), "rt")
         self.draw_common(f, t)
 
     def extra_sfx(self):
@@ -3562,3 +3595,129 @@ class Doc(Editorial):
 
 
 TYPES.update({"doc": Doc})
+
+
+# ════════════════════════════════════════════════════════════════
+# press — 언론 보도 스크랩 (2026-11-22 · 실제 기사 제목 · 매체 · 날짜를 신문 조각처럼)
+#   clips: [{outlet, date, headline, hl(밑줄 단어), lead, on}] · bg: 기본 어두운 배경 / photo · video
+class Press(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        if sp.get("title"):
+            G.blit(f, T(sp["title"], 60, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y), (230, 150), G.appear(t, 0, 0.3))
+        clips = sp["clips"]
+        n = len(clips)
+        for i, c in enumerate(clips):
+            ts = self.line_start(c.get("on", 1)) + c.get("offset", 0)
+            k = G.ease_out((t - ts) / 0.45)
+            if k <= 0:
+                continue
+            W2 = c.get("w", 1180)
+            hfont = _ff("NanumMyeongjo-ExtraBold.ttf", c.get("size", 60))
+            # 제목 줄바꿈
+            words, lines, cur = c["headline"].split(" "), [], ""
+            for wd in words:
+                tst = (cur + " " + wd).strip()
+                if hfont.getlength(tst) > W2 - 120 and cur:
+                    lines.append(cur); cur = wd
+                else:
+                    cur = tst
+            lines.append(cur)
+            lh = int(c.get("size", 60) * 1.32)
+            lead = c.get("lead")
+            H2 = 150 + lh * len(lines) + (70 if lead else 0) + 40
+            im = Image.new("RGBA", (W2, H2), (246, 243, 236, 255))
+            d = ImageDraw.Draw(im)
+            d.text((60, 40), c["outlet"], font=_ff("NanumMyeongjo-ExtraBold.ttf", 34), fill=(30, 30, 34))
+            dfont = _ff("NanumMyeongjo-ExtraBold.ttf", 26)
+            d.text((W2 - 60 - dfont.getlength(c.get("date", "")), 48), c.get("date", ""), font=dfont, fill=(110, 106, 98))
+            d.line((60, 100, W2 - 60, 100), fill=(30, 30, 34), width=3)
+            y = 128
+            hl = c.get("hl", "")
+            for ln in lines:
+                d.text((60, y), ln, font=hfont, fill=(18, 18, 22))
+                if hl and hl in ln and t > ts + 0.5:
+                    x_a = 60 + hfont.getlength(ln[:ln.index(hl)])
+                    x_b = x_a + hfont.getlength(hl)
+                    kk = G.ease_out((t - ts - 0.5) / 0.4)
+                    d.rectangle((x_a, y + lh - 26, x_a + (x_b - x_a) * kk, y + lh - 12), fill=(232, 66, 62, 200))
+                    d.text((60, y), ln, font=hfont, fill=(18, 18, 22))
+                y += lh
+            if lead:
+                d.text((60, y + 16), lead, font=_ff("NanumMyeongjo-ExtraBold.ttf", 28), fill=(90, 86, 80))
+            card = Image.new("RGBA", (W2 + 40, H2 + 40), (0, 0, 0, 0))
+            ImageDraw.Draw(card).rectangle((18, 24, W2 + 18, H2 + 24), fill=(0, 0, 0, 140))
+            card = card.filter(ImageFilter.GaussianBlur(10))
+            card.alpha_composite(im, (0, 0))
+            ang = c.get("tilt", [-2.2, 1.6, -1.0][i % 3])
+            card = card.rotate(ang, resample=Image.BICUBIC, expand=True)
+            pos = c.get("xy") or ([(S.W / 2, 600)] if n == 1 else [(S.W / 2 - 230, 470), (S.W / 2 + 230, 720), (S.W / 2, 600)])[i % 3]
+            G.blit(f, card, (pos[0], pos[1] + (1 - k) * 60), k, "mm")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(c.get("on", 1)) + c.get("offset", 0), "pop", 0.3) for c in self.spec["clips"]]
+
+
+TYPES.update({"press": Press})
+
+
+# ════════════════════════════════════════════════════════════════
+# chain — 지분 사다리 도식 (2026-11-22 · 글 나열 대신 원 · 선 · 숫자)
+#   kicker/title · nodes: [{label, sub, face, focus, logo, on, hl}] · links: [{text, on}] (노드 사이 화살표 위 %)
+class Chain(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=False)
+        nodes, links = sp["nodes"], sp.get("links", [])
+        n = len(nodes)
+        d0 = sp.get("d", 250)
+        xs = [S.W / 2 + (i - (n - 1) / 2) * sp.get("gap", 430) for i in range(n)]
+        cy = sp.get("y", 600)
+        acc = S.RED_L if S.THEME == "08" else Y
+        for i in range(n - 1):
+            lk = links[i] if i < len(links) else {}
+            ts = self.line_start(lk.get("on", nodes[i + 1].get("on", 1))) + lk.get("offset", 0)
+            k = G.ease_out((t - ts) / 0.5)
+            if k <= 0:
+                continue
+            xa, xb = xs[i] + d0 / 2 + 16, xs[i + 1] - d0 / 2 - 16
+            d = ImageDraw.Draw(f)
+            xe = xa + (xb - xa) * k
+            d.line((xa, cy, xe, cy), fill=acc + (255,), width=8)
+            if k > 0.9:
+                d.polygon([(xb + 6, cy), (xb - 26, cy - 18), (xb - 26, cy + 18)], fill=acc + (255,))
+            if lk.get("text"):
+                G.blit(f, T(lk["text"], 46, acc, "Black"), ((xa + xb) / 2, cy - 30), k, "mb")
+        for i, nd in enumerate(nodes):
+            ts = self.line_start(nd.get("on", 1)) + nd.get("offset", 0)
+            k = G.ease_out((t - ts) / 0.45)
+            if k <= 0:
+                continue
+            if nd.get("face"):
+                im = _face_circle(nd["face"], d0, tuple(nd["focus"]) if nd.get("focus") else None)
+            else:
+                im = Image.new("RGBA", (d0, d0), (0, 0, 0, 0))
+                dd = ImageDraw.Draw(im)
+                fill = (S.RED08 if S.THEME == "08" else CORAL) if nd.get("hl") else (S.GREEN08 if S.THEME == "08" else NAVY)
+                dd.ellipse((4, 4, d0 - 4, d0 - 4), fill=fill + (255,), outline=(255, 255, 255, 220), width=5)
+                tx = T(nd.get("text", nd["label"]), 52 if len(nd.get("text", nd["label"])) <= 4 else 40, (255, 255, 255), "Black", max_w=d0 - 40, align="center")
+                im.alpha_composite(tx, ((d0 - tx.width) // 2, (d0 - tx.height) // 2))
+            sc = 0.8 + 0.2 * k
+            im2 = im.resize((int(d0 * sc), int(d0 * sc)), Image.LANCZOS)
+            G.blit(f, im2, (xs[i], cy), k, "mm")
+            G.blit(f, T(nd["label"], 40, S.FG, "Black"), (xs[i], cy + d0 / 2 + 24), k, "mt")
+            if nd.get("sub"):
+                G.blit(f, T(nd["sub"], 28, (190, 196, 212), "SemiBold"), (xs[i], cy + d0 / 2 + 78), k, "mt")
+        if sp.get("note"):
+            ts = self.line_start(sp.get("note_on", 2))
+            G.blit(f, T(sp["note"], 44, S.FG, "Black", highlight=sp.get("note_hl", ""), hl_fill=acc), (S.W / 2, sp.get("note_y", 905)), G.appear(t, ts, 0.3), "mm")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(nd.get("on", 1)) + nd.get("offset", 0), "pop", 0.3) for nd in self.spec["nodes"]]
+
+
+TYPES.update({"chain": Chain})

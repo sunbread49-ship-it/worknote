@@ -35,4 +35,4 @@
 - 예약 업로드(publishAt) 쓰지 않음. **미리 전부 비공개로 올려 두고, 정한 시각에 공개로 전환**한다.
 - 업로드: `upload.py <ep> --long --shorts 1 --publish-at 2026-11-23T15:50 --queue` · 쇼츠: `upload_clips.py <ep> 2,...,9 --start 2026-11-23T16:20 --every 30 --queue`
 - 공개 전환: `tools/publish_queue.py due` — 공개 시각마다 예약 작업(send_later)으로 실행. 지식채널은 자식 세션 규칙 확인.
-- AI 표시: upload.py `AI_LABEL` (지식채널 True · 주식채널은 사용자 결정 대기 — 금융 주제는 플레이어 위에 라벨이 크게 뜸)
+- AI 표시: upload.py `AI_LABEL` (두 채널 모두 True · 11/22 사용자 결정. 금융 주제는 플레이어 위에 라벨이 더 눈에 띄게 뜰 수 있음)

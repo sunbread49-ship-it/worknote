@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets" / "photos"
 UA = {"User-Agent": "JusikAkeosaeVideoTool/1.0 (https://github.com/sunbread49-ship-it/worknote) python-urllib"}
-OK = ("public domain", "cc0", "cc by ", "cc by-sa", "cc-by", "pd", "cc by 2", "cc by 3", "cc by 4")
+OK = ("kogl type 1", "public domain", "cc0", "cc by ", "cc by-sa", "cc-by", "pd", "cc by 2", "cc by 3", "cc by 4")
 
 
 def _get(url, tries=4):
