@@ -3920,8 +3920,8 @@ class FaceRank(Editorial):
         seq = list(range(n))[::-1]          # 화면 왼쪽 = 꼴찌, 오른쪽 = 1위
         t0 = self.line_start(sp.get("on", 1))
         step = sp.get("step", 0.5)
-        base_y = sp.get("base_y", 760)
-        hmin, hmax = sp.get("hmin", 250), sp.get("hmax", 430)
+        base_y = sp.get("base_y", 690)
+        hmin, hmax = sp.get("hmin", 230), sp.get("hmax", 380)
         hs = {i: hmin + (hmax - hmin) * (n - 1 - i) / max(n - 1, 1) for i in range(n)}
         ws = {i: int(hs[i] * 0.8) for i in range(n)}
         gap = 54
@@ -3980,3 +3980,102 @@ class FaceRank(Editorial):
 
 
 TYPES.update({"facerank": FaceRank})
+
+
+# ════════════════════════════════════════════════════════════════
+# 비교 변주 (2026-11-22 · duel 말고) — photovs · scale
+class PhotoVS(Editorial):
+    """화면을 둘로 나눈 실제 사진 비교: left/right: {photo, focus, label, value, sub, on, color} · mid: '=' | 'VS' · heading"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        acc = S.RED_L if S.THEME == "08" else Y
+        W2 = S.W // 2
+        for j, side in enumerate(("left", "right")):
+            c = sp[side]
+            ts = self.line_start(c.get("on", 1)) + c.get("offset", 0)
+            k = G.ease_out((t - ts) / 0.5)
+            if k <= 0:
+                continue
+            im = _photo_src(c["photo"])
+            fx, fy = c.get("focus") or (0.5, 0.4)
+            ar = W2 / S.H
+            cw = min(im.width, int(im.height * ar)); ch = int(cw / ar)
+            x0 = int(min(max(0, im.width * fx - cw / 2), im.width - cw)); y0 = int(min(max(0, im.height * fy - ch / 2), im.height - ch))
+            zoom = 1.0 + 0.04 * min(1, max(0, t - ts) / 6)
+            ph = im.crop((x0, y0, x0 + cw, y0 + ch)).resize((int(W2 * zoom), int(S.H * zoom)), Image.LANCZOS).convert("RGBA")
+            ph = ph.crop(((ph.width - W2) // 2, (ph.height - S.H) // 2, (ph.width - W2) // 2 + W2, (ph.height - S.H) // 2 + S.H))
+            ph = Image.alpha_composite(ph, Image.new("RGBA", ph.size, (8, 10, 18, int(255 * c.get("dark", 0.45)))))
+            grad = Image.new("L", (1, S.H)); [grad.putpixel((0, y), int(220 * max(0, (y - S.H * 0.35) / (S.H * 0.65)))) for y in range(S.H)]
+            ph = Image.alpha_composite(ph, Image.merge("RGBA", [Image.new("L", ph.size, 0)] * 3 + [grad.resize(ph.size)]))
+            G.blit(f, ph, (j * W2 + (1 - k) * (-60 if j == 0 else 60), 0), k)
+            cx = j * W2 + W2 / 2
+            col = _col(c["color"]) if c.get("color") else (acc if j else S.FG)
+            G.blit(f, G.pill(c["label"], "Black", 40, (255, 255, 255), (S.GREEN08 if S.THEME == "08" else NAVY) if not j else (S.RED08 if S.THEME == "08" else CORAL), pad=(26, 10)), (cx, 560), k, "mm")
+            v = T(counter(c["value"], (t - ts) / 0.8), c.get("size", 130), col, "Black")
+            G.blit(f, v, (cx, 700), k, "mm")
+            if c.get("sub"):
+                G.blit(f, T(c["sub"], 32, (215, 220, 230), "SemiBold"), (cx, 784), k, "mt")
+        tr = self.line_start(sp["right"].get("on", 1)) + sp["right"].get("offset", 0)
+        km = G.ease_out((t - tr) / 0.4)
+        if km > 0:
+            d = ImageDraw.Draw(f)
+            d.line((W2, 0, W2, S.H * km), fill=(255, 255, 255), width=4)
+            mid = sp.get("mid", "VS")
+            disc = Image.new("RGBA", (150, 150), (0, 0, 0, 0))
+            ImageDraw.Draw(disc).ellipse((4, 4, 146, 146), fill=acc + (255,), outline=(255, 255, 255, 255), width=6)
+            tx = T(mid, 72 if len(mid) < 2 else 54, (255, 255, 255), "Black")
+            disc.alpha_composite(tx, ((150 - tx.width) // 2, (150 - tx.height) // 2 - 4))
+            G.blit(f, disc, (W2, 700), km, "mm")
+        if sp.get("heading"):
+            G.blit(f, T(sp["heading"], 60, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=acc), (S.W / 2, 175), G.appear(t, 0, 0.3), "mt")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec[s].get("on", 1)) + self.spec[s].get("offset", 0), "pop", 0.35) for s in ("left", "right")]
+
+
+class Scale(Editorial):
+    """저울(시소): 무거운 쪽으로 기울어짐. left/right: {label, value(표시), weight(숫자), sub, on, color} · heading · note"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        acc = S.RED_L if S.THEME == "08" else Y
+        if sp.get("heading"):
+            G.blit(f, T(sp["heading"], 60, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=acc), (S.W / 2, 160), G.appear(t, 0, 0.3), "mt")
+        L, R = sp["left"], sp["right"]
+        tl = self.line_start(L.get("on", 1)); tr = self.line_start(R.get("on", 1)) + R.get("offset", 0)
+        kl, kr = G.ease_out((t - tl) / 0.5), G.ease_out((t - tr) / 0.5)
+        wl, wr = float(L["weight"]) * max(kl, 0), float(R["weight"]) * max(kr, 0)
+        tot = max(float(L["weight"]), float(R["weight"]))
+        ang = max(-10, min(10, 10 * (wr - wl) / tot)) if tot else 0   # +면 오른쪽이 내려감
+        a = math.radians(ang)
+        px, py, half = S.W / 2, 560, 480
+        d = ImageDraw.Draw(f)
+        d.polygon([(px, py), (px - 60, py + 250), (px + 60, py + 250)], fill=(60, 66, 84))
+        d.rectangle((px - 200, py + 250, px + 200, py + 266), fill=(80, 86, 104))
+        xl, yl = px - half * math.cos(a), py - half * math.sin(a)
+        xr, yr = px + half * math.cos(a), py + half * math.sin(a)
+        d.line((xl, yl, xr, yr), fill=(220, 224, 234), width=12)
+        d.ellipse((px - 18, py - 18, px + 18, py + 18), fill=acc)
+        for c, (x, y), k, j in ((L, (xl, yl), kl, 0), (R, (xr, yr), kr, 1)):
+            d.line((x, y, x - 110, y + 120), fill=(200, 204, 214), width=3); d.line((x, y, x + 110, y + 120), fill=(200, 204, 214), width=3)
+            d.chord((x - 170, y + 60, x + 170, y + 190), 0, 180, fill=(48, 54, 72), outline=(200, 204, 214), width=4)
+            if k <= 0:
+                continue
+            col = _col(c["color"]) if c.get("color") else (acc if j else (S.GREEN_L if S.THEME == "08" else Y))
+            G.blit(f, T(c["label"], 40, S.FG, "Black"), (x, y - 150), k, "mb")
+            G.blit(f, T(counter(c["value"], (t - (tl if j == 0 else tr)) / 0.8), 84, col, "Black"), (x, y - 20), k, "mb")
+            if c.get("sub"):
+                G.blit(f, T(c["sub"], 28, (190, 196, 212), "SemiBold"), (x, y + 200), k, "mt")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 44, S.FG, "Black", highlight=sp.get("note_hl", ""), hl_fill=acc), (S.W / 2, 890), G.appear(t, self.line_start(sp.get("note_on", 2)) + 0.6, 0.3), "mm")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec[s].get("on", 1)), "pop", 0.35) for s in ("left", "right")]
+
+
+TYPES.update({"photovs": PhotoVS, "scale": Scale})

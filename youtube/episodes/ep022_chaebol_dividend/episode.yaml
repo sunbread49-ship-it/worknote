@@ -44,31 +44,51 @@ chapter_titles:
 #   삼성생명 237,500 · 모비스 322,000 · SK 456,500 · SDS 206,500 · 물산 255,500 · 하이닉스 1,100,000
 
 scenes:
-# ───────── 인트로 (INTRO30: 욕구 → 갈등 → 숫자 → 긴장) ─────────
 - type: kinetic
   chapter: 인트로
-  bg: {kind: video, file: yeouido_v, dark: 0.62, blur: 3}
+  bg:
+    kind: video
+    file: yeouido_v
+    dark: 0.62
+    blur: 3
   items:
-  - {text: "회장님은\n1년에 얼마 벌까?", 'on': 1, size: 130, highlight: 얼마}
-  - {text: "이재용 회장 연봉\n0원", 'on': 2, size: 150, highlight: 0원, hl_color: down}
+  - text: '회장님은
+
+      1년에 얼마 벌까?'
+    'on': 1
+    size: 130
+    highlight: 얼마
+  - text: '이재용 회장 연봉
+
+      0원'
+    'on': 2
+    size: 150
+    highlight: 0원
+    hl_color: down
   narration:
   - 재벌 회장님들은 1년에 돈을 얼마나 벌까요? 한 번쯤 궁금하셨죠?
   - 그런데 삼성 이재용 회장, 작년 연봉이 !!0원!!이에요. | 그런데도 통장에는, 매년 수천억 원이 들어와요.
-- type: leaderboard
+- type: facerank
   chapter: 인트로
   kicker: 4대 그룹 회장님 · 2025년에 받은 돈 (연봉 + 배당금)
   title: 1등은 누구일까?
   highlight: 누구일까?
   'on': 1
-  step: 0.3
-  top: 360
-  row_h: 118
+  step: 0.35
   rows:
-  - {label: '? ? ?', sub: 연봉은 0원, value: 3909, text: '3,909억', color: [232, 66, 62]}
-  - {label: '? ? ?', sub: '', value: 2104, text: '2,104억', color: [72, 176, 120]}
-  - {label: '? ? ?', sub: '', value: 1121, text: '1,121억', color: [150, 160, 180]}
-  - {label: '? ? ?', sub: '', value: 849, text: 849억, color: [150, 160, 180]}
-  vmax: 5600
+  - label: '? ? ?'
+    sub: 연봉은 0원
+    value: 3909
+    text: 3,909억
+  - label: '? ? ?'
+    value: 2104
+    text: 2,104억
+  - label: '? ? ?'
+    value: 1121
+    text: 1,121억
+  - label: '? ? ?'
+    value: 849
+    text: 849억
   narration:
   - 결론부터 살짝 보여 드릴게요. 1등 회장님이 작년에 받은 돈, !!3,909억!!.
   - 그런데 이 돈, 연봉이 아니에요. | 그리고 끝까지 보시면, 여러분도 회장님이랑 같은 통로로 돈 받는 법을 알게 돼요.
@@ -76,27 +96,48 @@ scenes:
   skyline: true
   y: 250
   kicker: 주식 궁금증, 숫자로 풀기
-  title: "4대 그룹 회장님 지갑\n공시로 열어 보기"
+  title: '4대 그룹 회장님 지갑
+
+    공시로 열어 보기'
   highlight: 공시로
   subtitle: 연봉 · 배당금 · 지분의 비밀 · 그래서 나는?
   narration:
   - 오늘은 삼성, 에스케이, 현대차, 엘지. 4대 그룹 회장님 지갑을, 금융감독원 공시로 열어 볼게요.
-
-# ───────── 연봉 ─────────
-- type: leaderboard
+- type: columns
   chapter: 연봉
   kicker: 2025년 연봉 · 각 사 사업보고서 개인별 보수
   title: 회장님 연봉 순위
   highlight: 연봉
   'on': 1
-  top: 340
-  row_h: 140
   rows:
-  - {label: 정의선 · 현대차, sub: 현대차 + 기아 + 현대모비스, face: chung_es, face_focus: [0.55, 0.3], value: 174.6, text: 174.6억, color: [72, 176, 120]}
-  - {label: 최태원 · SK, sub: SK + SK하이닉스, face: chey_tw, face_focus: [0.5, 0.3], value: 82.5, text: 82.5억, color: [150, 160, 180]}
-  - {label: 구광모 · LG, sub: ㈜LG, value: 71.3, text: 71.3억, color: [150, 160, 180]}
-  - {label: 이재용 · 삼성, sub: 2017년 3월부터 무보수, face: lee_jy, face_focus: [0.5, 0.42], value: 0.1, text: 0원, color: [232, 66, 62]}
-  vmax: 260
+  - label: 정의선
+    sub: 현대차 · 기아 · 모비스
+    face: chung_es
+    focus:
+    - 0.55
+    - 0.3
+    value: 174.6
+    text: 174.6억
+  - label: 최태원
+    sub: SK · SK하이닉스
+    face: chey_tw
+    focus:
+    - 0.5
+    - 0.3
+    value: 82.5
+    text: 82.5억
+  - label: 구광모
+    sub: ㈜LG
+    value: 71.3
+    text: 71.3억
+  - label: 이재용
+    sub: 2017년 3월부터 무보수
+    face: lee_jy
+    focus:
+    - 0.5
+    - 0.42
+    value: 0.5
+    text: 0원
   credit: '사진: The White House · 대한민국 국회(KOGL 1유형) · 미국 대통령실 (Wikimedia Commons)'
   narration:
   - 먼저 연봉. 회사들이 매년 3월에 내는 사업보고서에, 회장님 연봉이 다 나와요.
@@ -104,12 +145,20 @@ scenes:
   - 그리고 꼴찌가, 0원 이재용 회장이죠.
 - type: doc
   chapter: 연봉
-  bg: {kind: video, file: car_carrier_truck_v, dark: 0.72, blur: 6}
+  bg:
+    kind: video
+    file: car_carrier_truck_v
+    dark: 0.72
+    blur: 6
   kicker: 현대자동차 2025 사업보고서 · 임원의 보수
   title: 한 회사에서만 90억
   highlight: 90억
   file: doc_hmc_pay
-  hl: [29, 182, 1233, 243]
+  hl:
+  - 29
+  - 182
+  - 1233
+  - 243
   'on': 1
   tag: 정의선 · 9,001백만 원
   narration:
@@ -124,17 +173,34 @@ scenes:
   - title: 정의선 · 현대차그룹 회장
     sub: 회사 3곳에서 각각 받음
     lines:
-    - {label: 현대자동차, value: 90.0억, 'on': 1}
-    - {label: 기아, value: 54.0억, 'on': 1, offset: 0.5}
-    - {label: 현대모비스, value: 30.6억, 'on': 1, offset: 1.0}
-    total: {label: 합계, value: 174.6억, color: up, 'on': 2}
+    - label: 현대자동차
+      value: 90.0억
+      'on': 1
+    - label: 기아
+      value: 54.0억
+      'on': 1
+      offset: 0.5
+    - label: 현대모비스
+      value: 30.6억
+      'on': 1
+      offset: 1.0
+    total:
+      label: 합계
+      value: 174.6억
+      color: up
+      'on': 2
   narration:
   - 현대차 90억, 기아 54억, 현대모비스 30억 6천만 원.
   - 합치면 174억 6천만 원. | 하루에 4,784만 원이에요.
 - type: punch
   chapter: 연봉
   tone: gold
-  photo: {file: samsung_pt_biden, focus: [0.72, 0.3], dark: 0.62}
+  photo:
+    file: samsung_pt_biden
+    focus:
+    - 0.72
+    - 0.3
+    dark: 0.62
   label: 삼성전자 회장 이재용
   big: 연봉 0원
   sub: 2017년 3월부터 삼성전자 급여를 받지 않는다
@@ -146,34 +212,63 @@ scenes:
   - 2017년 3월, 국정농단 사건으로 구속된 직후부터, 삼성전자 급여를 한 푼도 안 받고 있어요.
 - type: press
   chapter: 연봉
-  bg: {kind: photo, file: samsung_bldg, dark: 0.72, blur: 8}
+  bg:
+    kind: photo
+    file: samsung_bldg
+    dark: 0.72
+    blur: 8
   clips:
-  - {outlet: 뉴시스, date: 2024.02.06, headline: '이재용, 2017년 3월 이후 무보수 경영 지속', hl: 무보수 경영, 'on': 1}
-  - {outlet: CEO스코어데일리, date: 2026.04.15, headline: '지난해 국내 10대 그룹 총수 평균 보수총액 102억5860만원', hl: 102억5860만원, 'on': 2}
+  - outlet: 뉴시스
+    date: 2024.02.06
+    headline: 이재용, 2017년 3월 이후 무보수 경영 지속
+    hl: 무보수 경영
+    'on': 1
+  - outlet: CEO스코어데일리
+    date: 2026.04.15
+    headline: 지난해 국내 10대 그룹 총수 평균 보수총액 102억5860만원
+    hl: 102억5860만원
+    'on': 2
   narration:
   - 언론도 해마다 이걸 짚어요. 9년째 무보수 경영.
   - 10대 그룹 총수 평균 연봉이 102억인데, 혼자 0원이죠. | 그런데도 4명 중, 돈은 제일 많이 받았어요.
-
-# ───────── 배당금 ─────────
 - type: kinetic
   chapter: 배당금
-  bg: {kind: video, file: money_count_v, dark: 0.6, blur: 3}
+  bg:
+    kind: video
+    file: money_count_v
+    dark: 0.6
+    blur: 3
   items:
-  - {text: "회장님 진짜 월급\n= 배당금", 'on': 1, size: 140, highlight: 배당금}
+  - text: '회장님 진짜 월급
+
+      = 배당금'
+    'on': 1
+    size: 140
+    highlight: 배당금
   narration:
   - 비밀은 배당금이에요. 회사가 번 돈을 주주한테 나눠 주는 돈이죠.
   - 1주에 얼마씩, 가진 주식 수만큼 받아요. | 주식이 많을수록, 월급이 커지는 구조예요.
 - type: doc
   chapter: 배당금
-  bg: {kind: photo, file: chip_dark, dark: 0.7, blur: 6}
+  bg:
+    kind: photo
+    file: chip_dark
+    dark: 0.7
+    blur: 6
   kicker: 삼성전자 2025 사업보고서 · 최대주주 및 특수관계인
   title: 이재용 회장 삼성전자 9,741만 주
   highlight: 9,741만 주
   file: doc_sec_holder
-  crop: [560, 1221]
-  hl: [29, 840, 1747, 901]
+  crop:
+  - 560
+  - 1221
+  hl:
+  - 29
+  - 840
+  - 1747
+  - 901
   'on': 1
-  tag: '97,414,196주'
+  tag: 97,414,196주
   narration:
   - 이재용 회장이 가진 삼성전자 주식, !!9,741만 주!!.
   - 작년 1주 배당이 1,668원이니까, 삼성전자에서만 1,625억이에요.
@@ -186,26 +281,62 @@ scenes:
   - title: 이재용 · 삼성 회장
     sub: 연봉 0원
     lines:
-    - {label: 삼성전자, value: '1,625억', 'on': 1}
-    - {label: 삼성생명, value: '1,107억', 'on': 2}
-    - {label: 삼성물산, value: 949억, 'on': 2, offset: 0.5}
-    - {label: 삼성SDS, value: 227억, 'on': 2, offset: 1.0}
-    total: {label: 합계 (우선주 포함), value: '3,909억', color: up, 'on': 3}
+    - label: 삼성전자
+      value: 1,625억
+      'on': 1
+    - label: 삼성생명
+      value: 1,107억
+      'on': 2
+    - label: 삼성물산
+      value: 949억
+      'on': 2
+      offset: 0.5
+    - label: 삼성SDS
+      value: 227억
+      'on': 2
+      offset: 1.0
+    total:
+      label: 합계 (우선주 포함)
+      value: 3,909억
+      color: up
+      'on': 3
   narration:
   - 삼성전자 1,625억.
   - 여기에 삼성생명, 삼성물산, 삼성에스디에스까지.
   - 다 합치면 !!3,909억!!. 연봉 0원 회장님이, 4명 중 1등이에요.
 - type: kpi
   chapter: 배당금
-  bg: {kind: video, file: seoul_night_market_v, dark: 0.72, blur: 6}
+  bg:
+    kind: video
+    file: seoul_night_market_v
+    dark: 0.72
+    blur: 6
   kpis:
-  - {label: 이재용 회장 배당금 · 하루, value: 10.7억, 'on': 1, color: navy}
-  - {label: 이 영상 5분 보는 동안, value: 372만, 'on': 3, color: red}
+  - label: 이재용 회장 배당금 · 하루
+    value: 10.7억
+    'on': 1
+    color: navy
+  - label: 이 영상 5분 보는 동안
+    value: 372만
+    'on': 3
+    color: red
   bars:
-  - {label: 이재용, value: 10.7, text: 하루 10.7억, hl: true}
-  - {label: 정의선, value: 5.3, text: 5.3억, hl: false}
-  - {label: 최태원, value: 2.8, text: 2.8억, hl: false}
-  - {label: 구광모, value: 2.1, text: 2.1억, hl: false}
+  - label: 이재용
+    value: 10.7
+    text: 하루 10.7억
+    hl: true
+  - label: 정의선
+    value: 5.3
+    text: 5.3억
+    hl: false
+  - label: 최태원
+    value: 2.8
+    text: 2.8억
+    hl: false
+  - label: 구광모
+    value: 2.1
+    text: 2.1억
+    hl: false
   bars_on: 2
   vmax: 12
   credit: 2025년 배당금 ÷ 365일
@@ -213,62 +344,145 @@ scenes:
   - 하루로 나누면 10억 7천만 원.
   - 다른 회장님들의 두 배가 넘어요.
   - 이 영상을 5분 보시는 동안, 이재용 회장 통장엔 !!372만 원!!이 쌓여요.
-- type: matrix
+- type: leaderboard
   chapter: 배당금
-  kicker: 2025년 · 연봉 vs 배당금 (억 원)
-  title: 배당이 연봉의 몇 배?
-  highlight: 몇 배?
-  best: false
-  top: 420
-  row_h: 110
-  font: 46
-  label_w: 520
-  head_font: 38
-  cols:
-  - {label: 연봉, 'on': 1}
-  - {label: 배당금, 'on': 1}
-  - {label: 배당 ÷ 연봉, 'on': 2}
+  kicker: 2025년 배당금 · 주당 배당 × 보유 주식 (상장 주요 계열사)
+  title: 회장님 배당금 순위
+  highlight: 배당금
+  'on': 1
+  top: 340
+  row_h: 140
   rows:
-  - {label: 이재용 · 삼성, values: [0, 3909, 999], texts: ['0', '3,909', 무한대]}
-  - {label: 정의선 · 현대차, values: [175, 1930, 11], texts: ['174.6', '1,930', 11배]}
-  - {label: 최태원 · SK, values: [83, 1038, 13], texts: ['82.5', '1,038', 13배]}
-  - {label: 구광모 · LG, values: [71, 778, 11], texts: ['71.3', '778', 11배]}
-  note: 배당금 = 2025 회계연도 주당 배당 × 2025.12.31 보유 주식 · 상장 주요 계열사 기준
+  - label: 이재용 · 삼성
+    sub: 연봉 0원 · 배당만
+    face: lee_jy
+    face_focus:
+    - 0.5
+    - 0.42
+    value: 3909
+    text: 3,909억
+    color:
+    - 232
+    - 66
+    - 62
+  - label: 정의선 · 현대차
+    sub: 연봉의 11배
+    face: chung_es
+    face_focus:
+    - 0.55
+    - 0.3
+    value: 1930
+    text: 1,930억
+    color:
+    - 72
+    - 176
+    - 120
+  - label: 최태원 · SK
+    sub: 연봉의 13배
+    face: chey_tw
+    face_focus:
+    - 0.5
+    - 0.3
+    value: 1038
+    text: 1,038억
+    color:
+    - 150
+    - 160
+    - 180
+  - label: 구광모 · LG
+    sub: 연봉의 11배
+    value: 778
+    text: 778억
+    color:
+    - 150
+    - 160
+    - 180
+  vmax: 5600
+  note: 배당금 = 2025 회계연도 주당 배당 × 2025.12.31 보유 주식
   narration:
-  - 다른 회장님들도 마찬가지예요.
-  - 배당이 연봉의 !!11배에서 13배!!. | 회장님 진짜 월급은, 배당이에요.
-
-# ───────── 회장님 돈의 비밀 ─────────
+  - 배당 순위로 다시 보면, 1위는 역시 이재용 회장 3,909억.
+  - 나머지 세 분도 배당이 연봉의 !!11배에서 13배!!. | 회장님 진짜 월급은, 배당이에요.
 - type: doc
   chapter: 회장님 돈의 비밀
-  bg: {kind: video, file: cargo_ship_aerial_v, dark: 0.68, blur: 5}
+  bg:
+    kind: video
+    file: cargo_ship_aerial_v
+    dark: 0.68
+    blur: 5
   kicker: 현대글로비스 2025 사업보고서 · 최대주주
   title: 정의선 회장 배당 1등 회사는?
   highlight: 1등 회사
   file: doc_glovis_holder
-  crop: [0, 520]
-  hl: [29, 304, 1685, 360]
+  crop:
+  - 0
+  - 520
+  hl:
+  - 29
+  - 304
+  - 1685
+  - 360
   'on': 2
   tag: 지분 20% · 배당 870억
   narration:
   - 재밌는 건, 정의선 회장 배당 1등 회사예요. 현대차일까요?
   - 아니에요. !!현대글로비스!!, 870억이에요.
-  - 현대차그룹 차를 배에 싣고 나르는 물류 회사인데, 정의선 회장이 20%를 가진 최대주주거든요. | 지분 2.7%인 현대차보다 더 많이 받아요.
+- type: duel
+  chapter: 회장님 돈의 비밀
+  heading: 정의선 회장 배당 · 2025년
+  highlight: 배당
+  left:
+    title: 현대글로비스 · 지분 20%
+    value: 870억
+    sub: 1,500만 주 × 5,800원
+    color: up
+    'on': 1
+  right:
+    title: 현대자동차 · 지분 2.7%
+    value: 560억
+    sub: 560만 주 × 1만 원
+    color: down
+    'on': 2
+  narration:
+  - 현대차그룹 차를 배에 싣고 나르는 물류 회사인데, 정의선 회장이 20%를 가진 최대주주거든요.
+  - 지분 2.7%인 현대차에서 받은 560억보다, !!310억!!이나 더 받았어요.
 - type: chart
   chapter: 회장님 돈의 비밀
   chart:
     lines:
-    - {series: skhynix, color: up, label: SK하이닉스}
+    - series: skhynix
+      color: up
+      label: SK하이닉스
     start: '2025-01-02'
     end: '2026-11-20'
     end_labels: false
-    rect: [300, 220, 1200, 600]
+    rect:
+    - 300
+    - 220
+    - 1200
+    - 600
     title: SK하이닉스 주가 (원)
-    draw: {'on': 1, dur: 2.4}
+    draw:
+      'on': 1
+      dur: 2.4
     marks:
-    - {date: '2025-01-02', label: '17만 원', color: up, 'on': 1, dy: -70, dx: 40}
-    - {date: '2026-06-22', label: '꼭대기 291만 원 · 17배', color: up, 'on': 1, dy: -60, dx: -420}
-    - {date: '2026-11-09', label: '지금 110만 원', color: down, 'on': 2, dy: 90, dx: -300}
+    - date: '2025-01-02'
+      label: 17만 원
+      color: up
+      'on': 1
+      dy: -70
+      dx: 40
+    - date: '2026-06-22'
+      label: 꼭대기 291만 원 · 17배
+      color: up
+      'on': 1
+      dy: -60
+      dx: -420
+    - date: '2026-11-09'
+      label: 지금 110만 원
+      color: down
+      'on': 2
+      dy: 90
+      dx: -300
     source: '자료: 네이버 차트 (일별 종가)'
   narration:
   - 에스케이하이닉스는 작년 초 17만 원에서, 올해 6월 291만 원까지 !!17배!!가 올랐어요.
@@ -277,7 +491,12 @@ scenes:
 - type: punch
   chapter: 회장님 돈의 비밀
   tone: gold
-  photo: {file: chey_tw, focus: [0.5, 0.3], dark: 0.6}
+  photo:
+    file: chey_tw
+    focus:
+    - 0.5
+    - 0.3
+    dark: 0.6
   label: 최태원 SK 회장 · SK하이닉스 직접 보유 주식
   big: 0주
   sub: 하이닉스에서 받는 건 연봉 47.5억뿐
@@ -293,14 +512,36 @@ scenes:
   title: 17.9%로 하이닉스까지
   highlight: 17.9%
   nodes:
-  - {label: 최태원, face: chey_tw, focus: [0.5, 0.3], 'on': 1}
-  - {label: SK, sub: 지주회사, text: SK, 'on': 1, offset: 0.4}
-  - {label: SK스퀘어, sub: 투자회사, text: SK스퀘어, 'on': 2}
-  - {label: SK하이닉스, sub: 주가 110만 원, text: 하이닉스, hl: true, 'on': 2, offset: 0.8}
+  - label: 최태원
+    face: chey_tw
+    focus:
+    - 0.5
+    - 0.3
+    'on': 1
+  - label: SK
+    sub: 지주회사
+    text: SK
+    'on': 1
+    offset: 0.4
+  - label: SK스퀘어
+    sub: 투자회사
+    text: SK스퀘어
+    'on': 2
+  - label: SK하이닉스
+    sub: 주가 110만 원
+    text: 하이닉스
+    hl: true
+    'on': 2
+    offset: 0.8
   links:
-  - {text: 17.9%, 'on': 1, offset: 0.4}
-  - {text: 최대주주, 'on': 2}
-  - {text: 20.07%, 'on': 2, offset: 0.8}
+  - text: 17.9%
+    'on': 1
+    offset: 0.4
+  - text: 최대주주
+    'on': 2
+  - text: 20.07%
+    'on': 2
+    offset: 0.8
   note: 사다리 타듯 · 적은 지분으로 그룹 전체를
   note_hl: 적은 지분
   note_on: 3
@@ -311,90 +552,169 @@ scenes:
   - 사다리 타듯, 적은 지분으로 그룹 전체를 움직이는 구조예요.
 - type: press
   chapter: 회장님 돈의 비밀
-  bg: {kind: photo, file: samsung_bldg, dark: 0.75, blur: 8}
+  bg:
+    kind: photo
+    file: samsung_bldg
+    dark: 0.75
+    blur: 8
   title: 그 많은 배당금, 어디에 쓸까?
   highlight: 어디에
   clips:
-  - {outlet: 뉴시스, date: 2026.04.05, headline: '5년간 6회에 걸쳐 12조원 상속세 납부', hl: 12조원, 'on': 2}
-  - {outlet: 데일리안, date: '2026.05', headline: '삼성가, 5년 만에 상속세 12조 완납…한국 건국 이래 최대 규모', hl: 12조 완납, 'on': 3}
+  - outlet: 뉴시스
+    date: 2026.04.05
+    headline: 5년간 6회에 걸쳐 12조원 상속세 납부
+    hl: 12조원
+    'on': 2
+  - outlet: 데일리안
+    date: '2026.05'
+    headline: 삼성가, 5년 만에 상속세 12조 완납…한국 건국 이래 최대 규모
+    hl: 12조 완납
+    'on': 3
   narration:
   - 그럼 이 많은 배당금, 다 어디에 쓸까요?
   - 큰 몫이 세금이었어요. 고 이건희 회장이 남긴 재산에 붙은 상속세, !!12조 원!!.
   - 삼성 일가는 이걸 5년 동안 여섯 번에 나눠 냈고, 올해 4월에 다 냈어요. | 이재용 회장 몫만 2조 9천억. 그 돈줄이 배당금과 주식 담보 대출이었죠.
-
-# ───────── 나도 받는 법 ─────────
-- type: duel
+- type: photovs
   chapter: 나도 받는 법
   heading: 삼성전자 1주 배당 · 2025년
   highlight: 1주
-  left: {title: 이재용 회장 1주, value: '1,668원', sub: '9,741만 주 보유', color: up, 'on': 2}
-  right: {title: 내 1주, value: '1,668원', sub: 1주만 있어도, color: up, 'on': 2, offset: 0.6}
   mid: '='
+  left:
+    photo: lee_jy
+    focus:
+    - 0.5
+    - 0.4
+    label: 이재용 회장의 1주
+    value: 1,668원
+    sub: 9,741만 주 보유
+    'on': 2
+  right:
+    photo: me_phone_city
+    focus:
+    - 0.5
+    - 0.45
+    label: 내 1주
+    value: 1,668원
+    sub: 1주만 있어도
+    'on': 2
+    offset: 0.7
+  credit: '사진: 미국 대통령실 (퍼블릭 도메인) · Mohamed Benziane (Unsplash)'
   narration:
   - 그리고 여기서 중요한 사실. 배당은 1주당 똑같이 나와요.
   - 이재용 회장이 받는 삼성전자 1주 배당 1,668원. 여러분이 1주를 사도, !!똑같이 1,668원!!이에요.
-- type: leaderboard
+- type: podium
   chapter: 나도 받는 법
   kicker: 회장님 회사 배당수익률 · 2025년 배당 ÷ 11월 20일 종가
   title: 회장님 회사 중 배당 제일 센 곳
   highlight: 제일 센 곳
-  'on': 1
-  top: 340
-  row_h: 120
+  'on': 2
   rows:
-  - {label: 기아, sub: 1주 6,800원 · 주가 8만 7,400원, value: 7.8, text: 7.8%, color: [232, 66, 62]}
-  - {label: 현대차, sub: 1주 1만 원 · 주가 25만 3,000원, value: 4.0, text: 4.0%, color: [72, 176, 120]}
-  - {label: LG, sub: 1주 3,100원 · 주가 8만 7,700원, value: 3.5, text: 3.5%, color: [72, 176, 120]}
-  - {label: 삼성전자, sub: 1주 1,668원 · 주가 18만 900원, value: 0.9, text: 0.9%, color: [150, 160, 180]}
-  - {label: SK하이닉스, sub: 1주 3,000원 · 주가 110만 원, value: 0.3, text: 0.3%, color: [150, 160, 180]}
-  vmax: 12
+  - label: 기아
+    sub: 1주 6,800원
+    value: 7.8
+    text: 7.8%
+  - label: 현대차
+    sub: 1주 1만 원
+    value: 4.0
+    text: 4.0%
+  - label: LG
+    sub: 1주 3,100원
+    value: 3.5
+    text: 3.5%
+  - label: 삼성전자
+    value: 0.9
+    text: 0.9%
+  - label: SK하이닉스
+    value: 0.3
+    text: 0.3%
   narration:
   - 그럼 회장님 회사 중에, 주가 대비 배당을 제일 많이 주는 곳은 어딜까요?
   - 1위는 기아, !!7.8%!!. 100만 원어치 사면 1년에 7만 8천 원이에요.
   - 반대로 삼성전자와 하이닉스는 1%도 안 돼요. | 주가가 크게 올라서, 배당이 상대적으로 작아진 거죠.
-- type: duel
+- type: scale
   chapter: 나도 받는 법
   heading: 월 30만 원 배당 받으려면? (세전)
   highlight: 월 30만 원
-  left: {title: 기아로, value: '4,632만', sub: 530주 × 8만 7,400원, color: up, 'on': 1}
-  right: {title: 삼성전자로, value: 3억 9천만, sub: '2,159주 × 18만 900원', color: down, 'on': 2}
+  left:
+    label: 기아로
+    value: 4,632만
+    weight: 4632
+    sub: 530주 × 8만 7,400원
+    'on': 1
+  right:
+    label: 삼성전자로
+    value: 3억 9천만
+    weight: 39056
+    sub: 2,159주 × 18만 900원
+    'on': 2
+  note: 같은 30만 원 · 8배 넘게 차이
+  note_hl: 8배
+  note_on: 2
   narration:
   - 월 30만 원을 배당으로 받으려면? 기아는 4,632만 원이면 돼요.
   - 삼성전자는 !!3억 9천만 원!!. 같은 30만 원인데, 8배 넘게 차이 나요.
 - type: checklist
   chapter: 나도 받는 법
-  bg: {kind: video, file: stock_decline_v, dark: 0.7, blur: 6}
+  bg:
+    kind: video
+    file: stock_decline_v
+    dark: 0.7
+    blur: 6
   kicker: 배당주 사기 전에
   title: 딱 네 가지만 보세요
   highlight: 네 가지
   title_size: 84
   items:
-  - {text: 배당수익률은 · 작년 배당 기준, highlight: 작년, 'on': 2}
-  - {text: 배당 기준일에 · 주식이 있어야 받는다, highlight: 기준일, 'on': 3}
-  - {text: 기준일 다음 날 · 주가가 배당만큼 빠질 수 있다, highlight: 빠질 수, 'on': 4}
-  - {text: 세금 15.4% · 떼고 들어온다, highlight: 15.4%, 'on': 5}
+  - text: 배당수익률은 · 작년 배당 기준
+    highlight: 작년
+    'on': 2
+  - text: 배당 기준일에 · 주식이 있어야 받는다
+    highlight: 기준일
+    'on': 3
+  - text: 기준일 다음 날 · 주가가 배당만큼 빠질 수 있다
+    highlight: 빠질 수
+    'on': 4
+  - text: 세금 15.4% · 떼고 들어온다
+    highlight: 15.4%
+    'on': 5
   narration:
   - 그렇다고 배당만 보고 사면 안 돼요. 딱 네 가지만 보세요.
   - 첫째, 배당수익률은 작년 배당 기준이에요. 실적이 나빠지면, 배당도 줄어요.
   - 둘째, 배당 기준일에 주식이 있어야 받아요. 회사마다 날짜가 달라서, 공시로 꼭 확인하세요.
   - 셋째, 기준일 다음 날엔 주가가 배당만큼 빠지기도 해요.
   - 넷째, 배당소득세 15.4%를 떼고 들어와요.
-
-# ───────── 정리 ─────────
 - type: kinetic
   chapter: 정리
-  bg: {kind: video, file: skyline_v, dark: 0.62, blur: 3}
+  bg:
+    kind: video
+    file: skyline_v
+    dark: 0.62
+    blur: 3
   items:
-  - {text: "회장님 월급은\n연봉이 아니라 배당", 'on': 1, size: 120, highlight: 배당}
-  - {text: "그 배당,\n1주부터 똑같이", 'on': 2, size: 130, highlight: 1주부터}
+  - text: '회장님 월급은
+
+      연봉이 아니라 배당'
+    'on': 1
+    size: 120
+    highlight: 배당
+  - text: '그 배당,
+
+      1주부터 똑같이'
+    'on': 2
+    size: 130
+    highlight: 1주부터
   narration:
   - 정리할게요. 회장님 진짜 월급은 연봉이 아니라 배당이에요. 연봉 0원 이재용 회장이 1등인 이유죠.
   - 그리고 그 배당, 1주만 있어도 회장님이랑 똑같이 받아요.
 - type: outro
-  heading: "회장님처럼\n배당으로 월급 받기"
+  heading: '회장님처럼
+
+    배당으로 월급 받기'
   highlight: 배당으로
   sub: 궁금한 회장님 · 종목 · 주제, 댓글로 남겨주세요
-  disclaimer: "본 영상은 투자 교육 목적이며, 매수 · 매도 추천이 아닙니다.\n배당은 회사 실적에 따라 바뀌며, 과거 배당이 미래를 보장하지 않습니다."
+  disclaimer: '본 영상은 투자 교육 목적이며, 매수 · 매도 추천이 아닙니다.
+
+    배당은 회사 실적에 따라 바뀌며, 과거 배당이 미래를 보장하지 않습니다.'
   subscribe_on: 2
   signature: 오늘도 감 말고, 숫자로 투자하세요.
   signature_on: 3
@@ -402,8 +722,6 @@ scenes:
   - 여러분이 회장님 회사 하나를 고른다면, 어디 주식을 사시겠어요?
   - 댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.
   - 오늘도 감 말고, 숫자로 투자하세요.
-
-# 쇼츠 9개+ 후보 (렌더 후 시간 확정)
 clips_plan:
 - 연봉 0원 회장님이 1년에 3,909억?
 - 정의선 연봉 174억, 월급 주는 회사가 3곳
