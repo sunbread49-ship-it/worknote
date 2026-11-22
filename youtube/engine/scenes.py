@@ -239,7 +239,7 @@ def _logo(name):
     k = ("logo", name)
     if k not in _cache2:
         from .character import logo_badge
-        b = logo_badge(110)
+        b = logo_badge(110, profile="profile_circle_science.png" if "지식" in name else "profile_circle.png")
         t = G.text_img(name, "Black", 24, (255, 255, 255), stroke=3, stroke_fill=(10, 12, 20))
         im = Image.new("RGBA", (max(b.width, t.width) + 4, b.height + t.height + 4), (0, 0, 0, 0))
         im.alpha_composite(b, ((im.width - b.width) // 2, 0))

@@ -226,9 +226,10 @@ def ant_side(size=800, carry="money", glasses=True, mood="smile"):
     return c.reduce(K)
 
 
-def logo_badge(size=200, ring=(14, 20, 38)):
-    """채널 로고: 프로필(사용자 일러스트 악어새) 원형 + 흰 테두리. 파일이 없으면 예전 개미 배지."""
-    p = Path(__file__).resolve().parents[1] / "assets/media/profile_circle.png"
+def logo_badge(size=200, ring=(14, 20, 38), profile="profile_circle.png"):
+    """채널 로고: 프로필(사용자 일러스트 악어새) 원형 + 흰 테두리. 파일이 없으면 예전 개미 배지.
+    2026-11-22: 지식창고는 profile_circle_science.png (학사모 악어새)"""
+    p = Path(__file__).resolve().parents[1] / "assets/media" / profile
     if p.exists():
         k = 3
         S = size * k

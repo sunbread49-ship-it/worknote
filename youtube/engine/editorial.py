@@ -213,6 +213,22 @@ def counter(text, k):
     return text[:m.start()] + sign + s + text[m.end():]
 
 
+
+def _mascot_img(channel, hh):
+    """2026-11-22 사용자: 지식채널 영상에는 지식 악어새(학사모) 프로필을 쓴다"""
+    from pathlib import Path as _P
+    base = _P(__file__).resolve().parents[1] / "assets/media"
+    if "지식" in (channel or {}).get("name", ""):
+        src = Image.open(base / "profile_circle_science.png").convert("RGBA")
+        d = hh
+        im = Image.new("RGBA", (d, d), (0, 0, 0, 0))
+        ImageDraw.Draw(im).ellipse((0, 0, d - 1, d - 1), fill=(255, 255, 255, 255))
+        b = max(3, int(d * 0.05))
+        im.alpha_composite(src.resize((d - 2 * b, d - 2 * b), Image.LANCZOS), (b, b))
+        return im
+    ch = Image.open(base / "character_croc_bird_cutout.png").convert("RGBA")
+    return ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
+
 # ── 장면들 ──────────────────────────────────────────────────────
 from .scenes import Scene  # noqa: E402
 
@@ -3267,9 +3283,8 @@ class SeoulMap(Editorial):
             from pathlib import Path as _P
             o = G.appear(t, self.line_start(gd.get("on", 1)) + gd.get("offset", 0), 0.35)
             if o > 0:
-                ch = Image.open(_P(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png").convert("RGBA")
                 hh = gd.get("size", 300)
-                ch = ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
+                ch = _mascot_img(getattr(self, "channel", {}), hh)
                 gx, gy = gd.get("xy", (110, S.H - 120))
                 bob = 6 * math.sin(t * 3)
                 G.blit(f, ch, (gx, gy + bob), o, "lb")
@@ -3438,9 +3453,8 @@ class Journal(Editorial):
             go = min(o0, G.appear(t, self.line_start(gd.get("on", 1)) + gd.get("offset", 0), 0.35))
             if go > 0:
                 from pathlib import Path as _P
-                ch = Image.open(_P(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png").convert("RGBA")
                 hh = gd.get("size", 140)
-                ch = ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
+                ch = _mascot_img(getattr(self, "channel", {}), hh)
                 gx, gy = gd.get("xy", (700, 900))
                 bob = 5 * math.sin(t * 3)
                 G.blit(f, ch, (gx, gy + bob - (1 - go) * 40), go, "lb")
@@ -4224,9 +4238,9 @@ class Swatch(Editorial):
                 if kr > 0.95:
                     d.polygon([(xe + 18, y), (xe - 6, y - 14), (xe - 6, y + 14)], fill=(38, 40, 52))
                 G.blit(f, _ink(sp.get("rainbow_text", "무지개 순서?"), "NanumPenScript-Regular.ttf", 50, (150, 60, 50)), (x0 + 10, y - 8), kr, "lb")
-        if sp.get("note"):
-            G.blit(f, _ink(sp["note"], "NanumPenScript-Regular.ttf", 56, (150, 60, 50)), (S.W / 2, sp.get("note_y", 880)),
-                   G.appear(t, self.line_start(sp.get("note_on", 2)) + 0.4, 0.4), "mt")
+        if sp.get("memo"):
+            G.blit(f, _ink(sp["memo"], "NanumPenScript-Regular.ttf", 56, (150, 60, 50)), (S.W / 2, sp.get("memo_y", 880)),
+                   G.appear(t, self.line_start(sp.get("memo_on", 2)) + 0.4, 0.4), "mt")
         gd = sp.get("guide")
         if gd:
             self._guide(f, t, gd)
@@ -4237,9 +4251,8 @@ class Swatch(Editorial):
         if go <= 0:
             return
         from pathlib import Path as _P
-        ch = Image.open(_P(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png").convert("RGBA")
         hh = gd.get("size", 140)
-        ch = ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
+        ch = _mascot_img(getattr(self, "channel", {}), hh)
         gx, gy = gd.get("xy", (1500, 1000))
         bob = 5 * math.sin(t * 3)
         G.blit(f, ch, (gx, gy + bob - (1 - go) * 40), go, "lb")
@@ -4254,3 +4267,158 @@ class Swatch(Editorial):
 
 
 TYPES.update({"metro": Metro, "swatch": Swatch})
+
+
+# ════════════════════════════════════════════════════════════════
+# 지식채널 밝은 톤 (2026-11-22 사용자: 인트로 · 제목 · 엔딩도 주식채널처럼 어둡게 X → 종이 · 아이보리 / 하늘 / 노랑)
+SCI_TONES = {
+    "ivory": {"paper": (247, 241, 228), "ink": (38, 40, 52), "acc": (226, 92, 64), "mark": (255, 214, 120), "sub": (120, 110, 94)},
+    "sky": {"paper": (226, 239, 249), "ink": (28, 44, 70), "acc": (30, 112, 196), "mark": (255, 226, 120), "sub": (90, 110, 136)},
+    "butter": {"paper": (252, 244, 206), "ink": (52, 44, 30), "acc": (214, 110, 20), "mark": (140, 210, 255), "sub": (130, 112, 80)},
+}
+
+
+def _sci_tone(sp, channel=None):
+    return SCI_TONES.get(sp.get("tone") or (channel or {}).get("tone") or "ivory", SCI_TONES["ivory"])
+
+
+def _marker_text(text, size, ink, mark, highlight="", font="NanumMyeongjo-ExtraBold.ttf", gap=1.18):
+    """명조 큰 글씨 + 강조어 아래 형광펜 띠 (여러 줄)"""
+    fnt = _ff(font, size)
+    lines = text.split("\n")
+    w = int(max(fnt.getlength(l) for l in lines)) + 40
+    lh = int(size * gap)
+    im = Image.new("RGBA", (w, lh * len(lines) + 20), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    for i, l in enumerate(lines):
+        x = (w - fnt.getlength(l)) / 2
+        y = i * lh
+        if highlight and highlight in l:
+            xa = x + fnt.getlength(l[:l.index(highlight)])
+            xb = xa + fnt.getlength(highlight)
+            d.rounded_rectangle((xa - 8, y + size * 0.55, xb + 8, y + size * 1.05), 10, fill=mark + (235,))
+        d.text((x, y), l, font=fnt, fill=ink)
+    return im
+
+
+def _sci_frame(f, tone, t):
+    """밝은 종이 + 옅은 모눈 + 가장자리 테이프 느낌"""
+    f.paste(paper_bg(tone["paper"]), (0, 0))
+    d = ImageDraw.Draw(f)
+    gc = tuple(max(0, c - 14) for c in tone["paper"])
+    for x in range(0, S.W, 60):
+        d.line((x, 0, x, S.H), fill=gc, width=1)
+    for y in range(0, S.H, 60):
+        d.line((0, y, S.W, y), fill=gc, width=1)
+
+
+def _sticker_profile(d):
+    from pathlib import Path as _P
+    src = Image.open(_P(__file__).resolve().parents[1] / "assets/media/profile_circle_science.png").convert("RGBA")
+    im = Image.new("RGBA", (d + 24, d + 24), (0, 0, 0, 0))
+    ImageDraw.Draw(im).ellipse((6, 10, d + 18, d + 22), fill=(0, 0, 0, 50))
+    ImageDraw.Draw(im).ellipse((0, 0, d, d), fill=(255, 255, 255, 255))
+    b = int(d * 0.05)
+    im.alpha_composite(src.resize((d - 2 * b, d - 2 * b), Image.LANCZOS), (b, b))
+    return im
+
+
+class SciTitle(Editorial):
+    """밝은 제목 카드: kicker(손글씨) · 큰 명조 제목(형광펜) · subtitle · 프로필 스티커"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        tone = _sci_tone(sp, getattr(self, "channel", {}))
+        _sci_frame(f, tone, t)
+        self.paper = True
+        o = G.appear(t, 0.0, 0.4)
+        if sp.get("kicker"):
+            G.blit(f, _ink(sp["kicker"], "NanumPenScript-Regular.ttf", 64, tone["acc"]), (S.W / 2, 230), o, "mt")
+        tt = _marker_text(sp["title"], sp.get("size", 140), tone["ink"], tone["mark"], sp.get("highlight", ""))
+        G.blit(f, tt, (S.W / 2, 330 + (1 - o) * 30), o, "mt")
+        if sp.get("subtitle"):
+            G.blit(f, _ink(sp["subtitle"], "NanumMyeongjo-ExtraBold.ttf", 44, tone["sub"]), (S.W / 2, 360 + tt.height + 10), G.appear(t, 0.3, 0.4), "mt")
+        st = _sticker_profile(190).rotate(-8, expand=True, resample=Image.BICUBIC)
+        G.blit(f, st, (S.W - 200, 820 + 6 * math.sin(t * 2.5)), G.appear(t, 0.5, 0.4), "mm")
+        for x, y, a in ((280, 210, 12), (S.W - 300, 200, -10)):   # 테이프
+            tp = Image.new("RGBA", (170, 50), tone["mark"] + (170,)).rotate(a, expand=True, resample=Image.BICUBIC)
+            G.blit(f, tp, (x, y), o * 0.9, "mm")
+        self.finish(f, t)
+
+
+class SciKinetic(Editorial):
+    """밝은 큰 문장: 종이 위 큰 명조 + 형광펜 · 옆에 사진/영상 폴라로이드 (media: {kind: video|photo, file, side: right|left})"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        tone = _sci_tone(sp, getattr(self, "channel", {}))
+        _sci_frame(f, tone, t)
+        self.paper = True
+        md = sp.get("media")
+        cx_text = S.W / 2
+        if md:
+            side = md.get("side", "right")
+            pw, ph = 720, 480
+            if md.get("kind") == "video":
+                from . import bgvideo
+                fr = bgvideo.at({"kind": "video", "file": md["file"], "dark": 0.0, "blur": 0}, getattr(self, "_now", t)).convert("RGB")
+            else:
+                fr, cr = photo_backdrop({"file": md["file"], "dark": 0.0, "gray": 0.0})
+                fr = fr.convert("RGB")
+                if cr and not sp.get("credit"):
+                    sp["credit"] = cr
+            r0 = max(pw / fr.width, ph / fr.height)
+            fr = fr.resize((int(fr.width * r0) + 1, int(fr.height * r0) + 1), Image.LANCZOS)
+            fr = fr.crop(((fr.width - pw) // 2, (fr.height - ph) // 2, (fr.width - pw) // 2 + pw, (fr.height - ph) // 2 + ph))
+            pol = Image.new("RGBA", (pw + 36, ph + 90), (253, 252, 248, 255))
+            pol.paste(fr, (18, 18))
+            if md.get("caption"):
+                cp = _ink(md["caption"], "NanumPenScript-Regular.ttf", 44, tone["ink"])
+                pol.alpha_composite(cp, ((pol.width - cp.width) // 2, ph + 28))
+            rot = pol.rotate(md.get("tilt", 3 if side == "right" else -3), expand=True, resample=Image.BICUBIC)
+            sh = Image.new("RGBA", rot.size, (0, 0, 0, 0)); sh.putalpha(rot.split()[3].filter(ImageFilter.GaussianBlur(14)).point(lambda v: int(v * 0.3)))
+            x = 1040 if side == "right" else 120
+            ko = G.appear(t, 0.1, 0.4)
+            f.alpha_composite(sh, (x + 12, 250 + 18))
+            G.blit(f, rot, (x, 250 + (1 - ko) * 40), ko, "lt")
+            tp = Image.new("RGBA", (160, 46), tone["mark"] + (180,)).rotate(-8, expand=True, resample=Image.BICUBIC)
+            G.blit(f, tp, (x + rot.width / 2, 250), ko, "mm")
+            cx_text = 540 if side == "right" else 1380
+        items = sp["items"]
+        starts = [self.line_start(it.get("on", 1)) + it.get("offset", 0) for it in items]
+        cur = max([i for i, st in enumerate(starts) if t >= st] or [-1])
+        if cur >= 0:
+            it = items[cur]
+            k = G.ease_out((t - starts[cur]) / 0.45)
+            im = _marker_text(it["text"], it.get("size", 120) if not md else min(it.get("size", 120), 104), tone["ink"], tone["mark"], it.get("highlight", ""))
+            G.blit(f, im, (cx_text, 540 + (1 - k) * 30), k, "mm")
+        self.finish(f, t)
+
+
+class SciOutro(Editorial):
+    """밝은 엔딩: 큰 프로필 스티커 · 질문 제목 · 구독 알약(파스텔) · 손글씨 서명"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        tone = _sci_tone(sp, getattr(self, "channel", {}))
+        _sci_frame(f, tone, t)
+        self.paper = True
+        st = _sticker_profile(300)
+        G.blit(f, st, (420, 470 + 8 * math.sin(t * 2.2)), G.appear(t, 0.0, 0.4), "mm")
+        hd = _marker_text(sp["heading"], 104, tone["ink"], tone["mark"], sp.get("highlight", ""))
+        G.blit(f, hd, (1180, 250), G.appear(t, 0.1, 0.4), "mt")
+        y = 260 + hd.height + 10
+        if sp.get("sub"):
+            G.blit(f, _ink(sp["sub"], "NanumMyeongjo-ExtraBold.ttf", 38, tone["sub"]), (1180, y), G.appear(t, 0.3, 0.4), "mt")
+            y += 70
+        ks = G.appear(t, self.line_start(sp.get("subscribe_on", 2)), 0.35)
+        if ks > 0:
+            pill = G.pill("구독 · 좋아요 · 알림 설정", "Black", 40, (255, 255, 255), tone["acc"], pad=(36, 14))
+            G.blit(f, pill, (1180, y + 10), ks, "mt")
+        if sp.get("signature"):
+            G.blit(f, _ink(sp["signature"], "NanumPenScript-Regular.ttf", 62, tone["acc"]), (1180, y + 120),
+                   G.appear(t, self.line_start(sp.get("signature_on", 3)), 0.4), "mt")
+        self.finish(f, t)
+
+
+TYPES.update({"sci_title": SciTitle, "sci_kinetic": SciKinetic, "sci_outro": SciOutro})

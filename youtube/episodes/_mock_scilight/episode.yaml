@@ -1,0 +1,121 @@
+title: 밝은 톤 샘플
+series_tag: 한 번에 정리
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+tts:
+  provider: gemini
+  voice: Umbriel
+scenes:
+- type: sci_kinetic
+  tone: ivory
+  media:
+    kind: video
+    file: sub_tunnel_v
+    caption: 서울 지하철
+    side: right
+  items:
+  - text: '2호선은
+
+      왜 초록색일까?'
+    'on': 1
+    highlight: 초록색
+  narration:
+  - 매일 타는 지하철, 2호선은 왜 초록색일까요?
+- type: sci_title
+  tone: ivory
+  kicker: 악어새 지식창고 · 한 번에
+  title: '지하철 노선 색깔의
+
+    비밀'
+  highlight: 비밀
+  subtitle: 무지개 규칙 · 사라진 빨간 1호선 · 투표로 뽑은 금색
+  narration:
+  - 오늘은 지하철 노선 색깔의 비밀을 따라가 볼게요.
+- type: sci_outro
+  tone: ivory
+  heading: '여러분 노선은
+
+    몇 호선인가요?'
+  highlight: 몇 호선
+  sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
+  subscribe_on: 1
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  signature_on: 1
+  narration:
+  - 여러분이 매일 타는 노선은 몇 호선인가요?
+- type: sci_kinetic
+  tone: sky
+  media:
+    kind: video
+    file: sub_tunnel_v
+    caption: 서울 지하철
+    side: right
+  items:
+  - text: '2호선은
+
+      왜 초록색일까?'
+    'on': 1
+    highlight: 초록색
+  narration:
+  - 매일 타는 지하철, 2호선은 왜 초록색일까요?
+- type: sci_title
+  tone: sky
+  kicker: 악어새 지식창고 · 한 번에
+  title: '지하철 노선 색깔의
+
+    비밀'
+  highlight: 비밀
+  subtitle: 무지개 규칙 · 사라진 빨간 1호선 · 투표로 뽑은 금색
+  narration:
+  - 오늘은 지하철 노선 색깔의 비밀을 따라가 볼게요.
+- type: sci_outro
+  tone: sky
+  heading: '여러분 노선은
+
+    몇 호선인가요?'
+  highlight: 몇 호선
+  sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
+  subscribe_on: 1
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  signature_on: 1
+  narration:
+  - 여러분이 매일 타는 노선은 몇 호선인가요?
+- type: sci_kinetic
+  tone: butter
+  media:
+    kind: video
+    file: sub_tunnel_v
+    caption: 서울 지하철
+    side: right
+  items:
+  - text: '2호선은
+
+      왜 초록색일까?'
+    'on': 1
+    highlight: 초록색
+  narration:
+  - 매일 타는 지하철, 2호선은 왜 초록색일까요?
+- type: sci_title
+  tone: butter
+  kicker: 악어새 지식창고 · 한 번에
+  title: '지하철 노선 색깔의
+
+    비밀'
+  highlight: 비밀
+  subtitle: 무지개 규칙 · 사라진 빨간 1호선 · 투표로 뽑은 금색
+  narration:
+  - 오늘은 지하철 노선 색깔의 비밀을 따라가 볼게요.
+- type: sci_outro
+  tone: butter
+  heading: '여러분 노선은
+
+    몇 호선인가요?'
+  highlight: 몇 호선
+  sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
+  subscribe_on: 1
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  signature_on: 1
+  narration:
+  - 여러분이 매일 타는 노선은 몇 호선인가요?
