@@ -443,6 +443,8 @@ def main():
     timeline.write_srt(c.cues, out / "captions.srt")
     write_review(c, out)
     try:  # 2026-11-12: 사용자 검수 전에 음성 자동 점검 (tools/voice_check.py · VOICE_RULES.md)
+        if a.draft:   # 2026-11-22: 초안에서는 음성을 만들지 않음 (점검기가 Gemini 음성을 새로 만들며 15분 넘게 걸리던 문제)
+            raise RuntimeError("초안 모드 — 음성 점검은 본 렌더에서")
         sys.path.insert(0, str(ROOT / "tools"))
         import voice_check
         voice_check.main(ep_dir, quiet=True)

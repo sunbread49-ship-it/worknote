@@ -1,4 +1,4 @@
-title: 'MBTI는 과학일까? | 심리학자 아닌 모녀가 만든 검사 · 5주 뒤 절반이 바뀐다?'
+title: 당신의 MBTI는 가짜일 수 있다 | 할 때마다 바뀌는 진짜 이유 3가지
 series_tag: 한 번에 정리
 clip_theme: science
 channel:
@@ -23,79 +23,129 @@ bgm:
   volume: 0.18
   chapters:
     인트로: hope
-    거실에서 태어난 검사: drive
-    과학의 검증: tense
-    내 얘기 같은 이유: drive
-    그래서 MBTI는: hope
+    증거 1 · 만든 사람: drive
+    증거 2 · 다시 하면 바뀐다: tense
+    증거 3 · 내 얘기 같은 착각: drive
+    진짜 내 성향 찾는 법: hope
 chapter_titles:
-  인트로: 처음 만나면 묻는 그것, MBTI
-  거실에서 태어난 검사: 엄마와 딸 · 융의 심리 유형 · 1943년 첫 검사지
-  과학의 검증: 5주 뒤 다시 하면 · 가운데에 몰린 점수 · 빅5와 비교
-  내 얘기 같은 이유: 1949년 포러의 실험 · 바넘 효과 · 무료 검사의 정체
-  그래서 MBTI는: 잘 쓰는 법 세 가지
+  인트로: 어제는 E, 오늘은 I?
+  증거 1 · 만든 사람: 엄마와 딸 · 융의 심리 유형 · 1943년 첫 검사지
+  증거 2 · 다시 하면 바뀐다: 5주 뒤 다시 하면 · 51점 vs 49점 · 빅5와 비교
+  증거 3 · 내 얘기 같은 착각: 포러의 실험 4.26점 · 바넘 효과 · 무료 검사의 정체
+  진짜 내 성향 찾는 법: 다른 날 세 번 · 안 바뀌는 글자만 진짜
 scenes:
 - type: sci_kinetic
   chapter: 인트로
   items:
-  - {text: "처음 만나면\n묻는 그것", highlight: 묻는, 'on': 1}
-  - {text: "MBTI 뭐예요?", highlight: MBTI, 'on': 2}
+  - text: '어제는 E
+
+      오늘은 I?'
+    highlight: 오늘은 I
+    'on': 1
+  - text: '바뀐 건 나일까,
+
+      검사일까?'
+    highlight: 검사
+    'on': 2
   narration:
-  - 처음 만난 사람이랑, 이름 다음으로 꼭 묻는 게 있죠.
-  - 엠비티아이 뭐예요? | 근데 이 검사, 심리학자가 만든 게 아니라면 믿으시겠어요?
+  - 엠비티아이 검사, 할 때마다 결과가 달랐던 적 있으시죠? | 어제는 E였는데, 오늘은 I.
+  - 다들 내가 변했나 싶죠. 그런데 바뀐 건 여러분이 아니라, 검사일 수도 있어요.
 - type: grid
   chapter: 인트로
-  bg: {kind: paper}
+  bg:
+    kind: paper
   kicker: 4글자 · 16가지 유형
-  title: 나는 이 중 하나?
-  highlight: 하나
+  title: 당신의 MBTI, 가짜일 수 있다
+  highlight: 가짜
   n: 16
   cols: 8
   cell: 150
   k: 0
   hits: []
-  labels: [ISTJ, ISFJ, INFJ, INTJ, ISTP, ISFP, INFP, INTP, ESTP, ESFP, ENFP, ENTP, ESTJ, ESFJ, ENFJ, ENTJ]
+  labels:
+  - ISTJ
+  - ISFJ
+  - INFJ
+  - INTJ
+  - ISTP
+  - ISFP
+  - INFP
+  - INTP
+  - ESTP
+  - ESFP
+  - ENFP
+  - ENTP
+  - ESTJ
+  - ESFJ
+  - ENFJ
+  - ENTJ
   step: 0.06
-  headline: 그런데, 같은 사람이 다시 하면?
-  headline_hl: 다시 하면
-  headline_on: 2
+  headline: 증거는 딱 세 가지
+  headline_hl: 세 가지
+  headline_on: 1
   narration:
-  - 사람을 16가지 유형으로 나누는 검사. 전 세계에서 해마다 수백만 명이 해요.
-  - 그런데 같은 사람이, 몇 주 뒤에 다시 해도 같은 유형이 나올까요? | 결과는 생각보다 놀라워요.
+  - 오늘은 여러분 엠비티아이가 가짜일 수 있는 증거, 딱 세 가지만 보여 드릴게요.
+  - 특히 세 번째 증거는, 지금 이 순간에도 여러분이 속고 있는 거예요.
 - type: sci_title
   kicker: 악어새 지식창고 · 한 번에
-  title: "MBTI는\n과학일까?"
-  highlight: 과학
-  subtitle: 엄마와 딸의 거실 · 5주 뒤 다시 하면 · 내 얘기 같은 이유
+  title: '당신의 MBTI
+
+    가짜일 수 있다'
+  highlight: 가짜
+  subtitle: 증거 1 만든 사람 · 증거 2 다시 하면 · 증거 3 내 얘기 같은 착각
   narration:
-  - 악어새 탐사 수첩, 오늘은 엠비티아이를 과학의 눈으로 열어 볼게요.
+  - 악어새 탐사 수첩, 첫 번째 증거부터 볼게요. 이 검사를 만든 사람이에요.
 - type: sci_kinetic
-  chapter: 거실에서 태어난 검사
-  media: {kind: photo, file: mb_mother_daughter, caption: '캐서린 브릭스와 딸 이자벨', side: right}
+  chapter: 증거 1 · 만든 사람
+  media:
+    kind: photo
+    file: mb_mother_daughter
+    caption: 캐서린 브릭스와 딸 이자벨
+    side: right
   items:
-  - {text: "만든 사람은\n엄마와 딸", highlight: 엄마와 딸, 'on': 1}
+  - text: '만든 사람은
+
+      엄마와 딸'
+    highlight: 엄마와 딸
+    'on': 1
   narration:
   - 엠비티아이를 만든 건, 미국의 엄마와 딸이에요. 엄마 캐서린 브릭스, 딸 이자벨 마이어스.
   - 두 사람 이름 앞 글자를 따서, 마이어스 브릭스, 엠비티아이가 된 거죠.
 - type: sci_kinetic
-  chapter: 거실에서 태어난 검사
-  media: {kind: photo, file: mb_jung, caption: '카를 융 (1910년)', side: left}
+  chapter: 증거 1 · 만든 사람
+  media:
+    kind: photo
+    file: mb_jung
+    caption: 카를 융 (1910년)
+    side: left
   items:
-  - {text: "시작은\n융의 책 한 권", highlight: 융, 'on': 1}
+  - text: '시작은
+
+      융의 책 한 권'
+    highlight: 융
+    'on': 1
   narration:
   - 엄마 캐서린은 원래 사람 성격을 유형으로 나누는 데 푹 빠져 있었어요.
   - 그러다 스위스 정신의학자 카를 융의 책, 심리 유형을 읽고 무릎을 쳤죠. | 외향과 내향이라는 말도, 융이 널리 알린 말이에요.
 - type: timeline
-  chapter: 거실에서 태어난 검사
-  bg: {kind: paper}
+  chapter: 증거 1 · 만든 사람
+  bg:
+    kind: paper
   kicker: 거실 연구 → 세계적인 검사
   title: MBTI가 걸어온 길
   highlight: 걸어온 길
   ticks:
-  - {label: '1921', sub: '융 · 심리 유형 출간'}
-  - {label: '1943', sub: '첫 검사지 저작권 등록', hl: true}
-  - {label: '1962', sub: '시험 출판사 ETS 연구판'}
-  - {label: '1980', sub: '이자벨 마이어스 별세'}
-  - {label: '2020년대', sub: '한국 MBTI 열풍'}
+  - label: '1921'
+    sub: 융 · 심리 유형 출간
+  - label: '1943'
+    sub: 첫 검사지 저작권 등록
+    hl: true
+  - label: '1962'
+    sub: 시험 출판사 ETS 연구판
+  - label: '1980'
+    sub: 이자벨 마이어스 별세
+  - label: 2020년대
+    sub: 한국 MBTI 열풍
   bottom: 2차 세계대전 때, 일자리 찾는 사람들을 도우려고 만들었다
   bottom_hl: 2차 세계대전
   bottom_on: 2
@@ -103,50 +153,66 @@ scenes:
   - 딸 이자벨이 검사지를 본격적으로 만든 건 2차 세계대전 때예요. 1943년, 첫 검사지를 저작권 등록했죠.
   - 전쟁 중에 일하러 나온 사람들이, 자기에게 맞는 일을 찾게 돕고 싶었대요.
 - type: accent_simple
-  chapter: 거실에서 태어난 검사
+  chapter: 증거 1 · 만든 사람
   palette: notyet
   bg: a
   ink: b
   pop: c
-  big: '0명'
+  big: 0명
   big_size: 300
   caption: 두 사람 중 심리학 학위가 있던 사람
   narration:
   - 그런데 놀라운 점. 두 사람 모두, 심리학을 정식으로 공부한 적이 없었어요.
   - 딸 이자벨은 대학에서 정치학을 전공했고, 추리소설을 쓰는 작가이기도 했죠.
 - type: accent_simple
-  chapter: 과학의 검증
+  chapter: 증거 2 · 다시 하면 바뀐다
   palette: coffee
   bg: a
   ink: b
   pop: b
-  big: '50%'
+  big: 50%
   big_size: 300
   caption: 5주 뒤 다시 하면 최대 절반이 다른 유형 (피텐저 2005)
   narration:
-  - 그럼 과학자들은 이 검사를 어떻게 봤을까요?
+  - 두 번째 증거. 다시 하면, 결과가 바뀐다는 거예요.
   - 미국 심리학자 데이비드 피텐저는 이렇게 지적했어요. 5주 뒤에 다시 검사하면, 최대 !!절반!!이 다른 유형이 나온다고요.
   - 물론 반론도 있어요. 검사 회사는 다시 해도 결과가 꽤 일정하다는 자료를 내놨죠.
 - type: duel
-  chapter: 과학의 검증
-  bg: {kind: paper}
+  chapter: 증거 2 · 다시 하면 바뀐다
+  bg:
+    kind: paper
   heading: 51점과 49점, 정반대 사람?
   highlight: 정반대
-  left: {title: '외향 51 · 내향 49', value: 'E', sub: '외향형으로 분류', color: up, 'on': 1}
-  right: {title: '외향 49 · 내향 51', value: 'I', sub: '내향형으로 분류', color: down, 'on': 2}
+  left:
+    title: 외향 51 · 내향 49
+    value: E
+    sub: 외향형으로 분류
+    color: up
+    'on': 1
+  right:
+    title: 외향 49 · 내향 51
+    value: I
+    sub: 내향형으로 분류
+    color: down
+    'on': 2
   narration:
   - 왜 이렇게 자주 바뀔까요? 비밀은 점수에 있어요.
   - 외향 51, 내향 49인 사람은 E. 외향 49, 내향 51인 사람은 I. | 사실상 똑같은 사람인데, 정반대 유형으로 나뉘는 거죠.
 - type: sci_kinetic
-  chapter: 과학의 검증
+  chapter: 증거 2 · 다시 하면 바뀐다
   items:
-  - {text: "대부분은\n가운데에 몰려 있다", highlight: 가운데, 'on': 1}
+  - text: '대부분은
+
+      가운데에 몰려 있다'
+    highlight: 가운데
+    'on': 1
   narration:
   - 그런데 실제로 사람들 점수는, 양 끝보다 가운데에 훨씬 많이 몰려 있어요.
   - 그날 기분, 컨디션에 따라 1, 2점만 달라져도, 유형이 휙 바뀌는 거예요.
 - type: matrix
-  chapter: 과학의 검증
-  bg: {kind: paper}
+  chapter: 증거 2 · 다시 하면 바뀐다
+  bg:
+    kind: paper
   title: MBTI vs 빅5 성격 검사
   highlight: 빅5
   kicker: 심리학자들이 연구에 주로 쓰는 건?
@@ -155,18 +221,52 @@ scenes:
   font: 40
   best: false
   cols:
-  - {label: MBTI, 'on': 1}
-  - {label: 빅5, 'on': 2}
+  - label: MBTI
+    'on': 1
+    color:
+    - 214
+    - 70
+    - 46
+  - label: 빅5
+    'on': 2
+    color:
+    - 30
+    - 62
+    - 178
   rows:
-  - {label: 결과 모양, values: [0, 0], texts: ['16칸 중 하나', '5가지 점수']}
-  - {label: 재는 것, values: [0, 0], texts: ['4가지', '5가지']}
-  - {label: 감정 기복(불안), values: [0, 0], texts: ['안 잼', '잼']}
-  - {label: 연구에서, values: [0, 0], texts: ['드묾', '표준']}
+  - label: 결과 모양
+    values:
+    - 0
+    - 0
+    texts:
+    - 16칸 중 하나
+    - 5가지 점수
+  - label: 재는 것
+    values:
+    - 0
+    - 0
+    texts:
+    - 4가지
+    - 5가지
+  - label: 감정 기복(불안)
+    values:
+    - 0
+    - 0
+    texts:
+    - 안 잼
+    - 잼
+  - label: 연구에서
+    values:
+    - 0
+    - 0
+    texts:
+    - 드묾
+    - 표준
   narration:
   - 그래서 심리학자들은 연구할 때, 빅 파이브라는 다른 검사를 주로 써요.
   - 칸에 나누지 않고, 다섯 가지 성향을 점수로 보여 줘요. | 엠비티아이에는 없는, 불안하고 예민한 정도도 재고요.
 - type: accent_simple
-  chapter: 내 얘기 같은 이유
+  chapter: 증거 3 · 내 얘기 같은 착각
   palette: dinner
   bg: a
   ink: b
@@ -175,61 +275,85 @@ scenes:
   big_size: 300
   caption: 모두에게 똑같은 결과지를 줬더니 · 5점 만점에
   narration:
-  - 그런데 왜 결과지를 보면, 딱 내 얘기 같을까요?
+  - 그리고 세 번째 증거. 결과지를 보면, 왜 딱 내 얘기 같을까요?
   - 1949년 심리학자 버트럼 포러가 실험을 했어요. 학생들에게 성격 검사를 시키고, 결과지를 나눠 줬죠.
   - 학생들은 얼마나 맞는지 5점 만점에 평균 !!4.26점!!을 줬어요. | 그런데 그 결과지, 사실 모두 똑같은 내용이었어요.
 - type: sci_kinetic
-  chapter: 내 얘기 같은 이유
+  chapter: 증거 3 · 내 얘기 같은 착각
   items:
-  - {text: "누구에게나 맞는 말\n= 바넘 효과", highlight: 바넘 효과, 'on': 1}
+  - text: '누구에게나 맞는 말
+
+      = 바넘 효과'
+    highlight: 바넘 효과
+    'on': 1
   narration:
   - 이렇게 누구에게나 해당하는 말을 내 얘기로 느끼는 걸, 바넘 효과라고 해요.
   - 겉으론 밝지만 속은 여린 편, 같은 말이요. 듣고 보면 다 내 얘기 같죠.
 - type: checklist
-  chapter: 내 얘기 같은 이유
-  bg: {kind: paper}
+  chapter: 증거 3 · 내 얘기 같은 착각
+  bg:
+    kind: paper
   kicker: 우리가 하는 무료 검사는?
   title: 사실 공식 MBTI가 아니다
   title_size: 80
   highlight: 공식 MBTI
   items:
-  - {text: "인터넷 무료 검사 · 다른 회사가 만든 검사", highlight: 다른 회사, 'on': 2}
-  - {text: "끝에 붙는 -A · -T는 원래 MBTI에 없음", highlight: '-A · -T', 'on': 2}
-  - {text: "공식 MBTI는 유료 · 전문가 해석", highlight: 유료, 'on': 3}
+  - text: 인터넷 무료 검사 · 다른 회사가 만든 검사
+    highlight: 다른 회사
+    'on': 2
+  - text: 끝에 붙는 -A · -T는 원래 MBTI에 없음
+    highlight: -A · -T
+    'on': 2
+  - text: 공식 MBTI는 유료 · 전문가 해석
+    highlight: 유료
+    'on': 3
   narration:
   - 그리고 하나 더. 우리가 인터넷에서 하는 무료 검사, 사실 공식 엠비티아이가 아니에요.
   - 다른 회사가 만든 비슷한 검사라서, 유형 끝에 A나 T가 붙죠. 원래 엠비티아이엔 없는 거예요.
   - 공식 검사는 돈을 내고, 해석해 주는 전문가와 함께 받아요.
 - type: checklist
-  chapter: 그래서 MBTI는
-  bg: {kind: paper}
-  kicker: 그래서 MBTI는
-  title: 이렇게만 쓰세요
+  chapter: 진짜 내 성향 찾는 법
+  bg:
+    kind: paper
+  kicker: 그럼 진짜 내 MBTI는?
+  title: 이렇게 찾으세요
   title_size: 84
-  highlight: 이렇게만
+  highlight: 찾으세요
   items:
-  - {text: "나를 알아 가는 대화 소재로", highlight: 대화 소재, 'on': 2}
-  - {text: "사람을 16칸에 가두지 않기", highlight: 가두지, 'on': 2}
-  - {text: "채용 · 연애 판단의 잣대로 쓰지 않기", highlight: 잣대, 'on': 3}
+  - text: 다른 날, 세 번 해 보기
+    highlight: 세 번
+    'on': 1
+  - text: 세 번 다 같은 글자 = 진짜 내 성향
+    highlight: 진짜 내 성향
+    'on': 2
+  - text: 바뀌는 글자 = 그 사이에 있는 사람
+    highlight: 그 사이
+    'on': 3
   narration:
-  - 그럼 엠비티아이, 쓰지 말아야 할까요? 그렇진 않아요. 이렇게만 쓰면 돼요.
-  - 첫째, 나를 알아 가는 재밌는 대화 소재로. 둘째, 사람을 16칸에 가두지 않기.
-  - 셋째, 채용이나 연애처럼 중요한 판단의 잣대로는 쓰지 않기. | 실제로 지원서에 엠비티아이를 묻는 회사가 생겨서 논란이 되기도 했죠.
+  - 그럼 진짜 내 엠비티아이는 어떻게 알까요? 방법은 간단해요. 다른 날, 세 번 해 보세요.
+  - 세 번 다 같은 글자만, 진짜 내 성향이에요.
+  - 바뀌는 글자는, 여러분이 딱 그 사이에 있는 사람이라는 뜻이에요. 양쪽 다 가진 거죠.
 - type: sci_kinetic
-  chapter: 그래서 MBTI는
+  chapter: 진짜 내 성향 찾는 법
   items:
-  - {text: "MBTI는 정답이 아니라\n재밌는 거울", highlight: 재밌는 거울, 'on': 2}
+  - text: 'MBTI는 가짜라기보다
+
+      흐릿한 사진'
+    highlight: 흐릿한 사진
+    'on': 2
   narration:
-  - 정리할게요. 엠비티아이는 심리학자가 아닌 엄마와 딸이 만들었고, 다시 하면 바뀌는 경우가 많아요.
-  - 정답이 아니라, 나를 비춰 보는 재밌는 거울 정도로 쓰면 딱이에요.
+  - 정리할게요. 엠비티아이는 심리학자가 아닌 엄마와 딸이 만들었고, 다시 하면 바뀌기도 하고, 누구에게나 맞는 말이 섞여 있어요.
+  - 그래서 가짜라기보다는, 흐릿한 사진에 가까워요. 재밌는 대화 소재로 쓰되, 사람을 16칸에 가두지만 마세요. | 지원서에 엠비티아이를 묻는 회사가 생겨서 논란이 되기도 했으니까요.
 - type: sci_outro
-  heading: "여러분 MBTI는?\n다시 해도 같나요?"
-  highlight: 다시 해도
+  heading: '세 번 해 보면
+
+    몇 글자가 그대로?'
+  highlight: 그대로
   sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
   subscribe_on: 2
   signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
   signature_on: 3
   narration:
-  - 여러분 엠비티아이는 뭔가요? 다시 해도 같은 유형이 나오나요?
-  - 댓글로 남겨 주시면, 다음 지식 주제로도 찾아볼게요.
+  - 여러분도 세 번 해 보시고, 몇 글자가 그대로였는지 댓글로 알려 주세요.
+  - 다음 지식 주제도 댓글로 받을게요.
   - 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.

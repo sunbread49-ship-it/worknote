@@ -359,7 +359,8 @@ def _cell(s, c, label=None):
     im = Image.new("RGBA", (s, s), (0, 0, 0, 0))
     ImageDraw.Draw(im).rounded_rectangle((0, 0, s - 1, s - 1), radius=8, fill=c + (255,))
     if label:
-        tx = T(str(label), int(s * 0.36), INK if c == Y else (230, 232, 240), "Bold")
+        lum = 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
+        tx = T(str(label), int(s * 0.36), INK if (c == Y or lum > 160) else (230, 232, 240), "Bold")
         im.alpha_composite(tx, ((s - tx.width) // 2, (s - tx.height) // 2))
     return im
 
@@ -1613,11 +1614,11 @@ class Checklist(Editorial):
         if sp.get("kicker"):
             G.blit(f, T(sp["kicker"], 44, Y, "Black"), (x, y), G.appear(t, 0.0, 0.3))
             y += 64
-        tt = T(sp["title"], sp.get("title_size", 120), S.FG, "Black")
+        tt = T(sp["title"], sp.get("title_size", 120), self.fg, "Black")
         shadow(f, tt, (x - 4, y), "lt", G.ease_out(t / 0.4))
         y += tt.height + 4
         if sp.get("sub"):
-            G.blit(f, T(sp["sub"], 40, (220, 224, 232), "ExtraBold"), (x, y), G.appear(t, 0.2, 0.3))
+            G.blit(f, T(sp["sub"], 40, (110, 104, 92) if self.paper else (220, 224, 232), "ExtraBold"), (x, y), G.appear(t, 0.2, 0.3))
             y += 90
         for it in sp["items"]:
             o = G.appear(t, self.line_start(it.get("on", 1)) + it.get("offset", 0), 0.3)
@@ -1627,7 +1628,7 @@ class Checklist(Editorial):
             ck = _check(52)
             G.blit(f, ck, (x, y + 8), o)
             mw = (sp.get("icon_x", 1450) - 300 - x - 78) if sp.get("icon") else 1500
-            tx = T(it["text"], 62, S.FG, "Black", highlight=it.get("highlight", ""), hl_fill=Y)
+            tx = T(it["text"], 62, self.fg, "Black", highlight=it.get("highlight", ""), hl_fill=(214, 70, 46) if self.paper else Y)
             if tx.width > mw:  # 그림과 겹치면 한 줄을 유지한 채 줄이기
                 tx = tx.resize((int(mw), int(tx.height * mw / tx.width)), Image.LANCZOS)
             shadow(f, tx, (x + 78, y), "lt", o)
@@ -2131,13 +2132,13 @@ class Matrix(Editorial):
                 if j == 0:
                     pane = Image.new("RGBA", (int(S.W - 2 * S.SAFE_X - 20), rh - 12), (255, 255, 255, 0))
                     ImageDraw.Draw(pane).rounded_rectangle((0, 0, pane.width - 1, pane.height - 1), 14,
-                                                           fill=(255, 204, 40, 40) if tot else (255, 255, 255, 24))
+                                                           fill=(255, 204, 40, 40) if tot else ((40, 36, 30, 22) if self.paper else (255, 255, 255, 24)))
                     G.blit(f, pane, (x0 - 10, y), 1)
-                    lab = T(r["label"], int(fs * 0.84), Y if tot else S.FG, "Black")
+                    lab = T(r["label"], int(fs * 0.84), Y if tot else self.fg, "Black")
                     cym = y + (rh - 12) / 2
                     G.blit(f, lab, (x0 + 16, cym), 1, "lm")
                     if r.get("sub"):  # 작은 설명은 같은 줄 오른쪽에 (두 줄로 쌓지 않음)
-                        G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (x0 + 30 + lab.width, cym + 2), 1, "lm")
+                        G.blit(f, T(r["sub"], 24, (110, 104, 92) if self.paper else (190, 196, 212), "SemiBold"), (x0 + 30 + lab.width, cym + 2), 1, "lm")
                 if oj <= 0:
                     continue
                 win = i == best
@@ -2149,7 +2150,7 @@ class Matrix(Editorial):
                     ImageDraw.Draw(cell).rounded_rectangle((0, 0, cell.width - 1, cell.height - 1), 16, fill=ccol + (235,))
                     G.blit(f, cell, (cx - cell.width / 2, y + 7), oj)
                 txt_s = str(r["texts"][j])
-                col = (16, 18, 28) if win else (Y if tot else (S.FG if sp.get("best") == "row" else ((255, 140, 130) if txt_s.startswith("-") else S.FG)))
+                col = (16, 18, 28) if win else (Y if tot else (self.fg if sp.get("best") == "row" else ((255, 140, 130) if txt_s.startswith("-") else self.fg)))
                 txt = T(counter(txt_s, oj), fs if not tot else int(fs * 1.1), col, "Black")
                 cy = y + (rh - 12) / 2
                 if r.get("subs"):
