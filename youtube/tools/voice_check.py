@@ -169,7 +169,7 @@ def main(ep_dir, quiet=False, use_stt=True):
             nar = sc.get("narration", [])
             if not nar:
                 continue
-            p_, _ = tts.gemini_scene(nar, cfg, cache, log=lambda *a: None)
+            p_, _ = tts.gemini_scene(nar, {**cfg, "voice_lock": False}, cache, log=lambda *a: None)   # 점검은 새 음성 안 만듦
             heard = " ".join(w for w, _, _ in tts._stt_words(p_))
             r = difflib.SequenceMatcher(None, tts._hn(" ".join(nar)), tts._hn(heard)).ratio()
             if r < 0.85:

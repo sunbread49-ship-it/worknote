@@ -509,7 +509,7 @@ def gemini_scene(lines, cfg, cache, log=print):
                 cfg["_f0_ref"] = m0
             elif m0 and abs(m0 / ref - 1) > 0.07:
                 cand = [(abs(m0 / ref - 1), ratio, p, words)]
-                for take in range(3, 8):
+                for take in range(3, 5):   # 하루 한도 아끼기: 추가 take 최대 2개
                     p2 = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
                     m2 = _med(p2)
                     if not m2:
