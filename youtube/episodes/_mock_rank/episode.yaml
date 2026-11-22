@@ -1,0 +1,52 @@
+title: 순위 템플릿 샘플
+series_tag: 회장님 지갑
+theme: '08'
+tts: {provider: gemini, voice: Umbriel}
+scenes:
+- type: podium
+  kicker: 회장님 회사 배당수익률 · 2025년 배당 ÷ 11월 20일 종가
+  title: 배당 제일 센 회장님 회사
+  highlight: 제일 센
+  'on': 1
+  rows:
+  - {label: 기아, sub: '1주 6,800원', value: 7.8, text: 7.8%}
+  - {label: 현대차, sub: 1주 1만 원, value: 4.0, text: 4.0%}
+  - {label: LG, sub: '1주 3,100원', value: 3.5, text: 3.5%}
+  - {label: 삼성전자, value: 0.9, text: 0.9%}
+  - {label: SK하이닉스, value: 0.3, text: 0.3%}
+  narration: [샘플 문장 하나예요. 1위는 기아.]
+- type: columns
+  kicker: 2025년 연봉 · 각 사 사업보고서
+  title: 회장님 연봉 순위
+  highlight: 연봉
+  'on': 1
+  rows:
+  - {label: 정의선, sub: 현대차, face: chung_es, focus: [0.55, 0.3], value: 174.6, text: 174.6억}
+  - {label: 최태원, sub: SK, face: chey_tw, focus: [0.5, 0.3], value: 82.5, text: 82.5억}
+  - {label: 구광모, sub: LG, value: 71.3, text: 71.3억}
+  - {label: 이재용, sub: 삼성, face: lee_jy, focus: [0.5, 0.42], value: 0.5, text: 0원}
+  narration: [샘플 문장 하나예요. 1위는 정의선 회장.]
+- type: lollipop
+  kicker: 회장님 회사 배당수익률 · 2025년 배당 ÷ 11월 20일 종가
+  title: 배당 제일 센 회장님 회사
+  highlight: 제일 센
+  'on': 1
+  rows:
+  - {label: 기아, sub: '1주 6,800원 · 주가 8만 7,400원', value: 7.8, text: 7.8%}
+  - {label: 현대차, sub: '1주 1만 원 · 주가 25만 3,000원', value: 4.0, text: 4.0%}
+  - {label: LG, sub: '1주 3,100원 · 주가 8만 7,700원', value: 3.5, text: 3.5%}
+  - {label: 현대글로비스, sub: '1주 5,800원', value: 2.9, text: 2.9%}
+  - {label: 삼성전자, sub: '1주 1,668원 · 주가 18만 900원', value: 0.9, text: 0.9%}
+  - {label: SK하이닉스, sub: '1주 3,000원 · 주가 110만 원', value: 0.3, text: 0.3%}
+  narration: [샘플 문장 하나예요. 1위는 기아.]
+- type: facerank
+  kicker: 2025년 · 연봉 + 배당금
+  title: 회장님이 1년에 받은 돈
+  highlight: 1년에
+  'on': 1
+  rows:
+  - {label: 이재용, sub: 삼성, face: lee_jy, focus: [0.5, 0.42], value: 3909, text: '3,909억'}
+  - {label: 정의선, sub: 현대차, face: chung_es, focus: [0.55, 0.35], value: 2104, text: '2,104억'}
+  - {label: 최태원, sub: SK, face: chey_tw, focus: [0.5, 0.35], value: 1121, text: '1,121억'}
+  - {label: 구광모, sub: LG, value: 849, text: 849억}
+  narration: [샘플 문장 하나예요. 1위는 이재용 회장.]

@@ -3721,3 +3721,262 @@ class Chain(Editorial):
 
 
 TYPES.update({"chain": Chain})
+
+
+# ════════════════════════════════════════════════════════════════
+# 순위표 변주 3종 (2026-11-22 사용자: leaderboard 말고 깔끔한 순위 템플릿)
+#   공통 spec: kicker/title/highlight · rows: [{label, sub, value, text, face, focus, hl}] · on · step
+def _rank_rows(sp):
+    return sorted(sp["rows"], key=lambda r: -float(r["value"]))
+
+
+def _rank_col(i, r):
+    if r.get("color"):
+        return _col(r["color"])
+    if r.get("hl") or i == 0:
+        return S.RED_L if S.THEME == "08" else Y
+    return (S.GREEN_L if S.THEME == "08" else (150, 180, 240)) if i < 3 else (150, 160, 180)
+
+
+class Podium(Editorial):
+    """시상대: 2 · 1 · 3위가 단상 위에 (얼굴 · 이름 · 금액), 4위부터는 아래 작은 칩"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=True)
+        rows = _rank_rows(sp)
+        t0 = self.line_start(sp.get("on", 1))
+        step = sp.get("step", 0.45)
+        order = [(1, S.W / 2 - 470, 190), (0, S.W / 2, 250), (2, S.W / 2 + 470, 140)]
+        base_y = sp.get("base_y", 840)
+        medal = [(255, 204, 40), (210, 214, 224), (205, 140, 80)]
+        for seq, (i, cx, ph) in enumerate(sorted(order, key=lambda o: -o[0])):   # 3위 → 2위 → 1위 순서로 등장
+            if i >= len(rows):
+                continue
+            r = rows[i]
+            ti = t0 + seq * step
+            k = G.ease_out((t - ti) / 0.55)
+            if k <= 0:
+                continue
+            w = 360
+            h = ph * k
+            top = base_y - h
+            # 단상 (유리판 + 위쪽 색 띠)
+            pane = Image.new("RGBA", (w, int(max(h, 2))), (0, 0, 0, 0))
+            pd = ImageDraw.Draw(pane)
+            pd.rectangle((0, 0, w - 1, pane.height - 1), fill=(255, 255, 255, 34 if i else 52), outline=(255, 255, 255, 60), width=2)
+            c = _rank_col(i, r)
+            pd.rectangle((0, 0, w - 1, 10), fill=c + (255,))
+            G.blit(f, pane, (cx - w / 2, top), 1)
+            num = T(str(i + 1), 110, medal[i], "Black")
+            G.blit(f, num, (cx, top + 18), min(1, k * 1.5) * 0.9, "mt")
+            # 단상 위: 얼굴(있으면) + 이름 + 금액
+            ka = G.ease_out((t - ti - 0.35) / 0.4)
+            if ka <= 0:
+                continue
+            y = top - 18
+            if r.get("sub"):
+                sbi = T(r["sub"], 26, (190, 196, 212), "SemiBold")
+                G.blit(f, sbi, (cx, y), ka, "mb")
+                y -= sbi.height + 6
+            val = T(counter(r["text"], ka), 72 if i == 0 else 58, c, "Black")
+            G.blit(f, val, (cx, y), ka, "mb")
+            y -= val.height + 6
+            G.blit(f, T(r["label"], 40, S.FG, "Black"), (cx, y), ka, "mb")
+            y -= 56
+            if r.get("face"):
+                fc = _face_circle(r["face"], 170 if i == 0 else 140, tuple(r["focus"]) if r.get("focus") else None)
+                G.blit(f, fc, (cx, y), ka, "mb")
+        rest = rows[3:]
+        if rest:
+            tr = t0 + 3 * step + 0.3
+            kr = G.appear(t, tr, 0.3)
+            chips = [G.pill(f"{j + 4}위 {r['label']} {r['text']}", "Bold", 30, S.FG, (40, 46, 60), pad=(22, 10)) for j, r in enumerate(rest)]
+            tw = sum(c.width for c in chips) + 20 * (len(chips) - 1)
+            x = S.W / 2 - tw / 2
+            for c in chips:
+                G.blit(f, c, (x, base_y + 16), kr)
+                x += c.width + 20
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        t0 = self.line_start(self.spec.get("on", 1)); st = self.spec.get("step", 0.45)
+        return [(t0 + j * st, "pop", 0.35) for j in range(3)]
+
+
+class Columns(Editorial):
+    """세로 기둥: 큰 순서로 왼→오, 기둥이 바닥에서 솟고 꼭대기에 금액, 아래 이름(얼굴은 기둥 위)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=False)
+        rows = _rank_rows(sp)
+        n = len(rows)
+        vmax = sp.get("vmax") or float(rows[0]["value"]) * 1.05
+        t0 = self.line_start(sp.get("on", 1))
+        step = sp.get("step", 0.25)
+        base_y, Hmax = sp.get("base_y", 800), sp.get("height", 340)
+        span = S.W - 2 * S.SAFE_X - 120
+        gap = span / n
+        bw = min(200, gap * 0.56)
+        d = ImageDraw.Draw(f)
+        d.line((S.SAFE_X + 40, base_y, S.W - S.SAFE_X - 40, base_y), fill=(255, 255, 255, 120), width=3)
+        for i, r in enumerate(rows):
+            ti = t0 + (n - 1 - i) * step
+            k = G.ease_out((t - ti) / 0.6)
+            if k <= 0:
+                continue
+            cx = S.SAFE_X + 100 + gap * (i + 0.5)
+            c = _rank_col(i, r)
+            h = max(6, Hmax * float(r["value"]) / vmax * k)
+            col = Image.new("RGBA", (int(bw), int(h)), (0, 0, 0, 0))
+            cd = ImageDraw.Draw(col)
+            for yy in range(int(h)):
+                fade = 1.0 - 0.45 * yy / max(h, 1)
+                cd.line((0, yy, bw, yy), fill=tuple(int(v * fade) for v in c) + (255,))
+            m = Image.new("L", col.size, 0)
+            ImageDraw.Draw(m).rounded_rectangle((0, 0, bw - 1, h + 20), 18, fill=255)
+            col.putalpha(m)
+            G.blit(f, col, (cx - bw / 2, base_y - h), 1)
+            y = base_y - h - 14
+            val = T(counter(r["text"], k), 56 if i == 0 else 46, c if i == 0 else S.FG, "Black")
+            if r.get("face"):   # 얼굴은 기둥 꼭대기에 걸치게 (기둥이 낮으면 금액 위로)
+                fc = _face_circle(r["face"], 104, tuple(r["focus"]) if r.get("focus") else None)
+                if h >= 90:
+                    G.blit(f, fc, (cx, base_y - h), min(1, k * 2), "mm")
+                    y = base_y - h - 62
+                else:
+                    G.blit(f, fc, (cx, y - val.height - 8), min(1, k * 2), "mb")
+            G.blit(f, val, (cx, y), min(1, k * 2), "mb")
+            G.blit(f, T(r["label"], 36, S.FG, "Black"), (cx, base_y + 20), k, "mt")
+            if r.get("sub"):
+                G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (cx, base_y + 68), k, "mt")
+            G.blit(f, T(str(i + 1), 30, (20, 22, 30), "Black").resize((1, 1)) if False else T(f"{i + 1}위", 26, c, "Black"), (cx - bw / 2 + 12, base_y - 40), k * (1 if h > 60 else 0), "lt")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W - S.SAFE_X, S.H - 170), 1, "rb")
+        self.finish(f, t)
+
+
+class Lollipop(Editorial):
+    """롤리팝: 가는 선 + 끝 동그라미 (선 · 점 · 여백 중심의 미니멀 순위). 1위(또는 hl)만 빨강, 나머지 회색"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=False)
+        rows = _rank_rows(sp)
+        n = len(rows)
+        vmax = sp.get("vmax") or float(rows[0]["value"]) * 1.1
+        t0 = self.line_start(sp.get("on", 1))
+        step = sp.get("step", 0.22)
+        top, rh = sp.get("top", 360), sp.get("row_h", min(110, 560 / max(n, 1)))
+        x_lab, x0, x1 = S.SAFE_X + 60, S.SAFE_X + 520, S.W - S.SAFE_X - 220
+        d = ImageDraw.Draw(f)
+        for g in range(1, 5):   # 옅은 세로 눈금
+            gx = x0 + (x1 - x0) * g / 4
+            d.line((gx, top - 30, gx, top + rh * n - 20), fill=(60, 68, 92), width=2)
+        for i, r in enumerate(rows):
+            ti = t0 + (n - 1 - i) * step
+            k = G.ease_out((t - ti) / 0.55)
+            if k <= 0:
+                continue
+            cy = top + rh * i + rh / 2 - 10
+            hl = r.get("hl") or (i == 0 and not any(x.get("hl") for x in rows))
+            c = (S.RED_L if S.THEME == "08" else Y) if hl else (150, 160, 180)
+            G.blit(f, T(f"{i + 1:02d}", 30, c, "Black"), (x_lab, cy), k, "lm")
+            lx = x_lab + 70
+            if r.get("face"):
+                fc = _face_circle(r["face"], int(rh * 0.72), tuple(r["focus"]) if r.get("focus") else None)
+                G.blit(f, fc, (lx, cy), k, "lm")
+                lx += fc.width + 16
+            G.blit(f, T(r["label"], 40 if hl else 36, S.FG if hl else (215, 220, 230), "Black"), (lx, cy - (14 if r.get("sub") else 0)), k, "lm")
+            if r.get("sub"):
+                G.blit(f, T(r["sub"], 22, (170, 176, 192), "SemiBold"), (lx, cy + 22), k, "lm")
+            xe = x0 + (x1 - x0) * float(r["value"]) / vmax * k
+            d.line((x0, cy, xe, cy), fill=c + (255,), width=6 if hl else 4)
+            rr = 22 if hl else 16
+            d.ellipse((xe - rr, cy - rr, xe + rr, cy + rr), fill=c + (255,), outline=(255, 255, 255, 230), width=4 if hl else 2)
+            G.blit(f, T(counter(r["text"], k), 46 if hl else 38, c if hl else S.FG, "Black"), (xe + rr + 18, cy), min(1, k * 2), "lm")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W - S.SAFE_X, S.H - 170), 1, "rb")
+        self.finish(f, t)
+
+
+TYPES.update({"podium": Podium, "columns": Columns, "lollipop": Lollipop})
+
+
+class FaceRank(Editorial):
+    """사진 순위 (2026-11-22 사용자 아이디어): 막대 없이 인물 사진 카드만 — 꼴찌 → 1위로 갈수록 사진이 커지고,
+    1위 머리 위 왕관 · 1위 금액만 색 포인트. rows: [{label, sub, text, value, face(photo), focus}] · order: up(작은→큰, 기본)"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 150), center=True)
+        rows = _rank_rows(sp)
+        n = len(rows)
+        seq = list(range(n))[::-1]          # 화면 왼쪽 = 꼴찌, 오른쪽 = 1위
+        t0 = self.line_start(sp.get("on", 1))
+        step = sp.get("step", 0.5)
+        base_y = sp.get("base_y", 760)
+        hmin, hmax = sp.get("hmin", 250), sp.get("hmax", 430)
+        hs = {i: hmin + (hmax - hmin) * (n - 1 - i) / max(n - 1, 1) for i in range(n)}
+        ws = {i: int(hs[i] * 0.8) for i in range(n)}
+        gap = 54
+        tw = sum(ws.values()) + gap * (n - 1)
+        x = S.W / 2 - tw / 2
+        acc = S.RED_L if S.THEME == "08" else Y
+        for order, i in enumerate(seq):
+            r = rows[i]
+            w, h = ws[i], int(hs[i])
+            cx = x + w / 2
+            x += w + gap
+            ti = t0 + order * step
+            k = G.ease_out((t - ti) / 0.5)
+            if k <= 0:
+                continue
+            card = Image.new("RGBA", (w + 12, h + 12), (0, 0, 0, 0))
+            if r.get("face"):
+                im = _photo_src(r["face"])
+                fx, fy = r.get("focus") or (0.5, 0.35)
+                ar = w / h
+                cw = min(im.width, int(im.height * ar)); ch = int(cw / ar)
+                x0 = int(min(max(0, im.width * fx - cw / 2), im.width - cw)); y0 = int(min(max(0, im.height * fy - ch / 2), im.height - ch))
+                ph = im.crop((x0, y0, x0 + cw, y0 + ch)).resize((w, h), Image.LANCZOS).convert("RGBA")
+                if i != 0:
+                    ph = Image.blend(ph, Image.new("RGBA", ph.size, (20, 24, 36, 255)), 0.18)
+            else:
+                ph = Image.new("RGBA", (w, h), (46, 52, 68, 255))
+                ImageDraw.Draw(ph).text((w / 2, h / 2), "?", fill=(150, 160, 180), anchor="mm", font=S.font("Black", int(h * 0.4)))
+            m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, w - 1, h - 1), 22, fill=255)
+            card.paste(ph, (6, 6), m)
+            ImageDraw.Draw(card).rounded_rectangle((3, 3, w + 8, h + 8), 24, outline=(acc if i == 0 else (255, 255, 255)) + (255 if i == 0 else 90,), width=6 if i == 0 else 3)
+            sc = 0.88 + 0.12 * k
+            card2 = card.resize((int(card.width * sc), int(card.height * sc)), Image.LANCZOS)
+            G.blit(f, card2, (cx, base_y - (1 - k) * 30), k, "mb")
+            # 순위 뱃지
+            G.blit(f, G.pill(f"{i + 1}위", "Black", 30 if i else 36, (20, 22, 30) if i else (255, 255, 255), (230, 232, 240) if i else acc, pad=(18, 6)),
+                   (cx - w / 2 + 14, base_y - h + 14), k)
+            if i == 0:   # 왕관
+                kc = G.ease_out((t - ti - 0.35) / 0.4)
+                if kc > 0:
+                    from . import illust as I
+                    cr = I.emoji("crown", 120)
+                    bob = math.sin(max(0, t - ti) * 3) * 4
+                    G.blit(f, cr.rotate(-12, expand=True, resample=Image.BICUBIC), (cx + w / 2 - 20, base_y - h - 30 + bob), kc, "mm")
+            G.blit(f, T(r["label"], 40 if i == 0 else 34, S.FG, "Black"), (cx, base_y + 18), k, "mt")
+            if r.get("sub"):
+                G.blit(f, T(r["sub"], 24, (180, 186, 204), "SemiBold"), (cx, base_y + 66), k, "mt")
+            kv = G.ease_out((t - ti - 0.25) / 0.5)
+            if kv > 0:
+                G.blit(f, T(counter(r["text"], kv), 60 if i == 0 else 44, acc if i == 0 else S.FG, "Black"), (cx, base_y + (100 if r.get("sub") else 70)), kv, "mt")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        t0 = self.line_start(self.spec.get("on", 1)); st = self.spec.get("step", 0.5)
+        return [(t0 + j * st, "pop", 0.35) for j in range(len(self.spec["rows"]))]
+
+
+TYPES.update({"facerank": FaceRank})
