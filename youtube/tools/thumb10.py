@@ -555,7 +555,7 @@ def v3_p09(sp):
     card.alpha_composite(bub, (pad, pad))
     TH.shadowed(f, card, (60, 50))
     if sp.get("bottom"):
-        TH.shadowed(f, txt(sp["bottom"], 130, YEL, maxw=1150), (70, H - 50), "lb")
+        TH.shadowed(f, txt(sp["bottom"], sp.get("bottom_size", 130), YEL, hl=sp.get("hl", ""), hl_color=RED, maxw=sp.get("bottom_w", 1150)), (70, H - 50), "lb")
     return f
 
 

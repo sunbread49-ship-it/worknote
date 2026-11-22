@@ -2102,7 +2102,16 @@ class Matrix(Editorial):
     def draw(self, f, t):
         sp = self.spec
         self.base(f)
-        self.hdr(f, t, y=sp.get("title_y", 150), center=False)
+        if sp.get("title_parts"):   # 2026-11-22 사용자: 제목 안 두 단어를 각 열 색으로 (예: 한 번에=노랑 vs 6개월 나눠=초록)
+            yy = header(f, {"kicker": sp.get("kicker")}, t, 0.0, y=sp.get("title_y", 150), center=False, fg=self.fg, acc=self.acc)
+            k_ = G.ease_out((t - 0.05) / 0.35)
+            x_ = 200
+            for txt_, c_ in sp["title_parts"]:
+                im_ = T(txt_, sp.get("title_size", 84), _rc(c_, S.FG) if c_ else S.FG, "Black")
+                shadow(f, im_, (x_, yy + (1 - k_) * 24), "lt", k_)
+                x_ += im_.width + 18
+        else:
+            self.hdr(f, t, y=sp.get("title_y", 150), center=False)
         cols, rows = sp["cols"], sp["rows"]
         x0, y0 = S.SAFE_X + 20, sp.get("top", 340)
         lw = sp.get("label_w", 520)
@@ -2112,9 +2121,10 @@ class Matrix(Editorial):
         for j, c in enumerate(cols):
             oj = G.appear(t, self.line_start(c.get("on", 1)) + 0.1, 0.35)
             cx = x0 + lw + cw * (j + 0.5)
-            G.blit(f, T(c["label"], sp.get("head_font", 40), Y, "Black"), (cx, y0 - 16), max(oj, 0.35), "mb")
+            ccol = _rc(c.get("color"), Y) if c.get("color") else Y
+            G.blit(f, T(c["label"], sp.get("head_font", 40), ccol, "Black"), (cx, y0 - 16), max(oj, 0.35), "mb")
             vals = [float(r["values"][j]) for r in rows]
-            best = max(range(len(rows)), key=lambda i: vals[i]) if sp.get("best", True) else -1
+            best = max(range(len(rows)), key=lambda i: vals[i]) if sp.get("best", True) not in (False, "row") else -1
             for i, r in enumerate(rows):
                 y = y0 + i * rh
                 tot = r.get("total")
@@ -2131,12 +2141,15 @@ class Matrix(Editorial):
                 if oj <= 0:
                     continue
                 win = i == best
+                if sp.get("best") == "row":   # 줄마다 더 나은 칸을 그 열 색으로 칠함 (검정 글씨) · 진 칸은 흰 글씨
+                    rv = [float(v) for v in r["values"]]
+                    win = rv[j] == max(rv) and rv.count(max(rv)) == 1
                 if win:
                     cell = Image.new("RGBA", (int(cw - 20), rh - 26), (0, 0, 0, 0))
-                    ImageDraw.Draw(cell).rounded_rectangle((0, 0, cell.width - 1, cell.height - 1), 16, fill=Y + (235,))
+                    ImageDraw.Draw(cell).rounded_rectangle((0, 0, cell.width - 1, cell.height - 1), 16, fill=ccol + (235,))
                     G.blit(f, cell, (cx - cell.width / 2, y + 7), oj)
                 txt_s = str(r["texts"][j])
-                col = (16, 18, 28) if win else (Y if tot else ((255, 140, 130) if txt_s.startswith("-") else S.FG))
+                col = (16, 18, 28) if win else (Y if tot else (S.FG if sp.get("best") == "row" else ((255, 140, 130) if txt_s.startswith("-") else S.FG)))
                 txt = T(counter(txt_s, oj), fs if not tot else int(fs * 1.1), col, "Black")
                 cy = y + (rh - 12) / 2
                 if r.get("subs"):
@@ -3869,8 +3882,9 @@ class Columns(Editorial):
                     G.blit(f, fc, (cx, y - val.height - 8), min(1, k * 2), "mb")
             G.blit(f, val, (cx, y), min(1, k * 2), "mb")
             G.blit(f, T(r["label"], 36, S.FG, "Black"), (cx, base_y + 20), k, "mt")
-            if r.get("sub"):
-                G.blit(f, T(r["sub"], 24, (190, 196, 212), "SemiBold"), (cx, base_y + 68), k, "mt")
+            if r.get("sub"):   # sub_hl: sub 안 강조어를 노란 띠로 (2026-11-22 사용자: '원금 n일' 강조)
+                G.blit(f, T(r["sub"], 30 if r.get("sub_hl") else 24, (190, 196, 212), "Bold" if r.get("sub_hl") else "SemiBold",
+                            highlight=r.get("sub_hl", ""), hl_fill=(255, 204, 40)), (cx, base_y + 68), k, "mt")
             G.blit(f, T(str(i + 1), 30, (20, 22, 30), "Black").resize((1, 1)) if False else T(f"{i + 1}위", 26, c, "Black"), (cx - bw / 2 + 12, base_y - 40), k * (1 if h > 60 else 0), "lt")
         if sp.get("note"):
             G.blit(f, T(sp["note"], 24, (180, 186, 204), "SemiBold"), (S.W - S.SAFE_X, S.H - 170), 1, "rb")
