@@ -4560,3 +4560,104 @@ class AccentSimple(Editorial):
 
 
 TYPES.update({"accent_simple": AccentSimple})
+
+
+# ════════════════════════════════════════════════════════════════
+# banknote — 지폐 일러스트 (실물 사진 X · 직접 그린 단순화 그림 · '일러스트' 표기)
+#   mode: single(한 장 크게 + 설명 꼬리표) | sizes(4장 겹쳐 가로 길이 비교) | pair(두 장 나란히)
+#   notes: [{value, side: front|back, person, motif, items:[{text, xy:[0~1,0~1], on}], on}]
+BN = {1000: ((96, 150, 214), 136), 5000: ((222, 128, 84), 142), 10000: ((96, 168, 110), 148), 50000: ((226, 186, 70), 154), 100000: ((150, 150, 160), 160)}
+
+
+def _note_img(n, scale=7.0):
+    col, mm = BN[n["value"]]
+    w, h = int(mm * scale), int(68 * scale)
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    pale = tuple(int(c * 0.35 + 250 * 0.65) for c in col)
+    d.rounded_rectangle((0, 0, w - 1, h - 1), 18, fill=pale + (255,), outline=col + (255,), width=6)
+    for k in range(10):   # 물결 무늬
+        pts = [(x, h * 0.18 + k * h * 0.07 + 10 * math.sin(x / 38 + k)) for x in range(20, w - 20, 8)]
+        d.line(pts, fill=col + (60,), width=2)
+    v = f"{n['value']:,}"
+    big = T(v, int(h * 0.22), col, "Black")
+    im.alpha_composite(big, (30, 24))
+    if n.get("side", "front") == "front":   # 인물 자리: 실루엣 원 + 이름 (실제 초상 X)
+        r = int(h * 0.27)
+        cx, cy = int(w * 0.76), int(h * 0.42)
+        d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=col + (90,), outline=col + (255,), width=4)
+        d.ellipse((cx - r * 0.38, cy - r * 0.62, cx + r * 0.38, cy + r * 0.02), fill=col + (200,))
+        d.pieslice((cx - r * 0.7, cy + r * 0.05, cx + r * 0.7, cy + r * 1.4), 180, 360, fill=col + (200,))
+        if n.get("person"):
+            pt = T(n["person"], int(h * 0.09), (60, 60, 70), "Black")
+            im.alpha_composite(pt, (int(cx - pt.width / 2), int(cy + r + 8)))
+    if n.get("motif"):
+        mt = T(n["motif"], int(h * 0.075), (70, 70, 80), "Bold")
+        im.alpha_composite(mt, (34, h - mt.height - 26))
+    tag = T("일러스트", 18, (120, 120, 130), "Bold")
+    im.alpha_composite(tag, (w - tag.width - 16, h - tag.height - 10))
+    return im
+
+
+class Banknote(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        tone = _sci_tone(sp, getattr(self, "channel", {}))
+        _sci_frame(f, tone, t)
+        self.paper = True
+        INK = tone["ink"]
+        if sp.get("title"):
+            G.blit(f, _marker_text(sp["title"], 72, INK, tone["mark"], sp.get("highlight", "")), (S.W / 2, 110), G.appear(t, 0, 0.3), "mt")
+        mode = sp.get("mode", "single")
+        notes = sp["notes"]
+        if mode == "sizes":
+            x0, y0 = 300, 250
+            for i, n in enumerate(sorted(notes, key=lambda n: -n["value"])):
+                k = G.ease_out((t - self.line_start(n.get("on", 1)) - n.get("offset", i * 0.3)) / 0.5)
+                if k <= 0:
+                    continue
+                im = _note_img(n, 6.0)
+                y = y0 + i * 95
+                G.blit(f, im, (x0 + (1 - k) * -200, y), k, "lt")
+                mm = BN[n["value"]][1]
+                G.blit(f, T(f"가로 {mm}mm", 34, (60, 60, 70), "Black"), (x0 + im.width - 40 + (1 - k) * -200, y + 22), k, "rt")
+            if sp.get("memo"):
+                G.blit(f, _ink(sp["memo"], "NanumPenScript-Regular.ttf", 58, tone["acc"]), (S.W - 120, 210), G.appear(t, self.line_start(sp.get("memo_on", 2)), 0.4), "rt")
+        else:
+            n_ = len(notes)
+            sc = 7.0 if n_ == 1 else 5.6
+            ws = [BN[n["value"]][1] * sc for n in notes]
+            gap = 80
+            x = S.W / 2 - (sum(ws) + gap * (n_ - 1)) / 2
+            for i, n in enumerate(notes):
+                ts = self.line_start(n.get("on", 1)) + n.get("offset", 0)
+                k = G.ease_out((t - ts) / 0.5)
+                im = _note_img(n, sc)
+                y = sp.get("y", 200 if n_ == 1 else 290)
+                if k > 0:
+                    ang = n.get("tilt", 0)
+                    imr = im.rotate(ang, expand=True, resample=Image.BICUBIC) if ang else im
+                    sh = Image.new("RGBA", imr.size, (0, 0, 0, 0)); sh.putalpha(imr.split()[3].filter(ImageFilter.GaussianBlur(12)).point(lambda v: int(v * 0.3)))
+                    f.alpha_composite(sh, (int(x + 10), int(y + 16)))
+                    G.blit(f, imr, (x, y + (1 - k) * 40), k, "lt")
+                    for it in n.get("items", []):
+                        ko = G.appear(t, self.line_start(it.get("on", 1)) + it.get("offset", 0), 0.3)
+                        if ko <= 0:
+                            continue
+                        px, py = x + it["xy"][0] * im.width, y + it["xy"][1] * im.height
+                        d = ImageDraw.Draw(f)
+                        d.ellipse((px - 14, py - 14, px + 14, py + 14), outline=tone["acc"] + (255,), width=6)
+                        lab = _ink(it["text"], "NanumPenScript-Regular.ttf", 54, tone["acc"])
+                        ly = y + im.height + 24 + it.get("row", 0) * 62   # 2026-11-22: 꼬리표는 지폐 아래 줄로 (자막과 안 겹치게 최대 3줄)
+                        d.line((px, py + (14 if ly > py else -14), px, ly + (0 if ly > py else lab.height)), fill=tone["acc"] + (255,), width=3)
+                        G.blit(f, lab, (px - 20, ly), ko, "lt")
+                x += BN[n["value"]][1] * sc + gap
+            if sp.get("memo"):
+                G.blit(f, _ink(sp["memo"], "NanumPenScript-Regular.ttf", 58, tone["acc"]), (S.W / 2, sp.get("memo_y", 800 if n_ > 1 else 120)), G.appear(t, self.line_start(sp.get("memo_on", 2)), 0.4), "mt")
+        gd = sp.get("guide")
+        if gd:
+            Swatch._guide(self, f, t, gd)
+        self.finish(f, t)
+
+
+TYPES.update({"banknote": Banknote})

@@ -90,5 +90,5 @@ if __name__ == "__main__":
         for row in search(sys.argv[2]):
             print(" | ".join(map(str, row)))
     elif sys.argv[1] == "get":
-        p, m = get(sys.argv[2], sys.argv[3])
+        p, m = get(sys.argv[2], sys.argv[3], int(sys.argv[4]) if len(sys.argv) > 4 else 1280)   # 2026-11-22: 1920 썸네일은 429 → 표준 크기 1280
         print(p, "·", m["credit"])
