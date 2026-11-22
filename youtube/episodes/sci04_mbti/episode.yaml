@@ -36,6 +36,11 @@ chapter_titles:
 scenes:
 - type: sci_kinetic
   chapter: 인트로
+  media:
+    kind: photo
+    file: mb_cafe
+    caption: 처음 만나면 꼭 묻는 질문
+    side: right
   items:
   - text: '어제는 E
 
@@ -94,7 +99,18 @@ scenes:
   highlight: 가짜
   subtitle: 증거 1 만든 사람 · 증거 2 다시 하면 · 증거 3 내 얘기 같은 착각
   narration:
-  - 악어새 탐사 수첩, 첫 번째 증거부터 볼게요. 이 검사를 만든 사람이에요.
+  - 악어새 탐사 수첩, 증거 세 개를 하나씩 열어 볼게요.
+- type: accent_simple
+  chapter: 증거 1 · 만든 사람
+  palette: notyet
+  bg: a
+  ink: b
+  pop: c
+  big: 증거 1
+  big_size: 240
+  caption: 만든 사람은 심리학자가 아니었다
+  narration:
+  - 첫 번째 증거. 이 검사를 만든 사람이에요.
 - type: sci_kinetic
   chapter: 증거 1 · 만든 사람
   media:
@@ -110,7 +126,7 @@ scenes:
     'on': 1
   narration:
   - 엠비티아이를 만든 건, 미국의 엄마와 딸이에요. 엄마 캐서린 브릭스, 딸 이자벨 마이어스.
-  - 두 사람 이름 앞 글자를 따서, 마이어스 브릭스, 엠비티아이가 된 거죠.
+  - 두 사람 이름을 따서, 마이어스 브릭스. 엠비티아이예요.
 - type: sci_kinetic
   chapter: 증거 1 · 만든 사람
   media:
@@ -162,21 +178,73 @@ scenes:
   big_size: 300
   caption: 두 사람 중 심리학 학위가 있던 사람
   narration:
-  - 그런데 놀라운 점. 두 사람 모두, 심리학을 정식으로 공부한 적이 없었어요.
-  - 딸 이자벨은 대학에서 정치학을 전공했고, 추리소설을 쓰는 작가이기도 했죠.
+  - 그런데 두 사람 중, 심리학을 정식으로 공부한 사람은 한 명도 없었어요.
+  - 딸 이자벨은 대학에서 정치학을 전공했고, 추리소설을 쓰는 작가이기도 했죠. | 이게 첫 번째 증거예요.
 - type: accent_simple
   chapter: 증거 2 · 다시 하면 바뀐다
   palette: coffee
   bg: a
   ink: b
   pop: b
-  big: 50%
-  big_size: 300
-  caption: 5주 뒤 다시 하면 최대 절반이 다른 유형 (피텐저 2005)
+  big: 증거 2
+  big_size: 240
+  caption: 다시 하면 결과가 바뀐다
   narration:
   - 두 번째 증거. 다시 하면, 결과가 바뀐다는 거예요.
-  - 미국 심리학자 데이비드 피텐저는 이렇게 지적했어요. 5주 뒤에 다시 검사하면, 최대 !!절반!!이 다른 유형이 나온다고요.
-  - 물론 반론도 있어요. 검사 회사는 다시 해도 결과가 꽤 일정하다는 자료를 내놨죠.
+- type: sci_kinetic
+  chapter: 증거 2 · 다시 하면 바뀐다
+  media:
+    kind: photo
+    file: mb_paper_pittenger
+    caption: 피텐저 (2005) · 상담심리학 학술지
+    side: right
+    tilt: 2
+  items:
+  - text: '5주 뒤 다시 하면
+
+      최대 절반이 바뀐다'
+    highlight: 최대 절반
+    'on': 1
+  narration:
+  - 미국 심리학자 데이비드 피텐저는 2005년 학술지에 이렇게 썼어요.
+  - 5주 뒤에 다시 검사하면, 최대 !!절반!!이 다른 유형이 나온다고요. | 물론 검사 회사는, 다시 해도 꽤 일정하다는 자료로 반박하고 있어요.
+- type: profile
+  chapter: 증거 2 · 다시 하면 바뀐다
+  bg:
+    kind: paper
+  kicker: 외향 ↔ 내향 점수, 사람들은 어디에?
+  title: 대부분은 가운데에 몰려 있다
+  highlight: 가운데
+  values:
+  - 1
+  - 3
+  - 7
+  - 13
+  - 18
+  - 13
+  - 7
+  - 3
+  - 1
+  labels:
+  - 완전 내향
+  - ''
+  - ''
+  - ''
+  - 가운데
+  - ''
+  - ''
+  - ''
+  - 완전 외향
+  hl:
+  - 3
+  - 5
+  pins:
+  - text: 여기가 대부분
+    at: 4
+    'on': 1
+  narration:
+  - 비밀은 점수 분포에 있어요. 실제로 사람들 점수는 양 끝보다, 가운데에 훨씬 많이 몰려 있거든요.
+  - 그날 기분이나 컨디션으로 1, 2점만 달라져도, 유형이 휙 바뀌는 거예요.
 - type: duel
   chapter: 증거 2 · 다시 하면 바뀐다
   bg:
@@ -196,19 +264,8 @@ scenes:
     color: down
     'on': 2
   narration:
-  - 왜 이렇게 자주 바뀔까요? 비밀은 점수에 있어요.
-  - 외향 51, 내향 49인 사람은 E. 외향 49, 내향 51인 사람은 I. | 사실상 똑같은 사람인데, 정반대 유형으로 나뉘는 거죠.
-- type: sci_kinetic
-  chapter: 증거 2 · 다시 하면 바뀐다
-  items:
-  - text: '대부분은
-
-      가운데에 몰려 있다'
-    highlight: 가운데
-    'on': 1
-  narration:
-  - 그런데 실제로 사람들 점수는, 양 끝보다 가운데에 훨씬 많이 몰려 있어요.
-  - 그날 기분, 컨디션에 따라 1, 2점만 달라져도, 유형이 휙 바뀌는 거예요.
+  - 예를 들어 외향 51, 내향 49인 사람은 E. 외향 49, 내향 51인 사람은 I.
+  - 사실상 똑같은 사람인데, 정반대 유형으로 나뉘는 거죠. | 이게 두 번째 증거예요.
 - type: matrix
   chapter: 증거 2 · 다시 하면 바뀐다
   bg:
@@ -271,15 +328,46 @@ scenes:
   bg: a
   ink: b
   pop: c
+  big: 증거 3
+  big_size: 240
+  caption: 내 얘기 같은 착각
+  narration:
+  - 세 번째 증거. 결과지를 보면, 왜 딱 내 얘기 같을까요?
+- type: sci_kinetic
+  chapter: 증거 3 · 내 얘기 같은 착각
+  media:
+    kind: photo
+    file: mb_paper_forer
+    caption: 포러 (1949) · 이상·사회심리학 학술지
+    side: left
+    tilt: -2
+  items:
+  - text: '모두에게
+
+      똑같은 결과지'
+    highlight: 똑같은
+    'on': 2
+  narration:
+  - 1949년 심리학자 버트럼 포러가 학생들에게 성격 검사를 시켰어요.
+  - 그리고 한 사람씩 결과지를 나눠 줬죠. 그런데 그 결과지, 사실 모두 똑같은 내용이었어요.
+- type: accent_simple
+  chapter: 증거 3 · 내 얘기 같은 착각
+  palette: dinner
+  bg: a
+  ink: b
+  pop: c
   big: '4.26'
   big_size: 300
   caption: 모두에게 똑같은 결과지를 줬더니 · 5점 만점에
   narration:
-  - 그리고 세 번째 증거. 결과지를 보면, 왜 딱 내 얘기 같을까요?
-  - 1949년 심리학자 버트럼 포러가 실험을 했어요. 학생들에게 성격 검사를 시키고, 결과지를 나눠 줬죠.
-  - 학생들은 얼마나 맞는지 5점 만점에 평균 !!4.26점!!을 줬어요. | 그런데 그 결과지, 사실 모두 똑같은 내용이었어요.
+  - 학생들은 얼마나 맞는지 5점 만점에, 평균 !!4.26점!!을 줬어요. | 거의 다 내 얘기라고 느낀 거죠.
 - type: sci_kinetic
   chapter: 증거 3 · 내 얘기 같은 착각
+  media:
+    kind: photo
+    file: mb_barnum
+    caption: P. T. 바넘 (서커스 흥행사)
+    side: right
   items:
   - text: '누구에게나 맞는 말
 
@@ -287,30 +375,24 @@ scenes:
     highlight: 바넘 효과
     'on': 1
   narration:
-  - 이렇게 누구에게나 해당하는 말을 내 얘기로 느끼는 걸, 바넘 효과라고 해요.
-  - 겉으론 밝지만 속은 여린 편, 같은 말이요. 듣고 보면 다 내 얘기 같죠.
-- type: checklist
+  - 이렇게 누구에게나 해당하는 말을 내 얘기로 느끼는 걸, 바넘 효과라고 불러요. | 누구에게나 뭔가 하나씩은 보여 준다던, 서커스 흥행사 바넘의 이름에서 따왔죠.
+  - 겉으론 밝지만 속은 여린 편. 듣고 보면 다 내 얘기 같잖아요.
+- type: sci_kinetic
   chapter: 증거 3 · 내 얘기 같은 착각
-  bg:
-    kind: paper
-  kicker: 우리가 하는 무료 검사는?
-  title: 사실 공식 MBTI가 아니다
-  title_size: 80
-  highlight: 공식 MBTI
+  media:
+    kind: photo
+    file: mb_phone_friends
+    caption: 우리가 하는 무료 검사
+    side: left
   items:
-  - text: 인터넷 무료 검사 · 다른 회사가 만든 검사
-    highlight: 다른 회사
-    'on': 2
-  - text: 끝에 붙는 -A · -T는 원래 MBTI에 없음
-    highlight: -A · -T
-    'on': 2
-  - text: 공식 MBTI는 유료 · 전문가 해석
-    highlight: 유료
-    'on': 3
+  - text: '무료 검사는
+
+      공식 MBTI가 아니다'
+    highlight: 공식 MBTI
+    'on': 1
   narration:
-  - 그리고 하나 더. 우리가 인터넷에서 하는 무료 검사, 사실 공식 엠비티아이가 아니에요.
-  - 다른 회사가 만든 비슷한 검사라서, 유형 끝에 A나 T가 붙죠. 원래 엠비티아이엔 없는 거예요.
-  - 공식 검사는 돈을 내고, 해석해 주는 전문가와 함께 받아요.
+  - 그리고 지금 이 순간에도 속고 있는 것 하나. 우리가 인터넷에서 하는 무료 검사, 사실 공식 엠비티아이가 아니에요.
+  - 다른 회사가 만든 비슷한 검사라서, 유형 끝에 A나 T가 붙죠. 공식 검사는 돈을 내고, 전문가 해석과 함께 받아요. | 이게 세 번째 증거예요.
 - type: checklist
   chapter: 진짜 내 성향 찾는 법
   bg:
@@ -335,6 +417,11 @@ scenes:
   - 바뀌는 글자는, 여러분이 딱 그 사이에 있는 사람이라는 뜻이에요. 양쪽 다 가진 거죠.
 - type: sci_kinetic
   chapter: 진짜 내 성향 찾는 법
+  media:
+    kind: photo
+    file: mb_interview
+    caption: 채용 면접
+    side: right
   items:
   - text: 'MBTI는 가짜라기보다
 
@@ -342,8 +429,8 @@ scenes:
     highlight: 흐릿한 사진
     'on': 2
   narration:
-  - 정리할게요. 엠비티아이는 심리학자가 아닌 엄마와 딸이 만들었고, 다시 하면 바뀌기도 하고, 누구에게나 맞는 말이 섞여 있어요.
-  - 그래서 가짜라기보다는, 흐릿한 사진에 가까워요. 재밌는 대화 소재로 쓰되, 사람을 16칸에 가두지만 마세요. | 지원서에 엠비티아이를 묻는 회사가 생겨서 논란이 되기도 했으니까요.
+  - 그래서 엠비티아이는, 가짜라기보다는 흐릿한 사진에 가까워요. | 지원서에 엠비티아이를 묻는 회사가 생겨 논란이 되기도 했지만, 채용이나 연애 같은 중요한 판단의 잣대로 쓰기엔 흐릿하죠.
+  - 재밌는 대화 소재로 쓰되, 사람을 16칸에 가두지만 마세요.
 - type: sci_outro
   heading: '세 번 해 보면
 
