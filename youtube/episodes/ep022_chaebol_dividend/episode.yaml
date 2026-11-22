@@ -70,7 +70,7 @@ youtube:
     [사진 · 영상] Wikimedia Commons — The White House (퍼블릭 도메인) · 미국 대통령실 (퍼블릭 도메인) · 대한민국 국회 (공공누리 1유형) / Unsplash — Valentyn Chernetskyi · Brecht Corbeel · Mohamed Benziane / Pixabay — YounStudios · antoinedes · JosephSenior · RafterJr72 · Hassas_Arts
   tags: [이재용, 정의선, 최태원, 구광모, 배당금, 재벌회장, 연봉공시, 삼성전자, SK하이닉스, 기아, 배당주]
   privacy: private
-thumb_pick: T01
+thumb_pick: T09
 scenes:
 - type: kinetic
   chapter: 인트로
@@ -158,15 +158,19 @@ scenes:
     sub: ㈜LG
     value: 71.3
     text: 71.3억
-  - label: 이재용
-    sub: 2017년 3월부터 무보수
-    face: lee_jy
+    face: koo_km_front
     focus:
     - 0.5
-    - 0.42
+    - 0.5
+  - label: 이재용
+    sub: 2017년 3월부터 무보수
+    face: lee_jy_front
+    focus:
+    - 0.5
+    - 0.5
     value: 0.5
     text: 0원
-  credit: '사진: The White House · 대한민국 국회(KOGL 1유형) · 미국 대통령실 (Wikimedia Commons)'
+  credit: '사진: 대한민국 대통령실(정책브리핑) · The White House · 대한민국 국회(KOGL 1유형)'
   narration:
   - 먼저 연봉. 회사들이 매년 3월에 내는 사업보고서에, 회장님 연봉이 다 나와요.
   - 1위는 현대차 정의선 회장, !!174억!!. | 에스케이 최태원, 엘지 구광모 회장은 70에서 80억대예요.
@@ -224,17 +228,17 @@ scenes:
   chapter: 연봉
   tone: gold
   photo:
-    file: samsung_pt_biden
+    file: busan_2023_front
     focus:
-    - 0.72
-    - 0.3
+    - 0.22
+    - 0.4
     dark: 0.62
   label: 삼성전자 회장 이재용
   big: 연봉 0원
   sub: 2017년 3월부터 삼성전자 급여를 받지 않는다
   'on': 1
   sub_on: 2
-  credit: '사진: 미국 대통령실 (퍼블릭 도메인, Wikimedia Commons) · 2022 평택캠퍼스'
+  credit: '사진: 대한민국 대통령실 (정책브리핑 · 2023 부산 깡통시장)'
   narration:
   - 그럼 삼성 이재용 회장은요? 연봉 !!0원!!이에요.
   - 2017년 3월, 국정농단 사건으로 구속된 직후부터, 삼성전자 급여를 한 푼도 안 받고 있어요.
@@ -383,10 +387,10 @@ scenes:
   rows:
   - label: 이재용 · 삼성
     sub: 연봉 0원 · 배당만
-    face: lee_jy
+    face: lee_jy_front
     face_focus:
     - 0.5
-    - 0.42
+    - 0.5
     value: 3909
     text: 3,909억
     color:
@@ -425,11 +429,16 @@ scenes:
     - 150
     - 160
     - 180
+    face: koo_km_front
+    face_focus:
+    - 0.5
+    - 0.5
   vmax: 5600
   note: 배당금 = 2025 회계연도 주당 배당 × 2025.12.31 보유 주식
   narration:
   - 배당 순위로 다시 보면, 1위는 역시 이재용 회장 3,909억.
   - 나머지 세 분도 배당이 연봉의 !!11배에서 13배!!. | 회장님 진짜 월급은, 배당이에요.
+  credit: '사진: 대한민국 대통령실(정책브리핑) · The White House · 대한민국 국회(KOGL 1유형)'
 - type: doc
   chapter: 회장님 돈의 비밀
   bg:
@@ -608,10 +617,10 @@ scenes:
   highlight: 1주
   mid: '='
   left:
-    photo: lee_jy
+    photo: busan_2023_front
     focus:
-    - 0.5
-    - 0.4
+    - 0.22
+    - 0.45
     label: 이재용 회장의 1주
     value: 1,668원
     sub: 9,741만 주 보유
@@ -626,7 +635,7 @@ scenes:
     sub: 1주만 있어도
     'on': 2
     offset: 0.7
-  credit: '사진: 미국 대통령실 (퍼블릭 도메인) · Mohamed Benziane (Unsplash)'
+  credit: '사진: 대한민국 대통령실(정책브리핑) · Mohamed Benziane (Unsplash)'
   narration:
   - 그리고 여기서 중요한 사실. 배당은 1주당 똑같이 나와요.
   - 이재용 회장이 받는 삼성전자 1주 배당 1,668원. 여러분이 1주를 사도, !!똑같이 1,668원!!이에요.
@@ -750,37 +759,179 @@ scenes:
   - 여러분이 회장님 회사 하나를 고른다면, 어디 주식을 사시겠어요?
   - 댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.
   - 오늘도 감 말고, 숫자로 투자하세요.
-clips_plan:
-- 연봉 0원 회장님이 1년에 3,909억?
-- 정의선 연봉 174억, 월급 주는 회사가 3곳
-- 이재용은 왜 연봉 0원일까 (9년째 무보수)
-- 이 영상 5분 보는 동안 이재용 통장엔 372만 원
-- 정의선 배당 1등 회사는 현대차가 아니다
-- 하이닉스 110만 원인데 최태원 회장은 0주
-- 17.9%로 하이닉스까지 움직이는 법
-- 상속세 12조, 배당금으로 냈다
-- 배당 제일 센 회장님 회사는 기아 7.8%
-- 월 30만 원 배당, 기아 4,632만 vs 삼성 3억 9천
-- 배당주 사기 전 딱 4가지
 thumbs10:
-- {name: T01, p: P01, photo: lee_jy, focus: [0.5, 0.35], top: 연봉 0원 회장님, bottom: '1년에 3,909억?', hl: '3,909억', chips: [삼성, SK, 현대차, LG], chips_y: 46}
-- {name: T02, p: P03, photo: samsung_bldg, before: 연봉 0원, after: '3,909억', sub: 회장님 진짜 월급은 이것, label: 이재용 회장 · 2025년}
-- {name: T03, p: P08, face_l: {file: lee_jy, cx: 0.5, cy: 0.38, scale: 1.0, y: 380}, face_r: {file: chung_es, cx: 0.55, cy: 0.33, scale: 1.0, y: 380}, top_l: [연봉 0원, 이재용], top_r: [연봉 174억, 정의선], res_l: '?', res_r: '?', bottom: '누가 더 많이 받았을까?', hl: 더 많이}
-- {name: T04, p: P09, photo: lee_jy, focus: [0.5, 0.35], bubble: "연봉 0원인데\n어떻게 부자지?", bottom: 회장님 진짜 월급의 정체}
-- {name: T05, p: P10, photo: chey_tw, focus: [0.5, 0.3], label: 최태원 SK 회장, top: 주가 17배 오른 회사인데, bottom: '하이닉스 주식은 0주?'}
-- {name: T06, p: P01, photo: chung_es, focus: [0.55, 0.3], top: 연봉 1등 174억, bottom: 배당 1등은 따로 있다, hl: 따로}
-- {name: T07, p: P01, photo: me_phone_city, focus: [0.5, 0.45], top: 1주만 사도, bottom: 회장님이랑 똑같이 받는 돈, hl: 똑같이, point: '월 30만 원 받으려면?', point_size: 80, point_xy: [1860, 420]}
-- {name: T08, p: P03, photo: chip_dark, before: 하루, after: 10.7억, sub: 연봉 0원 회장님 통장, label: 이재용 회장 배당금}
-- {name: T09, p: P10, photo: samsung_pt_biden, focus: [0.72, 0.3], label: 4대 그룹 회장님 지갑 · 공시로 열어 봄, top: 이재용 · 정의선 · 최태원 · 구광모, bottom: '1년에 얼마 받을까?', hl: 얼마}
-- {name: T10, p: P01, photo: lee_jy, focus: [0.5, 0.35], top: 삼성 회장님 연봉 0원, bottom: '대신 받는 돈 3,909억', hl: '3,909억', point: 나도 받는 법, point_size: 80, point_xy: [1860, 420]}
+- name: T01
+  p: P01
+  photo: busan_2023_front
+  focus:
+  - 0.22
+  - 0.4
+  top: 연봉 0원 회장님
+  bottom: 1년에 3,909억?
+  hl: 3,909억
+  chips:
+  - 삼성
+  - SK
+  - 현대차
+  - LG
+  chips_y: 46
+- name: T02
+  p: P03
+  photo: samsung_bldg
+  before: 연봉 0원
+  after: 3,909억
+  sub: 회장님 진짜 월급은 이것
+  label: 이재용 회장 · 2025년
+- name: T03
+  p: P08
+  face_l:
+    file: busan_2023_front
+    cx: 0.227
+    cy: 0.41
+    scale: 2.6
+    y: 330
+  face_r:
+    file: chung_es
+    cx: 0.55
+    cy: 0.33
+    scale: 1.0
+    y: 380
+  top_l:
+  - 연봉 0원
+  - 이재용
+  top_r:
+  - 연봉 174억
+  - 정의선
+  res_l: '?'
+  res_r: '?'
+  bottom: 누가 더 많이 받았을까?
+  hl: 더 많이
+- name: T04
+  p: P09
+  photo: busan_2023_front
+  focus:
+  - 0.22
+  - 0.4
+  bubble: '연봉 0원인데
+
+    어떻게 부자지?'
+  bottom: 회장님 진짜 월급의 정체
+- name: T05
+  p: P10
+  photo: chey_tw
+  focus:
+  - 0.5
+  - 0.3
+  label: 최태원 SK 회장
+  top: 주가 17배 오른 회사인데
+  bottom: 하이닉스 주식은 0주?
+- name: T06
+  p: P01
+  photo: chung_es
+  focus:
+  - 0.55
+  - 0.3
+  top: 연봉 1등 174억
+  bottom: 배당 1등은 따로 있다
+  hl: 따로
+- name: T07
+  p: P01
+  photo: me_phone_city
+  focus:
+  - 0.5
+  - 0.45
+  top: 1주만 사도
+  bottom: 회장님이랑 똑같이 받는 돈
+  hl: 똑같이
+  point: 월 30만 원 받으려면?
+  point_size: 80
+  point_xy:
+  - 1860
+  - 420
+- name: T08
+  p: P03
+  photo: chip_dark
+  before: 하루
+  after: 10.7억
+  sub: 연봉 0원 회장님 통장
+  label: 이재용 회장 배당금
+- name: T09
+  p: P10
+  photo: chairmen4_circles
+  focus:
+  - 0.5
+  - 0.5
+  label: 4대 그룹 회장님 지갑 · 공시로 열어 봄
+  top: 이재용 · 정의선 · 최태원 · 구광모
+  bottom: 1년에 얼마 받을까?
+  hl: 얼마
+- name: T10
+  p: P01
+  photo: busan_2023_front
+  focus:
+  - 0.22
+  - 0.4
+  top: 삼성 회장님 연봉 0원
+  bottom: 대신 받는 돈 3,909억
+  hl: 3,909억
+  point: 나도 받는 법
+  point_size: 80
+  point_xy:
+  - 1860
+  - 420
 clip_theme: stock
 clips:
-- {start: 0.0, end: 27.5, hook: "연봉 0원 회장님이\n1년에 3,909억?", hl: '3,909억'}
-- {start: 34.4, end: 71.9, hook: "정의선 연봉 174억\n월급 주는 회사가 3곳", hl: 3곳}
-- {start: 72.1, end: 95.9, hook: "이재용 회장은\n왜 연봉이 0원일까", hl: 0원}
-- {start: 107.0, end: 140.9, hook: "이 영상 보는 동안\n이재용 통장엔 372만 원", hl: 372만 원}
-- {start: 153.7, end: 177.4, hook: "정의선 배당 1등 회사는\n현대차가 아니다", hl: 현대차가 아니다}
-- {start: 177.5, end: 215.0, hook: "17배 오른 하이닉스\n최태원 회장은 0주?", hl: 0주}
-- {start: 215.1, end: 236.8, hook: "상속세 12조\n배당금으로 냈다", hl: 12조}
-- {start: 236.9, end: 268.9, hook: "회장님 1주 = 내 1주\n배당 제일 센 회사는?", hl: 내 1주}
-- {start: 269.2, end: 302.9, hook: "월 30만 원 배당 받으려면\n얼마 있어야 할까?", hl: 월 30만 원}
+- start: 0.0
+  end: 27.5
+  hook: '연봉 0원 회장님이
+
+    1년에 3,909억?'
+  hl: 3,909억
+- start: 34.4
+  end: 71.9
+  hook: '정의선 연봉 174억
+
+    월급 주는 회사가 3곳'
+  hl: 3곳
+- start: 72.1
+  end: 95.9
+  hook: '이재용 회장은
+
+    왜 연봉이 0원일까'
+  hl: 0원
+- start: 107.0
+  end: 140.9
+  hook: '이 영상 보는 동안
+
+    이재용 통장엔 372만 원'
+  hl: 372만 원
+- start: 153.7
+  end: 177.4
+  hook: '정의선 배당 1등 회사는
+
+    현대차가 아니다'
+  hl: 현대차가 아니다
+- start: 177.5
+  end: 215.0
+  hook: '17배 오른 하이닉스
+
+    최태원 회장은 0주?'
+  hl: 0주
+- start: 215.1
+  end: 236.8
+  hook: '상속세 12조
+
+    배당금으로 냈다'
+  hl: 12조
+- start: 236.9
+  end: 268.9
+  hook: '회장님 1주 = 내 1주
+
+    배당 제일 센 회사는?'
+  hl: 내 1주
+- start: 269.2
+  end: 302.9
+  hook: '월 30만 원 배당 받으려면
+
+    얼마 있어야 할까?'
+  hl: 월 30만 원
