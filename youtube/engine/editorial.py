@@ -4670,3 +4670,151 @@ class Banknote(Editorial):
 
 
 TYPES.update({"banknote": Banknote})
+
+
+# ════════════════════════════════════════════════════════════════
+# notezoom — 지폐 그림 줌인 · 지폐 속 ↔ 실제 그림 비교 (2026-11-22 사용자: 뒷면 그림이 흐릿 → 줌인/지목 · 실사와 번갈아 비교)
+#   mode: loupe   — 지폐 한 장 + 지목 박스 → 오른쪽 큰 원형 돋보기 (zooms 여러 개면 차례로 바뀜)
+#         compare — 왼쪽 '지폐 속' 확대 컷 ↔ 오른쪽 '실제' 사진 (천천히 줌)
+#   bill: {img, value} · zooms: [{box:[x0,y0,x1,y1](0~1), label, on, offset}] · real: {file, label, focus:[0~1,0~1]}
+def _ph(name):
+    from pathlib import Path as _P
+    p = _P(__file__).resolve().parents[1] / "assets/photos"
+    im = Image.open(p / (name + ".jpg")).convert("RGB")
+    cr = ""
+    try:
+        cr = json.loads((p / (name + ".json")).read_text())["credit"]
+    except Exception:
+        pass
+    return im, cr
+
+
+def _fit(im, w, h, focus=(0.5, 0.5), k=1.0):
+    """cover 맞춤 + 초점 + 추가 확대 k"""
+    r = max(w / im.width, h / im.height) * k
+    im2 = im.resize((max(w, int(im.width * r) + 1), max(h, int(im.height * r) + 1)), Image.LANCZOS)
+    x0 = int(G.clamp(focus[0] * im2.width - w / 2, 0, im2.width - w))
+    y0 = int(G.clamp(focus[1] * im2.height - h / 2, 0, im2.height - h))
+    return im2.crop((x0, y0, x0 + w, y0 + h))
+
+
+def _crop01(im, box):
+    return im.crop((int(box[0] * im.width), int(box[1] * im.height), int(box[2] * im.width), int(box[3] * im.height)))
+
+
+def _shadowed(im, blur=14, alpha=0.28, off=(10, 16)):
+    sh = Image.new("RGBA", (im.width + 60, im.height + 60), (0, 0, 0, 0))
+    a = im.split()[3] if im.mode == "RGBA" else Image.new("L", im.size, 255)
+    sh.paste(Image.new("RGBA", im.size, (0, 0, 0, int(255 * alpha))), (30 + off[0], 30 + off[1]), a)
+    sh = sh.filter(ImageFilter.GaussianBlur(blur))
+    sh.alpha_composite(im.convert("RGBA"), (30, 30))
+    return sh
+
+
+class NoteZoom(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        tone = _sci_tone(sp, getattr(self, "channel", {}))
+        _sci_frame(f, tone, t)
+        self.paper = True
+        acc = tone["acc"]
+        nt = sp["bill"]
+        src, ncr = _ph(nt["img"])
+        crs = [ncr]
+        if sp.get("title"):
+            G.blit(f, _marker_text(sp["title"], 66, tone["ink"], tone["mark"], sp.get("highlight", "")), (S.W / 2, 96), G.appear(t, 0, 0.3), "mt")
+        mode = sp.get("mode", "loupe")
+        zooms = sp.get("zooms", [])
+        starts = [self.line_start(z.get("on", 1)) + z.get("offset", 0.3) for z in zooms]
+        cur = max([i for i, st in enumerate(starts) if t >= st] or [-1])
+        if mode == "loupe":
+            NW = sp.get("note_w", 900)
+            NH = int(src.height * NW / src.width)
+            nim = src.resize((NW, NH), Image.LANCZOS).filter(ImageFilter.UnsharpMask(1.4, 70, 2)).convert("RGBA")
+            m = Image.new("L", nim.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, NW - 1, NH - 1), 12, fill=255); nim.putalpha(m)
+            nx, ny = 110, sp.get("note_y", 520 - NH // 2)
+            k0 = G.ease_out((t - self.line_start(nt.get("on", 1))) / 0.5)
+            if k0 > 0:
+                sh = _shadowed(nim)
+                G.blit(f, sh, (nx - 30, ny - 30 + (1 - k0) * 40), k0, "lt")
+            if cur >= 0:
+                z = zooms[cur]
+                bx = z["box"]
+                kz = G.ease_out((t - starts[cur]) / 0.45)
+                d = ImageDraw.Draw(f)
+                r0 = (nx + bx[0] * NW, ny + bx[1] * NH, nx + bx[2] * NW, ny + bx[3] * NH)
+                d.rounded_rectangle(r0, 14, outline=acc + (int(255 * kz),), width=7)
+                D = sp.get("loupe_d", 600)
+                cx, cy = 1440, 500
+                bw, bh = (bx[2] - bx[0]) * src.width, (bx[3] - bx[1]) * src.height
+                if bw / bh > 1.3:   # 넓은 대상(건물 등): 사각 확대창 — 주변 글자가 안 끼게
+                    LW = 740; LH = int(G.clamp(LW * bh / bw, 300, 560))
+                    lens = _fit(_crop01(src, bx), LW, LH, z.get("focus", (0.5, 0.5)), 1.0 + 0.04 * G.clamp((t - starts[cur]) / 4))
+                    lens = lens.filter(ImageFilter.UnsharpMask(2.0, 90, 2)).convert("RGBA")
+                    mk = Image.new("L", (LW, LH), 0); ImageDraw.Draw(mk).rounded_rectangle((0, 0, LW - 1, LH - 1), 22, fill=255); lens.putalpha(mk)
+                    ring = Image.new("RGBA", (LW + 28, LH + 28), (0, 0, 0, 0))
+                    ImageDraw.Draw(ring).rounded_rectangle((0, 0, LW + 27, LH + 27), 30, fill=(255, 255, 255, 255))
+                    ring.alpha_composite(lens, (14, 14))
+                    ImageDraw.Draw(ring).rounded_rectangle((4, 4, LW + 23, LH + 23), 28, outline=acc + (255,), width=8)
+                    cx = 1460; Dh = LH
+                else:
+                    cxp, cyp = (bx[0] + bx[2]) / 2 * src.width, (bx[1] + bx[3]) / 2 * src.height
+                    hs = max(bw, bh) / 2
+                    crop = src.crop((int(cxp - hs), int(cyp - hs), int(cxp + hs), int(cyp + hs)))
+                    lens = _fit(crop, D, D, z.get("focus", (0.5, 0.5)), 1.0 + 0.05 * G.clamp((t - starts[cur]) / 4))
+                    lens = lens.filter(ImageFilter.UnsharpMask(2.0, 90, 2)).convert("RGBA")
+                    mk = Image.new("L", (D, D), 0); ImageDraw.Draw(mk).ellipse((0, 0, D - 1, D - 1), fill=255); lens.putalpha(mk)
+                    ring = Image.new("RGBA", (D + 28, D + 28), (0, 0, 0, 0))
+                    ImageDraw.Draw(ring).ellipse((0, 0, D + 27, D + 27), fill=(255, 255, 255, 255))
+                    ring.alpha_composite(lens, (14, 14))
+                    ImageDraw.Draw(ring).ellipse((4, 4, D + 23, D + 23), outline=acc + (255,), width=8)
+                    Dh = D
+                # 연결선: 박스 오른쪽 위/아래 → 원 위/아래
+                for (px, py), (qx, qy) in (((r0[2], r0[1]), (cx - (ring.width / 2 - 20 if Dh != D else 0), cy - Dh / 2)), ((r0[2], r0[3]), (cx - (ring.width / 2 - 20 if Dh != D else 0), cy + Dh / 2))):
+                    ex, ey = px + (qx - px) * kz, py + (qy - py) * kz
+                    d.line((px, py, ex, ey), fill=acc + (200,), width=4)
+                sc = 0.6 + 0.4 * kz
+                rr = ring.resize((int(ring.width * sc), int(ring.height * sc)), Image.LANCZOS)
+                G.blit(f, _shadowed(rr), (cx, cy), kz, "mm")
+                if z.get("label"):
+                    lab = _ink(z["label"], "NanumPenScript-Regular.ttf", 62, acc)
+                    G.blit(f, lab, (cx, cy + Dh / 2 + 24), kz, "mt")
+        else:   # compare
+            PW, PH = sp.get("panel", (780, 560))
+            y = sp.get("panel_y", 190)
+            z = zooms[0] if zooms else {"box": [0, 0, 1, 1]}
+            rl = sp["real"]
+            rim, rcr = _ph(rl["file"])
+            crs.append(rl.get("credit") or rcr)
+            kk = 1.0 + 0.06 * G.clamp(t / max(self.dur, 1))
+            for i, (im, lab, foc, on, off) in enumerate((
+                    (_crop01(src, z["box"]).rotate(z.get("rot", 0), expand=True), sp.get("note_label", "지폐 속"), z.get("focus", (0.5, 0.5)), nt.get("on", 1), 0),
+                    (rim, rl.get("label", "실제 그림"), rl.get("focus", (0.5, 0.5)), rl.get("on", 1), rl.get("offset", 0.6)))):
+                k = G.ease_out((t - self.line_start(on) - off) / 0.5)
+                if k <= 0:
+                    continue
+                pic = _fit(im, PW, PH, foc, (kk * (rl.get("zoom", 1.0) if i == 1 else 1.0)) if rl.get("fit") != "contain" or i == 0 else 1.0)
+                if i == 1 and rl.get("fit") == "contain":
+                    bgc = Image.new("RGB", (PW, PH), tuple(max(0, c - 8) for c in tone["paper"]))
+                    r_ = min(PW / im.width, PH / im.height) * 0.96
+                    sm = im.resize((int(im.width * r_), int(im.height * r_)), Image.LANCZOS)
+                    bgc.paste(sm, ((PW - sm.width) // 2, (PH - sm.height) // 2)); pic = bgc
+                if i == 0:
+                    pic = pic.filter(ImageFilter.UnsharpMask(2.0, 90, 2))
+                card = Image.new("RGBA", (PW + 24, PH + 24), (255, 255, 255, 255))
+                card.paste(pic, (12, 12))
+                x = 130 if i == 0 else S.W - 130 - card.width
+                G.blit(f, _shadowed(card), (x - 30, y - 30 + (1 - k) * 40), k, "lt")
+                tag = G.pill(lab, "Black", 38, (255, 255, 255), acc if i == 0 else tone["ink"], pad=(26, 10))
+                G.blit(f, tag, (x + 30, y - 20), k, "lt")
+                cap = (z.get("label") if i == 0 else rl.get("caption"))
+                if cap:
+                    G.blit(f, _ink(cap, "NanumPenScript-Regular.ttf", 54, tone["ink"]), (x + card.width / 2, y + card.height + 18), k, "mt")
+            ka = G.appear(t, self.line_start(rl.get("on", 1)) + rl.get("offset", 0.6), 0.4)
+            if ka > 0:
+                G.blit(f, T("=" if sp.get("same", True) else "↔", 96, acc, "Black"), (S.W / 2, y + PH / 2 + 12), ka, "mm")
+        sp.setdefault("credit", " · ".join(dict.fromkeys(c for c in crs if c)))
+        self.finish(f, t)
+
+
+TYPES.update({"notezoom": NoteZoom})
