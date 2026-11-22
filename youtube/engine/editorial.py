@@ -4513,3 +4513,50 @@ class Accent(Editorial):
 
 
 TYPES.update({"accent": Accent})
+
+
+class AccentSimple(Editorial):
+    """포인트 장면 · 심플 (2026-11-22 사용자: 거창함 X) — 종이 위 3색 카드 한 장: 큰 요소 하나 + 짧은 문구 한 줄
+    palette · bg/ink/pop(a|b|c) · big: 큰 글자/숫자 or line: [노선] · caption: 한 줄"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        tone = _sci_tone(sp, getattr(self, "channel", {}))
+        _sci_frame(f, tone, t)
+        self.paper = True
+        P = ACCENT[sp.get("palette", "notyet")]
+        C = {"a": P["a"], "b": P["b"], "c": P["c"]}
+        bg, ink, pop = C[sp.get("bg", "a")], C[sp.get("ink", "c")], C[sp.get("pop", "b")]
+        PW, PH = 1120, 640
+        k = G.ease_out((t - 0.15) / 0.5)
+        if k <= 0:
+            return self.finish(f, t)
+        po = Image.new("RGBA", (PW, PH), bg + (255,))
+        pd = ImageDraw.Draw(po)
+        if sp.get("line"):
+            M = _metro()
+            pts_all = [p for l in sp["line"] for p in M["lines"][str(l)]]
+            lo0, lo1 = min(p[0] for p in pts_all), max(p[0] for p in pts_all)
+            la0, la1 = min(p[1] for p in pts_all), max(p[1] for p in pts_all)
+            bx = (PW * 0.52, 70, PW - 80, PH - 70)
+            kx = math.cos(math.radians(37.55))
+            scl = min((bx[2] - bx[0]) / ((lo1 - lo0) * kx + 1e-6), (bx[3] - bx[1]) / (la1 - la0 + 1e-6))
+            kd = G.ease_in_out(G.clamp((t - 0.5) / 1.4))
+            for l in sp["line"]:
+                pts = [(bx[0] + (p[0] - lo0) * kx * scl, bx[3] - (p[1] - la0) * scl) for p in M["lines"][str(l)]]
+                n = min(len(pts), max(2, int(len(pts) * kd) + 1))
+                pd.line(pts[:n], fill=pop + (255,), width=20, joint="curve")
+        if sp.get("big"):
+            bt = T(sp["big"], sp.get("big_size", 300), pop, "Black")
+            x = 70 if not sp.get("line") else 70
+            po.alpha_composite(bt, (x, (PH - bt.height) // 2 - 40))
+        if sp.get("caption"):
+            cp = T(sp["caption"], 44, ink, "Bold")
+            po.alpha_composite(cp, (76, PH - cp.height - 64))
+        sh = Image.new("RGBA", (PW + 40, PH + 40), (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle((14, 20, PW + 14, PH + 20), fill=(0, 0, 0, 45))
+        sh = sh.filter(ImageFilter.GaussianBlur(14)); sh.alpha_composite(po, (0, 0))
+        G.blit(f, sh, (S.W / 2, 500 + (1 - k) * 30), k, "mm")
+        self.finish(f, t)
+
+
+TYPES.update({"accent_simple": AccentSimple})

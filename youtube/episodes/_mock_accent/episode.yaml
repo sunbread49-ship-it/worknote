@@ -1,4 +1,4 @@
-title: 포인트 색 조합 샘플
+title: 포인트 심플 샘플
 series_tag: 한 번에 정리
 channel:
   name: 악어새 지식창고
@@ -8,79 +8,45 @@ tts:
   provider: gemini
   voice: Umbriel
 scenes:
-- type: accent
+- type: accent_simple
   palette: neon
-  bg: b
+  bg: a
   ink: c
-  pop: a
-  kicker: 9호선 노선색 후보 · 2006
-  headline: '투표로
-
-    뽑은
-
-    금색'
-  sub: 마젠타 · 골드 · 화이트 · 블랙 중 약 47%
-  art:
-    kind: big
-    text: 47%
-    size: 240
-    dy: -20
-  foot: 서울시 선호도 조사 · 일반인 500명 + 전문가 200명
+  pop: c
+  big: 47%
+  caption: 9호선 색, 투표로 골드
   narration:
   - 9호선 색은 투표로 뽑았어요.
-- type: accent
+- type: accent_simple
   palette: dinner
-  bg: b
-  ink: a
+  bg: a
+  ink: b
   pop: c
-  kicker: 8호선 · 1992년 12월 23일
-  headline: '분홍은
-
-    낭만과
-
-    사랑'
-  sub: 5~8호선 색은 하루 만에 정해졌다
-  art:
-    kind: line
-    lines:
-    - 8
-  foot: 서울지하철건설본부 · 노선별 상징색 확정
+  big: '8'
+  big_size: 380
+  line:
+  - 8
+  caption: 분홍 = 낭만과 사랑
   narration:
   - 8호선 분홍색엔 낭만과 사랑이라는 뜻도 붙었어요.
-- type: accent
+- type: accent_simple
   palette: coffee
   bg: a
   ink: b
   pop: b
-  kicker: 1974.8.15 · 서울 첫 지하철
-  headline: '1호선,
-
-    서울역 →
-
-    청량리'
-  sub: 처음 노선도 색은 빨강이었다
-  art:
-    kind: line
-    lines:
-    - 1
-  foot: 서울 지하철 1호선 개통
+  big: '1974'
+  big_size: 240
+  line:
+  - 1
+  caption: 서울 첫 지하철 1호선
   narration:
   - 이야기는 1974년 8월 15일에 시작돼요.
-- type: accent
+- type: accent_simple
   palette: notyet
   bg: a
   ink: b
   pop: c
-  kicker: 2005년 무렵 · 노선도 색 통일
-  headline: '빨간 1호선이
-
-    사라진 날'
-  sub: 같은 열차, 두 가지 색 → 남색 하나로
-  art:
-    kind: big
-    text: RED
-    size: 240
-    dy: 30
-  foot: 빨강의 귀환은 2011년 신분당선
+  big: RED
+  caption: 빨간 1호선, 노선도에서 퇴장
   narration:
   - 그렇게 빨간 1호선은 노선도에서 사라졌죠.
