@@ -24,21 +24,27 @@ def T(text, size, color, weight="Black", **kw):
 
 
 def overlay(hook, hl, theme, out):
-    acc = {"science": (110, 232, 140), "stock": (255, 204, 40)}[theme]
-    band = {"science": (14, 40, 34), "stock": (1, 66, 43)}[theme]
+    # 2026-11-22 사용자: 지식채널은 어두운 톤 X → 아이보리 종이 띠 + 진한 글씨 + 형광펜 강조
+    if theme == "science":
+        band, line, ink, hlc, pill_bg, pill_fg, stroke = (247, 241, 228), (226, 92, 64), (38, 40, 52), (255, 214, 120), (226, 92, 64), (255, 255, 255), 0
+    else:
+        band, line, ink, hlc, pill_bg, pill_fg, stroke = (1, 66, 43), (255, 204, 40), (255, 255, 255), (255, 204, 40), (255, 204, 40), (20, 22, 30), 6
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    d.rectangle((0, 0, W, 480), fill=band + (235,))
-    d.rectangle((0, 472, W, 480), fill=acc + (255,))
+    d.rectangle((0, 0, W, 480), fill=band + (255 if theme == "science" else 235,))
+    d.rectangle((0, 472, W, 480), fill=line + (255,))
     lines = hook.split("\n")
     y = 95 if len(lines) > 1 else 165
     for ln in lines:
-        t = T(ln, 104, (255, 255, 255), highlight=hl if hl and hl in ln else "", hl_fill=acc, stroke=6, stroke_fill=(0, 0, 0))
+        if theme == "science":
+            t = T(ln, 104, ink, highlight=hl if hl and hl in ln else "", hl_fill=(214, 70, 46))
+        else:
+            t = T(ln, 104, ink, highlight=hl if hl and hl in ln else "", hl_fill=hlc, stroke=stroke, stroke_fill=(0, 0, 0))
         if t.width > W - 70:
             t = t.resize((W - 70, int(t.height * (W - 70) / t.width)), Image.LANCZOS)
         im.alpha_composite(t, ((W - t.width) // 2, y))
         y += t.height + 10
-    pill = G.pill("▶ 풀버전은 아래 영상 버튼", "Black", 44, (20, 22, 30), acc, pad=(26, 12), radius=14)
+    pill = G.pill("▶ 풀버전은 아래 영상 버튼", "Black", 44, pill_fg, pill_bg, pad=(26, 12), radius=14)
     im.alpha_composite(pill, ((W - pill.width) // 2, 1365))
     im.save(out)
 
