@@ -171,10 +171,39 @@ scenes:
       row: 2
     img: bok_10000_b
   narration:
-  - 진짜 비밀은 뒷면이에요. 바탕에 깔린 건 천상열차분야지도. 1395년 태조가 돌에 새기게 한, 조선의 별자리 지도예요.
+  - 진짜 비밀은 뒷면이에요. 별자리 지도와 천문 기구가 가득하죠.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
+- type: sci_kinetic
+  chapter: 만 원의 비밀
+  media:
+    kind: photo
+    file: bn_cheonsang
+    caption: 천상열차분야지도 (국보)
+    side: right
+  items:
+  - text: '1395년
+
+      조선의 별자리 지도'
+    'on': 1
+    highlight: 별자리 지도
+  narration:
+  - 바탕에 깔린 건 천상열차분야지도. 1395년 태조가 돌에 새기게 한, 조선의 별자리 지도예요.
+- type: sci_kinetic
+  chapter: 만 원의 비밀
+  media:
+    kind: photo
+    file: bn_honcheonui_crop
+    caption: 혼천의 (복원품)
+    side: left
+  items:
+  - text: '혼천의 +
+
+      오늘의 망원경'
+    'on': 1
+    highlight: 망원경
+  narration:
   - 그 위엔 천문 관측 기구 혼천의, 그리고 보현산 천문대의 망원경까지.
   - 600년 전 하늘과 오늘의 망원경이, 지폐 한 장에 같이 들어 있는 거죠.
-  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: accent_simple
   chapter: 만 원의 비밀
   palette: dinner
@@ -263,8 +292,22 @@ scenes:
     img: bok_1000_f
   narration:
   - 천 원엔 퇴계 이황이 있어요.
-  - 뒷면엔 겸재 정선의 그림, 계상정거도가 들어 있죠. | 퇴계가 머물며 공부하던 계곡의 서당을 그린 그림이에요.
   credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
+- type: sci_kinetic
+  chapter: 천 원의 그림
+  media:
+    kind: photo
+    file: bn_jeongseon_inwang
+    caption: 겸재 정선 · 인왕제색도
+    side: right
+  items:
+  - text: '천 원 뒷면은
+
+      겸재 정선의 그림'
+    'on': 1
+    highlight: 겸재 정선
+  narration:
+  - 뒷면엔 진경산수화로 유명한 겸재 정선의 그림, 계상정거도가 들어 있죠. | 퇴계가 머물며 공부하던 계곡의 서당을 그린 그림이에요.
 - type: press
   chapter: 사라진 10만 원
   bg:
