@@ -24,7 +24,7 @@ MAP = {
 for ep, v in json.loads((ROOT / "uploads.json").read_text()).items():
     if not isinstance(v, dict) or not v.get("long", {}).get("id") or ep.startswith("ep009"):
         continue
-    shorts = [v[k]["id"] for k in sorted(v) if k.startswith("short") and v[k].get("id")]
+    shorts = [v[k]["id"] for k in sorted(v) if k.startswith(("short", "clip")) and v[k].get("id")]
     if shorts:
         MAP[v["long"]["id"]] = shorts
 
@@ -45,7 +45,7 @@ def main(dry=False):
         for it in items:
             sid, sn, st = it["id"], it["snippet"], it["status"]["privacyStatus"]
             rec = done.setdefault(sid, {})
-            if MARK not in sn.get("description", ""):
+            if MARK not in sn.get("description", "") and f"youtu.be/{lid}" not in sn.get("description", ""):   # 2026-11-22: 구간 쇼츠는 설명에 이미 풀버전 링크
                 body = {"id": sid, "snippet": {"title": sn["title"], "description": line + "\n\n" + sn.get("description", ""),
                                                "categoryId": sn["categoryId"], "tags": sn.get("tags", []),
                                                "defaultLanguage": sn.get("defaultLanguage", "ko"),
