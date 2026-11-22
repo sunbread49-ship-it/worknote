@@ -1,0 +1,16 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.03,0:00:03.42,S,만 원짜리가 처음 나온\N건 1973년이에요.
+Dialogue: 0,0:00:04.09,0:00:07.63,S,원래 계획은 앞면에 석굴암\N부처님, 뒷면엔 불국사였어요.
+Dialogue: 0,0:00:07.63,0:00:09.89,S,그런데 도안 소재가\N문제가 됐고,
+Dialogue: 0,0:00:09.89,0:00:12.66,S,결국 세종대왕과\N근정전으로 바뀌었죠.
+Dialogue: 0,0:00:12.66,0:00:15.77,S,종교계 반발 때문이었다는\N이야기도 있어요.

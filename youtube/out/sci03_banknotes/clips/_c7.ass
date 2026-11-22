@@ -1,0 +1,24 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.06,0:00:01.81,S,천 원엔 퇴계 이황이 있어요.
+Dialogue: 0,0:00:01.81,0:00:04.78,S,왼쪽 기와 건물은\N성균관 명륜당,
+Dialogue: 0,0:00:04.78,0:00:06.54,S,그 위엔 매화가 피어 있죠.
+Dialogue: 0,0:00:06.54,0:00:11.14,S,퇴계는 매화를 유난히 아껴서, 매화\N시만 100편 넘게 남겼어요.
+Dialogue: 0,0:00:11.80,0:00:15.96,S,명륜당은 조선 최고 교육기관,\N성균관의 강의실이에요.
+Dialogue: 0,0:00:15.96,0:00:18.61,S,지금도 서울 명륜동에\N그대로 있죠.
+Dialogue: 0,0:00:18.61,0:00:21.78,S,퇴계는 이 성균관의 최고\N책임자, 대사성을 지냈어요.
+Dialogue: 0,0:00:22.44,0:00:25.14,S,뒷면엔 진경산수화로 유명한\N겸재 정선의 그림,
+Dialogue: 0,0:00:25.14,0:00:26.56,S,계상정거도가 들어 있죠.
+Dialogue: 0,0:00:26.56,0:00:28.32,S,가운데 작은 집 보이시나요?
+Dialogue: 0,0:00:28.32,0:00:31.19,S,퇴계가 머물며 공부하던\N계곡의 서당이에요.
+Dialogue: 0,0:00:31.85,0:00:35.58,S,퇴계는 훗날 안동에 도산서당을\N짓고 제자들을 가르쳤어요.
+Dialogue: 0,0:00:35.58,0:00:38.06,S,이 서당도 지금까지 그\N자리에 남아 있죠.

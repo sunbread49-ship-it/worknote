@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.04,0:00:02.85,S,지금 쓰는 만 원은\N2007년에 나왔어요.
+Dialogue: 0,0:00:02.85,0:00:04.01,S,앞면엔 세종대왕,
+Dialogue: 0,0:00:04.01,0:00:06.18,S,그 왼쪽 초록\N산봉우리 보이시죠?
+Dialogue: 0,0:00:06.18,0:00:09.50,S,임금의 자리 뒤에 두던 병풍\N그림, 일월오봉도예요.
+Dialogue: 0,0:00:10.17,0:00:11.72,S,실제 일월오봉도예요.
+Dialogue: 0,0:00:11.72,0:00:15.00,S,해와 달, 다섯 봉우리,\N그리고 소나무와 물결까지.
+Dialogue: 0,0:00:15.00,0:00:16.22,S,경복궁 같은 궁궐에 가면,
+Dialogue: 0,0:00:16.22,0:00:18.29,S,왕의 자리 뒤에 이 병풍이\N그대로 서 있어요.

@@ -1,0 +1,17 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.05,0:00:01.75,S,그리고 2009년 6월 23일,
+Dialogue: 0,0:00:01.75,0:00:03.60,S,엄마가 직접 지폐\N앞면에 나왔어요.
+Dialogue: 0,0:00:03.60,0:00:04.39,S,오만 원권이죠.
+Dialogue: 0,0:00:04.39,0:00:06.63,S,원화 지폐 최초의\N여성 인물이고,
+Dialogue: 0,0:00:06.63,0:00:10.77,S,1973년 만 원 이후 36년\N만에 나온 최고액권이었어요.
+Dialogue: 0,0:00:10.77,0:00:13.50,S,그래서 지갑 속엔, 엄마와 아들이\N함께 들어 있는 셈이에요.

@@ -1,0 +1,17 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.05,0:00:02.29,S,오만 원 뒷면엔 또\N다른 특징이 있어요.
+Dialogue: 0,0:00:02.29,0:00:03.93,S,그림을 세로로 그렸거든요.
+Dialogue: 0,0:00:03.93,0:00:06.99,S,달밤의 매화를 그린\N어몽룡의 월매도와,
+Dialogue: 0,0:00:06.99,0:00:10.16,S,바람에 흔들리는 대나무,\N이정의 풍죽도예요.
+Dialogue: 0,0:00:10.83,0:00:14.71,S,지폐를 세워서 실제\N월매도와 비교해 볼까요?
+Dialogue: 0,0:00:14.71,0:00:19.09,S,부러진 굵은 줄기에서, 곧게\N뻗은 매화 가지. 똑같죠.
