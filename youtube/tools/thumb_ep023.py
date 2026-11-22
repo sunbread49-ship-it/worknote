@@ -1,5 +1,5 @@
-"""EP023 '폭락 직전에만 산 남자' 썸네일 10종 (주식 채널 어두운 톤 · 2026-11-22 CCN: New가 3초 안에 이해 · 결과는 숨기는 안 위주)
-  python tools/thumb_ep023.py → out/ep023_worst_timing/thumbs10/T01~T10 + 비교표
+"""EP023 '나스닥 -20%, 지금 사면?' 썸네일 10종 (11/22 사용자: 꼭대기 X → 지금이 바닥? 현금 넣어 볼까 느낌) (주식 채널 어두운 톤 · 2026-11-22 CCN: New가 3초 안에 이해 · 결과는 숨기는 안 위주)
+  python tools/thumb_ep023.py → out/ep023_nasdaq_minus20/thumbs10/T01~T10 + 비교표
 """
 import csv
 import sys
@@ -13,12 +13,13 @@ import thumbs as TH  # noqa: E402
 from engine import draw as G  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "out/ep023_worst_timing/thumbs10"
+OUT = ROOT / "out/ep023_nasdaq_minus20/thumbs10"
 W, H = TH.W, TH.H
 YEL, RED, WHITE, MINT, GOLD = (255, 214, 40), (255, 60, 60), (255, 255, 255), (90, 230, 170), (240, 190, 70)
-PEAKS = [("2000-03-24", "닷컴버블"), ("2007-10-09", "리먼"), ("2018-09-20", "미중 무역전쟁"), ("2020-02-19", "코로나"),
-         ("2022-01-03", "금리 쇼크"), ("2025-02-19", "관세 폭탄"), ("2026-01-27", "이란 전쟁")]
-SPX = {r["date"]: float(r["close"]) for r in csv.DictReader(open(ROOT / "assets/data/spx_daily.csv")) if r["date"] >= "1999-06"}
+PEAKS = [("2000-04-12", "닷컴"), ("2008-01-23", "금융위기"), ("2018-12-21", "무역전쟁"), ("2020-03-12", "코로나"),
+         ("2022-03-14", "금리"), ("2025-04-04", "관세"), ("2026-11-20", "지금")]
+SPX = {r["date"]: float(r["close"]) for r in csv.DictReader(open(ROOT / "assets/data/ndx_daily.csv")) if r["date"] >= "1999-06"}
+YEARS = ["1987", "1990", "1998", "2000", "2008", "2018", "2020", "2022", "2025"]
 
 
 def chart(w, h, start="1999-06-01", end="2026-11-20", peaks=True, color=WHITE, lw=7, dot=24, labels=False, log=True):
@@ -121,6 +122,20 @@ def make(sp):
         TH.shadowed(f, b, (60, H - b.height - 60))
         m = mascot(600)
         f.alpha_composite(m, (W - m.width - 10, H - m.height))
+    elif v == "years":   # 9개 연도 칸 + 질문
+        cw = 190
+        x0 = (W - 9 * cw - 8 * 12) // 2
+        for i, y in enumerate(YEARS):
+            c = Image.new("RGBA", (cw, cw), (0, 0, 0, 0))
+            ImageDraw.Draw(c).rounded_rectangle((0, 0, cw - 1, cw - 1), 24, fill=(RED if y in sp.get("red", []) else (40, 46, 66)) + (255,))
+            t = TH.T(y, 58, WHITE)
+            c.alpha_composite(t, ((cw - t.width) // 2, 30))
+            q = TH.T(sp.get("cell", "?"), 70, YEL)
+            c.alpha_composite(q, ((cw - q.width) // 2, 100))
+            f.alpha_composite(c, (x0 + i * (cw + 12), 430))
+        TH.shadowed(f, TH.fit(sp["top"], 150, 1800, color=WHITE, hl=sp.get("hl_top", ""), hl_color=RED), (W / 2, 60), "mt")
+        b = TH.fit(sp["bottom"], 170, 1800, color=YEL, hl=sp.get("hl", ""), hl_color=RED)
+        TH.shadowed(f, b, (W / 2, H - b.height - 60), "mt")
     elif v == "bubble":
         ch = chart(1840, 640)
         f.alpha_composite(ch, (40, 330))
@@ -136,16 +151,16 @@ def make(sp):
 
 
 SPECS = [
-    {"name": "T01", "v": "chart", "top": "폭락 직전에만 7번 샀다", "hl_top": "폭락 직전", "bottom": "26년 뒤 계좌는?", "hl": "계좌"},
-    {"name": "T02", "v": "three", "top": "폭락 7번, 세 사람 중\n누가 제일 벌었을까?", "hl": "누가"},
-    {"name": "T03", "v": "big", "top": "꼭대기에서만 샀는데", "big": "+141%", "bottom": "역사상 최악의 타이밍 26년"},
-    {"name": "T04", "v": "dates", "top": "하필 이날만 샀다", "hl": "이날만", "bottom": "26년 뒤\n결과는?"},
-    {"name": "T05", "v": "chart", "labels": True, "top": "최악의 타이밍으로 26년", "hl_top": "최악", "bottom": "버텼더니…", "m": 380},
-    {"name": "T06", "v": "vs", "top": "신의 타이밍 vs 매달 22만 원", "hl": "매달 22만 원", "l": ("바닥만", "???", "폭락 바닥만 7번"), "r": ("매달", "???", "아무 생각 없이 26년")},
-    {"name": "T07", "v": "now", "tag": "나스닥 한 주 -10%", "bottom": "지금 사면\n바보일까?", "hl": "바보"},
-    {"name": "T08", "v": "big", "top": "폭락 직전에만 7,000만 원", "big": "→ ???", "big_col": YEL, "bottom": "26년 뒤 진짜 계좌 공개"},
-    {"name": "T09", "v": "bubble", "bubble": "폭락 직전에 사면 망하는 거 아냐?", "bottom": "26년 데이터로 해 봤다", "hl": "해 봤다"},
-    {"name": "T10", "v": "dates", "top": "운 최악인 투자자", "hl": "최악", "bottom": "그래도\n돈 벌었을까?"},
+    {"name": "T01", "v": "now", "tag": "나스닥 고점 대비 -20%", "bottom": "지금이\n바닥일까?", "hl": "바닥"},
+    {"name": "T02", "v": "bubble", "bubble": "현금, 슬슬 넣어 볼까?", "bottom": "나스닥 -20% 때 산 9번의 결말", "hl": "9번"},
+    {"name": "T03", "v": "years", "top": "나스닥 -20%, 그날 산 사람들", "hl_top": "-20%", "bottom": "9번 중 몇 번이 바닥?", "hl": "몇 번"},
+    {"name": "T04", "v": "now", "tag": "나스닥 -20%", "bottom": "지금이니!!\n현금 넣을 때?", "hl": "지금이니!!"},
+    {"name": "T05", "v": "vs", "top": "나스닥 -20%, 당신의 선택은?", "hl": "-20%", "l": ("지금 산다", "???", "-20% 날 바로"), "r": ("더 기다린다", "???", "바닥 확인하고")},
+    {"name": "T06", "v": "big", "top": "나스닥 -20%에 샀는데", "big": "13년?", "big_col": RED, "bottom": "본전까지 걸린 최악의 시간"},
+    {"name": "T07", "v": "years", "top": "지금 사면 천재? 바보?", "hl_top": "천재?", "bottom": "과거 9번이 답한다", "hl": "9번", "cell": "?"},
+    {"name": "T08", "v": "chart", "start": "1999-06-01", "top": "40년 동안 딱 9번 온 기회?", "hl_top": "9번", "bottom": "지금이 10번째", "hl": "10번째"},
+    {"name": "T09", "v": "bubble", "bubble": "바닥 확인하고 살래…", "bottom": "그러다 못 산 사람 9번 중 4번", "hl": "9번 중 4번"},
+    {"name": "T10", "v": "now", "tag": "나스닥 한 주 -10% · 고점 대비 -20%", "bottom": "물 타? 기다려?\n데이터로 답함", "hl": "데이터"},
 ]
 
 if __name__ == "__main__":
