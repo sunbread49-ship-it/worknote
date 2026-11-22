@@ -65,7 +65,7 @@ def t1():
     d = ImageDraw.Draw(im)
     f = F(112)
     head_lines(d, 300, f, (255, 214, 0), (255, 214, 0), stroke=12, sc=(0, 0, 0))
-    v = cover_burned(video(W, 1.25), (255, 255, 255), 0)  # 띠 없이, 자막 박스가 덮음
+    v = cover_burned(video(W, 1.35), (255, 255, 255), 0)  # 띠 없이, 자막 박스가 덮음
     vy = 540
     im.paste(v, (0, vy))
     f2 = F(92, "Bold")
@@ -84,7 +84,7 @@ def t2():
     d = ImageDraw.Draw(im)
     head_lines(d, 230, F(104), (255, 255, 255), (34, 229, 255))
     d.rectangle((0, 422, W, 430), fill=(34, 229, 255))
-    v = cover_burned(video(W))
+    v = cover_burned(video(W, 1.35))
     vy = 500
     im.paste(v, (0, vy))
     f2 = F(120)
@@ -175,7 +175,54 @@ def t5():
     return im
 
 
-ims = [t() for t in (t1, t2, t3, t4, t5)]
+
+def crop_box(w, h, fx=0.5, keep=0.82):
+    # 원본 위쪽 82%만 사용(아래 원본 자막은 잘라냄) → 세로로 긴 칸에 꽉 채움
+    sh = int(SRC.size[1] * keep)
+    sw = int(sh * w / h)
+    x = int(max(0, min(SRC.size[0] - sw, SRC.size[0] * fx - sw / 2)))
+    return SRC.crop((x, 0, x + sw, sh)).resize((w, h), Image.LANCZOS)
+
+
+# 03 빅 블랙 (본영상 꽉 차게)
+def tb1():
+    im = Image.new("RGB", (W, H), (0, 0, 0))
+    d = ImageDraw.Draw(im)
+    f = F(96)
+    d.text(((W - f.getlength(HEAD[0])) / 2, 40), HEAD[0], font=f, fill=(255, 214, 0))
+    parts = [(HEAD[1][:HEAD[1].index(HL)], 0), (HL, 1)]
+    draw_parts(d, (W - text_w(parts, f)) / 2, 160, parts, f, (255, 255, 255), (240, 50, 40))
+    vy, vh = 300, 1180
+    im.paste(crop_box(W, vh, 0.7), (0, vy))
+    f2 = F(118)
+    tw = text_w(SUB, f2)
+    draw_parts(d, (W - tw) / 2, vy + vh + 40, SUB, f2, (255, 255, 255), (255, 214, 0), 8)
+    label(im, 3, "빅 블랙 (꽉 찬 화면)")
+    return im
+
+
+# 04 빅 풀스크린 (화면 전체 + 위아래 그라데이션)
+def tb2():
+    im = crop_box(W, H, 0.7).convert("RGBA")
+    g = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(g)
+    for y in range(520):
+        gd.line((0, y, W, y), fill=(0, 0, 0, int(215 * (1 - y / 520))))
+    for y in range(1300, H):
+        gd.line((0, y, W, y), fill=(0, 0, 0, int(215 * (y - 1300) / (H - 1300))))
+    im = Image.alpha_composite(im, g).convert("RGB")
+    d = ImageDraw.Draw(im)
+    head_lines(d, 250, F(106), (255, 255, 255), (255, 214, 0), stroke=9)
+    f2 = F(118)
+    tw = text_w(SUB, f2)
+    by = 1400
+    d.rounded_rectangle(((W - tw) / 2 - 36, by - 10, (W + tw) / 2 + 36, by + 140), 24, fill=(255, 214, 0))
+    draw_parts(d, (W - tw) / 2, by, SUB, f2, (10, 10, 10), (220, 30, 30))
+    label(im, 4, "빅 풀스크린")
+    return im
+
+
+ims = [t() for t in (t1, t2, tb1, tb2, t5)]
 for i, im in enumerate(ims, 1):
     im.save(D + f"tpl{i}.jpg", quality=90)
 sw = 540
