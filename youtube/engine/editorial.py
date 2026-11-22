@@ -3481,3 +3481,84 @@ class Journal(Editorial):
 
 
 TYPES.update({"journal": Journal})
+
+
+# ════════════════════════════════════════════════════════════════
+# doc — 공시 원문 캡처 위에 형광펜 (2026-11-22 · 심플·깔끔 레퍼런스 변주)
+#   file: assets/photos/<file>.png · hl: [x0,y0,x1,y1](원본 px) · on: 형광펜 줄 번호
+#   kicker · title(highlight) · tag: 형광펜 옆 메모 · credit (기본: 금융감독원 DART)
+@lru_cache(maxsize=16)
+def _doc_img(name):
+    from pathlib import Path
+    p = Path(__file__).resolve().parent.parent / "assets" / "photos" / name
+    for ext in ("", ".png", ".jpg"):
+        if Path(str(p) + ext).exists():
+            return Image.open(str(p) + ext).convert("RGBA")
+    raise FileNotFoundError(name)
+
+
+class Doc(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        self.paper = True
+        ink, acc = NAVY, CORAL
+        # 왼쪽 위 작은 머리말 + 가는 선
+        y0 = 150
+        if sp.get("kicker"):
+            G.blit(f, T(sp["kicker"], 30, (120, 112, 98), "Bold"), (230, y0), G.appear(t, 0, 0.3))
+            d = ImageDraw.Draw(f)
+            d.line((230, y0 + 50, 230 + 120, y0 + 50), fill=acc, width=4)
+        if sp.get("title"):
+            G.blit(f, T(sp["title"], 60, ink, "Black", highlight=sp.get("highlight", ""), hl_fill=acc), (230, y0 + 70), G.appear(t, 0.05, 0.3))
+        im = _doc_img(sp["file"])
+        hl = list(sp["hl"]) if sp.get("hl") else None
+        if sp.get("crop"):   # 원본 세로 구간만 잘라 크게 (y0, y1)
+            c0, c1 = sp["crop"]
+            im = im.crop((0, c0, im.width, min(im.height, c1)))
+            if hl:
+                hl[1] -= c0; hl[3] -= c0
+        bw, bh = sp.get("box", (1460, 540))
+        k0 = min(bw / im.width, bh / im.height)
+        # 형광펜 쪽으로 천천히 다가가기
+        zk = 1 + 0.05 * G.ease_in_out(min(1, t / max(1.0, self.dur)))
+        w, h = int(im.width * k0 * zk), int(im.height * k0 * zk)
+        doc = im.resize((w, h), Image.LANCZOS)
+        cx, cy = S.W / 2, sp.get("y", 625)
+        if hl:
+            hx, hy = (hl[0] + hl[2]) / 2 * k0 * zk, (hl[1] + hl[3]) / 2 * k0 * zk
+            dx, dy = (w / 2 - hx) * (zk - 1) * 4, (h / 2 - hy) * (zk - 1) * 4
+        else:
+            dx = dy = 0
+        card = Image.new("RGBA", (w + 40, h + 40), (0, 0, 0, 0))
+        card.alpha_composite(Image.new("RGBA", (w + 20, h + 20), (255, 255, 255, 255)), (0, 0))
+        card.alpha_composite(doc, (10, 10))
+        if hl:
+            ts = self.line_start(sp.get("on", 1))
+            kk = G.ease_out((t - ts) / 0.5)
+            if kk > 0:
+                x0, y_0, x1, y_1 = [v * k0 * zk + 10 for v in hl]
+                lay = Image.new("RGBA", card.size, (0, 0, 0, 0))
+                ld = ImageDraw.Draw(lay)
+                ld.rectangle((x0, y_0, x0 + (x1 - x0) * kk, y_1), fill=acc + (60,))
+                ld.line((x0, y_1 + 2, x0 + (x1 - x0) * kk, y_1 + 2), fill=acc + (255,), width=6)
+                card.alpha_composite(lay)
+        sh = Image.new("RGBA", card.size, (0, 0, 0, 0))
+        ImageDraw.Draw(sh).rectangle((14, 18, w + 26, h + 30), fill=(40, 34, 24, 60))
+        sh = sh.filter(ImageFilter.GaussianBlur(10))
+        sh.alpha_composite(card)
+        sh = sh.rotate(sp.get("tilt", -0.8), resample=Image.BICUBIC, expand=True)
+        G.blit(f, sh, (cx + dx, cy + dy), G.appear(t, 0.1, 0.35), "mm")
+        if sp.get("tag") and hl:
+            ts = self.line_start(sp.get("on", 1))
+            tg = G.pill(sp["tag"], "Black", 44, S.WHITE08 if S.THEME == "08" else (255, 255, 255), acc, pad=(28, 12))
+            G.blit(f, tg, (S.W - 150, sp.get("tag_y", y0 + 140)), G.appear(t, ts + 0.45, 0.25), "rb")
+        cr = sp.get("credit") or "자료: 금융감독원 전자공시 DART · 2025 사업보고서"
+        G.blit(f, T(cr, 22, (120, 112, 98), "SemiBold"), (cx + w / 2, cy + h / 2 + 34), G.appear(t, 0.3, 0.3), "rt")
+        self.draw_common(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(self.spec.get("on", 1)) + 0.1, "pop", 0.3)] if self.spec.get("hl") else []
+
+
+TYPES.update({"doc": Doc})
