@@ -1,16 +1,32 @@
 title: 지폐 속 숨은 그림 | 만 원의 별자리 · 엄마와 아들 · 끝내 못 나온 10만 원
 series_tag: 한 번에 정리
 clip_theme: science
-channel: {name: 악어새 지식창고, disclaimer_corner: '', outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다., signature: '세상의 지식, 악어새가 쏙쏙 골라 드릴게요.', tone: ivory}
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  tone: ivory
 tts:
   provider: gemini
   voice: Umbriel
   speed: 빠르게
   tempo: 1.08
-  say: {오천 원: 오천 원, 혼천의: 혼천의, 68mm: 육십팔 밀리미터, 6mm: 육 밀리미터}
+  say:
+    오천 원: 오천 원
+    혼천의: 혼천의
+    68mm: 육십팔 밀리미터
+    6mm: 육 밀리미터
 bgm:
   volume: 0.18
-  chapters: {인트로: tense, 만 원의 비밀: hope, 엄마와 아들: hope, 천 원의 그림: drive, 사라진 10만 원: tense, 지폐 키 재기: drive, 정리: hope}
+  chapters:
+    인트로: tense
+    만 원의 비밀: hope
+    엄마와 아들: hope
+    천 원의 그림: drive
+    사라진 10만 원: tense
+    지폐 키 재기: drive
+    정리: hope
 chapter_titles:
   인트로: 만 원 뒷면, 보신 적 있나요
   만 원의 비밀: 1973 첫 만 원 · 세종대왕 · 천상열차분야지도 · 혼천의
@@ -30,25 +46,49 @@ scenes:
     motif: 별자리 지도 · 혼천의 · 망원경
     'on': 1
     items:
-    - {text: 600년 넘은 별자리 지도, xy: [0.3, 0.5], 'on': 2}
+    - text: 600년 넘은 별자리 지도
+      xy:
+      - 0.3
+      - 0.5
+      'on': 2
+    img: bok_10000_b
   narration:
   - 지갑 속 만 원짜리, 뒷면 자세히 보신 적 있나요?
   - 여기엔 600년도 넘은 별자리 지도가 숨어 있어요. | 그리고 원래 이 지폐엔, 세종대왕 대신 부처님이 들어갈 뻔했죠.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: banknote
   chapter: 인트로
   mode: pair
   notes:
-  - {value: 5000, person: 율곡 이이, 'on': 1}
-  - {value: 50000, person: 신사임당, 'on': 1, offset: 0.4}
+  - value: 5000
+    person: 율곡 이이
+    'on': 1
+    img: bok_5000_f
+  - value: 50000
+    person: 신사임당
+    'on': 1
+    offset: 0.4
+    img: bok_50000_f
   memo: 지갑 속에 엄마와 아들이?
   memo_on: 1
-  guide: {text: "한 번도 못 나온\n지폐도 있어요!", 'on': 2, xy: [120, 1000], size: 150}
+  guide:
+    text: '한 번도 못 나온
+
+      지폐도 있어요!'
+    'on': 2
+    xy:
+    - 120
+    - 1000
+    size: 150
   narration:
   - 게다가 지갑 속엔 엄마와 아들이 함께 들어 있고,
   - 세상에 한 번도 나오지 못한 지폐도 있어요. | 오늘은 지폐 속에 숨은 이야기를 하나씩 펼쳐 볼게요.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: sci_title
   kicker: 악어새 지식창고 · 한 번에
-  title: "지폐 속\n숨은 그림"
+  title: '지폐 속
+
+    숨은 그림'
   highlight: 숨은 그림
   subtitle: 만 원의 별자리 · 엄마와 아들 · 끝내 못 나온 10만 원
   narration:
@@ -63,8 +103,23 @@ scenes:
   caption: 첫 만 원, 원래 도안은 석굴암
   narration:
   - 만 원짜리가 처음 나온 건 1973년이에요.
+- type: banknote
+  chapter: 만 원의 비밀
+  mode: pair
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
+  notes:
+  - value: 10000
+    img: bok_10000_1973_f
+    'on': 1
+  - value: 10000
+    img: bok_10000_1973_b
+    'on': 1
+    offset: 0.4
+  memo: 1973년 첫 만 원 · 세종대왕과 경복궁 근정전
+  memo_on: 2
+  narration:
   - 원래 계획은 앞면에 석굴암 부처님, 뒷면엔 불국사였어요.
-  - 그런데 도안 소재가 문제가 됐고, 결국 세종대왕으로 바뀌었죠. | 종교계 반발 때문이었다는 이야기도 있어요.
+  - 그런데 도안 소재가 문제가 됐고, 결국 세종대왕과 근정전으로 바뀌었죠. | 종교계 반발 때문이었다는 이야기도 있어요.
 - type: banknote
   chapter: 만 원의 비밀
   notes:
@@ -73,10 +128,17 @@ scenes:
     motif: 일월오봉도
     'on': 1
     items:
-    - {text: 왕의 자리 뒤 병풍 그림, xy: [0.12, 0.86], 'on': 2, under: true}
+    - text: 왕의 자리 뒤 병풍 그림
+      xy:
+      - 0.12
+      - 0.86
+      'on': 2
+      under: true
+    img: bok_10000_f
   narration:
   - 지금 쓰는 만 원은 2007년에 나왔어요. 앞면엔 세종대왕,
   - 그 뒤엔 임금의 자리 뒤에 두던 병풍 그림, 일월오봉도가 있어요.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: banknote
   chapter: 만 원의 비밀
   notes:
@@ -85,13 +147,34 @@ scenes:
     motif: 천상열차분야지도 · 혼천의 · 망원경
     'on': 1
     items:
-    - {text: 천상열차분야지도, xy: [0.25, 0.45], 'on': 1, under: true, row: 0}
-    - {text: 혼천의, xy: [0.55, 0.55], 'on': 2, under: true, row: 1}
-    - {text: 보현산 천문대 망원경, xy: [0.82, 0.45], 'on': 2, offset: 0.8, under: true, row: 2}
+    - text: 천상열차분야지도
+      xy:
+      - 0.25
+      - 0.45
+      'on': 1
+      under: true
+      row: 0
+    - text: 혼천의
+      xy:
+      - 0.55
+      - 0.55
+      'on': 2
+      under: true
+      row: 1
+    - text: 보현산 천문대 망원경
+      xy:
+      - 0.82
+      - 0.45
+      'on': 2
+      offset: 0.8
+      under: true
+      row: 2
+    img: bok_10000_b
   narration:
   - 진짜 비밀은 뒷면이에요. 바탕에 깔린 건 천상열차분야지도. 1395년 태조가 돌에 새기게 한, 조선의 별자리 지도예요.
   - 그 위엔 천문 관측 기구 혼천의, 그리고 보현산 천문대의 망원경까지.
   - 600년 전 하늘과 오늘의 망원경이, 지폐 한 장에 같이 들어 있는 거죠.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: accent_simple
   chapter: 만 원의 비밀
   palette: dinner
@@ -111,28 +194,46 @@ scenes:
     person: 율곡 이이
     motif: 오죽헌 · 오죽
     'on': 1
+    img: bok_5000_f
   narration:
   - 다음은 오천 원. 율곡 이이가 있죠. 2006년에 지금 모습으로 바뀌었어요.
   - 그런데 뒷면을 뒤집으면, 율곡의 어머니가 그린 그림이 들어 있어요.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: sci_kinetic
   chapter: 엄마와 아들
-  media: {kind: photo, file: bn_chochung, caption: 신사임당 초충도, side: right}
+  media:
+    kind: photo
+    file: bn_chochung
+    caption: 신사임당 초충도
+    side: right
   items:
-  - {text: "아들 지폐 뒤에\n엄마의 그림", 'on': 1, highlight: 엄마의 그림}
+  - text: '아들 지폐 뒤에
+
+      엄마의 그림'
+    'on': 1
+    highlight: 엄마의 그림
   narration:
   - 바로 신사임당의 초충도예요. 풀과 벌레를 섬세하게 그린 그림이죠.
 - type: banknote
   chapter: 엄마와 아들
   mode: pair
   notes:
-  - {value: 5000, person: 율곡 이이, 'on': 1}
-  - {value: 50000, person: 신사임당, 'on': 1, offset: 0.4}
+  - value: 5000
+    person: 율곡 이이
+    'on': 1
+    img: bok_5000_f
+  - value: 50000
+    person: 신사임당
+    'on': 1
+    offset: 0.4
+    img: bok_50000_f
   memo: 지갑 속 엄마와 아들
   memo_on: 3
   narration:
   - 그리고 2009년 6월 23일, 엄마가 직접 지폐 앞면에 나왔어요. 오만 원권이죠.
   - 원화 지폐 최초의 여성 인물이고, 1973년 만 원 이후 36년 만에 나온 최고액권이었어요.
   - 그래서 지갑 속엔, 엄마와 아들이 함께 들어 있는 셈이에요.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: banknote
   chapter: 엄마와 아들
   notes:
@@ -141,10 +242,17 @@ scenes:
     motif: 월매도 · 풍죽도
     'on': 1
     items:
-    - {text: 뒷면을 세로로 그렸다, xy: [0.5, 0.5], 'on': 1, under: true}
+    - text: 뒷면을 세로로 그렸다
+      xy:
+      - 0.5
+      - 0.5
+      'on': 1
+      under: true
+    img: bok_50000_b
   narration:
   - 오만 원 뒷면엔 또 다른 특징이 있어요. 그림을 세로로 그렸거든요.
   - 달밤의 매화를 그린 월매도와, 바람에 흔들리는 대나무 풍죽도예요.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: banknote
   chapter: 천 원의 그림
   notes:
@@ -152,26 +260,44 @@ scenes:
     person: 퇴계 이황
     motif: 뒷면 · 정선 계상정거도
     'on': 1
+    img: bok_1000_f
   narration:
   - 천 원엔 퇴계 이황이 있어요.
   - 뒷면엔 겸재 정선의 그림, 계상정거도가 들어 있죠. | 퇴계가 머물며 공부하던 계곡의 서당을 그린 그림이에요.
-- type: banknote
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
+- type: press
   chapter: 사라진 10만 원
-  notes:
-  - value: 100000
-    person: 백범 김구
-    motif: 뒷면 · 대동여지도
+  bg:
+    kind: paper
+  title: 끝내 나오지 못한 십만 원
+  highlight: 십만 원
+  clips:
+  - outlet: 한국은행 보도자료
+    date: 2007.12.31
+    headline: 100,000원권 및 50,000원권 2009년 상반기 중 발행 의결
+    hl: 100,000원권
     'on': 1
-  memo: 2007년 말 발행 결정
-  memo_on: 2
+  - outlet: 아주경제
+    date: 2008.12.17
+    headline: 정부, 10만원권 발행 무기보류 확정
+    hl: 무기보류
+    'on': 2
   narration:
   - 그리고 끝내 세상에 나오지 못한 지폐가 있어요. 십만 원권이에요.
   - 2007년 말, 앞면은 백범 김구, 뒷면엔 대동여지도를 넣기로 정했죠.
 - type: sci_kinetic
   chapter: 사라진 10만 원
-  media: {kind: photo, file: bn_daedong, caption: 대동여지도, side: right}
+  media:
+    kind: photo
+    file: bn_daedong
+    caption: 대동여지도
+    side: right
   items:
-  - {text: "대동여지도에\n독도가 없다?", 'on': 1, highlight: 독도}
+  - text: '대동여지도에
+
+      독도가 없다?'
+    'on': 1
+    highlight: 독도
   narration:
   - 그런데 문제가 터졌어요. 뒷면에 넣을 대동여지도 목판본에, 독도가 없었던 거예요.
   - 독도를 그려 넣자니 원본에 없는 걸 넣는다는 비판, 빼자니 독도 빠진 지도라는 비판.
@@ -182,7 +308,7 @@ scenes:
   bg: a
   ink: b
   pop: b
-  big: '100,000'
+  big: 100,000
   big_size: 180
   caption: 끝내 나오지 못한 지폐
   narration:
@@ -193,25 +319,40 @@ scenes:
   title: 지폐 키 재기
   highlight: 키 재기
   notes:
-  - {value: 50000, 'on': 1}
-  - {value: 10000, 'on': 1}
-  - {value: 5000, 'on': 1}
-  - {value: 1000, 'on': 1}
+  - value: 50000
+    'on': 1
+    img: bok_50000_f
+  - value: 10000
+    'on': 1
+    img: bok_10000_f
+  - value: 5000
+    'on': 1
+    img: bok_5000_f
+  - value: 1000
+    'on': 1
+    img: bok_1000_f
   memo: 세로는 모두 68mm, 가로는 6mm씩
   memo_on: 2
   narration:
   - 마지막으로 지폐 크기예요. 네 장 모두, 세로는 68mm로 똑같아요.
   - 그런데 가로는 천 원 136, 오천 원 142, 만 원 148, 오만 원 154. 정확히 6mm씩 길어져요.
   - 지갑 속에서 지폐들이, 키 순서대로 줄 서 있는 셈이죠.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
 - type: sci_kinetic
   chapter: 정리
   items:
-  - {text: "다음 지폐는\n뒷면부터!", 'on': 2, highlight: 뒷면부터}
+  - text: '다음 지폐는
+
+      뒷면부터!'
+    'on': 2
+    highlight: 뒷면부터
   narration:
   - 정리할게요. 만 원엔 600년 전 하늘, 오천 원과 오만 원엔 엄마와 아들, 그리고 섬 하나 때문에 사라진 십만 원.
   - 다음에 지폐 받으시면, 뒷면부터 한 번 보세요.
 - type: sci_outro
-  heading: "새 지폐 인물,\n누가 좋을까요?"
+  heading: '새 지폐 인물,
+
+    누가 좋을까요?'
   highlight: 누가
   sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
   subscribe_on: 2

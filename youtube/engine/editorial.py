@@ -4571,6 +4571,15 @@ BN = {1000: ((96, 150, 214), 136), 5000: ((222, 128, 84), 142), 10000: ((96, 168
 
 def _note_img(n, scale=7.0):
     col, mm = BN[n["value"]]
+    if n.get("img"):   # 2026-11-22 사용자: 일러스트 X → 한국은행 공식 이미지 ('보기/SPECIMEN' 표시 포함 · 화폐도안 이용기준)
+        from pathlib import Path as _P
+        src = Image.open(_P(__file__).resolve().parents[1] / "assets/photos" / (n["img"] + ".jpg")).convert("RGB")
+        w = int(mm * scale)
+        h = int(src.height * w / src.width)
+        im = src.resize((w, h), Image.LANCZOS).filter(ImageFilter.UnsharpMask(1.6, 80, 2)).convert("RGBA")
+        m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, w - 1, h - 1), 10, fill=255)
+        im.putalpha(m)
+        return im
     w, h = int(mm * scale), int(68 * scale)
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
@@ -4611,16 +4620,16 @@ class Banknote(Editorial):
         mode = sp.get("mode", "single")
         notes = sp["notes"]
         if mode == "sizes":
-            x0, y0 = 300, 250
-            for i, n in enumerate(sorted(notes, key=lambda n: -n["value"])):
+            x0, y0 = 260, 240
+            for i, n in enumerate(sorted(notes, key=lambda n: n["value"])):   # 작은 것 위 → 큰 것 아래 (오른쪽 끝이 계단처럼 보이게)
                 k = G.ease_out((t - self.line_start(n.get("on", 1)) - n.get("offset", i * 0.3)) / 0.5)
                 if k <= 0:
                     continue
-                im = _note_img(n, 6.0)
-                y = y0 + i * 95
+                im = _note_img(n, 5.2)
+                y = y0 + i * 105
                 G.blit(f, im, (x0 + (1 - k) * -200, y), k, "lt")
                 mm = BN[n["value"]][1]
-                G.blit(f, T(f"가로 {mm}mm", 34, (60, 60, 70), "Black"), (x0 + im.width - 40 + (1 - k) * -200, y + 22), k, "rt")
+                G.blit(f, T(f"가로 {mm}mm", 40, (60, 60, 70), "Black"), (x0 + im.width + 28 + (1 - k) * -200, y + 30), k, "lt")
             if sp.get("memo"):
                 G.blit(f, _ink(sp["memo"], "NanumPenScript-Regular.ttf", 58, tone["acc"]), (S.W - 120, 210), G.appear(t, self.line_start(sp.get("memo_on", 2)), 0.4), "rt")
         else:
