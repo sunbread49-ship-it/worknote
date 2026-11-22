@@ -591,3 +591,116 @@ scenes:
   - 여러분은 세 사람 중 누구에 가까우세요? 지금 이 폭락장에서, 어떻게 하실 건가요?
   - 댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.
   - 오늘도 감 말고, 숫자로 투자하세요.
+thumbs10:
+- name: T01
+  p: P01
+  photo: nyse_floor
+  focus:
+  - 0.5
+  - 0.45
+  top: 폭락 직전에만 7번 샀다
+  bottom: 26년 뒤 계좌는?
+  hl: 계좌
+  chips:
+  - 닷컴
+  - 리먼
+  - 코로나
+  - 이란 전쟁
+  chips_y: 46
+- name: T02
+  p: P03
+  photo: stock_monitor
+  before: 7,000만
+  after: ???
+  sub: 꼭대기에서만 산 사람 26년 뒤
+  label: S&P500 · 2000 → 2026
+- name: T03
+  p: P08
+  face_l:
+    file: ev_lehman
+    cx: 0.5
+    cy: 0.45
+    scale: 1.0
+    y: 360
+  face_r:
+    file: ev_wallst
+    cx: 0.5
+    cy: 0.5
+    scale: 1.0
+    y: 360
+  top_l:
+  - 바닥만 7번
+  - 신의 타이밍
+  top_r:
+  - 매달 22만 원
+  - 아무 생각 없이
+  res_l: '?'
+  res_r: '?'
+  bottom: 누가 더 벌었을까?
+  hl: 더
+- name: T04
+  p: P09
+  photo: nyse_floor
+  focus:
+  - 0.5
+  - 0.45
+  bubble: '꼭대기에서 사면
+
+    망하는 거 아냐?'
+  bottom: 26년 데이터로 해 봤다
+- name: T05
+  p: P10
+  photo: ev_lehman
+  focus:
+  - 0.5
+  - 0.45
+  label: 2008.9.15 리먼 파산 날
+  top: 이 폭락 직전에 산 사람
+  bottom: 지금 계좌는?
+  hl: 계좌
+- name: T06
+  p: P01
+  photo: ev_wallst
+  focus:
+  - 0.5
+  - 0.5
+  top: 운 최악인 투자자
+  bottom: 그래도 돈 벌었을까?
+  hl: 돈 벌었을까
+- name: T07
+  p: P03
+  photo: nyse_floor
+  before: 2,000만
+  after: 875만
+  sub: 리먼 때 불운이 계좌 · 그래도 안 팔았다
+  label: 2009년 3월 9일
+- name: T08
+  p: P10
+  photo: stock_monitor
+  focus:
+  - 0.5
+  - 0.5
+  label: 나스닥 한 주 -10% · 엔비디아 -23%
+  top: 지금 사면 꼭대기일까?
+  bottom: 26년 데이터의 답
+  hl: 답
+- name: T09
+  p: P09
+  photo: ev_wallst
+  focus:
+  - 0.5
+  - 0.5
+  bubble: '바닥 확인하고
+
+    사야지!'
+  bottom: 바닥 맞혀도 별 차이 없었다
+  hl: 별 차이 없었다
+- name: T10
+  p: P01
+  photo: ev_lehman
+  focus:
+  - 0.5
+  - 0.45
+  top: 닷컴 · 리먼 · 코로나 · 이란 전쟁
+  bottom: 꼭대기에서만 샀더니
+  hl: 꼭대기
