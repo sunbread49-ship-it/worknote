@@ -4422,3 +4422,89 @@ class SciOutro(Editorial):
 
 
 TYPES.update({"sci_title": SciTitle, "sci_kinetic": SciKinetic, "sci_outro": SciOutro})
+
+
+# ════════════════════════════════════════════════════════════════
+# accent — 지식채널 포인트 장면 (2026-11-22 사용자 참고: 3색 조합 포스터)
+#   기본 아이보리 수첩 톤은 그대로, 강조 순간에만 3색 포스터 카드 + 색 견본 3장
+#   palette: neon | dinner | coffee | notyet · kicker · headline(줄바꿈) · sub · art: {kind: line, lines:[...]} | {kind: big, text}
+ACCENT = {
+    "neon":   {"a": (204, 242, 0), "b": (214, 209, 202), "c": (40, 38, 36), "names": ("NEON 2297", "WARM GRAY 1", "BLACK")},
+    "dinner": {"a": (34, 70, 52), "b": (241, 239, 233), "c": (247, 160, 200), "names": ("GREEN 553", "CLOUD 11-4202", "PINK 210")},
+    "coffee": {"a": (214, 209, 202), "b": (24, 64, 196), "c": (248, 248, 244), "names": ("WARM GRAY 1", "BLUE 2369", "WHITE 11-0601")},
+    "notyet": {"a": (242, 236, 222), "b": (30, 62, 178), "c": (232, 72, 18), "names": ("VANILLA 11-0104", "BLUE 2098", "ORANGE 1665")},
+}
+
+
+class Accent(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        tone = _sci_tone(sp, getattr(self, "channel", {}))
+        _sci_frame(f, tone, t)
+        self.paper = True
+        P = ACCENT[sp.get("palette", "notyet")]
+        a, b, c = P["a"], P["b"], P["c"]
+        # 왼쪽: 색 견본 3장
+        for i, (col, nm) in enumerate(zip((a, b, c), P["names"])):
+            k = G.ease_out((t - 0.1 - i * 0.15) / 0.4)
+            if k <= 0:
+                continue
+            ch = Image.new("RGBA", (220, 220), (0, 0, 0, 0))
+            d = ImageDraw.Draw(ch)
+            d.rectangle((0, 0, 219, 219), fill=(255, 255, 255, 255))
+            d.rectangle((0, 0, 219, 156), fill=col + (255,))
+            d.rectangle((0, 0, 219, 219), outline=(210, 204, 192, 255), width=2)
+            ch.alpha_composite(T(nm, 20, (30, 30, 34), "Black"), (14, 172))
+            sh = Image.new("RGBA", (240, 244), (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle((10, 14, 230, 234), fill=(0, 0, 0, 40))
+            sh = sh.filter(ImageFilter.GaussianBlur(8)); sh.alpha_composite(ch, (0, 0))
+            G.blit(f, sh, (230, 140 + i * 245 + (1 - k) * 30), k, "lt")
+        # 오른쪽: 포스터
+        k = G.ease_out((t - 0.3) / 0.5)
+        if k > 0:
+            PW, PH = 1060, 760
+            po = Image.new("RGBA", (PW, PH), sp.get("bg_color", a) + (255,) if isinstance(sp.get("bg_color"), tuple) else a + (255,))
+            bgk = sp.get("bg", "a")
+            po = Image.new("RGBA", (PW, PH), {"a": a, "b": b, "c": c}[bgk] + (255,))
+            pd = ImageDraw.Draw(po)
+            ink = {"a": a, "b": b, "c": c}[sp.get("ink", "c")]
+            pop = {"a": a, "b": b, "c": c}[sp.get("pop", "b")]
+            art = sp.get("art", {})
+            if art.get("kind") == "line":   # 노선 선 그림 (지도 개략)
+                M = _metro()
+                pts_all = [p for l in art["lines"] for p in M["lines"][str(l)]]
+                lo0, lo1 = min(p[0] for p in pts_all), max(p[0] for p in pts_all)
+                la0, la1 = min(p[1] for p in pts_all), max(p[1] for p in pts_all)
+                bx = (420, 300, PW - 60, PH - 60)
+                kx = math.cos(math.radians(37.55))
+                scl = min((bx[2] - bx[0]) / ((lo1 - lo0) * kx + 1e-6), (bx[3] - bx[1]) / (la1 - la0 + 1e-6))
+                kd = G.ease_in_out(G.clamp((t - 0.6) / 1.6))
+                for l in art["lines"]:
+                    pts = [(bx[0] + (p[0] - lo0) * kx * scl, bx[3] - (p[1] - la0) * scl) for p in M["lines"][str(l)]]
+                    n = min(len(pts), max(2, int(len(pts) * kd) + 1))
+                    pd.line(pts[:n], fill=pop + (255,), width=26, joint="curve")
+                    for e in (pts[0], pts[n - 1]):
+                        pd.ellipse((e[0] - 22, e[1] - 22, e[0] + 22, e[1] + 22), fill={"a": a, "b": b, "c": c}[sp.get("bg", "a")] + (255,), outline=pop + (255,), width=10)
+            elif art.get("kind") == "big":
+                bt = T(art["text"], art.get("size", 520), pop, "Black")
+                if bt.width > PW * 0.56:
+                    bt = bt.resize((int(PW * 0.56), int(bt.height * PW * 0.56 / bt.width)), Image.LANCZOS)
+                po.alpha_composite(bt, (PW - bt.width - 30, PH - bt.height - 50))
+            if sp.get("kicker"):
+                po.alpha_composite(T(sp["kicker"], 30, ink, "Bold"), (60, 54))
+            y = 110
+            for ln in sp["headline"].split("\n"):
+                hh = T(ln, sp.get("size", 104), ink, "Black")
+                po.alpha_composite(hh, (54, y))
+                y += hh.height - 6
+            if sp.get("sub"):
+                sb = T(sp["sub"], 32, ink, "Bold", max_w=400)
+                po.alpha_composite(sb, (60, y + 24))
+            if sp.get("foot"):
+                po.alpha_composite(T(sp["foot"], 24, ink, "Bold"), (60, PH - 60))
+            sh = Image.new("RGBA", (PW + 40, PH + 40), (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle((14, 20, PW + 14, PH + 20), fill=(0, 0, 0, 60))
+            sh = sh.filter(ImageFilter.GaussianBlur(14)); sh.alpha_composite(po, (0, 0))
+            G.blit(f, sh, (560, 110 + (1 - k) * 40), k, "lt")
+        self.finish(f, t)
+
+
+TYPES.update({"accent": Accent})
