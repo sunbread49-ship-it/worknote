@@ -409,6 +409,8 @@ def series(name: str, start=None, end=None) -> pd.Series:
     elif name.endswith("_drawdown") and name[:-9] in ("tqqq", "sqqq", "qqq", "ndx", "sim3x_ndx", "kospi", "spx", "soxl", "soxx"):
         p = series(name[:-9])
         s = (p / p.cummax() - 1) * 100
+    elif (DATA / f"{name}_daily.csv").exists():   # 에피소드 전용 계산 곡선 (예: ep023_unlucky_daily.csv · adj_close 열)
+        s = _daily(name)
     else:
         raise KeyError(f"알 수 없는 시리즈: {name}")
     return s.loc[start:end]

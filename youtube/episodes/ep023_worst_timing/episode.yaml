@@ -1,0 +1,593 @@
+title: 폭락 직전에만 7번 산 남자, 26년 뒤 계좌 (닷컴 · 리먼 · 코로나 · 이란 전쟁)
+series_tag: 폭락장 실험
+theme: 08
+pace: punchy
+clip_theme: stock
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    S&P500: 에스앤피 오백
+    S&P: 에스앤피
+    AI: 에이아이
+bgm:
+  volume: 0.22
+  chapters:
+    인트로: tense
+    실험 규칙: drive
+    불운이의 26년: tense
+    결과 공개: drive
+    그래서 지금은: hope
+chapter_titles:
+  인트로: 폭락 직전에만 7번 산 남자
+  실험 규칙: 세 사람 · 7,000만 원 · S&P500 · 절대 안 판다
+  불운이의 26년: 닷컴 · 리먼 · 무역전쟁 · 코로나 · 금리 · 관세 · 이란 전쟁
+  결과 공개: 불운이 · 행운이 · 꾸준이 계좌
+  그래서 지금은: 이번 AI 폭락은 8번째 꼭대기일까
+scenes:
+- type: kinetic
+  chapter: 인트로
+  bg:
+    kind: video
+    file: market_crash_v
+    dark: 0.6
+    blur: 3
+  items:
+  - text: '지난주 계좌,
+
+      열어 보셨나요?'
+    highlight: 계좌
+    'on': 1
+    size: 140
+  - text: 나스닥 한 주 -10%
+    highlight: -10%
+    hl_color: down
+    'on': 2
+    size: 150
+  narration:
+  - 지난주 계좌 열어 보고, 한숨 쉬셨죠?
+  - 나스닥이 한 주 만에 !!10%!!, 엔비디아는 23%가 빠졌어요. | 지금 팔아야 할지, 더 사야 할지 모르겠고요.
+- type: chart
+  chapter: 인트로
+  chart:
+    series: spx
+    start: '1999-06-01'
+    end: '2026-11-20'
+    log: true
+    color:
+    - 235
+    - 235
+    - 240
+    draw:
+      'on': 1
+      dur: 2.4
+    marks:
+    - date: '2000-03-24'
+      label: 닷컴
+      'on': 2
+      dy: -70
+      color: down
+    - date: '2007-10-09'
+      label: 리먼
+      'on': 2
+      offset: 0.3
+      dy: -70
+      color: down
+    - date: '2018-09-20'
+      label: 무역전쟁
+      'on': 2
+      offset: 0.6
+      dy: -90
+      dx: -60
+      color: down
+    - date: '2020-02-19'
+      label: 코로나
+      'on': 2
+      offset: 0.9
+      dy: 80
+      color: down
+    - date: '2022-01-03'
+      label: 금리
+      'on': 2
+      offset: 1.2
+      dy: -80
+      color: down
+    - date: '2025-02-19'
+      label: 관세
+      'on': 2
+      offset: 1.5
+      dy: 80
+      dx: -40
+      color: down
+    - date: '2026-01-27'
+      label: 이란
+      'on': 2
+      offset: 1.8
+      dy: -80
+      color: down
+    source: '자료: S&P500 일간 종가 (로그 눈금)'
+    title: 미국 S&P500 · 2000 ~ 2026
+  narration:
+  - 다들 바닥 확인하고 사야지, 하잖아요. | 그런데 오늘 소개할 남자는 정반대예요.
+  - 26년 동안, 하필 폭락 직전 꼭대기에서만, !!7번!! 샀거든요. | 닷컴버블, 리먼, 코로나, 그리고 올해 이란 전쟁까지.
+- type: columns
+  chapter: 인트로
+  title: 세 사람 · 같은 7,000만 원
+  highlight: 7,000만 원
+  kicker: 2000년 3월부터 S&P500에 7,000만 원
+  'on': 1
+  rows:
+  - label: 불운이
+    sub: 꼭대기에서만 7번
+    text: ???
+    value: 1
+  - label: 행운이
+    sub: 바닥에서만 7번
+    text: ???
+    value: 1
+  - label: 꾸준이
+    sub: 26년간 매달 똑같이
+    text: ???
+    value: 1
+  narration:
+  - 오늘 딱 세 사람만 비교할게요. | 꼭대기만 산 불운이, 바닥만 산 행운이, 그리고 아무 생각 없이 매달 똑같이 넣은 꾸준이.
+  - 누가 제일 많이 벌었을까요? | 다들 답을 안다고 생각하시죠? 근데 결과는, 아마 생각과 완전히 다를 거예요.
+- type: title
+  kicker: 폭락장 실험 · 26년 데이터
+  title: '폭락 직전에만 산 남자
+
+    26년 뒤 계좌'
+  highlight: 26년 뒤 계좌
+  subtitle: 닷컴 · 리먼 · 무역전쟁 · 코로나 · 금리 · 관세 · 이란 전쟁
+  narration:
+  - 26년 진짜 데이터로, 세 사람의 계좌를 열어 볼게요.
+- type: checklist
+  chapter: 실험 규칙
+  bg:
+    kind: photo
+    file: ev_wallst
+    dark: 0.72
+    blur: 4
+  kicker: 실험 규칙
+  title: 딱 네 가지 규칙
+  title_size: 84
+  highlight: 네 가지
+  items:
+  - text: 한 번에 1,000만 원 · 총 7번 = 7,000만 원
+    highlight: 7,000만 원
+    'on': 1
+  - text: 미국 대표 500개 기업 · S&P500 지수
+    highlight: S&P500
+    'on': 2
+  - text: 한 번 사면 절대 안 판다
+    highlight: 절대 안 판다
+    'on': 3
+  - text: 배당 · 환율 · 세금은 뺀다 (보수적 계산)
+    highlight: 보수적
+    'on': 4
+  narration:
+  - 규칙은 딱 네 가지예요. 한 번에 1,000만 원씩, 총 7번. 7,000만 원이에요.
+  - 사는 건 개별 종목이 아니라, 미국 대표 500개 기업을 묶은 에스앤피 오백 지수.
+  - 그리고 한 번 사면, 무슨 일이 있어도 절대 안 팔아요.
+  - 배당과 환율, 세금은 빼고 계산할게요. 실제로는 배당까지 받아서, 이것보다 결과가 더 좋아요.
+- type: chart
+  chapter: 불운이의 26년
+  chart:
+    series: spx
+    start: '1998-01-02'
+    end: '2003-06-30'
+    color:
+    - 240
+    - 84
+    - 84
+    draw:
+      'on': 1
+      dur: 2.2
+    marks:
+    - date: '2000-03-24'
+      label: 1번째 매수 · 꼭대기
+      sub: 2000.3.24
+      'on': 1
+      offset: 1.2
+      dy: -70
+      dx: -60
+      color: gold
+    - date: '2002-10-09'
+      label: -49%
+      sub: 1,000만 → 509만
+      'on': 2
+      dy: 70
+      dx: -80
+      color: down
+      size: 36
+    source: '자료: S&P500 일간 종가 (배당 제외)'
+    title: 1번째 · 2000년 닷컴버블
+  narration:
+  - 첫 매수는 2000년 3월 24일. 인터넷 회사라면 뭐든 오르던, 닷컴버블 꼭대기 날이에요.
+  - 2년 반 뒤, 1,000만 원은 !!509만 원!!. 반 토막이 났죠. | 기술주만 모은 나스닥은 무려 83%가 빠졌고요.
+- type: ticket
+  chapter: 불운이의 26년
+  kicker: 닷컴 꼭대기에 산 나스닥100
+  title: 본전까지 걸린 시간
+  label: 2000년 3월 꼭대기 → 다시 그 가격
+  value: '15'
+  unit: 년 7개월
+  stub: '2000.3 꼭대기
+
+    2015.11 본전
+
+    그 사이 리먼까지'
+  highlight: 15년
+  narration:
+  - 나스닥은 그 꼭대기 가격을 되찾는 데, !!15년 7개월!!이 걸렸어요.
+  - 스무 살에 샀다면, 서른다섯이 돼서야 본전인 거죠.
+- type: punch
+  chapter: 불운이의 26년
+  big: 2,000만 → 875만
+  label: 2009년 3월 9일 · 불운이 계좌 (넣은 돈 2,000만 원)
+  photo:
+    file: ev_lehman
+    dark: 0.6
+    focus:
+    - 0.5
+    - 0.4
+  tone: down
+  'on': 1
+  sub: 2007.10.9 두 번째 꼭대기 → 리먼 파산 → 계좌 -56%
+  sub_on: 2
+  shake:
+  - 'on': 1
+    offset: 0.1
+    amp: 12
+    dur: 0.4
+  narration:
+  - 그런데 불운이는 2007년 10월 9일, 또 꼭대기에서 1,000만 원을 넣어요. | 1년 뒤, 미국 4위 투자은행 리먼 브라더스가 파산하죠.
+  - 2009년 3월, 넣은 돈 2,000만 원이 !!875만 원!!이 됐어요. 마이너스 56%. | 불운이의 26년 중, 가장 어두운 날이에요.
+- type: kpi
+  chapter: 불운이의 26년
+  bg:
+    kind: video
+    file: clock_anxiety_v
+    dark: 0.7
+    blur: 4
+  kpis:
+  - label: 첫 매수 → 계좌 본전
+    value: 13년
+    color: red
+    'on': 1
+  - label: 그동안 넣은 돈
+    value: 2,000만
+    color: navy
+    'on': 2
+  bars:
+  - label: 넣은 돈
+    value: 2000
+    text: 2,000만
+    hl: false
+  - label: '2009.3'
+    value: 875
+    text: 875만
+    hl: false
+  - label: '2013.3'
+    value: 2030
+    text: 2,030만
+    hl: true
+  bars_on: 1
+  vmax: 2300
+  narration:
+  - 첫 매수부터 따지면, 계좌가 본전을 찾은 건 2013년 3월. !!13년!!이 걸렸어요.
+  - 여기서 포기했다면, 이 실험은 그냥 실패담으로 끝났겠죠. | 그런데 불운이는, 안 팔았어요.
+- type: timeline
+  chapter: 불운이의 26년
+  kicker: 3 ~ 7번째 매수 · 모두 꼭대기
+  title: 그 뒤로도 꼭대기만
+  highlight: 꼭대기만
+  ticks:
+  - label: '2018.9'
+    sub: 무역전쟁 · -20%
+    hl: true
+  - label: '2020.2'
+    sub: 코로나 · -34%
+  - label: '2022.1'
+    sub: 금리 쇼크 · -25%
+  - label: '2025.2'
+    sub: 관세 폭탄 · -19%
+  - label: '2026.1'
+    sub: 이란 전쟁 · -9%
+  bottom: 다섯 번 더, 정확히 폭락 직전에 1,000만 원씩
+  bottom_hl: 폭락 직전
+  bottom_on: 2
+  narration:
+  - 그 뒤로도 불운이의 타이밍은 놀라울 정도로 정확했어요.
+  - 2018년 미중 무역전쟁, 2020년 코로나, 2022년 금리 쇼크, 2025년 관세 폭탄, | 그리고 올해 이란 전쟁 전 꼭대기까지. 다섯 번 더, 꼭대기에서만 샀죠.
+- type: punch
+  chapter: 불운이의 26년
+  big: 33일 · -34%
+  label: 2020년 코로나 · 역사상 가장 빠른 폭락
+  video:
+    file: stock_decline_v
+    dark: 0.55
+    blur: 2
+  tone: down
+  'on': 1
+  sub: 그런데 본전까지는 딱 6개월
+  sub_on: 2
+  narration:
+  - 특히 코로나 때는, 단 33일 만에 34%가 빠졌어요. 역사상 가장 빠른 폭락이었죠.
+  - 그런데 다시 그 꼭대기를 되찾는 데는, 딱 !!6개월!!밖에 안 걸렸어요.
+- type: lollipop
+  chapter: 불운이의 26년
+  title: 꼭대기 → 다시 본전까지
+  kicker: S&P500 · 불운이가 산 날의 가격을 되찾기까지
+  title_y: 150
+  vmax: 90
+  rows:
+  - label: 닷컴
+    value: 86
+    text: 7년 2개월
+  - label: 리먼
+    value: 66
+    text: 5년 5개월
+  - label: 무역전쟁
+    value: 7
+    text: 7개월
+  - label: 코로나
+    value: 6
+    text: 6개월
+  - label: 금리 쇼크
+    value: 24.5
+    text: 2년
+  - label: 관세 폭탄
+    value: 4.2
+    text: 4개월
+  - label: 이란 전쟁
+    value: 2.6
+    text: 2.6개월
+    hl: true
+  narration:
+  - 일곱 번의 폭락, 본전까지 걸린 시간을 보면요. | 닷컴은 7년, 리먼은 5년이 넘게 걸렸어요.
+  - 그런데 그 뒤로는 무역전쟁 7개월, 코로나 6개월. 금리 쇼크 때만 2년이었고요.
+  - 관세 폭탄은 4개월, 올해 이란 전쟁은 !!2.6개월!! 만에 본전이었어요.
+  top: 330
+  row_h: 64
+  step: 0.6
+  'on': 1
+- type: chart
+  chapter: 결과 공개
+  chart:
+    lines:
+    - series: ep023_unlucky
+      color: down
+      label: 불운이
+    start: '2000-03-24'
+    end: '2026-11-20'
+    unit: won
+    end_labels: true
+    draw:
+      'on': 1
+      dur: 3.0
+    marks:
+    - date: '2009-03-09'
+      label: 875만 · 최악
+      'on': 1
+      offset: 1.0
+      dy: 70
+      color: down
+    rect:
+    - 300
+    - 200
+    - 1200
+    - 620
+    source: '자료: S&P500 일간 종가로 계산 (배당 · 환율 · 세금 제외)'
+    title: 불운이 계좌 (만 원) · 넣은 돈 7,000만
+  narration:
+  - 자, 이제 결과예요. 폭락 직전에만 7번, 7,000만 원을 넣은 불운이의 계좌.
+  - 지금은 !!1억 6,894만 원!!. 141%가 늘었어요. | 역사상 최악의 타이밍으로만 샀는데도요.
+- type: receipt
+  chapter: 결과 공개
+  bg: dark
+  heading: 불운이 · 1,000만 원씩 7장의 영수증
+  highlight: 영수증
+  receipts:
+  - title: 2000 ~ 2020 · 4장
+    sub: 2026년 11월 20일 기준
+    lines:
+    - label: 2000 닷컴
+      value: 4,524만
+      'on': 1
+    - label: 2007 리먼
+      value: 4,415만
+      'on': 1
+      offset: 0.3
+    - label: 2018 무역전쟁
+      value: 2,358만
+      'on': 1
+      offset: 0.6
+    - label: 2020 코로나
+      value: 2,041만
+      'on': 1
+      offset: 0.9
+    total:
+      label: 소계
+      value: 1억 3,338만
+      color: up
+      'on': 1
+      offset: 1.2
+  - title: 2022 ~ 2026 · 3장
+    sub: 2026년 11월 20일 기준
+    lines:
+    - label: 2022 금리 쇼크
+      value: 1,441만
+      'on': 2
+    - label: 2025 관세 폭탄
+      value: 1,125만
+      'on': 2
+      offset: 0.3
+    - label: 2026 이란 전쟁
+      value: 990만
+      'on': 2
+      offset: 0.6
+    total:
+      label: 합계 (7장)
+      value: 1억 6,894만
+      color: up
+      'on': 3
+  narration:
+  - 가장 효자는 닷컴 꼭대기에서 산 1,000만 원이에요. 지금 4,524만 원. | 반 토막 났던 그 돈이, 오래 버티니까 4.5배가 됐어요.
+  - 지금 손해인 건, 올해 1월 이란 전쟁 전 꼭대기에서 산 것 하나. 990만 원이에요.
+  - 일곱 장 다 합치면 1억 6,894만 원이죠.
+- type: punch
+  chapter: 결과 공개
+  big: 2억 9,547만
+  label: 행운이 · 폭락 바닥에서만 7번 · 같은 7,000만 원
+  video:
+    file: money_count_v
+    dark: 0.55
+    blur: 2
+  tone: gold
+  'on': 1
+  sub: +322% · 신의 타이밍
+  sub_on: 1
+  narration:
+  - 그럼 바닥에서만 7번 산 행운이는요? | 2억 9,547만 원. 322%예요. 역시 신의 타이밍이죠.
+- type: duel
+  chapter: 결과 공개
+  heading: 신의 타이밍 vs 아무 생각 없이 매달
+  highlight: 매달
+  left:
+    title: 행운이 · 바닥만 7번
+    value: 2억 9,547만
+    sub: +322%
+    color: up
+    'on': 1
+  right:
+    title: 꾸준이 · 313개월 매달 22만 원
+    value: 2억 8,895만
+    sub: +313%
+    color: up
+    'on': 2
+  narration:
+  - 그런데 진짜 반전은 꾸준이예요. 2000년 3월부터 313개월 동안, 매달 22만 원씩 똑같이 넣었어요.
+  - 꾸준이 계좌는 !!2억 8,895만 원!!. 바닥만 7번 맞힌 신이랑, 겨우 652만 원 차이예요.
+- type: chart
+  chapter: 결과 공개
+  chart:
+    lines:
+    - series: ep023_lucky
+      color: gold
+      label: 행운이
+      label_dy: -56
+    - series: ep023_steady
+      color: up
+      label: 꾸준이
+    - series: ep023_unlucky
+      color: down
+      label: 불운이
+    start: '2000-03-24'
+    end: '2026-11-20'
+    unit: won
+    end_labels: true
+    draw:
+      'on': 1
+      dur: 3.0
+    rect:
+    - 300
+    - 200
+    - 1200
+    - 620
+    source: '자료: S&P500 일간 종가로 계산 (배당 · 환율 · 세금 제외)'
+    title: 세 사람 계좌 (만 원) · 모두 7,000만 원
+  narration:
+  - 세 사람을 한 화면에 놓아 볼게요.
+  - 바닥을 맞히는 건, 생각보다 큰 차이를 만들지 않았어요. | 진짜 차이를 만든 건, 언제 샀느냐보다, !!팔지 않았느냐!!였어요.
+- type: chart
+  chapter: 그래서 지금은
+  chart:
+    lines:
+    - series: spx
+      color: neutral
+      label: S&P500
+    - series: ndx
+      color: down
+      label: 나스닥100
+    base: 100
+    start: '2026-07-01'
+    end: '2026-11-20'
+    end_labels: true
+    draw:
+      'on': 1
+      dur: 2.0
+    marks:
+    - date: '2026-10-06'
+      label: 10.6 사상 최고
+      'on': 1
+      offset: 1.0
+      dy: -60
+      color: gold
+    rect:
+    - 300
+    - 200
+    - 1200
+    - 620
+    source: '자료: 일간 종가 (11.20 기준)'
+    title: 지금 · 2026년 하반기 (7월 1일 = 100)
+  narration:
+  - 그럼 지금은요? 10월 6일 사상 최고치 이후, 에스앤피 오백은 11.6%, 나스닥은 거의 !!20%!!가 빠졌어요.
+  - 혹시 10월 6일이, 불운이의 8번째 꼭대기였을까요?
+- type: punch
+  chapter: 그래서 지금은
+  big: '?'
+  label: 8번째 꼭대기였을까
+  video:
+    file: market_crash_v
+    dark: 0.6
+    blur: 3
+  tone: gold
+  'on': 1
+  sub: 불운이도 몰랐고, 아무도 모릅니다
+  sub_on: 1
+  narration:
+  - 솔직히 말씀드리면, 아무도 몰라요. 불운이도 몰랐죠.
+  - 다만 26년 데이터가 보여 준 건 하나예요. | 지수를 사서 안 판 사람은, 최악의 타이밍에도 결국 플러스였다는 것.
+- type: checklist
+  chapter: 그래서 지금은
+  bg:
+    kind: video
+    file: stock_decline_v
+    dark: 0.72
+    blur: 6
+  kicker: 불운이 따라 하기 전에
+  title: 이건 꼭 기억하세요
+  title_size: 84
+  highlight: 꼭
+  items:
+  - text: 지수 이야기다 · 개별 종목은 사라지기도 한다
+    highlight: 사라지기도
+    'on': 1
+  - text: 레버리지는 다르다 · 3배는 회복 못 할 수도
+    highlight: 레버리지
+    'on': 2
+  - text: 버틸 수 있는 돈으로만 · 13년 기다릴 수 있나
+    highlight: 13년
+    'on': 3
+  narration:
+  - 다만 세 가지는 꼭 기억하세요. 첫째, 이건 지수 이야기예요. 닷컴 때 사라진 회사들은, 영영 돌아오지 않았어요.
+  - 둘째, 레버리지는 달라요. 3배 상품은 폭락 한 번에 회복 못 할 만큼 깨질 수 있어요.
+  - 셋째, 불운이는 13년을 버텼어요. 그 돈이, 13년 동안 안 써도 되는 돈이어야 해요.
+- type: outro
+  heading: '불운이 · 행운이 · 꾸준이
+
+    나는 누구?'
+  highlight: 나는 누구?
+  sub: 지금 폭락장, 여러분의 선택을 댓글로 남겨 주세요
+  subscribe_on: 2
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 3
+  disclaimer: '본 영상은 투자 교육 목적이며, 매수 · 매도 추천이 아닙니다.
+
+    과거 수익률이 미래 수익을 보장하지 않습니다. 배당 · 환율 · 세금 제외 계산입니다.'
+  narration:
+  - 여러분은 세 사람 중 누구에 가까우세요? 지금 이 폭락장에서, 어떻게 하실 건가요?
+  - 댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.
+  - 오늘도 감 말고, 숫자로 투자하세요.
