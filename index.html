@@ -822,6 +822,13 @@ textarea.memo-ta{min-height:200px;font-size:15.5px;line-height:1.65;resize:verti
 .tsel select{flex:1;min-width:0;padding-left:10px;padding-right:4px}
 .tsel select+select{flex:1}
 .tsel select:disabled{opacity:.45}
+.urg-list .todo{position:relative}
+.urg-list .grip{flex:none;width:34px;height:40px;margin-left:2px;margin-right:-4px;display:grid;place-items:center;color:#A9AEB6;cursor:grab;touch-action:none;border-radius:10px}
+.urg-list .grip svg{width:20px;height:20px}
+.urg-list .grip:hover{color:#5E6470;background:#F1F2F4}
+.urg-list .todo.dragging{z-index:5;box-shadow:0 14px 30px -8px rgba(0,0,0,.45);transition:none!important;cursor:grabbing}
+.urg-list.sorting .todo:not(.dragging){transition:transform .15s ease}
+.urg-list.sorting{user-select:none;-webkit-user-select:none}
 </style>
 </head>
 <body>
@@ -1282,9 +1289,9 @@ function renderHome(){
   $('#hTodos').innerHTML = body || '<div class="hero-empty">남은 할 일이 없어요. 위에 입력해서 추가하세요.</div>';
   $('#hDone').innerHTML = doneRecent.length ? doneRecent.slice(0,8).map(todoRow).join('') : '<div class="empty">체크한 할 일이 여기 모여요</div>';
   // important / urgent: starred open to-dos
-  const urg = open.filter(t => t.star).sort((a,b) => (a.due ? 0 : 1) - (b.due ? 0 : 1) || String(a.due||'').localeCompare(String(b.due||'')) || String(b.createdAt).localeCompare(String(a.createdAt)));
+  const urg = open.filter(t => t.star).sort((a,b) => (a.urgOrder == null ? 0 : 1) - (b.urgOrder == null ? 0 : 1) || (a.urgOrder != null ? a.urgOrder - b.urgOrder : 0) || (a.due ? 0 : 1) - (b.due ? 0 : 1) || String(a.due||'').localeCompare(String(b.due||'')) || String(b.createdAt).localeCompare(String(a.createdAt)));
   $('#hUrgN').textContent = urg.length ? urg.length + '개' : '';
-  $('#hUrg').innerHTML = urg.length ? urg.map(todoRow).join('') : '<div class="urg-empty">할 일 옆 <b>☆</b>을 누르거나 위에 입력하면 여기 모여요.</div>';
+  if (!window.__urgDrag) $('#hUrg').innerHTML = urg.length ? urg.map(t => todoRow(t).replace(/\n  <\/div>$/, `\n    <button class="grip" data-grip="${t.id}" aria-label="끌어서 순서 바꾸기" title="끌어서 순서 바꾸기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg></button>\n  </div>`)).join('') : '<div class="urg-empty">할 일 옆 <b>☆</b>을 누르거나 위에 입력하면 여기 모여요.</div>';
   // this week: events (and timed meeting to-dos) from today to +7 days
   const endK = dkey(addDays(d,7));
   $('#hWeekRange').textContent = `${fmtMD(tk)} ~ ${fmtMD(endK)}`;
@@ -2241,6 +2248,38 @@ $('#hTqForm').addEventListener('submit', async e => {
   const p = parseQuick(v); $('#hTqText').value = ''; $('#hTqHint').innerHTML = '';
   await addTodo(p); toast(p.remind ? `추가했어요 · ${dueLabel(p.due)}에 알려줄게요` : '추가했어요');
 });
+/* drag to reorder important/urgent to-dos (mouse + touch) */
+(() => {
+  const box = $('#hUrg'); let d = null;
+  box.addEventListener('pointerdown', e => {
+    const g = e.target.closest('.grip'); if (!g || e.button > 0) return;
+    e.preventDefault();
+    const rows = [...box.querySelectorAll('.todo')], row = g.closest('.todo');
+    const rects = rows.map(r => r.getBoundingClientRect());
+    const idx = rows.indexOf(row), gap = rows.length > 1 ? (idx < rows.length - 1 ? rects[idx+1].top - rects[idx].bottom : rects[idx].top - rects[idx-1].bottom) : 8;
+    d = { rows, rects, row, idx, target: idx, y0: e.clientY, shift: rects[idx].height + gap };
+    try { g.setPointerCapture(e.pointerId); } catch {}
+    window.__urgDrag = true; row.classList.add('dragging'); box.classList.add('sorting');
+  });
+  box.addEventListener('pointermove', e => {
+    if (!d) return;
+    const dy = e.clientY - d.y0, c = d.rects[d.idx].top + d.rects[d.idx].height / 2 + dy;
+    d.row.style.transform = 'translateY(' + dy + 'px)';
+    let t = 0; d.rects.forEach((r, i) => { if (i !== d.idx && r.top + r.height / 2 < c) t++; });
+    d.target = t;
+    d.rows.forEach((r, i) => { if (i === d.idx) return; let sh = 0; if (d.idx < t && i > d.idx && i <= t) sh = -d.shift; if (d.idx > t && i < d.idx && i >= t) sh = d.shift; r.style.transform = sh ? 'translateY(' + sh + 'px)' : ''; });
+  });
+  const end = () => {
+    if (!d) return; const x = d; d = null; window.__urgDrag = false;
+    x.rows.forEach(r => { r.style.transform = ''; }); x.row.classList.remove('dragging'); box.classList.remove('sorting');
+    if (x.target === x.idx) { render(); return; }
+    const ids = x.rows.map(r => r.dataset.row); ids.splice(x.target, 0, ids.splice(x.idx, 1)[0]);
+    ids.forEach((tid, i) => { const t = S.todos.find(z => z.id === tid); if (t && t.urgOrder !== i) put('todos', tid, { ...strip(t), urgOrder: i }); });
+    render();
+  };
+  box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
+  box.addEventListener('click', e => { if (e.target.closest('.grip')) { e.preventDefault(); e.stopPropagation(); } }, true);
+})();
 $('#hUrgForm').addEventListener('submit', async e => {
   e.preventDefault(); const v = $('#hUrgText').value.trim(); if (!v) return;
   const p = parseQuick(v); $('#hUrgText').value = '';
