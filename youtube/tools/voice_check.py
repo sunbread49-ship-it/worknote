@@ -125,6 +125,26 @@ def text_lint(raw, spoken, say):
     return w
 
 
+def consistency(stats, f0_tol=0.08, sps_tol=0.18, db_tol=3.0):
+    """장면별 (번호, 음높이 중앙값, 음절/초, 크기 dB) → 에피소드 중앙값에서 벗어난 장면 목록
+    기준: 음높이 ±8% · 속도 ±18% · 크기 ±3dB (Gemini는 장면마다 따로 만들어 톤이 튈 수 있음)"""
+    out = []
+    f0m = np.median([s[1] for s in stats if s[1]]) if any(s[1] for s in stats) else None
+    spm = np.median([s[2] for s in stats]) if stats else 0
+    dbm = np.median([s[3] for s in stats]) if stats else 0
+    for si, f0, sps, db in stats:
+        w = []
+        if f0 and f0m and abs(f0 / f0m - 1) > f0_tol:
+            w.append(f"음높이 {(f0 / f0m - 1) * 100:+.0f}%")
+        if spm and abs(sps / spm - 1) > sps_tol:
+            w.append(f"속도 {(sps / spm - 1) * 100:+.0f}%")
+        if abs(db - dbm) > db_tol:
+            w.append(f"크기 {db - dbm:+.1f}dB")
+        if w:
+            out.append(f"[통일 장면 {si:02d}] 다른 장면과 다름: " + " · ".join(w) + " → 다시 만들기(take+1) 권장")
+    return out
+
+
 def main(ep_dir, quiet=False, use_stt=True):
     import render as R
     ep_dir = Path(ep_dir).resolve()
@@ -155,6 +175,17 @@ def main(ep_dir, quiet=False, use_stt=True):
             if r < 0.85:
                 bad += 1
                 out.append(f"[장면 {si:02d}] 받아쓰기 일치 {r * 100:.0f}% · 들린 말: {heard[:120]}")
+            # 2026-11-22 사용자: '음성이 아직 통일이 안 된다' → 장면끼리 음높이 · 속도 · 크기 비교
+            x = _pcm(p_)
+            nz = np.where(np.abs(x) > 0.01)[0]
+            x = x[nz[0]:nz[-1]] if len(nz) else x
+            f0 = _f0(x)
+            v = f0[f0 > 0]
+            syl = len(re.findall(r"[가-힣]", " ".join(tts.speakable(t_, say) for t_ in nar)))
+            rms = 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)
+            stats.append((si, float(np.median(v)) if len(v) > 20 else None, syl / max(len(x) / SR, 0.1), rms))
+        out += consistency(stats)
+        bad += sum(1 for l in out if l.startswith("[통일"))
         rep = ROOT / "out" / ep_dir.name / "음성점검.txt"
         rep.write_text(f"음성 자동 점검(장면 단위) · 장면 {len(ep['scenes'])}개 · 확인 필요 {bad}곳\n\n" + "\n".join(out), encoding="utf-8")
         print(f"음성 자동 점검: 확인 필요 {bad}곳 → {rep}")

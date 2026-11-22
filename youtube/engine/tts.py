@@ -327,7 +327,8 @@ _G_DEAD = set()
 GEMINI_MIN_GAP = 7.0   # 초 · 분당 약 8번 (429 방지)
 _G_LAST = 0.0   # pro 모델은 긴 글에서 502가 잦음
 GEMINI_STYLE = ("다음 한국어 대본을 그대로 읽어 줘. 경제 유튜브 진행자 말투로, 친구에게 이야기하듯 자연스럽고 생생하게. "
-                "{speed} 숫자는 또렷하게, 질문은 진짜 궁금한 듯이, 반전 앞에서는 한 박자 쉬어 줘.")
+                "{speed} 숫자는 또렷하게, 질문은 진짜 궁금한 듯이, 반전 앞에서는 한 박자 쉬어 줘. "
+                "목소리 높낮이와 톤은 처음부터 끝까지 같은 사람이 이어서 말하듯 일정하게, 들뜨거나 갑자기 낮아지지 않게.")
 GEMINI_PRON = {"물건": "'물건'은 된소리 없이 [물건]으로 읽어 줘 (물껀 X)."}   # 2026-11-15 사용자 피드백
 GEMINI_SPEED = {"보통": "차분하지만 지루하지 않은 보통 속도로.", "빠르게": "템포 빠르고 경쾌하게, 쇼츠처럼 몰입감 있게."}
 
@@ -492,6 +493,39 @@ def gemini_scene(lines, cfg, cache, log=print):
             break
         log(f"  Gemini 장면 다시 만듦({ratio:.2f}): {lines[0][:24]}")
     ratio, p, words = best
+    # 2026-11-22 사용자: '음성이 아직 통일이 안 된다' → 장면마다 음높이가 ±17%까지 달랐음(EP023).
+    # 첫 장면 음높이를 기준으로, 벗어나면(±7%) take를 더 만들어 기준에 가장 가까운 것을 쓴다 ([낮게] 장면은 제외)
+    if cfg.get("voice_lock", True) and not low:
+        try:
+            from voice_check import _f0 as _vf0
+            def _med(path):
+                x_ = _pcm(path)
+                v_ = _vf0(x_[:int(SR * 12)])
+                v_ = v_[v_ > 0]
+                return float(np.median(v_)) if len(v_) > 20 else None
+            m0 = _med(p)
+            ref = cfg.get("_f0_ref")
+            if ref is None and m0:
+                cfg["_f0_ref"] = m0
+            elif m0 and abs(m0 / ref - 1) > 0.07:
+                cand = [(abs(m0 / ref - 1), ratio, p, words)]
+                for take in range(3, 8):
+                    p2 = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
+                    m2 = _med(p2)
+                    if not m2:
+                        continue
+                    w2 = _stt_words(p2)
+                    import difflib as _dl
+                    r2 = _dl.SequenceMatcher(None, _hn(" ".join(lines)), _hn("".join(w for w, _, _ in w2))).ratio()
+                    if r2 >= 0.85:
+                        cand.append((abs(m2 / ref - 1), r2, p2, w2))
+                    if abs(m2 / ref - 1) <= 0.07 and r2 >= 0.85:
+                        break
+                cand.sort(key=lambda c: c[0])
+                log(f"  음높이 맞춤: {lines[0][:20]} {cand[-1][0] * 100 if len(cand) > 1 else 0:.0f}% → {cand[0][0] * 100:.0f}% (take {len(cand)}개 중)")
+                _, ratio, p, words = cand[0]
+        except Exception as e:
+            log(f"  음높이 맞춤 생략: {str(e)[:60]}")
     dur = len(_pcm(p)) / SR
     # 문장 경계: 대본 글자 수 누적 비율 ↔ 받아쓰기 단어 글자 수 누적 → 해당 단어의 시작 시각
     L = [max(1, len(_hn(l))) for l in lines]
