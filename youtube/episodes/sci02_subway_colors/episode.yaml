@@ -6,15 +6,32 @@ channel:
   disclaimer_corner: ''
   outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
   signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  tone: ivory
 tts:
   provider: gemini
   voice: Umbriel
   speed: 빠르게
   tempo: 1.08
-  say: {'1호선': 일호선, '2호선': 이호선, '3호선': 삼호선, '4호선': 사호선, '5호선': 오호선, '6호선': 육호선, '7호선': 칠호선, '8호선': 팔호선, '9호선': 구호선}
+  say:
+    1호선: 일호선
+    2호선: 이호선
+    3호선: 삼호선
+    4호선: 사호선
+    5호선: 오호선
+    6호선: 육호선
+    7호선: 칠호선
+    8호선: 팔호선
+    9호선: 구호선
 bgm:
   volume: 0.18
-  chapters: {인트로: hope, 무지개 규칙: drive, 사라진 빨간 1호선: tense, 하루 만에 정한 색: drive, 투표로 뽑은 금색: hope, 40년 만의 새 노선도: hope, 정리: hope}
+  chapters:
+    인트로: hope
+    무지개 규칙: drive
+    사라진 빨간 1호선: tense
+    하루 만에 정한 색: drive
+    투표로 뽑은 금색: hope
+    40년 만의 새 노선도: hope
+    정리: hope
 chapter_titles:
   인트로: 2호선은 왜 초록색일까
   무지개 규칙: 1974년 1호선 · 1~5호선 무지개 이야기
@@ -24,46 +41,93 @@ chapter_titles:
   40년 만의 새 노선도: 색약자 배려 · 무늬 · 길 찾기 시간
   정리: 정리 · 내 노선은 몇 호선?
 scenes:
-- type: kinetic
+- type: sci_kinetic
   chapter: 인트로
-  bg: {kind: video, file: sub_tunnel_v, dark: 0.55, blur: 3}
   items:
-  - {text: "2호선은\n왜 초록색일까?", 'on': 1, size: 140, highlight: 초록색}
-  - {text: "원래 1호선은\n빨간색이었다", 'on': 2, size: 130, highlight: 빨간색}
+  - text: '2호선은
+
+      왜 초록색일까?'
+    'on': 1
+    size: 140
+    highlight: 초록색
+  - text: '원래 1호선은
+
+      빨간색이었다'
+    'on': 2
+    size: 130
+    highlight: 빨간색
   narration:
   - 매일 타는 지하철, 2호선은 왜 초록색일까요? 그냥 예뻐서가 아니에요.
   - 사실 1호선은 원래 지금 색이 아니었고, | 그 바람에 서울역을 환승역으로 착각하는 사람까지 생겼어요.
+  media:
+    kind: photo
+    file: sub_platform
+    caption: 오늘도 타는 지하철
+    side: right
 - type: metro
   chapter: 인트로
-  draw: {1: 1, 2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2, 8: 2, 9: 2}
-  guide: {text: "색마다\n사연이 있어요!", 'on': 2, xy: [120, 980], size: 150}
+  draw:
+    1: 1
+    2: 1
+    3: 1
+    4: 1
+    5: 2
+    6: 2
+    7: 2
+    8: 2
+    9: 2
+  guide:
+    text: '색마다
+
+      사연이 있어요!'
+    'on': 2
+    xy:
+    - 120
+    - 980
+    size: 150
   narration:
   - 오늘 딱 세 가지 비밀만 알면,
   - 내일부터 지하철 노선도가 완전히 다르게 보일 거예요.
-- type: title
-  skyline: true
-  y: 250
+- type: sci_title
   kicker: 악어새 지식창고 · 한 번에
-  title: "지하철 노선 색깔의\n비밀"
+  title: '지하철 노선 색깔의
+
+    비밀'
   highlight: 비밀
   subtitle: 무지개 규칙 · 사라진 빨간 1호선 · 투표로 뽑은 금색
   narration:
   - 오늘은 악어새 탐사 수첩을 들고, 지하철 노선 색깔의 비밀을 따라가 볼게요.
 - type: metro
   chapter: 무지개 규칙
-  lines: [1]
-  focus: [1]
-  old: [1]
-  draw: {1: 1}
-  stations: [서울역, 청량리]
+  lines:
+  - 1
+  focus:
+  - 1
+  old:
+  - 1
+  draw:
+    1: 1
+  stations:
+  - 서울역
+  - 청량리
   tag: 1974년 8월 15일
   name: 1호선
-  name_color: [220, 40, 40]
-  color: [220, 40, 40]
+  name_color:
+  - 220
+  - 40
+  - 40
+  color:
+  - 220
+  - 40
+  - 40
   notes:
-  - {text: 서울 첫 지하철, 'on': 1}
-  - {text: 서울역 ~ 청량리, 'on': 1}
-  - {text: 처음 색은 빨강!, 'on': 2, hl: true}
+  - text: 서울 첫 지하철
+    'on': 1
+  - text: 서울역 ~ 청량리
+    'on': 1
+  - text: 처음 색은 빨강!
+    'on': 2
+    hl: true
   photo: sub_station
   caption: 서울의 지하철역
   narration:
@@ -77,11 +141,47 @@ scenes:
   rainbow_on: 2
   rainbow_text: 무지개에서 하나씩?
   cards:
-  - {name: 1호선, sub: 처음엔 빨강, color: [220, 40, 40], 'on': 1}
-  - {name: 2호선, sub: 빨강의 반대색, color: [0, 168, 77], hex: '#00A84D', 'on': 2}
-  - {name: 3호선, sub: 주황, color: [239, 124, 28], hex: '#EF7C1C', 'on': 3}
-  - {name: 4호선, sub: 파랑, color: [0, 165, 222], hex: '#00A5DE', 'on': 3, offset: 0.4}
-  - {name: 5호선, sub: 보라, color: [153, 108, 172], hex: '#996CAC', 'on': 3, offset: 0.8}
+  - name: 1호선
+    sub: 처음엔 빨강
+    color:
+    - 220
+    - 40
+    - 40
+    'on': 1
+  - name: 2호선
+    sub: 빨강의 반대색
+    color:
+    - 0
+    - 168
+    - 77
+    hex: '#00A84D'
+    'on': 2
+  - name: 3호선
+    sub: 주황
+    color:
+    - 239
+    - 124
+    - 28
+    hex: '#EF7C1C'
+    'on': 3
+  - name: 4호선
+    sub: 파랑
+    color:
+    - 0
+    - 165
+    - 222
+    hex: '#00A5DE'
+    'on': 3
+    offset: 0.4
+  - name: 5호선
+    sub: 보라
+    color:
+    - 153
+    - 108
+    - 172
+    hex: '#996CAC'
+    'on': 3
+    offset: 0.8
   memo: 공식 기록은 아니지만, 철도 팬들 사이에 유명한 이야기
   memo_on: 4
   narration:
@@ -91,38 +191,81 @@ scenes:
   - 공식 기록이 남아 있는 건 아니지만, 철도 팬들 사이에선 꽤 유명한 이야기예요.
 - type: metro
   chapter: 무지개 규칙
-  lines: [1, 2]
-  focus: [2]
-  old: [1]
-  draw: {2: 1}
-  stations: [시청, 강남, 잠실, 홍대입구]
+  lines:
+  - 1
+  - 2
+  focus:
+  - 2
+  old:
+  - 1
+  draw:
+    2: 1
+  stations:
+  - 시청
+  - 강남
+  - 잠실
+  - 홍대입구
   tag: 서울을 한 바퀴
   name: 2호선
-  name_color: [0, 150, 70]
-  color: [0, 150, 70]
+  name_color:
+  - 0
+  - 150
+  - 70
+  color:
+  - 0
+  - 150
+  - 70
   notes:
-  - {text: 빨강의 반대색 = 초록, 'on': 1, hl: true}
-  - {text: 시청에서 1호선과 만남, 'on': 2}
-  - {text: 한 바퀴 도는 순환선, 'on': 2, offset: 0.6}
+  - text: 빨강의 반대색 = 초록
+    'on': 1
+    hl: true
+  - text: 시청에서 1호선과 만남
+    'on': 2
+  - text: 한 바퀴 도는 순환선
+    'on': 2
+    offset: 0.6
   narration:
   - 그래서 2호선이 초록색이에요.
   - 빨간 1호선과 만나는 시청역에서, 한눈에 구분되게요. | 그리고 서울을 한 바퀴 빙 도는 순환선이죠.
 - type: metro
   chapter: 사라진 빨간 1호선
-  lines: [1]
-  focus: [1]
-  old: [1]
-  stations: [서울역, 청량리]
+  lines:
+  - 1
+  focus:
+  - 1
+  old:
+  - 1
+  stations:
+  - 서울역
+  - 청량리
   tag: 같은 열차, 다른 색
   name: 빨강 vs 남색
   name_size: 120
-  name_color: [220, 40, 40]
-  color: [220, 40, 40]
+  name_color:
+  - 220
+  - 40
+  - 40
+  color:
+  - 220
+  - 40
+  - 40
   notes:
-  - {text: 지하 구간 = 서울시 · 빨강, 'on': 1}
-  - {text: 땅 위 구간 = 철도청 · 남색, 'on': 2}
-  - {text: 서울역에서 환승인 줄 알고 내림, 'on': 3, hl: true}
-  guide: {text: "같은 열차인데\n내린다고?!", 'on': 3, xy: [700, 1000], size: 140}
+  - text: 지하 구간 = 서울시 · 빨강
+    'on': 1
+  - text: 땅 위 구간 = 철도청 · 남색
+    'on': 2
+  - text: 서울역에서 환승인 줄 알고 내림
+    'on': 3
+    hl: true
+  guide:
+    text: '같은 열차인데
+
+      내린다고?!'
+    'on': 3
+    xy:
+    - 700
+    - 1000
+    size: 140
   narration:
   - 그런데 1호선엔 문제가 있었어요. 서울역에서 청량리까지 지하 구간은 서울시가, 그 바깥 땅 위 구간은 철도청이 운영했거든요.
   - 노선도에서도 서울시 구간은 빨강, 철도청 구간은 남색. | 같은 열차인데, 색이 두 개였죠.
@@ -132,8 +275,23 @@ scenes:
   kicker: 2005년 무렵 · 노선도 색 통일
   title: 빨간 1호선이 사라진 날
   cards:
-  - {name: 빨강, sub: 서울시 구간, color: [220, 40, 40], 'on': 1, strike: true}
-  - {name: 남색, sub: 철도청 구간 · 지금 1호선, color: [0, 82, 164], hex: '#0052A4', 'on': 1, offset: 0.5}
+  - name: 빨강
+    sub: 서울시 구간
+    color:
+    - 220
+    - 40
+    - 40
+    'on': 1
+    strike: true
+  - name: 남색
+    sub: 철도청 구간 · 지금 1호선
+    color:
+    - 0
+    - 82
+    - 164
+    hex: '#0052A4'
+    'on': 1
+    offset: 0.5
   card_w: 420
   memo: 결국 남색 하나로
   memo_on: 2
@@ -145,10 +303,41 @@ scenes:
   kicker: 1992년 12월 23일 · 서울지하철건설본부
   title: 하루 만에 정한 4가지 색
   cards:
-  - {name: 5호선, sub: 보라, color: [153, 108, 172], hex: '#996CAC', 'on': 2}
-  - {name: 6호선, sub: 황토 · 행복, color: [205, 124, 47], hex: '#CD7C2F', 'on': 2, offset: 0.4}
-  - {name: 7호선, sub: 올리브(갈록색), color: [116, 127, 0], hex: '#747F00', 'on': 2, offset: 0.8}
-  - {name: 8호선, sub: 분홍 · 낭만과 사랑, color: [230, 24, 108], hex: '#E6186C', 'on': 2, offset: 1.2}
+  - name: 5호선
+    sub: 보라
+    color:
+    - 153
+    - 108
+    - 172
+    hex: '#996CAC'
+    'on': 2
+  - name: 6호선
+    sub: 황토 · 행복
+    color:
+    - 205
+    - 124
+    - 47
+    hex: '#CD7C2F'
+    'on': 2
+    offset: 0.4
+  - name: 7호선
+    sub: 올리브(갈록색)
+    color:
+    - 116
+    - 127
+    - 0
+    hex: '#747F00'
+    'on': 2
+    offset: 0.8
+  - name: 8호선
+    sub: 분홍 · 낭만과 사랑
+    color:
+    - 230
+    - 24
+    - 108
+    hex: '#E6186C'
+    'on': 2
+    offset: 1.2
   card_w: 340
   narration:
   - 5호선부터 8호선 색은, 1992년 12월 23일 하루에 한꺼번에 정해졌어요.
@@ -156,28 +345,85 @@ scenes:
   - 나중엔 6호선 황토색에 행복, 8호선 분홍색엔 낭만과 사랑이라는 뜻도 붙었어요.
 - type: metro
   chapter: 하루 만에 정한 색
-  lines: [1, 2, 3, 4, 5, 6, 7, 8]
-  focus: [5, 6, 7, 8]
-  draw: {5: 1, 6: 1, 7: 1, 8: 1}
-  guide: {text: "7호선은\n올리브색!", 'on': 1, xy: [120, 980], size: 150}
+  lines:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  focus:
+  - 5
+  - 6
+  - 7
+  - 8
+  draw:
+    5: 1
+    6: 1
+    7: 1
+    8: 1
+  guide:
+    text: '7호선은
+
+      올리브색!'
+    'on': 1
+    xy:
+    - 120
+    - 980
+    size: 150
   narration:
   - 그렇게 서울 지도 위에, 네 가지 색이 더해졌어요.
-- type: kinetic
+- type: sci_kinetic
   chapter: 투표로 뽑은 금색
-  bg: {kind: video, file: sub_bridge_v, dark: 0.55, blur: 3}
   items:
-  - {text: "9호선 색은\n투표로 뽑았다", 'on': 1, size: 140, highlight: 투표}
+  - text: '9호선 색은
+
+      투표로 뽑았다'
+    'on': 1
+    size: 140
+    highlight: 투표
   narration:
   - 그리고 9호선. 이 색은, 투표로 뽑았어요.
+  media:
+    kind: video
+    file: sub_bridge_v
+    caption: 한강을 건너는 지하철
+    side: right
 - type: swatch
   chapter: 투표로 뽑은 금색
   kicker: 9호선 노선색 후보 · 서울시 선호도 조사
   title: 후보는 4가지
   cards:
-  - {name: 마젠타, color: [200, 30, 140], 'on': 1}
-  - {name: 골드, sub: 약 47% 선택, color: [189, 160, 90], hex: '#BDB092', 'on': 3}
-  - {name: 화이트, color: [246, 244, 238], 'on': 1, offset: 0.4}
-  - {name: 블랙, sub: '검정 지하철?', color: [30, 30, 34], 'on': 2}
+  - name: 마젠타
+    color:
+    - 200
+    - 30
+    - 140
+    'on': 1
+  - name: 골드
+    sub: 약 47% 선택
+    color:
+    - 189
+    - 160
+    - 90
+    hex: '#BDB092'
+    'on': 3
+  - name: 화이트
+    color:
+    - 246
+    - 244
+    - 238
+    'on': 1
+    offset: 0.4
+  - name: 블랙
+    sub: 검정 지하철?
+    color:
+    - 30
+    - 30
+    - 34
+    'on': 2
   card_w: 340
   memo: 일반인 500명 + 전문가 200명에게 물었다
   memo_on: 3
@@ -187,39 +433,80 @@ scenes:
   - 일반인 500명과 전문가 200명에게 물었더니, 약 47%가 !!골드!!를 골랐어요. 특별하고 고급스러운 이미지라서요.
 - type: metro
   chapter: 투표로 뽑은 금색
-  lines: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  focus: [9]
-  draw: {9: 1}
-  stations: [김포공항, 여의도, 고속터미널]
+  lines:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  focus:
+  - 9
+  draw:
+    9: 1
+  stations:
+  - 김포공항
+  - 여의도
+  - 고속터미널
   tag: 2009년 개통
   name: 9호선
-  name_color: [170, 140, 70]
-  color: [170, 140, 70]
+  name_color:
+  - 170
+  - 140
+  - 70
+  color:
+  - 170
+  - 140
+  - 70
   notes:
-  - {text: 김포공항 · 여의도 · 강남, 'on': 1}
-  - {text: "별명 '골드라인'", 'on': 2, hl: true}
-  photo: sub_platform
-  caption: 열차를 기다리며
+  - text: 김포공항 · 여의도 · 강남
+    'on': 1
+  - text: 별명 '골드라인'
+    'on': 2
+    hl: true
+  photo: sub_car
+  caption: 9호선 열차 안
   narration:
   - 9호선은 2009년, 김포공항에서 여의도와 강남을 잇고 개통했어요.
   - 금색에 여의도, 강남 같은 부자 동네를 지나니까, 별명이 골드라인이 됐죠.
-- type: kinetic
+- type: sci_kinetic
   chapter: 투표로 뽑은 금색
-  bg: {kind: parallax, file: sub_crowded, dark: 0.6, blur: 4}
   items:
-  - {text: "골드라인\n→ 지옥철", 'on': 1, size: 150, highlight: 지옥철, hl_color: down}
+  - text: '골드라인
+
+      → 지옥철'
+    'on': 1
+    size: 150
+    highlight: 지옥철
   credit: '사진: Zoshua Colah (Unsplash)'
   narration:
   - 그런데 반전이 있어요. 사람이 너무 몰리면서, 골드라인은 금세 지옥철로 불리게 됐어요.
   - 2023년엔 출근길 노량진에서 동작 구간 혼잡도가, 185%까지 올라갔다는 기사도 있었죠.
+  media:
+    kind: photo
+    file: sub_crowded
+    caption: 출근길
+    side: left
 - type: press
   chapter: 40년 만의 새 노선도
-  bg: {kind: paper}
+  bg:
+    kind: paper
   title: 노선이 23개, 색이 모자라다
   highlight: 23개
   clips:
-  - {outlet: 서울시 내 손안에 서울, date: '2025', headline: "40년 만에 바뀌는 '서울 지하철 노선도' 최종 발표", hl: 40년 만에, 'on': 2}
-  - {outlet: 서울시 내 손안에 서울, date: '2025', headline: '보기 쉬워졌네! 지하철 노선도, 40년 만에 확 바뀐다', hl: 보기 쉬워졌네, 'on': 3}
+  - outlet: 서울시 내 손안에 서울
+    date: '2025'
+    headline: 40년 만에 바뀌는 '서울 지하철 노선도' 최종 발표
+    hl: 40년 만에
+    'on': 2
+  - outlet: 서울시 내 손안에 서울
+    date: '2025'
+    headline: 보기 쉬워졌네! 지하철 노선도, 40년 만에 확 바뀐다
+    hl: 보기 쉬워졌네
+    'on': 3
   narration:
   - 노선이 23개까지 늘면서, 색만으로는 구분이 점점 어려워졌어요.
   - 그래서 서울시가 40년 만에 노선도를 새로 만들었어요.
@@ -229,23 +516,79 @@ scenes:
   kicker: 오늘의 노선색
   title: 1호선부터 9호선까지
   cards:
-  - {name: '1', color: [0, 82, 164], 'on': 1, offset: 0}
-  - {name: '2', color: [0, 168, 77], 'on': 1, offset: 0.12}
-  - {name: '3', color: [239, 124, 28], 'on': 1, offset: 0.24}
-  - {name: '4', color: [0, 165, 222], 'on': 1, offset: 0.36}
-  - {name: '5', color: [153, 108, 172], 'on': 1, offset: 0.48}
-  - {name: '6', color: [205, 124, 47], 'on': 1, offset: 0.6}
-  - {name: '7', color: [116, 127, 0], 'on': 1, offset: 0.72}
-  - {name: '8', color: [230, 24, 108], 'on': 1, offset: 0.84}
-  - {name: '9', color: [189, 176, 146], 'on': 1, offset: 0.96}
+  - name: '1'
+    color:
+    - 0
+    - 82
+    - 164
+    'on': 1
+    offset: 0
+  - name: '2'
+    color:
+    - 0
+    - 168
+    - 77
+    'on': 1
+    offset: 0.12
+  - name: '3'
+    color:
+    - 239
+    - 124
+    - 28
+    'on': 1
+    offset: 0.24
+  - name: '4'
+    color:
+    - 0
+    - 165
+    - 222
+    'on': 1
+    offset: 0.36
+  - name: '5'
+    color:
+    - 153
+    - 108
+    - 172
+    'on': 1
+    offset: 0.48
+  - name: '6'
+    color:
+    - 205
+    - 124
+    - 47
+    'on': 1
+    offset: 0.6
+  - name: '7'
+    color:
+    - 116
+    - 127
+    - 0
+    'on': 1
+    offset: 0.72
+  - name: '8'
+    color:
+    - 230
+    - 24
+    - 108
+    'on': 1
+    offset: 0.84
+  - name: '9'
+    color:
+    - 189
+    - 176
+    - 146
+    'on': 1
+    offset: 0.96
   card_h: 400
   memo: 무지개 → 사라진 빨강 → 투표로 뽑은 금색
   memo_on: 2
   narration:
   - 정리할게요. 무지개에서 시작해서,
   - 빨강이 사라지고, 투표로 금색이 생겼어요. | 내일 지하철 타실 때, 노선 색 한 번 다시 보세요.
-- type: outro
-  heading: "여러분 노선은\n몇 호선인가요?"
+- type: sci_outro
+  heading: '여러분 노선은
+
+    몇 호선인가요?'
   highlight: 몇 호선
   sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
   subscribe_on: 2
