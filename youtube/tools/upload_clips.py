@@ -17,12 +17,13 @@ KST = dt.timezone(dt.timedelta(hours=9))
 ap = argparse.ArgumentParser()
 ap.add_argument("ep"); ap.add_argument("nums"); ap.add_argument("--channel", default="")
 ap.add_argument("--start"); ap.add_argument("--every", type=int, default=30)
+ap.add_argument("--queue", action="store_true", help="비공개로 올리고 시각에 공개 전환(publish_queue)")
 a = ap.parse_args()
 U.CHANNEL = a.channel.upper()
 od = ROOT / "out" / a.ep / "clips"
 t0 = dt.datetime.fromisoformat(a.start).replace(tzinfo=KST)
 now = dt.datetime.now(KST)
-if t0 < now + dt.timedelta(minutes=4):
+if t0 < now + dt.timedelta(minutes=4) and not a.queue:
     t0 = (now + dt.timedelta(minutes=6)).replace(second=0, microsecond=0)
 tok = U.access_token()
 log = json.loads((ROOT / "uploads.json").read_text())
@@ -30,7 +31,10 @@ rec = log.setdefault(("science" if a.channel == "science" else a.ep) if a.channe
 for k, n in enumerate(int(x) for x in a.nums.split(",")):
     lines = (od / f"c{n}.txt").read_text(encoding="utf-8").split("\n", 1)
     when = t0 + dt.timedelta(minutes=a.every * k)
-    vid, pv = U.upload_video(tok, od / f"c{n}.mp4", lines[0].strip(), lines[1].strip(), [], when)
+    vid, pv = U.upload_video(tok, od / f"c{n}.mp4", lines[0].strip(), lines[1].strip(), [], None if a.queue else when)
+    if a.queue:
+        import publish_queue as PQ
+        PQ.add(a.channel or "stock", vid, when.strftime("%Y-%m-%dT%H:%M"), f"{a.ep} 쇼츠{n}")
     try:
         U.set_thumbnail(tok, vid, od / f"c{n}_cover.jpg")
     except Exception as e:

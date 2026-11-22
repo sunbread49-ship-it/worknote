@@ -79,8 +79,12 @@ def call(method, url, token, data=None, headers=None, raw=False):
 
 
 # ── 업로드 동작 ───────────────────────────────────────────────────
+# AI 표시(변경·합성 콘텐츠) · 채널별 (2026-11-22 사용자: AI 음성 사용 표시)
+AI_LABEL = {"": False, "SCIENCE": True}
+
+
 def upload_video(token, path, title, desc, tags, publish_at=None, category="27"):
-    status = {"privacyStatus": "private", "selfDeclaredMadeForKids": False, "containsSyntheticMedia": False}
+    status = {"privacyStatus": "private", "selfDeclaredMadeForKids": False, "containsSyntheticMedia": AI_LABEL.get(CHANNEL, False)}
     if publish_at:
         status["publishAt"] = publish_at.astimezone(dt.timezone.utc).isoformat().replace("+00:00", "Z")
     meta = {"snippet": {"title": title[:100], "description": desc[:5000], "tags": tags[:30], "categoryId": category,
@@ -191,6 +195,7 @@ def main():
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--channel", default="", help="science = 악어새 지식창고 (환경 변수 YT_REFRESH_TOKEN_SCIENCE)")
     ap.add_argument("--file", help="단일 영상 업로드(지식창고 쇼츠 등)")
+    ap.add_argument("--queue", action="store_true", help="예약 대신 비공개로 올리고 publish_queue.json 시각에 공개 전환")
     ap.add_argument("--title")
     ap.add_argument("--desc-file")
     a = ap.parse_args()
@@ -232,7 +237,10 @@ def main():
     for it in items:
         if it["key"] in log and not a.force:
             continue
-        vid, privacy = upload_video(tok, it["file"], it["title"], it["desc"], it["tags"], it["publish_at"])
+        vid, privacy = upload_video(tok, it["file"], it["title"], it["desc"], it["tags"], None if a.queue else it["publish_at"])
+        if a.queue and it["publish_at"]:
+            import publish_queue as PQ
+            PQ.add("science" if CHANNEL == "SCIENCE" else "stock", vid, it["publish_at"].strftime("%Y-%m-%dT%H:%M"), f"{ep_dir.name} {it['key']}")
         print(f"  ✔ {it['key']} 업로드 → https://youtu.be/{vid} ({privacy})")
         if it["thumb"] and it["thumb"].exists():
             try:
