@@ -3372,6 +3372,87 @@ class Journal(Editorial):
         cx, cy = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
         return sc, cx - (lon0 + lon1) / 2 * kx * sc, cy + (lat0 + lat1) / 2 * sc
 
+    def _left(self, f, t, sp, col, o0, INK):
+        """왼쪽 수첩 면: tag · 큰 이름 · 메모 · 폴라로이드 · 도장 · 악어새 (journal · metro 공용)"""
+        tag = _ink(sp.get("tag", ""), "NanumPenScript-Regular.ttf", 58, col)
+        G.blit(f, tag, (150, 168), o0, "lt")
+        nm = _ink(sp.get("name", sp.get("gu", "")), "NanumMyeongjo-ExtraBold.ttf", sp.get("name_size", 150), tuple(sp["name_color"]) if sp.get("name_color") else INK)
+        G.blit(f, nm, (140, 212 + (1 - o0) * 20), o0, "lt")
+        if sp.get("eng"):
+            G.blit(f, _ink(sp["eng"], "NanumPenScript-Regular.ttf", 44, (120, 112, 98)), (150 + nm.width + 18, 342), o0, "lb")
+        ImageDraw.Draw(f).line((150, 388, 150 + int(max(nm.width, 520) * o0), 388), fill=INK + (200,), width=3)
+        y = 398
+        for n in sp.get("notes", []):
+            o = min(o0, G.appear(t, self.line_start(n.get("on", 1)) + n.get("offset", 0) + (0.9 if n.get("on", 1) == 1 else 0), 0.4))
+            if o > 0:
+                im = _ink(n["text"], "NanumPenScript-Regular.ttf", 58, col if n.get("hl") else INK)
+                G.blit(f, im, (155 + (1 - o) * 30, y), o, "lt")
+            y += 72
+        if sp.get("photo"):
+            pw, ph = sp.get("photo_wh", (440, 280))
+            im, cr = photo_backdrop({"file": sp["photo"], "dark": 0.0, "gray": 0.0})
+            im = im.convert("RGB")
+            r0 = max(pw / im.width, ph / im.height)
+            im = im.resize((int(im.width * r0) + 1, int(im.height * r0) + 1), Image.LANCZOS)
+            fx, fy = sp.get("photo_focus", (0.5, 0.5))
+            x0_, y0_ = int((im.width - pw) * fx), int((im.height - ph) * fy)
+            im = im.crop((x0_, y0_, x0_ + pw, y0_ + ph))
+            pol = Image.new("RGBA", (pw + 36, ph + 104), (252, 250, 244, 255))
+            pol.paste(im, (18, 18))
+            cap = _ink(sp.get("caption", ""), "NanumPenScript-Regular.ttf", 44, INK)
+            pol.alpha_composite(cap, ((pol.width - cap.width) // 2, ph + 34))
+            rot = pol.rotate(sp.get("tilt", -3.5), expand=True, resample=Image.BICUBIC)
+            shadow = Image.new("RGBA", rot.size, (0, 0, 0, 0))
+            shadow.putalpha(rot.split()[3].filter(ImageFilter.GaussianBlur(14)).point(lambda v: int(v * 0.35 * o0)))
+            x, y = sp.get("photo_xy", (150, 525))[0], sp.get("photo_xy", (150, 525))[1] + (1 - o0) * 60
+            f.alpha_composite(shadow, (x + 12, int(y + 18)))
+            G.blit(f, rot, (x, y), o0, "lt")
+            for tx, ang in ((x + 40, 14), (x + rot.width - 150, -12)):
+                tape = Image.new("RGBA", (130, 44), (246, 214, 120, 170)).rotate(ang, expand=True, resample=Image.BICUBIC)
+                G.blit(f, tape, (tx, y - 22), o0, "lt")
+            if cr and not sp.get("credit"):
+                sp["credit"] = cr
+        st = sp.get("seal")
+        if st:
+            so = min(o0, G.appear(t, self.line_start(st.get("on", 1)) + st.get("offset", 0.6), 0.25))
+            if so > 0:
+                R = 120
+                stp = Image.new("RGBA", (R * 2 + 20, R * 2 + 20), (0, 0, 0, 0))
+                ds = ImageDraw.Draw(stp)
+                red = (186, 30, 34, 225)
+                ds.ellipse((10, 10, R * 2 + 10, R * 2 + 10), outline=red, width=9)
+                ds.ellipse((26, 26, R * 2 - 6, R * 2 - 6), outline=red, width=3)
+                for txt, fs, yy in ((st.get("top", ""), 28, R - 54), (st.get("big", ""), 70, R - 8), (st.get("bottom", ""), 28, R + 52)):
+                    if txt:
+                        im = _ink(txt, "NanumMyeongjo-ExtraBold.ttf", fs, red)
+                        stp.alpha_composite(im, ((stp.width - im.width) // 2, int(yy - im.height / 2 + 10)))
+                rnd = np.random.default_rng(3)
+                a_ = np.array(stp.split()[3]).astype(np.float32) * (0.75 + 0.25 * rnd.random((stp.height, stp.width)))
+                stp.putalpha(Image.fromarray(a_.clip(0, 255).astype(np.uint8)))
+                stp = stp.rotate(st.get("tilt", 14), expand=True, resample=Image.BICUBIC)
+                z = 1 + 0.6 * (1 - so)
+                stp = stp.resize((int(stp.width * z), int(stp.height * z)), Image.LANCZOS)
+                G.blit(f, stp, tuple(st.get("xy", (1760, 840))), min(1, so * 1.4), "mm")
+        gd = sp.get("guide")
+        if gd:
+            go = min(o0, G.appear(t, self.line_start(gd.get("on", 1)) + gd.get("offset", 0), 0.35))
+            if go > 0:
+                from pathlib import Path as _P
+                ch = Image.open(_P(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png").convert("RGBA")
+                hh = gd.get("size", 140)
+                ch = ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
+                gx, gy = gd.get("xy", (700, 900))
+                bob = 5 * math.sin(t * 3)
+                G.blit(f, ch, (gx, gy + bob - (1 - go) * 40), go, "lb")
+                bub = T(gd["text"], gd.get("font", 40), (20, 22, 30), "Black", max_w=420)
+                bw_, bh_ = bub.width + 52, bub.height + 36
+                b_ = Image.new("RGBA", (bw_, bh_ + 26), (0, 0, 0, 0))
+                bd = ImageDraw.Draw(b_)
+                bd.rounded_rectangle((0, 0, bw_ - 1, bh_ - 1), 24, fill=(255, 255, 255, 250), outline=(20, 22, 30, 255), width=4)
+                bd.polygon([(36, bh_ - 4), (84, bh_ - 4), (26, bh_ + 22)], fill=(255, 255, 255, 250))
+                b_.alpha_composite(bub, (26, 18))
+                G.blit(f, b_, (gx + ch.width * 0.45, gy - hh - 4 + bob), go, "lb")
+
     def draw(self, f, t):
         sp = self.spec
         f.paste(paper_bg(), (0, 0))
@@ -3433,84 +3514,7 @@ class Journal(Editorial):
         # ── 수첩 요소 (확대됐을 때만) ──
         o0 = k
         if o0 > 0.01:
-            tag = _ink(sp.get("tag", ""), "NanumPenScript-Regular.ttf", 58, col)
-            G.blit(f, tag, (150, 168), o0, "lt")
-            nm = _ink(sp["gu"], "NanumMyeongjo-ExtraBold.ttf", 150, INK)
-            G.blit(f, nm, (140, 212 + (1 - o0) * 20), o0, "lt")
-            if sp.get("eng"):
-                G.blit(f, _ink(sp["eng"], "NanumPenScript-Regular.ttf", 44, (120, 112, 98)), (150 + nm.width + 18, 342), o0, "lb")
-            ImageDraw.Draw(f).line((150, 388, 150 + int(max(nm.width, 520) * o0), 388), fill=INK + (200,), width=3)
-            y = 398
-            for n in sp.get("notes", []):
-                o = min(o0, G.appear(t, self.line_start(n.get("on", 1)) + n.get("offset", 0) + (0.9 if n.get("on", 1) == 1 else 0), 0.4))
-                if o > 0:
-                    im = _ink(n["text"], "NanumPenScript-Regular.ttf", 58, col if n.get("hl") else INK)
-                    G.blit(f, im, (155 + (1 - o) * 30, y), o, "lt")
-                y += 72
-            if sp.get("photo"):
-                pw, ph = sp.get("photo_wh", (440, 280))
-                im, cr = photo_backdrop({"file": sp["photo"], "dark": 0.0, "gray": 0.0})
-                im = im.convert("RGB")
-                r0 = max(pw / im.width, ph / im.height)
-                im = im.resize((int(im.width * r0) + 1, int(im.height * r0) + 1), Image.LANCZOS)
-                fx, fy = sp.get("photo_focus", (0.5, 0.5))
-                x0_, y0_ = int((im.width - pw) * fx), int((im.height - ph) * fy)
-                im = im.crop((x0_, y0_, x0_ + pw, y0_ + ph))
-                pol = Image.new("RGBA", (pw + 36, ph + 104), (252, 250, 244, 255))
-                pol.paste(im, (18, 18))
-                cap = _ink(sp.get("caption", ""), "NanumPenScript-Regular.ttf", 44, INK)
-                pol.alpha_composite(cap, ((pol.width - cap.width) // 2, ph + 34))
-                rot = pol.rotate(sp.get("tilt", -3.5), expand=True, resample=Image.BICUBIC)
-                shadow = Image.new("RGBA", rot.size, (0, 0, 0, 0))
-                shadow.putalpha(rot.split()[3].filter(ImageFilter.GaussianBlur(14)).point(lambda v: int(v * 0.35 * o0)))
-                x, y = sp.get("photo_xy", (150, 525))[0], sp.get("photo_xy", (150, 525))[1] + (1 - o0) * 60
-                f.alpha_composite(shadow, (x + 12, int(y + 18)))
-                G.blit(f, rot, (x, y), o0, "lt")
-                for tx, ang in ((x + 40, 14), (x + rot.width - 150, -12)):
-                    tape = Image.new("RGBA", (130, 44), (246, 214, 120, 170)).rotate(ang, expand=True, resample=Image.BICUBIC)
-                    G.blit(f, tape, (tx, y - 22), o0, "lt")
-                if cr and not sp.get("credit"):
-                    sp["credit"] = cr
-            st = sp.get("seal")
-            if st:
-                so = min(o0, G.appear(t, self.line_start(st.get("on", 1)) + st.get("offset", 0.6), 0.25))
-                if so > 0:
-                    R = 120
-                    stp = Image.new("RGBA", (R * 2 + 20, R * 2 + 20), (0, 0, 0, 0))
-                    ds = ImageDraw.Draw(stp)
-                    red = (186, 30, 34, 225)
-                    ds.ellipse((10, 10, R * 2 + 10, R * 2 + 10), outline=red, width=9)
-                    ds.ellipse((26, 26, R * 2 - 6, R * 2 - 6), outline=red, width=3)
-                    for txt, fs, yy in ((st.get("top", ""), 28, R - 54), (st.get("big", ""), 70, R - 8), (st.get("bottom", ""), 28, R + 52)):
-                        if txt:
-                            im = _ink(txt, "NanumMyeongjo-ExtraBold.ttf", fs, red)
-                            stp.alpha_composite(im, ((stp.width - im.width) // 2, int(yy - im.height / 2 + 10)))
-                    rnd = np.random.default_rng(3)
-                    a_ = np.array(stp.split()[3]).astype(np.float32) * (0.75 + 0.25 * rnd.random((stp.height, stp.width)))
-                    stp.putalpha(Image.fromarray(a_.clip(0, 255).astype(np.uint8)))
-                    stp = stp.rotate(st.get("tilt", 14), expand=True, resample=Image.BICUBIC)
-                    z = 1 + 0.6 * (1 - so)
-                    stp = stp.resize((int(stp.width * z), int(stp.height * z)), Image.LANCZOS)
-                    G.blit(f, stp, tuple(st.get("xy", (1760, 840))), min(1, so * 1.4), "mm")
-            gd = sp.get("guide")
-            if gd:
-                go = min(o0, G.appear(t, self.line_start(gd.get("on", 1)) + gd.get("offset", 0), 0.35))
-                if go > 0:
-                    from pathlib import Path as _P
-                    ch = Image.open(_P(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png").convert("RGBA")
-                    hh = gd.get("size", 140)
-                    ch = ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
-                    gx, gy = gd.get("xy", (700, 900))
-                    bob = 5 * math.sin(t * 3)
-                    G.blit(f, ch, (gx, gy + bob - (1 - go) * 40), go, "lb")
-                    bub = T(gd["text"], gd.get("font", 40), (20, 22, 30), "Black", max_w=420)
-                    bw_, bh_ = bub.width + 52, bub.height + 36
-                    b_ = Image.new("RGBA", (bw_, bh_ + 26), (0, 0, 0, 0))
-                    bd = ImageDraw.Draw(b_)
-                    bd.rounded_rectangle((0, 0, bw_ - 1, bh_ - 1), 24, fill=(255, 255, 255, 250), outline=(20, 22, 30, 255), width=4)
-                    bd.polygon([(36, bh_ - 4), (84, bh_ - 4), (26, bh_ + 22)], fill=(255, 255, 255, 250))
-                    b_.alpha_composite(bub, (26, 18))
-                    G.blit(f, b_, (gx + ch.width * 0.45, gy - hh - 4 + bob), go, "lb")
+            self._left(f, t, sp, col, o0, INK)
         self.finish(f, t)
 
 
@@ -3605,7 +3609,7 @@ class Press(Editorial):
         sp = self.spec
         self.base(f)
         if sp.get("title"):
-            G.blit(f, T(sp["title"], 60, S.FG, "Black", highlight=sp.get("highlight", ""), hl_fill=Y), (230, 150), G.appear(t, 0, 0.3))
+            G.blit(f, T(sp["title"], 60, self.fg, "Black", highlight=sp.get("highlight", ""), hl_fill=Y), (230, 150), G.appear(t, 0, 0.3))
         clips = sp["clips"]
         n = len(clips)
         for i, c in enumerate(clips):
@@ -4079,3 +4083,174 @@ class Scale(Editorial):
 
 
 TYPES.update({"photovs": PhotoVS, "scale": Scale})
+
+
+# ════════════════════════════════════════════════════════════════
+# metro — 수첩 위 서울 지하철 노선도 (2026-11-22 지식 롱폼 2편 · 지도는 직접 그린 개략도)
+#   lines: 그릴 노선 [1..9] · focus: 강조 노선 (나머지 옅게) · old: [옛 색으로 그릴 노선] · draw: {line: on} 선이 그려지는 애니메이션
+#   stations: [역 이름] 점 + 이름 · box: 지도 영역 · 왼쪽 수첩 면은 journal 과 같은 spec (tag · name · name_color · notes · photo · seal · guide)
+@lru_cache(maxsize=1)
+def _metro():
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] / "assets/geo/seoul_metro.json").read_text())
+
+
+class Metro(Journal):
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        self.paper = True
+        INK = (38, 40, 52)
+        M = _metro()
+        d0 = _seoul()
+        names = [n for n in d0 if not n.startswith("_")]
+        left = bool(sp.get("name") or sp.get("tag") or sp.get("notes"))
+        box = tuple(sp.get("box", (860, 110, 1860, 980) if left else (360, 120, 1560, 980)))
+        sc, ox, oy = self._fit(names, box, pad=sp.get("pad", 0.08))
+        kx = math.cos(math.radians(37.55))
+        P = lambda lo, la: (ox + lo * kx * sc, oy - la * sc)
+        lay = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        dl = ImageDraw.Draw(lay)
+        for n in names:
+            for poly in d0[n]:
+                dl.polygon([P(*p_) for p_ in poly], fill=(236, 228, 210, 255), outline=(196, 186, 166, 255), width=2)
+        # 한강 대신 구 경계만 · 그 위에 노선
+        f.alpha_composite(lay)
+        lines = [str(x) for x in sp.get("lines", range(1, 10))]
+        focus = {str(x) for x in sp.get("focus", [])}
+        old = {str(x) for x in sp.get("old", [])}
+        draw_on = {str(k_): v for k_, v in (sp.get("draw") or {}).items()}
+        ln = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+        dd = ImageDraw.Draw(ln)
+        order = [l_ for l_ in lines if l_ not in focus] + [l_ for l_ in lines if l_ in focus]
+        for l_ in order:
+            pts = [P(*p_) for p_ in M["lines"][l_]]
+            col = tuple(M["old"][l_]) if l_ in old else tuple(M["colors"][l_])
+            if l_ in draw_on:   # 선이 그려짐
+                kd = G.ease_in_out(G.clamp((t - self.line_start(draw_on[l_])) / 1.4))
+                segs = [math.dist(pts[i], pts[i + 1]) for i in range(len(pts) - 1)]
+                tot, acc_, cut = sum(segs) * kd, 0.0, [pts[0]]
+                for i, sg in enumerate(segs):
+                    if acc_ + sg <= tot:
+                        cut.append(pts[i + 1]); acc_ += sg
+                    else:
+                        r_ = (tot - acc_) / sg if sg else 0
+                        cut.append((pts[i][0] + (pts[i + 1][0] - pts[i][0]) * r_, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * r_)); break
+                pts = cut if kd > 0 else []
+            if len(pts) < 2:
+                continue
+            fade = focus and l_ not in focus
+            a = 70 if fade else 255
+            w = 7 if fade else 13
+            dd.line(pts, fill=(255, 255, 255, a), width=w + 8, joint="curve")
+            dd.line(pts, fill=col + (a,), width=w, joint="curve")
+            if not fade:
+                for e in (pts[0], pts[-1]):
+                    dd.ellipse((e[0] - 9, e[1] - 9, e[0] + 9, e[1] + 9), fill=(255, 255, 255, 255), outline=col + (255,), width=5)
+        sh = ln.split()[3].filter(ImageFilter.GaussianBlur(6)).point(lambda v: int(v * 0.25))
+        f.alpha_composite(Image.merge("RGBA", (Image.new("L", ln.size, 0),) * 3 + (sh,)), (4, 6))
+        f.alpha_composite(ln)
+        # 노선 번호 원 (끝점)
+        for l_ in lines:
+            if (focus and l_ not in focus) or (l_ in draw_on and t < self.line_start(draw_on[l_]) + 1.3):
+                continue
+            col = tuple(M["old"][l_]) if l_ in old else tuple(M["colors"][l_])
+            e = P(*M["lines"][l_][0])
+            badge = Image.new("RGBA", (54, 54), (0, 0, 0, 0))
+            ImageDraw.Draw(badge).ellipse((0, 0, 53, 53), fill=col + (255,), outline=(255, 255, 255, 255), width=4)
+            tx = T(l_, 32, (255, 255, 255), "Black")
+            badge.alpha_composite(tx, ((54 - tx.width) // 2, (54 - tx.height) // 2 - 2))
+            G.blit(f, badge, (e[0], e[1] - 34), 1, "mm")
+        for nm_ in sp.get("stations", []):
+            lo, la = M["stations"][nm_]
+            x, y = P(lo, la)
+            ImageDraw.Draw(f).ellipse((x - 10, y - 10, x + 10, y + 10), fill=(255, 255, 255, 255), outline=INK + (255,), width=4)
+            G.blit(f, _ink(nm_, "NanumMyeongjo-ExtraBold.ttf", 34, INK), (x + 16, y - 4), 1, "lm")
+        if left:
+            o0 = G.appear(t, 0.3, 0.4)
+            col = tuple(sp.get("color", M["colors"].get(str(next(iter(focus), "1")), (232, 96, 76))))
+            self._left(f, t, sp, col, o0, INK)
+        self.finish(f, t)
+
+
+# swatch — 페인트 색 견본 카드 (노선색) · cards: [{name, sub, color, hex, on, offset, x}] · title · note · rainbow: true(위에 무지개 화살표)
+class Swatch(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        f.paste(paper_bg(), (0, 0))
+        self.paper = True
+        INK = (38, 40, 52)
+        if sp.get("kicker"):
+            G.blit(f, _ink(sp["kicker"], "NanumPenScript-Regular.ttf", 52, (150, 60, 50)), (S.W / 2, 120), G.appear(t, 0, 0.3), "mt")
+        if sp.get("title"):
+            G.blit(f, _ink(sp["title"], "NanumMyeongjo-ExtraBold.ttf", 84, INK), (S.W / 2, 180), G.appear(t, 0.05, 0.3), "mt")
+        cards = sp["cards"]
+        n = len(cards)
+        cw, chh = sp.get("card_w", min(250, int(1640 / n) - 24)), sp.get("card_h", 460)
+        gap = 24
+        x0 = S.W / 2 - (n * cw + (n - 1) * gap) / 2
+        for i, c in enumerate(cards):
+            ts = self.line_start(c.get("on", 1)) + c.get("offset", i * 0.18)
+            k = G.ease_out((t - ts) / 0.45)
+            if k <= 0:
+                continue
+            col = tuple(c["color"])
+            card = Image.new("RGBA", (cw + 20, chh + 20), (0, 0, 0, 0))
+            d = ImageDraw.Draw(card)
+            d.rectangle((10, 10, cw + 10, chh + 10), fill=(252, 250, 244, 255), outline=(200, 192, 176, 255), width=2)
+            d.rectangle((24, 24, cw - 4, int(chh * 0.62)), fill=col + (255,))
+            if c.get("strike"):   # 옛 색 X
+                d.line((24, 24, cw - 4, int(chh * 0.62)), fill=(255, 255, 255, 230), width=8)
+            nm = _ink(c["name"], "NanumMyeongjo-ExtraBold.ttf", 46, INK)
+            card.alpha_composite(nm, (26, int(chh * 0.62) + 18))
+            if c.get("sub"):
+                card.alpha_composite(_ink(c["sub"], "NanumPenScript-Regular.ttf", 40, (110, 102, 88)), (28, int(chh * 0.62) + 18 + nm.height + 4))
+            if c.get("hex"):
+                card.alpha_composite(_ink(c["hex"], "NanumMyeongjo-ExtraBold.ttf", 22, (150, 142, 126)), (28, chh - 26))
+            ang = c.get("tilt", [-2, 1.5, -1, 2, -1.5][i % 5])
+            card = card.rotate(ang, expand=True, resample=Image.BICUBIC)
+            sh = Image.new("RGBA", card.size, (0, 0, 0, 0)); sh.putalpha(card.split()[3].filter(ImageFilter.GaussianBlur(10)).point(lambda v: int(v * 0.3)))
+            x = c.get("x", x0 + i * (cw + gap))
+            y = sp.get("y", 330) + (1 - k) * 50
+            f.alpha_composite(sh, (int(x + 8), int(y + 12)))
+            G.blit(f, card, (x, y), k, "lt")
+        if sp.get("rainbow"):
+            kr = G.ease_out((t - self.line_start(sp.get("rainbow_on", 2))) / 0.8)
+            if kr > 0:
+                d = ImageDraw.Draw(f)
+                y = sp.get("y", 330) - 40
+                xe = x0 + (n * cw + (n - 1) * gap) * kr
+                d.line((x0, y, xe, y), fill=(38, 40, 52), width=5)
+                if kr > 0.95:
+                    d.polygon([(xe + 18, y), (xe - 6, y - 14), (xe - 6, y + 14)], fill=(38, 40, 52))
+                G.blit(f, _ink(sp.get("rainbow_text", "무지개 순서?"), "NanumPenScript-Regular.ttf", 50, (150, 60, 50)), (x0 + 10, y - 8), kr, "lb")
+        if sp.get("note"):
+            G.blit(f, _ink(sp["note"], "NanumPenScript-Regular.ttf", 56, (150, 60, 50)), (S.W / 2, sp.get("note_y", 880)),
+                   G.appear(t, self.line_start(sp.get("note_on", 2)) + 0.4, 0.4), "mt")
+        gd = sp.get("guide")
+        if gd:
+            self._guide(f, t, gd)
+        self.finish(f, t)
+
+    def _guide(self, f, t, gd):
+        go = G.appear(t, self.line_start(gd.get("on", 1)) + gd.get("offset", 0), 0.35)
+        if go <= 0:
+            return
+        from pathlib import Path as _P
+        ch = Image.open(_P(__file__).resolve().parents[1] / "assets/media/character_croc_bird_cutout.png").convert("RGBA")
+        hh = gd.get("size", 140)
+        ch = ch.resize((int(ch.width * hh / ch.height), hh), Image.LANCZOS)
+        gx, gy = gd.get("xy", (1500, 1000))
+        bob = 5 * math.sin(t * 3)
+        G.blit(f, ch, (gx, gy + bob - (1 - go) * 40), go, "lb")
+        bub = T(gd["text"], gd.get("font", 40), (20, 22, 30), "Black", max_w=420)
+        bw_, bh_ = bub.width + 52, bub.height + 36
+        b_ = Image.new("RGBA", (bw_, bh_ + 26), (0, 0, 0, 0))
+        bd = ImageDraw.Draw(b_)
+        bd.rounded_rectangle((0, 0, bw_ - 1, bh_ - 1), 24, fill=(255, 255, 255, 250), outline=(20, 22, 30, 255), width=4)
+        bd.polygon([(36, bh_ - 4), (84, bh_ - 4), (26, bh_ + 22)], fill=(255, 255, 255, 250))
+        b_.alpha_composite(bub, (26, 18))
+        G.blit(f, b_, (gx + ch.width * 0.45, gy - hh - 4 + bob), go, "lb")
+
+
+TYPES.update({"metro": Metro, "swatch": Swatch})
