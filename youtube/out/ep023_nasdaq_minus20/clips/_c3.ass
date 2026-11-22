@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.03,0:00:04.59,S,2018년 미중 무역전쟁 때는,\N크리스마스이브가 바닥이었어요.
+Dialogue: 0,0:00:04.59,0:00:05.77,S,산 지 딱 사흘 뒤죠.
+Dialogue: 0,0:00:05.77,0:00:07.12,S,원금 회복까지 5일.
+Dialogue: 0,0:00:07.12,0:00:10.87,S,작년 4월 관세\N폭탄도 똑같았어요.
+Dialogue: 0,0:00:10.87,0:00:13.81,S,원금 회복 5일,\N1년 뒤 39%.
+Dialogue: 0,0:00:14.46,0:00:18.77,S,1998년 러시아가 빚을 못\N갚겠다고 선언했을 때는,
+Dialogue: 0,0:00:18.77,0:00:20.14,S,더 빠진 게 고작 1%.
+Dialogue: 0,0:00:20.14,0:00:22.89,S,1년 뒤엔 110%,\N두 배가 넘었어요.

@@ -1,0 +1,16 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.08,0:00:01.12,S,먼저 코로나.
+Dialogue: 0,0:00:01.12,0:00:06.34,S,2020년 3월 12일에 샀다면,\N딱 8일 뒤가 바닥이었어요.
+Dialogue: 0,0:00:06.34,0:00:08.01,S,고작 3.7% 더 빠졌죠.
+Dialogue: 0,0:00:08.01,0:00:10.33,S,원금은 12일 만에 회복,
+Dialogue: 0,0:00:10.33,0:00:13.58,S,1년 뒤엔 1,781만\N원이었어요.
