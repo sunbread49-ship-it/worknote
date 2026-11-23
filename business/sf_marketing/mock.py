@@ -4,19 +4,19 @@ import tempfile
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
-sys.path.insert(0, "/home/user/shorts-factory/server")
+sys.path.insert(0, "/home/user/Shorts-Factory/server")
 import pipeline as P  # noqa: E402
 
 PH = Path("/home/user/worknote/business/sf_marketing/photos")
 OUT = Path(__file__).resolve().parent / "mock"
 OUT.mkdir(exist_ok=True)
-FONT = "/home/user/shorts-factory/server/fonts/Pretendard-Black.otf"
+FONT = str(next(p for p in (Path("/home/user/Shorts-Factory"), Path("/home/user/shorts-factory")) if p.exists()) / "server/fonts/Pretendard-Black.otf")
 
 # 템플릿 순서: tpl1 심플 화이트 · tpl2 네온 다크 · tpl3 빅 블랙 · tpl4 빅 풀스크린 · tpl5 아이보리 노트
 ITEMS = [
     ("simple", "drama", "드라마 엔딩\n결국 고백했다", "고백했다", "[10년] 만에 한 고백"),
     ("neon", "rain", "웹드라마 명장면\n비 오는 날 이별", "이별", "우산 [하나]로 끝난 사이"),
-    ("bigblack", "dance", "연습실 직캠\n칼군무 레전드", "레전드", "이 동작 [100번] 맞췄대요"),
+    ("bigblack", "set", "영화 촬영장\nNG 레전드", "레전드", "NG만 [27번] 났대요"),   # 11/23 안무 샘플 → 영화 촬영장
     ("full", "concert", "콘서트 떼창\n소름 돋은 순간", "소름", "[3만 명]이 같이 불렀어요"),
     ("ivory", "talk", "예능 토크\n찐친 폭로전", "폭로전", "[1초] 만에 터진 웃음"),
     ("bigblack", "set", "촬영장 비하인드\nNG 모음", "NG", "NG만 [27번] 났대요"),

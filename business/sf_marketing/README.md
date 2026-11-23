@@ -23,6 +23,6 @@
 
 ## 영상 mp4 (11/23 · 내레이션 1.15배)
 - `sf_reel.mp4` ① 릴스 홍보 1080x1920 약 30초 · 태오(Fenrir, 남)
-- `sf_guide.mp4` ③ 사용설명서 1920x1080 약 68초 · 수아(Despina, 여)
+- `sf_guide.mp4` ③ 사용설명서 1920x1080 약 68초 · 수아(Despina, 여) — **⚠ 옛 버전(크레딧 '돌려드려요' 문구)**. 11/23 새 문구(3장 · 9장) 녹음 중 Gemini 402(결제 필요)로 멈춤 → 결제 해결 후 `python3 make_video.py guide`
 - 다시 만들기: `node cap2.js` → `MK_VIDEO=1 python3 make_mk.py` (장면 표시 없는 이미지 → out_video/) → `python3 make_video.py [reel|guide]`
 - 장면 길이 = 내레이션 길이(문장 바꾸면 길이도 바뀜). 배경음 없음(배경음 기능 만들 때 추가)
