@@ -11,7 +11,7 @@ D = Path(__file__).resolve().parent
 SF = next((p for p in (Path("/home/user/Shorts-Factory"), Path("/home/user/shorts-factory")) if p.exists()), Path("/home/user/Shorts-Factory"))
 FD = SF / "server/fonts"
 TPL = Path(__file__).resolve().parent / "mock"   # 2026-11-23 사용자: 우리 채널 샘플 말고 요즘 장르(드라마 · 아이돌 · 예능)
-OUT = D / "out"
+OUT = D / ("out_video" if __import__("os").environ.get("MK_VIDEO") else "out")
 OUT.mkdir(exist_ok=True)
 
 BG = (6, 8, 14)
@@ -176,7 +176,8 @@ def reel(n, t, say, draw):
     im = canvas(1080, 1920)
     draw(im, ImageDraw.Draw(im))
     d = ImageDraw.Draw(im)
-    chip(d, 40, 40, f"SCENE {n:02d} · {t}", F(28, "Bold"), bg=(20, 28, 46), fg=CY, padx=18, pady=8)
+    if not __import__("os").environ.get("MK_VIDEO"):   # 영상용(make_video.py)은 장면 표시 없이
+        chip(d, 40, 40, f"SCENE {n:02d} · {t}", F(28, "Bold"), bg=(20, 28, 46), fg=CY, padx=18, pady=8)
     p = OUT / f"reel_{n:02d}.jpg"
     im.save(p, quality=90)
     REEL.append((p, t, say))
