@@ -86,7 +86,7 @@ def bars(sp):
         t = TH.T(n if g or sp.get("show") else "?", 58, YEL if g else WHITE)
         im.alpha_composite(t, (230 - t.width, y + 6))
         if g:
-            r = TH.T(f"{i + 1}위", 54, WHITE)
+            r = TH.T("?위", 54, YEL)   # 답은 영상에서
             im.alpha_composite(r, (260 + ln + 20, y + 8))
     return im
 
