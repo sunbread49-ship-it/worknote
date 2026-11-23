@@ -163,18 +163,33 @@ def main(ep_dir, quiet=False, use_stt=True):
     sc_path = ROOT / "out" / ep_dir.name / "stt_cache.json"
     stt_cache = json.loads(sc_path.read_text(encoding="utf-8")) if sc_path.exists() else {}
     if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene":   # 장면 단위: 이미 만든 장면 음성을 받아쓰기로 확인 (새 요청 없음)
+        lock_cfg = {**cfg}   # 장면끼리 같은 기준 음높이(_f0_ref)를 이어 씀 = 렌더와 같은 선택
+        scene_wavs = []
         import difflib
         out, bad = [], 0
         for si, sc in enumerate(ep["scenes"], 1):
             nar = sc.get("narration", [])
             if not nar:
                 continue
-            p_, _ = tts.gemini_scene(nar, {**cfg, "voice_lock": False}, cache, log=lambda *a: None)   # 점검은 새 음성 안 만듦
+            # 2026-11-23: 렌더와 똑같이 음높이 맞춤(voice_lock)까지 거친 '실제 쓴 take'를 잰다 (예전엔 다른 take를 재서 통일 점검이 틀렸음)
+            tts.NO_NEW_SYNTH = True
+            try:
+                p_, _ = tts.gemini_scene(nar, lock_cfg, cache, log=lambda *a: None)
+            finally:
+                tts.NO_NEW_SYNTH = False
             heard = " ".join(w for w, _, _ in tts._stt_words(p_))
             r = difflib.SequenceMatcher(None, tts._hn(" ".join(nar)), tts._hn(heard)).ratio()
             if r < 0.85:
                 bad += 1
                 out.append(f"[장면 {si:02d}] 받아쓰기 일치 {r * 100:.0f}% · 들린 말: {heard[:120]}")
+            scene_wavs.append((si, p_, nar))
+            continue
+        # 2026-11-23: 렌더와 똑같이 장면 음성 통일(tts.unify_scenes)을 거친 결과를 잰다
+        keep = [(p_, n_) for _, p_, n_ in scene_wavs if not all(l.lstrip().startswith("[낮게]") for l in n_)]
+        fix = tts.unify_scenes([p_ for p_, _ in keep], log=lambda *a: None,
+                               texts=[" ".join(tts.speakable(l, say) for l in n_) for _, n_ in keep]) if cfg.get("unify", True) else {}
+        for si, p_, nar in scene_wavs:
+            p_ = fix[p_][0] if p_ in fix else p_
             # 2026-11-22 사용자: '음성이 아직 통일이 안 된다' → 장면끼리 음높이 · 속도 · 크기 비교
             x = _pcm(p_)
             nz = np.where(np.abs(x) > 0.01)[0]

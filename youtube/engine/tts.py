@@ -237,6 +237,68 @@ def _pieces(text, voice, rate, cfg, cache):
     return out
 
 
+def scene_stats(path):
+    """장면 음성의 (음높이 중앙값 Hz, 크기 dB) — voice_check와 같은 방식(16kHz 자기상관)"""
+    import sys as _s
+    _s.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+    from voice_check import _f0 as _vf0, SR as _VSR
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(path), "-ac", "1", "-ar", str(_VSR), "-f", "s16le", "-"],
+                         capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, dtype="<i2").astype(np.float32) / 32768
+    nz = np.where(np.abs(x) > 0.01)[0]
+    x = x[nz[0]:nz[-1]] if len(nz) else x
+    f0 = _vf0(x)
+    v = f0[f0 > 0]
+    rms = 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)
+    return (float(np.median(v)) if len(v) > 20 else None), float(rms)
+
+
+def unify_scenes(paths, log=print, f0_tol=0.05, db_tol=1.5, sps_tol=0.15, texts=None):
+    """2026-11-23: Gemini는 장면마다 음높이 · 크기가 달라짐(MBTI 편 13곳) → 새 음성 없이
+    장면별로 에피소드 중앙값에 맞춤. 음높이는 rubberband(목소리 결 유지 · 길이 그대로 → 화면 싱크 유지), 크기는 volume.
+    속도(글자/초)가 중앙값에서 15% 넘게 벗어나면 atempo로 맞춤 → 반환 tempo로 문장 시각도 같이 맞춤
+    paths: 장면 wav 목록([낮게] 장면 제외) → {원본 경로: (맞춘 경로, tempo)}"""
+    st = {p: scene_stats(p) for p in paths}
+    sps = {}
+    for i, p in enumerate(paths):
+        if texts:
+            n = len(re.findall(r"[가-힣]", texts[i]))
+            sps[p] = n / max(len(_pcm(p)) / SR, 0.1)
+    spm = float(np.median(list(sps.values()))) if sps else 0
+    f0s = [v[0] for v in st.values() if v[0]]
+    if not f0s:
+        return {}
+    f0m, dbm = float(np.median(f0s)), float(np.median([v[1] for v in st.values()]))
+    out = {}
+    for p, (f0, db) in st.items():
+        af = []
+        tempo = 1.0
+        if sps and spm and abs(sps[p] / spm - 1) > sps_tol:
+            tempo = max(0.85, min(1.25, spm / sps[p]))
+            af.append(f"atempo={tempo:.4f}")
+        if f0 and abs(f0 / f0m - 1) > f0_tol:
+            r = max(0.75, min(1.35, f0m / f0))
+            af.append(f"rubberband=pitch={r:.4f}:formant=preserved:pitchq=quality")
+        if abs(db - dbm) > db_tol:
+            af.append(f"volume={max(-6.0, min(6.0, dbm - db)):.2f}dB")
+        if not af:
+            continue
+        q = Path(str(p) + ".u" + hashlib.sha1(",".join(af).encode()).hexdigest()[:8] + ".wav")
+        if not q.exists():
+            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(p), "-af", ",".join(af), str(q)], check=True)
+        f2, _ = scene_stats(q)   # 한 번 더 재서 남은 차이를 마저 맞춤 (rubberband는 한 번에 다 안 맞을 때가 있음)
+        if f2 and abs(f2 / f0m - 1) > f0_tol:
+            r2 = max(0.85, min(1.18, f0m / f2))
+            q2 = Path(str(q)[:-4] + f".r{int(r2 * 1000)}.wav")
+            if not q2.exists():
+                subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(q), "-af",
+                                f"rubberband=pitch={r2:.4f}:formant=preserved:pitchq=quality", str(q2)], check=True)
+            q = q2
+        out[p] = (q, tempo)
+        log(f"  장면 음성 맞춤: {Path(p).name[:14]} 음높이 {((f0 or f0m) / f0m - 1) * 100:+.0f}% · 크기 {db - dbm:+.1f}dB → 중앙값")
+    return out
+
+
 def plan(scenes, cfg, work_dir: Path, log=print):
     """각 장면에 start/dur/lines를 채우고 내레이션 wav 경로 반환"""
     # 2026-11-11 두 채널 통일: 남자 15번(Umbriel) 1.15배 — 롱폼 · 쇼츠 모두 (에피소드 tts에 따로 적으면 그게 우선)
@@ -246,11 +308,25 @@ def plan(scenes, cfg, work_dir: Path, log=print):
     lead, tail = cfg.get("scene_pad", [0.2, 0.45])
     cache = work_dir / "tts_cache"
     clips, t = [], 0.0
+    made, fix = {}, {}
+    if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene":
+        for sc in scenes:
+            if sc.narration:
+                made[id(sc)] = gemini_scene(list(sc.narration), cfg, cache, log=log)
+        if cfg.get("unify", True):
+            norm = [p_ for sc in scenes if id(sc) in made and not all(l.lstrip().startswith("[낮게]") for l in sc.narration)
+                    for p_ in [made[id(sc)][0]]]
+            texts = [" ".join(speakable(l, cfg.get("say")) for l in sc.narration) for sc in scenes
+                     if id(sc) in made and not all(l.lstrip().startswith("[낮게]") for l in sc.narration)]
+            fix = unify_scenes(norm, log=log, texts=texts)
     for sc in scenes:
         sc.start = t
         cur, lines = lead, []
         if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene" and sc.narration:
-            p_, spans = gemini_scene(list(sc.narration), cfg, cache, log=log)
+            p_, spans = made[id(sc)]
+            if p_ in fix:   # 장면 음성 통일(음높이 · 크기 · 속도)
+                p_, tq = fix[p_]
+                spans = [(a / tq, b / tq) for a, b in spans]
             tempo = float(cfg.get("tempo", 1.0))   # 2026-11-21: 지식창고 롱폼 = 쇼츠(1.2)의 0.9 → 1.08 (음높이 유지)
             if abs(tempo - 1.0) > 1e-3:
                 tp = Path(str(p_) + f".t{tempo:.3f}.wav")
@@ -324,6 +400,7 @@ if _os.environ.get("GEMINI_ONLY"):   # 2026-11-19: 한 영상 = 한 모델 — �
     GEMINI_MODEL = _os.environ["GEMINI_ONLY"]
     GEMINI_MODELS = [GEMINI_MODEL]
 _G_DEAD = set()
+NO_NEW_SYNTH = bool(_os.environ.get("TTS_CACHE_ONLY"))   # 2026-11-23: voice_check가 켜거나 TTS_CACHE_ONLY=1 이면 캐시만 씀 (하루 한도 보호)
 GEMINI_MIN_GAP = 7.0   # 초 · 분당 약 8번 (429 방지)
 _G_LAST = 0.0   # pro 모델은 긴 글에서 502가 잦음
 GEMINI_STYLE = ("다음 한국어 대본을 그대로 읽어 줘. 경제 유튜브 진행자 말투로, 친구에게 이야기하듯 자연스럽고 생생하게. "
@@ -362,6 +439,8 @@ def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), sty
         h_ = hashlib.sha1(json.dumps([text, voice, prompt, m_, take], ensure_ascii=False).encode()).hexdigest()[:16]
         if (cache_dir / f"g_{h_}.wav").exists():
             return cache_dir / f"g_{h_}.wav"
+    if NO_NEW_SYNTH:   # 점검 모드: 캐시에 없는 음성은 새로 만들지 않음 (하루 한도 보호)
+        raise RuntimeError("점검 모드: 캐시에 없는 음성")
     h = hashlib.sha1(json.dumps([text, voice, prompt, GEMINI_MODEL, take], ensure_ascii=False).encode()).hexdigest()[:16]
     out = cache_dir / f"g_{h}.wav"
     body = {"contents": [{"parts": [{"text": prompt + "\n\n대본:\n" + text}]}],
