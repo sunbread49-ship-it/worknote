@@ -141,7 +141,7 @@ def make(sp):
         card.alpha_composite(lg, (40, 30))
         TH.shadowed(f, card, (620, 60))
         # 11/23 사용자: 힌트 그림 대신 친절하고 직관적인 문장으로
-        s1 = big("구글은 빅7 중", 120, 1240, color=WHITE)
+        s1 = big("구글은 빅7 중", 120, 1240, color=WHITE, hl="구글", hl_color=YEL)   # 11/23 사용자: 구글 글자 포인트
         s2 = big("폭락 후 회복 속도가", 120, 1240, color=WHITE)
         s3 = big("몇 등일까?", 230, 1240, color=YEL, hl="몇 등", hl_color=YEL)
         TH.shadowed(f, s1, (640, 330))
