@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 D = Path(__file__).resolve().parent
 SF = Path("/home/user/shorts-factory")
 FD = SF / "server/fonts"
-TPL = Path("/tmp/claude-0/-home-user/9258c601-f35c-5810-8c02-b51a5f7acb8b/scratchpad/tpl")
+TPL = Path(__file__).resolve().parent / "mock"   # 2026-11-23 사용자: 우리 채널 샘플 말고 요즘 장르(드라마 · 아이돌 · 예능)
 OUT = D / "out"
 OUT.mkdir(exist_ok=True)
 
@@ -247,11 +247,12 @@ def r6(im, d):
 
 def r7(im, d):
     logo(im, 250, 320, 1.4)
-    lines(d, 540, 620, "롱폼 1편으로\n[쇼츠 5개]", F(140, "Han"), anchor="m", hl=CY)
-    d.rounded_rectangle((120, 1040, 960, 1400), 40, fill=(16, 22, 36), outline=CY, width=4)
-    rich(d, 540, 1090, "월 [9,900원]", F(110, "Han"), base=WH, hl=YL, anchor="m")
-    rich(d, 540, 1240, "쇼츠 25개 · 쇼츠 1개 = 크레딧 1", F(46, "Bold"), base=DIM, anchor="m")
-    chip(d, 540, 1520, "프로필 링크에서 시작하기 →", F(56), bg=PK, fg=WH, anchor="m", padx=44, pady=22)
+    lines(d, 540, 600, "롱폼 1편 =\n[쇼츠 1~5개]", F(140, "Han"), anchor="m", hl=CY)
+    d.rounded_rectangle((90, 1020, 990, 1420), 40, fill=(16, 22, 36), outline=YL, width=6)
+    rich(d, 540, 1070, "쇼츠 월 [25편]", F(120, "Han"), base=WH, hl=YL, anchor="m")
+    rich(d, 540, 1235, "[9,900원]", F(120, "Han"), base=WH, hl=PK, anchor="m")
+    rich(d, 540, 1450, "* 업그레이드 요금제 별도", F(40, "Bold"), base=DIM, anchor="m")
+    chip(d, 540, 1600, "프로필 링크에서 시작하기 →", F(56), bg=PK, fg=WH, anchor="m", padx=44, pady=22)
 
 
 SAY = [
@@ -261,7 +262,7 @@ SAY = [
     (r4, "8~11초", "자막이랑 헤드 문구까지 자동으로."),
     (r5, "11~14초", "템플릿 5종, 목소리 10종. 내 스타일로 고정까지."),
     (r6, "14~17초", "고칠 건 손가락으로 쓱."),
-    (r7, "17~20초", "롱폼 한 편으로 쇼츠 다섯 개. 쇼츠 팩토리, 프로필 링크에서."),
+    (r7, "17~20초", "롱폼 한 편으로 쇼츠 최대 다섯 개. 한 달 쇼츠 25편이 9,900원. 쇼츠 팩토리, 프로필 링크에서."),
 ]
 for i, (fn, t, say) in enumerate(SAY, 1):
     reel(i, t, say, fn)
@@ -284,7 +285,7 @@ def card(n, draw):
 
 def c1(im, d):
     chip(d, 70, 90, "유튜버 저장 필수", F(36, "Bold"), bg=YL)
-    lines(d, 70, 200, "롱폼 1편이\n[쇼츠 5개]로\n찍혀 나오는 곳", F(118, "Han"), lh=1.18, hl=CY)
+    lines(d, 70, 200, "롱폼 1편이\n[쇼츠 1~5개]로\n찍혀 나오는 곳", F(118, "Han"), lh=1.18, hl=CY)
     phone(im, str(TPL / "tpl3.jpg"), 330, 830, 230)
     phone(im, str(TPL / "tpl1.jpg"), 600, 760, 250)
     phone(im, str(TPL / "tpl5.jpg"), 870, 830, 230)
@@ -308,8 +309,8 @@ def c2(im, d):
 
 def c3(im, d):
     lines(d, 70, 100, "쇼츠 팩토리는\n[3단계]로 끝", F(100, "Han"), hl=CY)
-    steps = [("1", "링크 붙여넣기", SHOTS["home"], (600, 740, 2280, 1040)), ("2", "개수 · 템플릿 고르기", SHOTS["count"], None),
-             ("3", "편집 · mp4 다운로드", SHOTS["results"], (240, 760, 1720, 1300))]
+    steps = [("1", "풀영상 링크 · 파일 넣기", SHOTS["home"], (600, 740, 2280, 1040)), ("2", "개수 · 템플릿 고르기", SHOTS["count"], None),
+             ("3", "편집 · mp4 다운로드", SHOTS["results"], (240, 600, 1720, 1100))]
     y = 420
     for no, t, src, cr in steps:
         badge(d, 120, y + 50, no, 40, PK)
@@ -347,21 +348,19 @@ def c5(im, d):
 
 
 def c6(im, d):
-    lines(d, 70, 100, "쇼츠 1개 = [크레딧 1]", F(96, "Han"), hl=YL)
-    d.text((72, 230), "필요한 만큼만, 고른 개수만큼만", font=F(40, "Bold"), fill=DIM)
+    lines(d, 70, 100, "한 달 쇼츠 [25편]\n[9,900원]부터", F(96, "Han"), hl=YL)
     plans = [("베이직", "9,900", "25"), ("플러스", "15,900", "50"), ("프로", "22,900", "75")]
     for i, (n, p, c) in enumerate(plans):
         x = 70 + i * 320
         hot = i == 1
-        d.rounded_rectangle((x, 340, x + 290, 860), 30, fill=(255, 255, 255) if hot else PANEL, outline=CY if hot else (40, 52, 78), width=4)
+        d.rounded_rectangle((x, 400, x + 290, 860), 30, fill=(255, 255, 255) if hot else PANEL, outline=CY if hot else (40, 52, 78), width=4)
         fg = (10, 13, 22) if hot else WH
-        d.text((x + 30, 380), n, font=F(46), fill=fg)
-        d.text((x + 30, 470), p, font=F(70, "Han"), fill=PK if hot else YL)
-        d.text((x + 30, 560), "원 / 월", font=F(32, "Bold"), fill=DIM if not hot else (80, 90, 110))
-        d.text((x + 30, 680), f"쇼츠 {c}개", font=F(50), fill=fg)
+        d.text((x + 30, 430), n, font=F(46), fill=fg)
+        d.text((x + 30, 510), p, font=F(70, "Han"), fill=PK if hot else YL)
+        d.text((x + 30, 600), "원 / 월", font=F(32, "Bold"), fill=DIM if not hot else (80, 90, 110))
+        d.text((x + 30, 680), f"쇼츠 {c}편", font=F(50), fill=fg)
         if hot:
-            chip(d, x + 145, 315, "인기", F(28, "Bold"), bg=PK, fg=WH, anchor="m", padx=18, pady=6)
-    d.text((72, 900), "추가 충전 2,900원 = 쇼츠 5개 · 못 만든 쇼츠는 크레딧 돌려드려요", font=F(32, "Bold"), fill=DIM)
+            chip(d, x + 145, 375, "인기", F(28, "Bold"), bg=PK, fg=WH, anchor="m", padx=18, pady=6)
     chip(d, 540, 1040, "프로필 링크에서 시작하기 →", F(54), bg=PK, fg=WH, anchor="m", padx=44, pady=22)
     logo(im, 70, 1230, 0.75)
 
@@ -414,7 +413,7 @@ def g1(im, d):
     lines(d, 960, 450, "사용 설명서", F(150, "Han"), anchor="m")
     rich(d, 960, 660, "링크 하나로 쇼츠 만들기 · [3분]이면 끝", F(54, "Bold"), base=DIM, hl=CY, anchor="m")
     f = F(30, "Bold")
-    ts = ["링크", "개수 · 템플릿", "확인", "제작", "다운로드", "편집", "목소리 · 스타일"]
+    ts = ["링크 / 파일", "개수 · 템플릿", "확인", "제작", "다운로드", "편집", "목소리 · 스타일"]
     tot = sum(f.getlength(t) + 36 for t in ts) + 24 * (len(ts) - 1)
     x = 960 - tot / 2
     for t in ts:
@@ -427,7 +426,7 @@ def g2(im, d):
     callout(im, scale_box((620, 780, 2260, 940), src, dst), 1, "", "r")
     d = ImageDraw.Draw(im)
     y = 260
-    for t in ["유튜브 링크를 붙여넣어요", "파일은 '파일 업로드'", "30분 이하 영상까지"]:
+    for t in ["풀영상 링크 붙여넣기", "또는 풀영상 파일 업로드", "30분 이하 영상까지"]:
         d.text((1400, y), "•", font=F(44), fill=CY)
         d.text((1440, y), t, font=F(40, "Bold"), fill=WH)
         y += 90
@@ -461,8 +460,8 @@ def g4(im, d):
 
 
 def g5(im, d):
-    src = (1100, 60, 2780, 1100)
-    shot(im, SHOTS["working"], (120, 170, 1120, 170 + int(1000 * 1040 / 1680)), crop=src)
+    src = (360, 200, 2520, 1420)   # 2026-11-23 사용자: 가운데 · 오와 열 맞게 (콘텐츠 중앙 기준으로 자름)
+    shot(im, SHOTS["working"], (120, 170, 1120, 170 + int(1000 * 1220 / 2160)), crop=src)
     d = ImageDraw.Draw(im)
     y = 260
     for t in ["받기 → 받아쓰기 → 구간 분석 → 제작", "원본 자막이 있으면 화면 글자를 읽어요", "영상 길이에 따라 몇 분 걸려요", "창을 닫아도 계속 만들어져요"]:
@@ -472,9 +471,9 @@ def g5(im, d):
 
 
 def g6(im, d):
-    src = (220, 640, 1720, 1800)
+    src = (220, 480, 1720, 1760)
     dst = shot(im, SHOTS["results"], (150, 160, 1110, 160 + int(960 * 1160 / 1500)), crop=src)
-    callout(im, scale_box((280, 1220, 690, 1300), src, dst), 1, "", "r")
+    callout(im, scale_box((470, 1350, 690, 1440), src, dst), 1, "", "r")
     d = ImageDraw.Draw(im)
     y = 240
     for t in ["카드마다 제목 · 설명 추천이 붙어요", "훅 점수(HOOK)가 높을수록 반응 좋을 구간", "'다운로드'로 mp4 바로 받기", "'편집'으로 고치고 싶은 것만 수정"]:
@@ -518,7 +517,7 @@ def g9(im, d):
 
 GS = [
     (g1, "", "쇼츠 팩토리 사용법을 알려 드릴게요. 링크 하나로 쇼츠 만들기, 3분이면 끝나요."),
-    (g2, "링크 붙여넣기", "먼저 유튜브 풀영상 링크를 붙여넣어요. 파일이 있으면 파일 업로드도 돼요. 30분 이하 영상까지 가능해요."),
+    (g2, "풀영상 링크 / 파일", "먼저 풀영상 링크를 붙여넣거나, 영상 파일을 올려요. 30분 이하 영상까지 가능해요."),
     (g3, "개수 · 템플릿 고르기", "만들 쇼츠 개수를 1개부터 5개까지 고르고, 템플릿을 골라요. 고른 개수만큼 크레딧이 빠져요."),
     (g4, "저작권 확인", "생성 전에 체크 세 개를 해 주세요. 권리가 있는 영상만 올리고, 올릴 때 원본 출처를 꼭 표시해요."),
     (g5, "제작 기다리기", "이제 공장이 돌아가요. AI가 받아쓰고, 재밌는 구간을 골라 쇼츠를 만들어요."),
