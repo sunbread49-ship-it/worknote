@@ -1,9 +1,9 @@
 const { chromium } = require('playwright');
-const D = '/tmp/claude-0/-home-user/9258c601-f35c-5810-8c02-b51a5f7acb8b/scratchpad/mk/';
+const D = process.argv[2] || __dirname + '/';   // 캡처 저장 위치
 (async () => {
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
-  await p.goto('http://localhost:8770/');
+  await p.goto('file://' + (process.env.SF || '/home/user/Shorts-Factory') + '/web/index.html');   // 서버 없이 파일로 열기(샘플 모드)
   await p.waitForTimeout(2000);
   await p.evaluate(() => { LIVE = false; });
   await p.fill('#linkInput', 'https://youtu.be/풀영상-링크');
