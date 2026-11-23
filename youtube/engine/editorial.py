@@ -4833,3 +4833,87 @@ class NoteZoom(Editorial):
 
 
 TYPES.update({"notezoom": NoteZoom})
+
+
+
+# ════════════════════════════════════════════════════════════════
+# jars — 물컵 N개로 보는 '비율 맞추기(리밸런싱)' (2026-11-23 EP024 · 사용자: 초등학생한테 그림으로 설명하듯 · 모션그래픽)
+#   items: [{label, start(처음 비중), now(지금 비중), color}] · 단계(on):
+#     phase1(기본 1): 처음엔 모든 컵 물높이가 같다 · phase2: 주가가 움직여 물높이가 달라진다(now)
+#     phase3: 많은 컵 → 적은 컵으로 물을 옮겨 다시 똑같이 (화살표 + 물줄기)
+#   title · highlight · captions: {1: "..", 2: "..", 3: ".."} · unit: "%"
+class Jars(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 120))
+        items = sp["items"]
+        n = len(items)
+        p2 = self.line_start(sp.get("phase2", 2))
+        p3 = self.line_start(sp.get("phase3", 3))
+        k2 = G.ease_in_out((t - p2) / 1.4) if t >= p2 else 0.0
+        k3 = G.ease_in_out((t - p3 - 0.6) / 1.8) if t >= p3 else 0.0
+        mx = max(max(float(i["start"]), float(i["now"])) for i in items) * 1.25
+        jw, gap = sp.get("jar_w", 190), sp.get("gap", 44)
+        x0 = (S.W - (n * jw + (n - 1) * gap)) / 2
+        y_top, y_bot = sp.get("jar_top", 330), sp.get("jar_bot", 860)
+        jh = y_bot - y_top
+        d = ImageDraw.Draw(f)
+        avg = sum(float(i["now"]) for i in items) / n
+        levels = []
+        for j, it in enumerate(items):
+            a, b = float(it["start"]), float(it["now"])
+            lv = a + (b - a) * k2
+            lv = lv + (avg - lv) * k3 if k3 > 0 else lv
+            levels.append(lv)
+        for j, it in enumerate(items):
+            x = x0 + j * (jw + gap)
+            o = G.appear(t, 0.05 + j * 0.07, 0.3)
+            if o <= 0:
+                continue
+            col = _col(it.get("color"), (90, 170, 255)) if it.get("color") else (90, 170, 255)
+            lv = levels[j]
+            hh = jh * lv / mx
+            # 물 (아래부터) + 물결
+            wave = 6 * math.sin(t * 3 + j)
+            water = Image.new("RGBA", (S.W, S.H), (0, 0, 0, 0))
+            wd = ImageDraw.Draw(water)
+            wd.rounded_rectangle((x + 10, y_bot - hh + wave, x + jw - 10, y_bot - 10), 22, fill=col + (int(225 * o),))
+            wd.rectangle((x + 10, y_bot - hh + wave, x + jw - 10, y_bot - hh + wave + 10), fill=(255, 255, 255, int(120 * o)))
+            f.alpha_composite(water)
+            # 컵 테두리
+            d.rounded_rectangle((x, y_top, x + jw, y_bot), 28, outline=(235, 238, 246, int(255 * o)), width=7)
+            # 처음 높이 점선 (2단계부터)
+            if k2 > 0:
+                ys = y_bot - jh * float(it["start"]) / mx
+                for xx in range(int(x + 14), int(x + jw - 14), 22):
+                    d.line((xx, ys, xx + 11, ys), fill=(255, 214, 40, int(200 * min(1, k2 * 2))), width=4)
+            lab = T(it["label"], sp.get("label_size", 40), self.fg, "Black")
+            G.blit(f, lab, (x + jw / 2, y_bot + 24), o, "mt")
+            pct = T(f"{lv:.1f}{sp.get('unit', '%')}", 40, (255, 255, 255), "Black")
+            G.blit(f, pct, (x + jw / 2, max(y_top + 10, y_bot - hh - 60)), o, "mt")
+        # 3단계: 많은 컵 → 적은 컵 화살표
+        if k3 > 0 and k3 < 1:
+            rich = [j for j, it in enumerate(items) if float(it["now"]) > avg]
+            poor = [j for j, it in enumerate(items) if float(it["now"]) < avg]
+            a3 = math.sin(math.pi * k3)
+            for r_, p_ in zip(sorted(rich, key=lambda j: -float(items[j]["now"])), sorted(poor, key=lambda j: float(items[j]["now"]))):
+                xa = x0 + r_ * (jw + gap) + jw / 2
+                xb = x0 + p_ * (jw + gap) + jw / 2
+                ya = y_top - 30
+                mid = ((xa + xb) / 2, ya - 120)
+                pts = [((1 - u) ** 2 * xa + 2 * (1 - u) * u * mid[0] + u ** 2 * xb, (1 - u) ** 2 * ya + 2 * (1 - u) * u * mid[1] + u ** 2 * ya)
+                       for u in [i / 30 for i in range(31)]]
+                d.line(pts, fill=(255, 214, 40, int(255 * a3)), width=8, joint="curve")
+                ex, ey = pts[-1]
+                d.polygon([(ex, ey + 22), (ex - 18, ey - 10), (ex + 18, ey - 10)], fill=(255, 214, 40, int(255 * a3)))
+        cap = (sp.get("captions") or {})
+        stage = 3 if t >= p3 else (2 if t >= p2 else 1)
+        if cap.get(stage) or cap.get(str(stage)):
+            c = cap.get(stage) or cap.get(str(stage))
+            G.blit(f, T(c, 52, self.fg, "Black", highlight=sp.get("cap_hl", {}).get(str(stage), ""), hl_fill=self.acc),
+                   (S.W / 2, sp.get("cap_y", S.H - 110)), G.appear(t, {1: 0.3, 2: p2 + 0.3, 3: p3 + 0.3}[stage], 0.3), "mm")
+        self.finish(f, t)
+
+
+TYPES.update({"jars": Jars})

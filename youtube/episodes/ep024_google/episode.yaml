@@ -1,0 +1,874 @@
+title: 구글 -34%, 지금 사도 될까? 빅7 폭락 후 회복 속도, 구글은 몇 등?
+series_tag: 폭락장 데이터
+theme: 08
+pace: punchy
+clip_theme: stock
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    GOOGL: 구글
+    AI: 에이아이
+    MS: 마이크로소프트
+    TPU: 티피유
+    IPO: 아이피오
+    SEC: 미국 증권거래위원회
+    CEO: 씨이오
+bgm:
+  volume: 0.22
+  chapters:
+    인트로: tense
+    무슨 일이: tense
+    얼마나 버나: drive
+    구글 사업: drive
+    과거 8번: drive
+    -30%에 샀다면: hope
+    회복 속도: drive
+    비율 맞추기: hope
+    빅7은 계속?: drive
+    정리: hope
+chapter_titles:
+  인트로: 구글 -34% · 지금 사도 될까
+  무슨 일이: 10월 29일 · 역사상 최악의 하루
+  얼마나 버나: 1초에 560만 원 · 삼성전자 4개
+  구글 사업: 검색 · 유튜브 · 클라우드 · 냉정한 진단
+  과거 8번: 16년 동안 -20% 폭락 8번
+  -30%에 샀다면: 2020년 vs 2022년
+  회복 속도: 빅7 폭락 후 회복 속도 순위
+  비율 맞추기: 물컵 7개로 보는 리밸런싱
+  빅7은 계속?: 성적표 · 도전자 앤트로픽 · 스페이스X
+  정리: 물린 분들께 · 할 일 세 가지
+scenes:
+- type: kinetic
+  chapter: 인트로
+  bg:
+    kind: video
+    file: market_crash_v
+    dark: 0.6
+    blur: 3
+  items:
+  - text: '구글 주식,
+
+      요즘 계좌 열기 무서우시죠?'
+    highlight: 무서우시죠
+    'on': 1
+    size: 130
+  - text: 고점 대비 -34%
+    highlight: -34%
+    hl_color: down
+    'on': 2
+    size: 150
+  narration:
+  - 구글 주식 갖고 계신 분, 요즘 계좌 열기 무서우시죠?
+  - 5월 꼭대기에서 벌써 !!34%!! 빠졌거든요.
+- type: chart
+  chapter: 인트로
+  chart:
+    series: googl
+    start: '2026-01-02'
+    end: '2026-11-20'
+    color:
+    - 240
+    - 84
+    - 84
+    draw:
+      'on': 1
+      dur: 2.0
+    marks:
+    - date: '2026-05-13'
+      label: 사상 최고 402달러
+      sub: '5.13'
+      'on': 1
+      offset: 1.2
+      dy: -70
+      dx: -60
+      color: gold
+    - date: '2026-10-29'
+      label: 하루 -13%
+      sub: '10.29'
+      'on': 2
+      dy: -60
+      dx: -120
+      color: down
+    - date: '2026-11-20'
+      label: -34.1%
+      sub: 265달러
+      'on': 2
+      offset: 0.8
+      dy: 60
+      dx: -90
+      color: down
+      size: 36
+    source: '자료: 구글(알파벳 A주) 일간 종가 · 11.20 기준'
+    title: 구글 주가 · 2026년
+  narration:
+  - 다들 구글은 끝났다, 에이아이한테 검색을 뺏겼다고 하는데요.
+  - 데이터는 전혀 다른 이야기를 해요.
+- type: checklist
+  chapter: 인트로
+  kicker: 오늘 딱 세 가지만
+  title: 끝까지 보면 답이 나와요
+  highlight: 세 가지
+  title_size: 92
+  items:
+  - text: 과거에 -30%에서 산 사람들의 결말
+    'on': 1
+  - text: 빅7 폭락 후 회복 속도 순위
+    'on': 2
+  - text: 구글이 진짜 돈 버는 힘
+    'on': 3
+  icon: photo:g_hq_logo
+  icon_on: 1
+  icon_x: 1500
+  narration:
+  - 오늘 딱 세 가지만 보면 돼요. -30%에 산 사람들, 빅7 회복 속도, 그리고 구글이 진짜 돈 버는 힘.
+  - 그리고 빅7 중에 회복이 가장 빨랐던 종목은, 생각하시는 그 종목이 아니에요.
+- type: clips
+  chapter: 무슨 일이
+  title: 10월 29일 · 역사상 최악의 하루
+  highlight: 최악의 하루
+  items:
+  - outlet: CNBC
+    date: 2026.10.29
+    headline: Alphabet tanks nearly 13% for worst day ever, losing $500 billion in value
+    'on': 1
+  - outlet: 조선일보
+    date: 2026.10.30
+    headline: AI가 잘될수록 손해? 'AI의 역설'... 구글 시총 669조원 하룻밤 새 증발
+    'on': 2
+    hl: true
+  - outlet: Bloomberg
+    date: 2026.10.29
+    headline: Google Erases a Record $500 Billion as AI Eats Into Sales
+    'on': 3
+  credit: '기사 제목: CNBC · 조선일보 · 블룸버그 (보도 그대로)'
+  narration:
+  - 10월 29일, 3분기 실적이 나온 다음 날이었어요.
+  - 구글 주가가 하루에 !!13%!! 빠졌어요. 회사 역사상 최악의 하루예요.
+  - 하룻밤 사이에 사라진 시가총액이 약 **669조 원**이에요.
+- type: scale
+  chapter: 무슨 일이
+  heading: 하루 만에 사라진 669조, 얼마나 클까?
+  highlight: 669조
+  left:
+    label: 구글이 하루에 잃은 돈
+    value: 669조
+    weight: 669
+    sub: 10월 29일 하루
+    'on': 1
+  right:
+    label: 대한민국 1년 나라 살림
+    value: 727.9조
+    weight: 728
+    sub: 2026년 정부 예산
+    'on': 2
+  note: 나라 1년 예산의 92%가 하루 만에
+  note_hl: 92%
+  note_on: 2
+  narration:
+  - 얼마나 크냐면요, 우리나라 1년 나라 살림, 2026년 예산이 727조 9천억 원이에요.
+  - 나라 1년 예산의 **92%**가 하루 만에 사라진 셈이에요.
+- type: kpi
+  chapter: 무슨 일이
+  kpis:
+  - label: ① 본업 검색 광고 · 작년 같은 분기 대비
+    value: +12%
+    color: navy
+    'on': 1
+  - label: ③ 클라우드 매출 · 1년 만에
+    value: +103%
+    color: navy
+    'on': 4
+  bars:
+  - label: AI 투자비 2025 1~9월
+    value: 636
+    text: 636억$
+  - label: ② 2026 1~9월 · 2배
+    value: 1320
+    text: 1,320억$
+    hl: true
+  bars_on: 3
+  vmax: 1450
+  credit: '자료: 알파벳 2026년 3분기 보고서(10-Q) · 설비투자(유형자산 구입) 9개월 누적'
+  narration:
+  - 이유는 세 가지예요. 첫째, 본업인 검색 광고가 12% 늘긴 했는데 기대보다 느렸어요.
+  - 에이아이 답변이 광고 클릭을 줄인다는 걱정, 이른바 에이아이의 역설이에요.
+  - 둘째, 에이아이 투자비예요. 올해 9개월 동안 1,320억 달러, 작년의 두 배를 썼고 내년엔 더 늘린대요.
+  - 셋째, 클라우드가 !!103%!! 성장했는데도, 이 걱정을 못 이겼어요.
+- type: clips
+  chapter: 무슨 일이
+  title: AI, 구글에게 독일까 약일까
+  highlight: 독일까 약일까
+  items:
+  - outlet: BBC
+    date: 2026.10.30
+    headline: Google value plunges by $500bn as its own AI search hits ad sales
+    'on': 1
+  - outlet: TechCrunch
+    date: 2026.07.23
+    headline: Google's Gemini nears billion-user milestone
+    'on': 2
+    hl: true
+  - outlet: Yahoo Finance
+    date: 2026.10.28
+    headline: 'Alphabet Stock Falls 8% Even as Cloud Sales Double: Is AI Spending the Problem?'
+    'on': 3
+  credit: '기사 제목: BBC · 테크크런치 · 야후 파이낸스 (보도 그대로)'
+  narration:
+  - 시장의 고민은 이거예요. 구글이 에이아이를 잘할수록, 검색 광고를 스스로 갉아먹는 거 아니냐.
+  - 반대로 보면, 구글의 에이아이 제미나이는 사용자 10억 명을 앞두고 있어요.
+  - 에이아이가 독이 될지 약이 될지, 그걸 아직 아무도 확신 못 하니까 주가가 흔들리는 거예요.
+- type: photo_title
+  chapter: 얼마나 버나
+  bg:
+    kind: photo
+    file: g_hq_logo
+    dark: 0.6
+    gray: 0.3
+    focus:
+    - 0.5
+    - 0.35
+  title: '그런데 이 회사,
+
+    얼마나 벌길래?'
+  highlight: 얼마나
+  narration:
+  - 그런데 잠깐, 이 회사가 대체 얼마나 벌길래 이 난리일까요?
+- type: bignum
+  chapter: 얼마나 버나
+  label: 구글 순이익 · 1초에
+  from: 0
+  to: 560
+  fmt: '{:,.0f}만 원'
+  true: 1
+  dur: 1.4
+  color: up
+  sub: 2025년 순이익 1,322억 달러 ≈ 177조 원 · 1달러 1,340원
+  sub_on: 2
+  sfx:
+  - name: cash
+    true: 2
+    offset: 0.2
+  narration:
+  - 작년 구글 순이익이 1,322억 달러, 우리 돈 약 177조 원이에요.
+  - 1초로 나누면 약 **560만 원**. 이 영상 8분 보시는 동안 약 27억 원을 버는 거예요.
+- type: isobars
+  chapter: 얼마나 버나
+  kicker: 시가총액 · 11월 20일 · 1달러 1,340원
+  title: 구글 하나 = 삼성전자 4개
+  highlight: 4개
+  true: 1
+  step: 0.3
+  items:
+  - label: 1,056조
+    year: 삼성전자
+    value: 1056
+  - label: 4,370조
+    year: 구글
+    value: 4370
+    hl: true
+    sub: 34% 빠졌는데도
+  credit: '자료: 네이버 증권(삼성전자) · 구글 주식 수(SEC) × 11.20 종가'
+  narration:
+  - 34%나 빠진 지금도 구글 시가총액은 약 4,370조 원.
+  - 삼성전자 시가총액이 1,056조 원이니까, 구글 하나가 삼성전자 **4개**예요.
+- type: hbars
+  chapter: 구글 사업
+  kicker: 2026년 3분기 매출 1,276억 달러 · 작년 같은 분기 대비
+  title: 구글은 어디서 돈을 버나
+  highlight: 돈
+  title_y: 150
+  bar_h: 56
+  row_gap: 30
+  rows:
+  - label: 검색 광고 · +12%
+    value: 633.5
+    text: 634억$
+  - label: 클라우드 · +103%
+    value: 307.1
+    text: 307억$
+    hl: true
+  - label: 구독 · 기기 (유튜브 프리미엄 · 픽셀) · +11%
+    value: 142.9
+    text: 143억$
+  - label: 유튜브 광고 · +9%
+    value: 112.1
+    text: 112억$
+  - label: 광고 네트워크 · +1%
+    value: 74.6
+    text: 75억$
+  credit: '자료: 알파벳 2026년 3분기 보고서(10-Q) · 기타 사업 · 환헤지 제외'
+  narration:
+  - 구글 매출의 절반은 여전히 검색 광고예요. 3분기에만 634억 달러.
+  - 여기에 유튜브 광고, 유튜브 프리미엄 같은 구독, 픽셀 폰 같은 기기가 붙고요.
+  - 그리고 요즘 주인공, 클라우드가 307억 달러. 1년 만에 두 배가 됐어요.
+- type: duel
+  chapter: 구글 사업
+  heading: 냉정하게 보면
+  left:
+    title: 좋은 점
+    value: 영업이익 +30%
+    sub: 클라우드 2배 · 제미나이 · 자체 AI 칩
+    color: up
+    'on': 1
+  right:
+    title: 걱정
+    value: 투자비 2배
+    sub: 검색 둔화 · 장부상 이익은 흔들림
+    color: down
+    'on': 2
+  narration:
+  - 냉정하게 볼게요. 좋은 점부터. 3분기 영업이익은 오히려 작년보다 !!30%!! 늘었어요.
+  - 순이익이 줄어든 건 본업이 아니라, 투자해 둔 회사들 평가손실 때문이었어요.
+  - 걱정도 분명해요. 투자비는 두 배로 늘었고, 검색은 예전만큼 빨리 안 커요.
+  - 결국 핵심은 하나예요. 새 사업이 버는 돈으로 본업의 빈자리를 메울 수 있느냐.
+- type: bignum
+  chapter: 구글 사업
+  label: 구글이 들고 있는 비상장 회사 지분 · 장부가
+  from: 0
+  to: 1282
+  fmt: '{:,.0f}억 달러'
+  'on': 1
+  dur: 1.3
+  color: up
+  sub: 약 172조 원 · 2026년 9월 말 · 앤트로픽 · 스페이스X 등
+  sub_on: 2
+  credit: '자료: 알파벳 2026년 3분기 보고서(10-Q) 비상장 지분증권(measurement alternative)'
+  narration:
+  - 숨은 카드도 있어요. 구글이 들고 있는 비상장 회사 지분이 장부가로만 1,282억 달러, 약 172조 원이에요.
+  - 여기엔 앤트로픽, 스페이스엑스 같은 회사가 들어 있어요. 이 얘기는 뒤에서 다시 할게요.
+- type: chart
+  chapter: 과거 8번
+  chart:
+    series: googl
+    start: '2010-07-09'
+    end: '2026-11-20'
+    log: true
+    color:
+    - 90
+    - 170
+    - 255
+    draw:
+      'on': 1
+      dur: 2.2
+    marks:
+    - date: '2020-03-23'
+      label: 코로나 · -31%
+      'on': 1
+      offset: 1.4
+      dy: 70
+      dx: -40
+      color: down
+    - date: '2022-11-03'
+      label: 금리 · -44%
+      'on': 2
+      dy: 70
+      color: down
+      size: 36
+    - date: '2025-04-08'
+      label: 관세 · -30%
+      'on': 2
+      offset: 0.6
+      dy: 70
+      dx: -60
+      color: down
+    - date: '2026-11-20'
+      label: 지금 · -34%
+      'on': 3
+      dy: 60
+      dx: -110
+      color: down
+      size: 36
+    source: '자료: 구글 일간 종가(로그 눈금) · 2010.7~2026.11'
+    title: 구글 16년 · 고점 대비 -20% 넘게 빠진 8번
+  narration:
+  - 그럼 과거엔 어땠을까요? 2010년 이후 구글이 고점에서 20% 넘게 빠진 게 8번이에요.
+  - 가장 깊었던 건 2022년 금리 인상 때, !!-44%!!.
+  - 그리고 지금이 8번째예요.
+- type: leaderboard
+  chapter: 과거 8번
+  kicker: -20% 넘게 빠진 뒤 · 다시 꼭대기까지 · 긴 순서 5개 (나머지 2번은 81일 · 154일)
+  title: 앞의 7번은 전부 회복
+  highlight: 전부 회복
+  'on': 1
+  rows:
+  - label: 2020년 코로나
+    sub: -31%
+    value: 142
+    text: 142일
+  - label: 2025년 관세
+    sub: -30%
+    value: 202
+    text: 202일
+  - label: 2018년
+    sub: -23%
+    value: 277
+    text: 277일
+  - label: 2011년
+    sub: -26%
+    value: 343
+    text: 343일
+  - label: 2022년 금리
+    sub: -44%
+    value: 798
+    text: 798일 · 2년 2개월
+    color:
+    - 255
+    - 96
+    - 96
+  narration:
+  - 앞의 7번은 전부 꼭대기를 되찾았어요. 짧으면 81일, 가장 길었던 2022년도 2년 2개월.
+  - 참고로 20년 전 2008년 금융위기 땐 67%까지 빠지고, 회복에 5년쯤 걸렸어요. 아주 옛날 일이라 참고만 하세요.
+  top: 330
+  row_h: 120
+  credit: '참고: 2008년 금융위기 때는 -67%, 전고점까지 약 5년 (20년 전 · 구글 연차보고서 분기 최고·최저가 기준)'
+- type: duel
+  chapter: -30%에 샀다면
+  heading: 구글이 고점 대비 -30%가 된 날 샀다면
+  highlight: -30%
+  left:
+    title: 2020년 3월 23일
+    value: 1년 뒤 +94%
+    sub: 산 날이 정확히 바닥
+    color: up
+    'on': 1
+  right:
+    title: 2022년 9월 13일
+    value: -20% 더
+    sub: 그래도 1년 뒤 +31% · 3년 뒤 +131%
+    color: down
+    'on': 2
+  narration:
+  - 이제 질문의 핵심. 고점 대비 -30%가 된 날 샀다면 어땠을까요?
+  - 2020년 코로나 땐 그날이 정확히 바닥이었어요. 1년 뒤 !!94%!!.
+  - 그런데 2022년엔 거기서 20%가 더 빠졌어요. 그래도 1년 뒤 31%, 3년 뒤엔 131%였고요.
+- type: chart
+  chapter: -30%에 샀다면
+  chart:
+    series: googl
+    start: '2021-11-01'
+    end: '2025-09-12'
+    base: 1000
+    unit: won
+    color:
+    - 255
+    - 204
+    - 40
+    draw:
+      'on': 1
+      dur: 2.2
+    marks:
+    - date: '2022-09-13'
+      label: -30% · 1,000만 원
+      'on': 1
+      dy: -60
+      color: gold
+    - date: '2022-11-03'
+      label: 더 빠짐 · 800만
+      'on': 1
+      offset: 1.0
+      dy: 70
+      color: down
+    - date: '2025-09-12'
+      label: 3년 뒤 2,308만
+      'on': 2
+      dy: -60
+      dx: -120
+      color: up
+      size: 36
+    source: '자료: 구글 일간 종가 (배당 제외)'
+    title: 2022년 9월 -30%에 1,000만 원 (만 원)
+  narration:
+  - 즉, -30%는 바닥일 수도 있고, 한 번 더 빠지기 전일 수도 있어요.
+  - 그래서 한 번에 다 사지 말고, 나눠서 사는 게 마음 편해요.
+- type: podium
+  chapter: 회복 속도
+  kicker: 고점 대비 -30%에 산 뒤 → 전고점까지 · 평균 (2010~, 끝난 구간)
+  title: 빅7 폭락 후 회복 속도 순위
+  highlight: 회복 속도
+  'on': 1
+  rows:
+  - label: 마이크로소프트
+    sub: 평균 235일
+    value: 3
+    text: 235일
+  - label: 애플
+    sub: 평균 266일
+    value: 2
+    text: 266일
+  - label: 구글
+    sub: 평균 304일
+    value: 1
+    text: 304일
+  narration:
+  - 자, 인트로에서 말씀드린 빅7 회복 속도 순위예요.
+  - 1등은 엔비디아가 아니라 마이크로소프트, 2등 애플, 그리고 **구글이 3등**이에요.
+- type: hbars
+  chapter: 회복 속도
+  kicker: -30%에 산 뒤 전고점까지 평균 · 3위부터 · 산 뒤 더 빠진 폭
+  title: 엔비디아는 꼴찌
+  highlight: 꼴찌
+  rows:
+  - label: 구글 · -10%
+    value: 304
+    text: 304일
+    hl: true
+  - label: 메타 · -24%
+    value: 351
+    text: 351일
+  - label: 아마존 · -9%
+    value: 352
+    text: 352일
+  - label: 테슬라 · -21%
+    value: 390
+    text: 390일
+  - label: 엔비디아 · -28%
+    value: 502
+    text: 502일
+  credit: '자료: 각 사 일간 종가 2010~2026.11 · 구글은 -30% 사례 2번뿐'
+  narration:
+  - 엔비디아는 회복이 가장 느렸어요. 평균 502일, 최악일 땐 4년 반.
+  - 구글은 -30%에 산 뒤 더 빠진 폭도 평균 10%로 작은 편이었어요. 다만 사례가 두 번뿐이라 참고만 하세요.
+  title_y: 130
+  bar_h: 38
+  row_gap: 22
+  vmax: 640
+- type: jars
+  chapter: 비율 맞추기
+  kicker: 빅7을 똑같이 7등분 · 10월 6일 시작 → 11월 20일
+  title: 물컵 7개로 보는 '비율 맞추기'
+  highlight: 비율 맞추기
+  title_y: 110
+  items:
+  - label: 구글
+    start: 14.3
+    now: 13.0
+    color:
+    - 66
+    - 133
+    - 244
+  - label: 애플
+    start: 14.3
+    now: 17.5
+    color:
+    - 170
+    - 176
+    - 190
+  - label: MS
+    start: 14.3
+    now: 15.6
+    color:
+    - 0
+    - 164
+    - 239
+  - label: 아마존
+    start: 14.3
+    now: 16.4
+    color:
+    - 255
+    - 153
+    - 0
+  - label: 메타
+    start: 14.3
+    now: 13.0
+    color:
+    - 24
+    - 119
+    - 242
+  - label: 엔비디아
+    start: 14.3
+    now: 9.0
+    color:
+    - 118
+    - 185
+    - 0
+  - label: 테슬라
+    start: 14.3
+    now: 15.5
+    color:
+    - 232
+    - 33
+    - 39
+  captions:
+    1: 처음엔 7개 컵에 물을 똑같이
+    2: 주가가 움직이면 물높이가 달라져요
+    3: 많은 컵에서 덜어 적은 컵에 채우기
+  cap_hl:
+    '1': 똑같이
+    '2': 달라져요
+    '3': 채우기
+  narration:
+  - 이제 빅7을 통째로 들고 있는 분들을 위한 방법이에요. 물컵 7개로 볼게요.
+  - 10월 6일에 7개 종목에 똑같이 나눠 담았다면, 지금은 엔비디아 컵이 제일 줄고, 애플 컵은 오히려 늘었어요.
+  - 이때 많이 남은 컵에서 조금 덜어서, 많이 줄어든 컵에 채워 주는 거예요. 이걸 비율 맞추기, 리밸런싱이라고 해요.
+  cap_y: 305
+  jar_top: 370
+  jar_bot: 790
+- type: matrix
+  chapter: 비율 맞추기
+  kicker: 10월 6일 1,000만 원을 7등분 → 11월 20일 · 다시 똑같이 맞추려면
+  title: 실제로 얼마를 옮길까
+  highlight: 얼마
+  best: false
+  top: 400
+  row_h: 74
+  font: 44
+  label_w: 420
+  cols:
+  - label: 지금
+    'on': 1
+  - label: 맞추려면
+    'on': 2
+  rows:
+  - label: 엔비디아
+    values:
+    - 75.0
+    - 44.6
+    texts:
+    - 75만
+    - +45만 사기
+  - label: 메타
+    values:
+    - 108.4
+    - 11.2
+    texts:
+    - 108만
+    - +11만 사기
+  - label: 구글
+    values:
+    - 109.0
+    - 10.6
+    texts:
+    - 109만
+    - +11만 사기
+  - label: 테슬라
+    values:
+    - 129.7
+    - -10.1
+    texts:
+    - 130만
+    - -10만 팔기
+  - label: 마이크로소프트
+    values:
+    - 130.7
+    - -11.1
+    texts:
+    - 131만
+    - -11만 팔기
+  - label: 아마존
+    values:
+    - 137.6
+    - -18.0
+    texts:
+    - 138만
+    - -18만 팔기
+  - label: 애플
+    values:
+    - 146.7
+    - -27.1
+    texts:
+    - 147만
+    - -27만 팔기
+  credit: 합계 837만 → 종목마다 약 120만 원씩 · 세금 · 수수료 제외
+  narration:
+  - 실제 숫자로 볼게요. 10월 6일에 1,000만 원을 7등분했다면, 지금 합계는 837만 원이에요.
+  - 똑같이 맞추려면 애플에서 27만 원, 아마존에서 18만 원을 덜어서, 엔비디아에 45만 원을 채우는 식이에요.
+  - 많이 빠진 걸 싸게 더 사고, 덜 빠진 걸 비싸게 조금 파는 거죠. 빅7은 결국 전고점을 되찾아 왔으니까요.
+- type: matrix
+  chapter: 비율 맞추기
+  kicker: 빅7 똑같이 7등분 · 2012년 5월 ~ 2026년 11월 · 분기마다 비율 맞추기
+  title: 그냥 들고 있기 vs 비율 맞추기
+  title_parts:
+  - - 그냥 들고 있기
+    - yellow
+  - - ' vs '
+    - white
+  - - 비율 맞추기
+    - green
+  best: row
+  cols:
+  - label: 그냥 들고 있기
+    'on': 1
+  - label: 비율 맞추기
+    'on': 2
+  rows:
+  - label: 14년 수익
+    values:
+    - 99.1
+    - 72.5
+    texts:
+    - 99배
+    - 72배
+  - label: 최대 낙폭
+    values:
+    - -63
+    - -49
+    texts:
+    - -63%
+    - -49%
+  - label: 지금 고점 대비
+    values:
+    - -38
+    - -17
+    texts:
+    - -38%
+    - -17%
+  - label: 2021 고점에 시작했다면
+    values:
+    - 1.86
+    - 2.1
+    texts:
+    - 1.86배
+    - 2.10배
+  credit: '자료: 각 사 일간 종가로 직접 계산 · 배당 · 세금 · 수수료 제외'
+  narration:
+  - 2012년부터 실제로 계산해 봤어요. 14년 총수익은 그냥 들고 있기가 99배로 더 높았어요. 엔비디아 하나가 너무 많이 올라서예요.
+  - 하지만 폭락장에선 달랐어요. 최대 낙폭이 -63% 대신 -49%, 지금도 고점 대비 -38% 대신 **-17%**예요.
+  - 2021년 꼭대기에 시작했다면, 비율 맞추기가 오히려 수익도 더 높았고요.
+  top: 450
+  row_h: 100
+- type: matrix
+  chapter: 빅7은 계속?
+  kicker: 연 매출 · 순이익 (최근 회계연도 · SEC) · 지금 고점 대비
+  title: 빅7 냉정한 성적표
+  highlight: 성적표
+  best: false
+  cols:
+  - label: 매출
+    'on': 1
+  - label: 순이익
+    'on': 1
+  - label: 고점 대비
+    'on': 2
+  rows:
+  - label: 애플
+    values:
+    - 4788
+    - 1322
+    - -4
+    texts:
+    - 4,788억$
+    - 1,322억$
+    - -4%
+  - label: 마이크로소프트
+    values:
+    - 3318
+    - 1337
+    - -13
+    texts:
+    - 3,318억$
+    - 1,337억$
+    - -13%
+  - label: 아마존
+    values:
+    - 7169
+    - 777
+    - -13
+    texts:
+    - 7,169억$
+    - 777억$
+    - -13%
+  - label: 구글
+    values:
+    - 4028
+    - 1322
+    - -34
+    texts:
+    - 4,028억$
+    - 1,322억$
+    - -34%
+  - label: 메타
+    values:
+    - 2010
+    - 605
+    - -29
+    texts:
+    - 2,010억$
+    - 605억$
+    - -29%
+  - label: 엔비디아
+    values:
+    - 2159
+    - 1201
+    - -48
+    texts:
+    - 2,159억$
+    - 1,201억$
+    - -48%
+  - label: 테슬라
+    values:
+    - 948
+    - 39
+    - -29
+    texts:
+    - 948억$
+    - 39억$
+    - -29%
+  credit: '자료: SEC 공시(각 사 최근 회계연도) · 주가 11.20 · 1달러 단위'
+  narration:
+  - 빅7 성적표를 냉정하게 볼게요.
+  - 애플과 마이크로소프트는 가장 덜 빠졌고, 버는 돈도 꾸준해요.
+  - 가장 약한 건 테슬라예요. 순이익이 2023년 150억 달러에서 작년 39억 달러로 줄었어요.
+  top: 410
+  row_h: 76
+  font: 44
+- type: clips
+  chapter: 빅7은 계속?
+  title: 도전자들이 몰려온다
+  highlight: 도전자
+  items:
+  - outlet: CNBC
+    date: 2026.11.18
+    headline: Anthropic IPO raises over $81 billion in largest offering on record, topping SpaceX
+    'on': 1
+    hl: true
+  - outlet: Reuters
+    date: 2026.11.19
+    headline: Anthropic's $1.5 trillion debut rewrites venture capital's playbook
+    'on': 1
+  - outlet: Fortune
+    date: 2026.07.22
+    headline: Anthropic and SpaceX just handed Google the biggest profit quarter in company history—on paper
+    'on': 2
+  credit: '기사 제목: CNBC · 로이터 · 포춘 (보도 그대로)'
+  narration:
+  - 빅7 자리는 영원할까요? 이번 달 앤트로픽이 역사상 가장 큰 기업공개를 했고, 스페이스엑스도 상장했어요.
+  - 그런데 재밌는 점. 구글은 앤트로픽과 스페이스엑스의 주주예요. 올해 2분기엔 그 지분 덕에 장부상 역대 최대 이익을 냈고요.
+  - 빅7이라는 이름은 바뀔 수 있어도, 구글은 도전자 쪽에도 발을 걸쳐 둔 셈이에요.
+- type: checklist
+  chapter: 정리
+  kicker: 구글에 물린 분들께
+  title: 지금 할 일 세 가지
+  highlight: 세 가지
+  title_size: 96
+  items:
+  - text: 한 번에 말고, 세 번에 나눠서
+    'on': 1
+  - text: 빅7이면 비율 맞추기
+    'on': 2
+    highlight: 비율 맞추기
+  - text: 다음 실적의 검색 광고 숫자 확인
+    'on': 3
+  icon: photo:g_search_phone
+  icon_on: 1
+  icon_x: 1500
+  narration:
+  - 정리할게요. 구글은 과거 7번 모두 회복했고, 빅7 중 회복 속도 3등이었어요. 다만 한 번 더 빠질 수도 있어요.
+  - 그래서 첫째, 한 번에 말고 세 번에 나눠서. 둘째, 빅7을 갖고 있다면 비율 맞추기.
+  - 셋째, 다음 실적에서 검색 광고 숫자가 다시 빨라지는지 꼭 확인하세요.
+- type: outro
+  chapter: 정리
+  heading: '구글, 지금 사시겠어요?
+
+    버티시겠어요?'
+  highlight: 버티시겠어요
+  sub: 댓글로 알려 주세요
+  disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목의 매수·매도 추천이 아닙니다.
+
+    과거 데이터는 미래 수익을 보장하지 않으며, 투자 판단과 책임은 본인에게 있습니다.'
+  subscribe_on: 2
+  narration:
+  - 여러분은 구글, 지금 사시겠어요, 버티시겠어요? 댓글로 알려 주세요.
+  - 폭락장에서도 데이터로 버티는 법, 주식 악어새가 계속 찾아올게요.
+thumb_pick: T05
