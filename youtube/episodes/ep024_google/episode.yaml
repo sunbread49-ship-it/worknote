@@ -504,36 +504,61 @@ scenes:
   narration:
   - 자, 인트로에서 말씀드린 빅7 회복 속도 순위예요.
   - 1등은 엔비디아가 아니라 마이크로소프트, 2등 애플, 그리고 **구글이 3등**이에요.
-- type: hbars
+- type: vbars
   chapter: 회복 속도
-  kicker: -30%에 산 뒤 전고점까지 평균 · 3위부터 · 산 뒤 더 빠진 폭
+  kicker: 고점 대비 -30%에 산 뒤 → 전고점까지 · 평균 (2010~, 끝난 구간)
   title: 엔비디아는 꼴찌
   highlight: 꼴찌
   rows:
-  - label: 구글 · -10%
+  - label: MS
+    value: 235
+    text: 235일
+    sub: 더 빠진 폭 -8%
+  - label: 애플
+    value: 266
+    text: 266일
+    sub: -6%
+  - label: 구글
     value: 304
     text: 304일
+    sub: -10%
     hl: true
-  - label: 메타 · -24%
+    color:
+    - 66
+    - 133
+    - 244
+  - label: 메타
     value: 351
     text: 351일
-  - label: 아마존 · -9%
+    sub: -24%
+  - label: 아마존
     value: 352
     text: 352일
-  - label: 테슬라 · -21%
+    sub: -9%
+  - label: 테슬라
     value: 390
     text: 390일
-  - label: 엔비디아 · -28%
+    sub: -21%
+  - label: 엔비디아
     value: 502
     text: 502일
+    sub: -28%
+    color:
+    - 240
+    - 84
+    - 84
+  vmax: 600
+  tag:
+    row: 6
+    text: 최악 4년 반
+    color: down
+    'on': 1
   credit: '자료: 각 사 일간 종가 2010~2026.11 · 구글은 -30% 사례 2번뿐'
   narration:
   - 엔비디아는 회복이 가장 느렸어요. 평균 502일, 최악일 땐 4년 반.
   - 구글은 -30%에 산 뒤 더 빠진 폭도 평균 10%로 작은 편이었어요. 다만 사례가 두 번뿐이라 참고만 하세요.
-  title_y: 130
-  bar_h: 38
-  row_gap: 22
-  vmax: 640
+  base_y: 780
+  height: 420
 - type: jars
   chapter: 비율 맞추기
   kicker: 빅7을 똑같이 7등분 · 10월 6일 시작 → 11월 20일
@@ -681,17 +706,27 @@ scenes:
   title: 그냥 들고 있기 vs 비율 맞추기
   title_parts:
   - - 그냥 들고 있기
-    - yellow
+    - &id001
+      - 255
+      - 204
+      - 40
   - - ' vs '
-    - white
+    - - 255
+      - 255
+      - 255
   - - 비율 맞추기
-    - green
+    - &id002
+      - 90
+      - 220
+      - 150
   best: row
   cols:
   - label: 그냥 들고 있기
     'on': 1
+    color: *id001
   - label: 비율 맞추기
     'on': 2
+    color: *id002
   rows:
   - label: 14년 수익
     values:

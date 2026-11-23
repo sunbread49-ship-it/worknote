@@ -4917,3 +4917,81 @@ class Jars(Editorial):
 
 
 TYPES.update({"jars": Jars})
+
+
+
+# ════════════════════════════════════════════════════════════════
+# vbars — 세로 막대 (2026-11-23 사용자: 가로 막대보다 세로 막대를 많이 · 예쁘고 직관적으로)
+#   순서는 적은 그대로(순위 자동 정렬 없음) · 막대가 왼쪽부터 차례로 솟고 꼭대기에 숫자 · 아래 이름 + 작은 설명
+#   rows: [{label, value, text, sub, color, hl, on}] · vmax · ref: {value, label}(점선 기준선) · bar_w · base_y · height
+#   tag: {row: 인덱스, text} 막대 위 말풍선(예: '꼴찌')
+class VBars(Editorial):
+    def draw(self, f, t):
+        sp = self.spec
+        self.base(f)
+        self.hdr(f, t, y=sp.get("title_y", 130))
+        rows = sp["rows"]
+        n = len(rows)
+        vmax = float(sp.get("vmax") or max(float(r["value"]) for r in rows) * 1.12)
+        base_y, Hmax = sp.get("base_y", 860), sp.get("height", 470)
+        span = S.W - 2 * S.SAFE_X - 80
+        gap = span / n
+        bw = sp.get("bar_w", min(170, gap * 0.62))
+        x0 = S.SAFE_X + 40
+        t0 = self.line_start(sp.get("on", 1))
+        step = sp.get("step", 0.18)
+        d = ImageDraw.Draw(f)
+        d.line((x0 - 10, base_y, S.W - S.SAFE_X - 30, base_y), fill=self.fg + (120,), width=3)
+        dim = (120, 128, 150)
+        for i, r in enumerate(rows):
+            ti = self.line_start(r["on"]) if r.get("on") else t0 + i * step
+            k = G.ease_out((t - ti) / 0.7)
+            if k <= 0:
+                continue
+            cx = x0 + gap * (i + 0.5)
+            hl = r.get("hl")
+            c = _col(r["color"]) if r.get("color") else (self.acc if hl else dim)
+            h = max(8, Hmax * float(r["value"]) / vmax * k)
+            # 막대: 위가 둥근 그라데이션 + 은은한 빛
+            bar = Image.new("RGBA", (int(bw), int(h) + 30), (0, 0, 0, 0))
+            bd = ImageDraw.Draw(bar)
+            for yy in range(int(h) + 30):
+                fade = 1.0 - 0.35 * yy / max(h, 1)
+                bd.line((0, yy, bw, yy), fill=tuple(int(min(255, v * fade + (40 if yy < 10 else 0))) for v in c) + (255,))
+            m = Image.new("L", bar.size, 0)
+            ImageDraw.Draw(m).rounded_rectangle((0, 0, bw - 1, h + 40), int(bw * 0.28), fill=255)
+            bar.putalpha(m)
+            if hl:
+                glow = Image.new("RGBA", (int(bw) + 80, int(h) + 80), (0, 0, 0, 0))
+                ImageDraw.Draw(glow).rounded_rectangle((40, 40, bw + 40, h + 80), int(bw * 0.3), fill=c + (150,))
+                G.blit(f, glow.filter(ImageFilter.GaussianBlur(22)), (cx - bw / 2 - 40, base_y - h - 40), min(1, k))
+            G.blit(f, bar.crop((0, 0, int(bw), int(h))), (cx - bw / 2, base_y - h), 1)
+            val = T(counter(r["text"], k), 62 if hl else 50, c if hl else self.fg, "Black")
+            G.blit(f, val, (cx, base_y - h - 14), min(1, k * 2), "mb")
+            G.blit(f, T(r["label"], 40 if hl else 36, c if hl else self.fg, "Black"), (cx, base_y + 18), k, "mt")
+            if r.get("sub"):
+                G.blit(f, T(r["sub"], 26, (190, 196, 212), "SemiBold"), (cx, base_y + 68), k, "mt")
+        if sp.get("ref"):
+            rf = sp["ref"]
+            ok = G.appear(t, self.line_start(rf.get("on", 1)) + 0.4, 0.4)
+            if ok > 0:
+                yr = base_y - Hmax * float(rf["value"]) / vmax
+                for xx in range(int(x0), int(S.W - S.SAFE_X - 40), 26):
+                    d.line((xx, yr, xx + 13, yr), fill=(255, 214, 40, int(220 * ok)), width=4)
+                G.blit(f, T(rf.get("label", ""), 30, (255, 214, 40), "Black"), (S.W - S.SAFE_X - 40, yr - 10), ok, "rb")
+        if sp.get("tag"):
+            tg = sp["tag"]
+            j = tg["row"]
+            r = rows[j]
+            ok = G.appear(t, self.line_start(tg.get("on", 1)) + 0.5, 0.35)
+            if ok > 0:
+                cx = x0 + gap * (j + 0.5)
+                h = Hmax * float(r["value"]) / vmax
+                pill = G.pill(tg["text"], "Black", 40, (255, 255, 255), _col(tg.get("color", "down")), pad=(22, 10), radius=16)
+                G.blit(f, pill, (cx, base_y - h - 96), ok, "mb")
+        if sp.get("note"):
+            G.blit(f, T(sp["note"], 26, (180, 186, 204), "SemiBold"), (S.W / 2, sp.get("base_y", 860) + 125), 1, "mt")
+        self.finish(f, t)
+
+
+TYPES.update({"vbars": VBars})
