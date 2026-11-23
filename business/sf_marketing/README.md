@@ -1,7 +1,7 @@
-# 쇼츠 팩토리 마케팅 샘플 (11/23 최종본)
+# 쇼츠 팩토리 마케팅 샘플 (11/23 최종본 · 목소리 샘플 10종 반영 후 재생성)
 
 재료: 실제 서비스 화면 캡처 + 요즘 장르(드라마 · 아이돌 · 예능) 장면 사진 (Unsplash, photos/*.json 에 작가) → mock.py 로 템플릿 5종 결과 화면 합성
-다시 만들기: `python3 make_mk.py` (캡처 d_*.png 는 scratchpad/mk/cap.js 로 생성)
+다시 만들기: `node cap2.js` (서버 없이 web/index.html 을 파일로 열어 캡처 d_*.png 생성) → `python3 make_mk.py` → out/ 의 jpg 를 이 폴더로 복사
 
 ## 1. 릴스 / 쇼츠 홍보 영상 (9:16 · 약 20초 · reel_01~07)
 | 장면 | 시간 | 화면 | 내레이션 · 자막 |

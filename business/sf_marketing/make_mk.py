@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 D = Path(__file__).resolve().parent
-SF = Path("/home/user/shorts-factory")
+SF = next((p for p in (Path("/home/user/Shorts-Factory"), Path("/home/user/shorts-factory")) if p.exists()), Path("/home/user/Shorts-Factory"))
 FD = SF / "server/fonts"
 TPL = Path(__file__).resolve().parent / "mock"   # 2026-11-23 사용자: 우리 채널 샘플 말고 요즘 장르(드라마 · 아이돌 · 예능)
 OUT = D / "out"
