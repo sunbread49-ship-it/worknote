@@ -140,21 +140,13 @@ def make(sp):
         ImageDraw.Draw(card).rounded_rectangle((0, 0, card.width - 1, card.height - 1), 36, fill=(255, 255, 255, 255))
         card.alpha_composite(lg, (40, 30))
         TH.shadowed(f, card, (620, 60))
-        TH.shadowed(f, big("몇 등?", 210, 700, color=YEL), (1330, 40))
-        TH.shadowed(f, big("빅7 폭락 후 회복 속도", 92, 1250, color=WHITE), (640, 300))
-        # 시상대: 2위 · 1위 · 3위 (전부 물음표 + 커튼)
-        x0, base_y = 700, 1010
-        for rank, hgt, x in ((2, 250, x0), (1, 340, x0 + 380), (3, 190, x0 + 760)):
-            blk = Image.new("RGBA", (340, hgt), (0, 0, 0, 0))
-            dd = ImageDraw.Draw(blk)
-            dd.rounded_rectangle((0, 0, 339, hgt - 1), 22, fill=(46, 54, 78, 255), outline=(255, 214, 40, 255), width=5)
-            n = TH.T(f"{rank}위", 64, (200, 206, 222))
-            blk.alpha_composite(n, ((340 - n.width) // 2, hgt - n.height - 22))
-            TH.shadowed(f, blk, (x, base_y - hgt))
-            q = TH.T("?", 190, YEL if rank == 1 else WHITE)
-            TH.shadowed(f, q, (x + 170, base_y - hgt - 8), "mb")
-        TH.shadowed(f, pill("4~7위도 ?", 46, bg=(70, 78, 100)), (1640, 430))
-        TH.shadowed(f, pill("1등은 엔비디아가 아니다", 50, bg=RED), (640, 430))
+        # 11/23 사용자: 힌트 그림 대신 친절하고 직관적인 문장으로
+        s1 = big("구글은 빅7 중", 120, 1240, color=WHITE)
+        s2 = big("폭락 후 회복 속도가", 120, 1240, color=WHITE)
+        s3 = big("몇 등일까?", 230, 1240, color=YEL, hl="몇 등", hl_color=YEL)
+        TH.shadowed(f, s1, (640, 330))
+        TH.shadowed(f, s2, (640, 330 + s1.height + 10))
+        TH.shadowed(f, s3, (630, 330 + s1.height + s2.height + 40))
     elif v == "phone":       # 검색 화면 + AI 질문
         f.alpha_composite(photo("g_search_phone", W, H, focus=(0.45, 0.4), dark=0.3, gray=0.1))
         shade(f, "left", 0.7, 245)
