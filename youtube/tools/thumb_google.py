@@ -129,6 +129,32 @@ def make(sp):
         shade(f, "left", 0.42, 120)
         TH.shadowed(f, bars(sp), (700, 350))
         TH.shadowed(f, big(sp["top"], 130, 1250, color=WHITE, hl=sp.get("hl", ""), hl_color=YEL), (680, 60))
+    elif v == "podium":      # 11/23 사용자: T05 + 구글 로고 · 순위 힌트는 더 궁금하게 (시상대 1~3위 전부 '?')
+        f = TH.bg_dark((20, 50, 120), (0.65, 0.55))
+        f.alpha_composite(photo("g_pichai", 560, H, focus=(0.5, 0.25), dark=0.3, gray=0.2), (0, 0))
+        shade(f, "left", 0.36, 110)
+        # 구글 로고 카드 (상표: 변형 없이)
+        lg = Image.open(ROOT / "assets/photos/g_logo_flat.png").convert("RGBA")
+        lg = lg.resize((520, int(520 * lg.height / lg.width)), Image.LANCZOS)
+        card = Image.new("RGBA", (lg.width + 80, lg.height + 60), (0, 0, 0, 0))
+        ImageDraw.Draw(card).rounded_rectangle((0, 0, card.width - 1, card.height - 1), 36, fill=(255, 255, 255, 255))
+        card.alpha_composite(lg, (40, 30))
+        TH.shadowed(f, card, (620, 60))
+        TH.shadowed(f, big("몇 등?", 210, 700, color=YEL), (1330, 40))
+        TH.shadowed(f, big("빅7 폭락 후 회복 속도", 92, 1250, color=WHITE), (640, 300))
+        # 시상대: 2위 · 1위 · 3위 (전부 물음표 + 커튼)
+        x0, base_y = 700, 1010
+        for rank, hgt, x in ((2, 250, x0), (1, 340, x0 + 380), (3, 190, x0 + 760)):
+            blk = Image.new("RGBA", (340, hgt), (0, 0, 0, 0))
+            dd = ImageDraw.Draw(blk)
+            dd.rounded_rectangle((0, 0, 339, hgt - 1), 22, fill=(46, 54, 78, 255), outline=(255, 214, 40, 255), width=5)
+            n = TH.T(f"{rank}위", 64, (200, 206, 222))
+            blk.alpha_composite(n, ((340 - n.width) // 2, hgt - n.height - 22))
+            TH.shadowed(f, blk, (x, base_y - hgt))
+            q = TH.T("?", 190, YEL if rank == 1 else WHITE)
+            TH.shadowed(f, q, (x + 170, base_y - hgt - 8), "mb")
+        TH.shadowed(f, pill("4~7위도 ?", 46, bg=(70, 78, 100)), (1640, 430))
+        TH.shadowed(f, pill("1등은 엔비디아가 아니다", 50, bg=RED), (640, 430))
     elif v == "phone":       # 검색 화면 + AI 질문
         f.alpha_composite(photo("g_search_phone", W, H, focus=(0.45, 0.4), dark=0.3, gray=0.1))
         shade(f, "left", 0.7, 245)
@@ -169,7 +195,7 @@ SPECS = [
     {"name": "T02", "v": "ceo", "tag": "구글에 물린 분들", "big": "-34%", "bottom": "과거 데이터가\n말해 준 결말", "hl": "결말"},
     {"name": "T03", "v": "crash", "tag": "역대 최악의 하루", "big": "669조 증발", "hl_big": "669조", "bottom": "구글, 지금이 바닥일까?"},
     {"name": "T04", "v": "dots", "top": "구글 -20% 폭락, 16년간 8번", "hl_top": "8번", "bottom": "7번은 회복\n지금이 8번째", "hl": "8번째"},
-    {"name": "T05", "v": "bars", "top": "빅7 폭락 후 회복 속도\n구글은 몇 등?", "hl": "몇 등?"},
+    {"name": "T05", "v": "podium"},
     {"name": "T06", "v": "phone", "top": "AI가 구글을 먹었다?", "hl_top": "AI", "big": "-34%", "bottom": "지금 사면 바닥? 함정?"},
     {"name": "T07", "v": "vs", "top": "구글 -30%에 산 사람들", "hl": "-30%", "cards": [("+94%", "2020년 3월에 샀다면", MINT), ("-20% 더", "2022년 9월에 샀다면", RED)]},
     {"name": "T08", "v": "money", "top": "1초에 560만 원 버는 회사가", "hl_top": "560만 원", "big": "1초 = 560만", "bottom": "주가는 -34%?", "hl": "-34%"},
