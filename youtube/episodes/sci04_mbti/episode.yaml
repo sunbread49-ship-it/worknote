@@ -33,6 +33,43 @@ chapter_titles:
   증거 2 · 다시 하면 바뀐다: 5주 뒤 다시 하면 · 51점 vs 49점 · 빅5와 비교
   증거 3 · 내 얘기 같은 착각: 포러의 실험 4.26점 · 바넘 효과 · 무료 검사의 정체
   진짜 내 성향 찾는 법: 다른 날 세 번 · 안 바뀌는 글자만 진짜
+clips:   # 2026-11-23 쇼츠 9개 (완결된 이야기 단위 · 15~35초)
+- start: 0.0
+  end: 20.5
+  hook: "MBTI 할 때마다\n바뀌는 이유"
+  hl: 바뀌는 이유
+- start: 25.0
+  end: 51.2
+  hook: "MBTI를 만든 건\n엄마와 딸"
+  hl: 엄마와 딸
+- start: 51.3
+  end: 75.5
+  hook: "MBTI 만든 두 사람\n심리학 전공 0명"
+  hl: 0명
+- start: 76.0
+  end: 92.3
+  hook: "5주 뒤 다시 하면\n절반이 바뀐다"
+  hl: 절반
+- start: 92.5
+  end: 126.0
+  hook: "51점 vs 49점\n정반대 유형"
+  hl: 정반대
+- start: 126.5
+  end: 148.0
+  hook: "모두 똑같은 결과지\n4.26점이 나왔다"
+  hl: "4.26점"
+- start: 148.4
+  end: 163.0
+  hook: "딱 내 얘기 같은 착각\n바넘 효과"
+  hl: 바넘 효과
+- start: 163.3
+  end: 179.7
+  hook: "인터넷 무료 MBTI\n공식이 아니다"
+  hl: 공식이 아니다
+- start: 180.1
+  end: 211.0
+  hook: "진짜 내 MBTI\n찾는 법"
+  hl: 찾는 법
 scenes:
 - type: sci_kinetic
   chapter: 인트로

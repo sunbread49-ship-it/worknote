@@ -1,0 +1,17 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.07,0:00:03.78,S,이렇게 누구에게나 해당하는\N말을 내 얘기로 느끼는 걸,
+Dialogue: 0,0:00:03.78,0:00:05.29,S,바넘 효과라고 불러요.
+Dialogue: 0,0:00:05.29,0:00:07.99,S,누구에게나 뭔가\N하나씩은 보여 준다던,
+Dialogue: 0,0:00:07.99,0:00:10.68,S,서커스 흥행사 바넘의\N이름에서 따왔죠.
+Dialogue: 0,0:00:10.68,0:00:12.43,S,겉으론 밝지만 속은 여린 편.
+Dialogue: 0,0:00:12.43,0:00:14.34,S,듣고 보면 다 내\N얘기 같잖아요.

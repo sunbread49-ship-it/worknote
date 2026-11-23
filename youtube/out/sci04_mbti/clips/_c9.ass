@@ -1,0 +1,21 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.11,0:00:02.89,S,그럼 진짜 내 엠비티아이는\N어떻게 알까요?
+Dialogue: 0,0:00:02.89,0:00:04.03,S,방법은 간단해요.
+Dialogue: 0,0:00:04.03,0:00:05.50,S,다른 날, 세 번 해 보세요.
+Dialogue: 0,0:00:05.50,0:00:08.74,S,세 번 다 같은 글자만,\N진짜 내 성향이에요.
+Dialogue: 0,0:00:08.74,0:00:13.14,S,바뀌는 글자는, 여러분이 딱 그\N사이에 있는 사람이라는 뜻이에요.
+Dialogue: 0,0:00:13.14,0:00:14.32,S,양쪽 다 가진 거죠.
+Dialogue: 0,0:00:14.99,0:00:18.80,S,그래서 엠비티아이는, 가짜라기보다는\N흐릿한 사진에 가까워요.
+Dialogue: 0,0:00:18.80,0:00:22.61,S,지원서에 엠비티아이를 묻는 회사가\N생겨 논란이 되기도 했지만,
+Dialogue: 0,0:00:22.61,0:00:26.12,S,채용이나 연애 같은 중요한\N판단의 잣대로 쓰기엔 흐릿하죠.
+Dialogue: 0,0:00:26.12,0:00:30.72,S,재밌는 대화 소재로 쓰되, 사람을\N16칸에 가두지만 마세요.
