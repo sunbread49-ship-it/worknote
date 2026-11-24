@@ -15,6 +15,7 @@ tts:
     IPO: 아이피오
     SEC: 미국 증권거래위원회
     CEO: 씨이오
+    560만: 오백육십만
 bgm:
   volume: 0.22
   chapters:
@@ -188,20 +189,28 @@ scenes:
     date: 2026.10.29
     headline: Alphabet tanks nearly 13% for worst day ever, losing $500 billion in value
     'on': 1
+    ko: 알파벳, 역대 최악의 하루… 13% 폭락 · 5천억 달러 증발
+    mark: 역대 최악의 하루
   - outlet: 조선일보
     date: 2026.10.30
     headline: AI가 잘될수록 손해? 'AI의 역설'... 구글 시총 669조원 하룻밤 새 증발
     'on': 2
     hl: true
+    mark: 669조원
+    ko: 구글 시총 669조원 하룻밤 새 증발
   - outlet: Bloomberg
     date: 2026.10.29
     headline: Google Erases a Record $500 Billion as AI Eats Into Sales
     'on': 3
+    ko: 구글, 사상 최대 5천억 달러 증발… AI가 매출을 갉아먹다
+    mark: AI가 매출을 갉아먹다
   credit: '기사 제목: CNBC · 조선일보 · 블룸버그 (보도 그대로)'
   narration:
   - 10월 29일, 3분기 실적이 나온 다음 날이었어요.
   - 구글 주가가 하루에 !!13%!! 빠졌어요. 회사 역사상 최악의 하루예요.
   - 하룻밤 사이에 사라진 시가총액이 약 **669조 원**이에요.
+  bottom: 840
+  size: 44
 - type: scale
   chapter: 무슨 일이
   heading: 하루 만에 사라진 669조, 얼마나 클까?
@@ -224,31 +233,51 @@ scenes:
   narration:
   - 얼마나 크냐면요, 우리나라 1년 나라 살림, 2026년 예산이 727조 9천억 원이에요.
   - 나라 1년 예산의 **92%**가 하루 만에 사라진 셈이에요.
+- type: kinetic
+  chapter: 무슨 일이
+  bg:
+    kind: parallax
+    file: g_search_phone
+    dark: 0.55
+  items:
+  - text: '① 검색 광고 +12%
+
+      기대보다 느렸다'
+    highlight: +12%
+    'on': 1
+    size: 120
+  - text: 'AI 답변 → 광고 클릭 ↓
+
+      ''AI의 역설'''
+    highlight: AI의 역설
+    'on': 2
+    size: 96
+  credit: '자료: 알파벳 2026년 3분기 보고서(10-Q) · 조선일보 보도 · 사진: Solen Feyissa, Unsplash'
+  narration:
+  - 이유는 세 가지예요. 첫째, 본업인 검색 광고가 12% 늘긴 했는데 기대보다 느렸어요.
+  - 에이아이 답변이 광고 클릭을 줄인다는 걱정, 이른바 에이아이의 역설이에요.
 - type: kpi
   chapter: 무슨 일이
   kpis:
-  - label: ① 본업 검색 광고 · 작년 같은 분기 대비
-    value: +12%
-    color: navy
+  - label: ② AI 투자비 · 올해 9개월 (작년 2배)
+    value: 1,320억$
     'on': 1
   - label: ③ 클라우드 매출 · 1년 만에
     value: +103%
     color: navy
-    'on': 4
+    'on': 3
   bars:
-  - label: AI 투자비 2025 1~9월
+  - label: 2025 1~9월
     value: 636
     text: 636억$
-  - label: ② 2026 1~9월 · 2배
+  - label: 2026 1~9월
     value: 1320
     text: 1,320억$
     hl: true
-  bars_on: 3
+  bars_on: 1
   vmax: 1450
   credit: '자료: 알파벳 2026년 3분기 보고서(10-Q) · 설비투자(유형자산 구입) 9개월 누적'
   narration:
-  - 이유는 세 가지예요. 첫째, 본업인 검색 광고가 12% 늘긴 했는데 기대보다 느렸어요.
-  - 에이아이 답변이 광고 클릭을 줄인다는 걱정, 이른바 에이아이의 역설이에요.
   - 둘째, 에이아이 투자비예요. 올해 9개월 동안 1,320억 달러, 작년의 두 배를 썼고 내년엔 더 늘린대요.
   - 셋째, 클라우드가 !!103%!! 성장했는데도, 이 걱정을 못 이겼어요.
 - type: clips
@@ -260,20 +289,28 @@ scenes:
     date: 2026.10.30
     headline: Google value plunges by $500bn as its own AI search hits ad sales
     'on': 1
+    ko: 구글 가치 5천억 달러 급락… 자기 AI 검색이 광고 매출을 때렸다
+    mark: 자기 AI 검색이
   - outlet: TechCrunch
     date: 2026.07.23
     headline: Google's Gemini nears billion-user milestone
     'on': 2
     hl: true
+    ko: 구글 제미나이, 사용자 10억 명 눈앞
+    mark: 10억 명
   - outlet: Yahoo Finance
     date: 2026.10.28
     headline: 'Alphabet Stock Falls 8% Even as Cloud Sales Double: Is AI Spending the Problem?'
     'on': 3
+    ko: 클라우드 매출 2배인데 주가 -8%… 문제는 AI 투자비?
+    mark: 문제는 AI 투자비
   credit: '기사 제목: BBC · 테크크런치 · 야후 파이낸스 (보도 그대로)'
   narration:
   - 시장의 고민은 이거예요. 구글이 에이아이를 잘할수록, 검색 광고를 스스로 갉아먹는 거 아니냐.
   - 반대로 보면, 구글의 에이아이 제미나이는 사용자 10억 명을 앞두고 있어요.
   - 에이아이가 독이 될지 약이 될지, 그걸 아직 아무도 확신 못 하니까 주가가 흔들리는 거예요.
+  bottom: 840
+  size: 44
 - type: photo_title
   chapter: 얼마나 버나
   bg:
@@ -333,9 +370,9 @@ scenes:
   kicker: 2026년 3분기 매출 1,276억 달러 · 작년 같은 분기 대비
   title: 구글은 어디서 돈을 버나
   highlight: 돈
-  title_y: 150
-  bar_h: 56
-  row_gap: 30
+  title_y: 120
+  bar_h: 36
+  row_gap: 12
   rows:
   - label: 검색 광고 · +12%
     value: 633.5
@@ -913,19 +950,27 @@ scenes:
     headline: Anthropic IPO raises over $81 billion in largest offering on record, topping SpaceX
     'on': 1
     hl: true
+    ko: 앤트로픽 상장, 810억 달러 조달… 스페이스X 넘은 사상 최대
+    mark: 사상 최대
   - outlet: Reuters
     date: 2026.11.19
     headline: Anthropic's $1.5 trillion debut rewrites venture capital's playbook
     'on': 1
+    ko: 앤트로픽 1.5조 달러 데뷔, 벤처투자의 공식을 바꾸다
+    mark: 1.5조 달러
   - outlet: Fortune
     date: 2026.07.22
     headline: Anthropic and SpaceX just handed Google the biggest profit quarter in company history—on paper
     'on': 2
+    ko: 앤트로픽 · 스페이스X 덕에 구글 역사상 최대 분기 이익 (장부상)
+    mark: 역사상 최대 분기 이익
   credit: '기사 제목: CNBC · 로이터 · 포춘 (보도 그대로)'
   narration:
   - 빅7 자리는 영원할까요? 이번 달 앤트로픽이 역사상 가장 큰 기업공개를 했고, 스페이스엑스도 상장했어요.
   - 그런데 재밌는 점. 구글은 앤트로픽과 스페이스엑스의 주주예요. 올해 2분기엔 그 지분 덕에 장부상 역대 최대 이익을 냈고요.
   - 빅7이라는 이름은 바뀔 수 있어도, 구글은 도전자 쪽에도 발을 걸쳐 둔 셈이에요.
+  bottom: 840
+  size: 44
 - type: checklist
   chapter: 정리
   kicker: 구글에 물린 분들께

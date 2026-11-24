@@ -255,7 +255,7 @@ def scene_stats(path):
 
 def unify_scenes(paths, log=print, f0_tol=0.05, db_tol=1.5, sps_tol=0.15, texts=None):
     """2026-11-23: Gemini는 장면마다 음높이 · 크기가 달라짐(MBTI 편 13곳) → 새 음성 없이
-    장면별로 에피소드 중앙값에 맞춤. 음높이는 rubberband(목소리 결 유지 · 길이 그대로 → 화면 싱크 유지), 크기는 volume.
+    장면별로 에피소드 중앙값에 맞춤: 크기(volume) · 속도(atempo ±8%) 만. 음높이 가공(rubberband)은 금지 — 기계음 (2026-11-24).
     속도(글자/초)가 중앙값에서 15% 넘게 벗어나면 atempo로 맞춤 → 반환 tempo로 문장 시각도 같이 맞춤
     paths: 장면 wav 목록([낮게] 장면 제외) → {원본 경로: (맞춘 경로, tempo)}"""
     st = {p: scene_stats(p) for p in paths}
@@ -274,11 +274,10 @@ def unify_scenes(paths, log=print, f0_tol=0.05, db_tol=1.5, sps_tol=0.15, texts=
         af = []
         tempo = 1.0
         if sps and spm and abs(sps[p] / spm - 1) > sps_tol:
-            tempo = max(0.85, min(1.25, spm / sps[p]))
+            tempo = max(0.92, min(1.08, spm / sps[p]))   # 속도도 ±8% 안에서만 (크게 바꾸면 소리가 뭉개짐)
             af.append(f"atempo={tempo:.4f}")
-        if f0 and abs(f0 / f0m - 1) > f0_tol:
-            r = max(0.75, min(1.35, f0m / f0))
-            af.append(f"rubberband=pitch={r:.4f}:formant=preserved:pitchq=quality")
+        # 2026-11-24 사용자: '기계음이 겁나 심하다' (구글 편 · MBTI 편) — 원인은 이 음높이 강제 변경(rubberband ±30%)이었음.
+        # → 음높이는 절대 소리를 가공해서 맞추지 않는다. 음높이 통일은 take 고르기(gemini_scene)로만. 여기선 크기 · 속도만.
         if abs(db - dbm) > db_tol:
             af.append(f"volume={max(-6.0, min(6.0, dbm - db)):.2f}dB")
         if not af:
@@ -286,16 +285,8 @@ def unify_scenes(paths, log=print, f0_tol=0.05, db_tol=1.5, sps_tol=0.15, texts=
         q = Path(str(p) + ".u" + hashlib.sha1(",".join(af).encode()).hexdigest()[:8] + ".wav")
         if not q.exists():
             subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(p), "-af", ",".join(af), str(q)], check=True)
-        f2, _ = scene_stats(q)   # 한 번 더 재서 남은 차이를 마저 맞춤 (rubberband는 한 번에 다 안 맞을 때가 있음)
-        if f2 and abs(f2 / f0m - 1) > f0_tol:
-            r2 = max(0.85, min(1.18, f0m / f2))
-            q2 = Path(str(q)[:-4] + f".r{int(r2 * 1000)}.wav")
-            if not q2.exists():
-                subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(q), "-af",
-                                f"rubberband=pitch={r2:.4f}:formant=preserved:pitchq=quality", str(q2)], check=True)
-            q = q2
         out[p] = (q, tempo)
-        log(f"  장면 음성 맞춤: {Path(p).name[:14]} 음높이 {((f0 or f0m) / f0m - 1) * 100:+.0f}% · 크기 {db - dbm:+.1f}dB → 중앙값")
+        log(f"  장면 음성 맞춤: {Path(p).name[:14]} 크기 {db - dbm:+.1f}dB · 속도 x{tempo:.2f} (음높이는 가공 안 함)")
     return out
 
 

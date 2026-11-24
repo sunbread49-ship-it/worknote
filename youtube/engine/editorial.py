@@ -2935,14 +2935,28 @@ class Clips(Editorial):
     """신문 · 기사 스크랩 콜라주 (2026-11-14 벤치마킹: 다채로운 장면 변주). items: [{outlet, date, headline, on, hl}]
     한 장씩 비스듬히 날아와 쌓임 · 카드 높이대로 차곡차곡(자막 위까지만). 실제 보도 제목만 (credit에 출처)."""
 
-    def _card(self, it, size, w):
+    def _card(self, it, size, w, mk=1.0):
+        """2026-11-24 사용자: 영어 기사는 아래에 한글 번역 · 핵심은 노란 형광펜을 긋는 모션 (it.ko · it.mark · mk=0~1 진행)"""
         head = T(it["headline"], size, (20, 22, 30), "Black", max_w=w - 100)
-        h = 104 + head.height
+        ko = T(it["ko"], int(size * 0.78), (40, 44, 60), "ExtraBold", max_w=w - 100) if it.get("ko") else None
+        h = 104 + head.height + (ko.height + 18 if ko else 0)
         card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
         d = ImageDraw.Draw(card)
         d.rectangle((0, 0, w - 1, h - 1), fill=(248, 246, 240, 255))
         d.rectangle((0, 0, 14, h - 1), fill=(220, 40, 40, 255) if it.get("hl") else (60, 64, 80, 255))
         card.alpha_composite(T(f"{it['outlet']} · {it.get('date', '')}", 28, (110, 112, 124), "Bold"), (50, 26))
+        if ko is not None:
+            yk = 72 + head.height + 14
+            mark = it.get("mark")
+            txt = it["ko"]
+            if mark and mark in txt and mk > 0 and "\n" not in txt:   # 한 줄일 때만 정확한 위치에 형광펜
+                fs = int(size * 0.78)
+                x0 = T(txt[:txt.index(mark)], fs, (0, 0, 0), "ExtraBold").width if txt.index(mark) else 0
+                mw = T(mark, fs, (0, 0, 0), "ExtraBold").width
+                if x0 + mw <= w - 100:
+                    hy0, hy1 = yk + ko.height * 0.38, yk + ko.height * 0.98
+                    d.rectangle((50 + x0 - 6, hy0, 50 + x0 + (mw + 12) * mk - 6, hy1), fill=(255, 222, 40, 235))
+            card.alpha_composite(ko, (50, yk))
         card.alpha_composite(head, (50, 72))
         if it.get("logo"):
             lg = logo_chip(it["logo"], 50)
@@ -2957,12 +2971,12 @@ class Clips(Editorial):
         if sp.get("title"):
             self.hdr(f, t, y=sp.get("title_y", 110))
         items = sp["items"]
-        top, bottom, w = (260 if sp.get("title") else 160), 900, 1440
+        top, bottom, w = (260 if sp.get("title") else 160), sp.get("bottom", 900), 1440
         size = sp.get("size", 54)
         while True:   # 전부 자막 위에 들어오도록 글자 크기 자동
-            cards = [self._card(it, size, w) for it in items]
+            cards = [self._card(it, size, w, 0.0) for it in items]
             total = sum(c.height for c in cards) + 26 * (len(cards) - 1)
-            if total <= bottom - top or size <= 36:
+            if total <= bottom - top or size <= 28:
                 break
             size -= 4
         y = top + max(0, (bottom - top - total) // 2)
@@ -2973,6 +2987,8 @@ class Clips(Editorial):
             y += card.height + 26
             if k <= 0:
                 continue
+            if it.get("mark"):   # 카드가 자리 잡은 뒤 형광펜이 왼→오로 그어짐
+                card = self._card(it, size, w, G.ease_out((t - t0 - 0.45) / 0.6))
             rot = it.get("tilt", (-1.6, 1.2, -0.9, 1.4)[i % 4])
             c2 = card.rotate(rot * (1 + (1 - k) * 3), expand=True, resample=Image.BICUBIC)
             sh = Image.new("RGBA", c2.size, (0, 0, 0, 0))
