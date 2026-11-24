@@ -149,7 +149,93 @@ def apply():
     (ROOT / "retitle_log.json").write_text(json.dumps(log, ensure_ascii=False, indent=1))
 
 
+# ── 11/25 사용자: B는 너무 요약 느낌 → A의 문구 · 톤은 그대로, 색 · 배치만 다른 파생 3종(정기 구독자가 같은 썸네일만 보는 느낌 방지)
+def photo_tint(name, tint, dark=0.45, gray=True):
+    f = photo_bg(name, dark=dark) if gray else None
+    if not gray:
+        p = next(q for q in (ROOT / "assets/photos").glob(name + ".*") if q.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp"))
+        im = Image.open(p).convert("RGB")
+        r = max(W / im.width, H / im.height)
+        im = im.resize((int(im.width * r) + 1, int(im.height * r) + 1), Image.LANCZOS)
+        im = im.crop(((im.width - W) // 2, (im.height - H) // 2, (im.width - W) // 2 + W, (im.height - H) // 2 + H))
+        im = ImageEnhance.Color(im).enhance(0.55)
+        f = ImageEnhance.Brightness(im).enhance(1 - dark).convert("RGBA")
+    if tint:
+        f.alpha_composite(Image.new("RGBA", (W, H), tint + (70,)))
+    return f
+
+
+def make_s2(it):   # 컬러 사진(채도 낮춤) + 아래 빨간 띠에 결말 줄 · 말풍선 오른쪽 위
+    f = photo_tint(it["photo"], None, dark=0.45, gray=False)
+    vg = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(vg).rectangle((0, H // 2, W, H), fill=(0, 0, 0, 120))
+    f.alpha_composite(vg.filter(ImageFilter.GaussianBlur(80)))
+    l2 = TH.fit(it["l2"], 170, 1700, color=WHITE, hl=it["hl"], hl_color=YEL)
+    band = Image.new("RGBA", (l2.width + 120, l2.height + 50), (210, 30, 40, 255)).rotate(-2, expand=True, resample=Image.BICUBIC)
+    f.alpha_composite(band, (20, H - band.height - 40))
+    TH.shadowed(f, l2, (80, H - band.height - 40 + (band.height - l2.height) // 2))
+    l1 = TH.fit(it["l1"], 150, 1700, color=WHITE, hl=it["hl"], hl_color=YEL)
+    TH.shadowed(f, l1, (70, H - band.height - 50 - l1.height))
+    bb = bubble(it["bubble"])
+    TH.shadowed(f, bb, (W - bb.width - 60, 50))
+    b = badge()
+    f.alpha_composite(b, (60, 50))
+    return f.convert("RGB")
+
+
+def make_s3(it):   # 왼쪽 검은 패널에 문구 세로로 크게 · 오른쪽 사진 · 노랑 테두리
+    f = Image.new("RGBA", (W, H), (12, 14, 20, 255))
+    ph = photo_bg(it["photo"], dark=0.35).crop((W - 1000, 0, W, H))
+    f.alpha_composite(ph, (W - 1000, 0))
+    g = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(g)
+    for x in range(0, 500):
+        gd.line((W - 1000 + x, 0, W - 1000 + x, H), fill=(12, 14, 20, int(255 * (1 - x / 500))))
+    f.alpha_composite(g)
+    ImageDraw.Draw(f).rectangle((0, 0, W - 1, H - 1), outline=YEL + (255,), width=14)
+    TH.shadowed(f, bubble(it["bubble"]), (70, 70))
+    l1 = TH.fit(it["l1"], 150, 1150, color=WHITE, hl=it["hl"], hl_color=RED)
+    l2 = TH.fit(it["l2"], 190, 1150, color=YEL, hl=it["hl"], hl_color=RED)
+    TH.shadowed(f, l1, (70, 420))
+    TH.shadowed(f, l2, (70, 430 + l1.height))
+    b = badge()
+    f.alpha_composite(b, (W - b.width - 50, H - b.height - 50))
+    return f.convert("RGB")
+
+
+def make_s4(it):   # 남색 톤 사진 · 위 흰 줄 · 아래 검은 상자 속 노랑 결말 · 말풍선 가운데 왼쪽
+    f = photo_tint(it["photo"], (20, 50, 140), dark=0.5)
+    l1 = TH.fit(it["l1"], 160, 1800, color=WHITE, hl=it["hl"], hl_color=YEL)
+    TH.shadowed(f, l1, (W / 2, 60), "mt")
+    l2 = TH.fit(it["l2"], 190, 1700, color=YEL, hl=it["hl"], hl_color=RED)
+    box = Image.new("RGBA", (l2.width + 100, l2.height + 50), (0, 0, 0, 0))
+    ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 30, fill=(8, 10, 16, 235), outline=YEL + (255,), width=6)
+    f.alpha_composite(box, (int(W / 2 - box.width / 2), H - box.height - 60))
+    TH.shadowed(f, l2, (W / 2, H - box.height - 60 + 25), "mt")
+    TH.shadowed(f, bubble(it["bubble"]), (60, 330))
+    b = badge()
+    f.alpha_composite(b, (W - b.width - 40, 340))
+    return f.convert("RGB")
+
+
+def build_variants():
+    OUT.mkdir(parents=True, exist_ok=True)
+    fns = [("S2", make_s2), ("S3", make_s3), ("S4", make_s4)]
+    sheet = Image.new("RGB", (3 * 650 + 10, len(ITEMS) * 400 + 10), (20, 20, 24))
+    for i, it in enumerate(ITEMS):
+        for j, (nm, fn) in enumerate(fns):
+            im = fn(it).resize((1280, 720), Image.LANCZOS)
+            im.save(OUT / f"{it['ep']}_{nm}.jpg", quality=92)
+            sheet.paste(im.resize((640, 360)), (10 + j * 650, 10 + i * 400))
+            ImageDraw.Draw(sheet).text((14 + j * 650, 372 + i * 400), f"{it['ep']} {nm}", fill=(180, 255, 60))
+    sheet.save(OUT / "파생_비교표.jpg", quality=85)
+    print("파생 →", OUT / "파생_비교표.jpg")
+
+
 if __name__ == "__main__":
+    if "--variants" in sys.argv:
+        build_variants()
+        sys.exit()
     build()
     if "--apply" in sys.argv:
         apply()

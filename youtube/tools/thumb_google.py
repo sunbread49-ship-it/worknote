@@ -147,6 +147,25 @@ def make(sp):
         TH.shadowed(f, s1, (640, 330))
         TH.shadowed(f, s2, (640, 330 + s1.height + 10))
         TH.shadowed(f, s3, (630, 330 + s1.height + s2.height + 40))
+    elif v == "podium2":     # 11/25 사용자: 문구 · 배치만 변경 — 저점 매수 찬스? 진입? + 작은 글씨로 빅7 회복 속도 1위는?
+        f = TH.bg_dark((20, 50, 120), (0.65, 0.55))
+        f.alpha_composite(photo("g_pichai", 560, H, focus=(0.5, 0.25), dark=0.3, gray=0.2), (0, 0))
+        shade(f, "left", 0.36, 110)
+        lg = Image.open(ROOT / "assets/photos/g_logo_flat.png").convert("RGBA")
+        lg = lg.resize((420, int(420 * lg.height / lg.width)), Image.LANCZOS)
+        card = Image.new("RGBA", (lg.width + 70, lg.height + 50), (0, 0, 0, 0))
+        ImageDraw.Draw(card).rounded_rectangle((0, 0, card.width - 1, card.height - 1), 32, fill=(255, 255, 255, 255))
+        card.alpha_composite(lg, (35, 25))
+        TH.shadowed(f, card, (640, 50))
+        neg = big("-34%", 200, 700, color=RED)
+        TH.shadowed(f, neg, (640 + card.width + 40, 40))
+        s1 = big("최고 기업 저점 매수 찬스?", 118, 1240, color=YEL, hl="찬스?", hl_color=YEL)
+        s2 = big("슬슬 진입해 볼까?", 150, 1240, color=WHITE, hl="진입", hl_color=YEL)
+        y0 = 60 + card.height + 70
+        TH.shadowed(f, s1, (640, y0))
+        TH.shadowed(f, s2, (640, y0 + s1.height + 20))
+        sm = pill("빅7 중 폭락 후 회복 속도 1위는?", 56, bg=BLUE)
+        TH.shadowed(f, sm, (640, H - sm.height - 70))
     elif v == "phone":       # 검색 화면 + AI 질문
         f.alpha_composite(photo("g_search_phone", W, H, focus=(0.45, 0.4), dark=0.3, gray=0.1))
         shade(f, "left", 0.7, 245)
@@ -188,6 +207,7 @@ SPECS = [
     {"name": "T03", "v": "crash", "tag": "역대 최악의 하루", "big": "669조 증발", "hl_big": "669조", "bottom": "구글, 지금이 바닥일까?"},
     {"name": "T04", "v": "dots", "top": "구글 -20% 폭락, 16년간 8번", "hl_top": "8번", "bottom": "7번은 회복\n지금이 8번째", "hl": "8번째"},
     {"name": "T05", "v": "podium"},
+    {"name": "T05b", "v": "podium2"},
     {"name": "T06", "v": "phone", "top": "AI가 구글을 먹었다?", "hl_top": "AI", "big": "-34%", "bottom": "지금 사면 바닥? 함정?"},
     {"name": "T07", "v": "vs", "top": "구글 -30%에 산 사람들", "hl": "-30%", "cards": [("+94%", "2020년 3월에 샀다면", MINT), ("-20% 더", "2022년 9월에 샀다면", RED)]},
     {"name": "T08", "v": "money", "top": "1초에 560만 원 버는 회사가", "hl_top": "560만 원", "big": "1초 = 560만", "bottom": "주가는 -34%?", "hl": "-34%"},
@@ -203,7 +223,7 @@ if __name__ == "__main__":
         p = OUT / f"{sp['name']}.png"
         im.save(p)
         outs.append((sp["name"], p))
-    sheet = Image.new("RGB", (2 * 650 + 10, 5 * 400 + 10), (20, 20, 24))
+    sheet = Image.new("RGB", (2 * 650 + 10, 6 * 400 + 10), (20, 20, 24))
     for i, (nm, p) in enumerate(outs):
         x, y = 10 + (i % 2) * 650, 10 + (i // 2) * 400
         sheet.paste(Image.open(p).resize((640, 360)), (x, y))
