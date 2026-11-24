@@ -75,15 +75,15 @@ class Globe(Viz):
         cx, cy = sp.get("cx", S.W // 2), sp.get("cy", 580)
         d = ImageDraw.Draw(f)
         if mode == "antipode":
-            a = CITIES["서울"]
-            b = CITIES["서울 반대편"]
+            na, nb = sp.get("a", "서울"), sp.get("b", "서울 반대편")
+            a, b = CITIES[na], CITIES[nb]
             st = self.ls(sp.get("turn_on", 1), 0.6)
             k = _ease((t - st) / 2.6)
             lon = a[0] + ((b[0] - a[0] + 540) % 360 - 180) * k
             lat = _lerp(a[1], b[1], k)
             g = _globe(r, round(lon), round(lat))
             G.blit(f, g, (cx, cy), 1, "mm")
-            for name, c, col in (("서울", a, GOLD), ("서울 반대편", b, SKY)):
+            for name, c, col in ((na, a, GOLD), (nb, b, SKY)):
                 x, y, v = project(c[0], c[1], lon, lat, r)
                 if v:
                     pulse = 10 + 4 * math.sin(t * 6)
