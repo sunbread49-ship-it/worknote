@@ -195,7 +195,8 @@ def photo_card(name, w, h, gray=0.0, focus=(0.5, 0.35)):
 
 def credit(f, sp):
     if sp.get("credit"):
-        G.blit(f, T(sp["credit"], 20, (200, 204, 214), "SemiBold"), (S.W - S.SAFE_X + 40, 128), 0.75, "rt")
+        # 2026-11-24: 오른쪽 위(y128)는 제목 · 키커와 겹침 → 화면 맨 아래 오른쪽(자막 아래 여백)으로
+        G.blit(f, T(sp["credit"], 20, (200, 204, 214), "SemiBold"), (S.W - 40, S.H - 12), 0.75, "rb")
 
 
 def counter(text, k):
@@ -2938,7 +2939,7 @@ class Clips(Editorial):
     def _card(self, it, size, w, mk=1.0):
         """2026-11-24 사용자: 영어 기사는 아래에 한글 번역 · 핵심은 노란 형광펜을 긋는 모션 (it.ko · it.mark · mk=0~1 진행)"""
         head = T(it["headline"], size, (20, 22, 30), "Black", max_w=w - 100)
-        ko = T(it["ko"], int(size * 0.78), (40, 44, 60), "ExtraBold", max_w=w - 100) if it.get("ko") else None
+        ko = T(it["ko"], int(size * 0.84), (40, 44, 60), "ExtraBold", max_w=w - 100) if it.get("ko") else None
         h = 104 + head.height + (ko.height + 18 if ko else 0)
         card = Image.new("RGBA", (w, h), (0, 0, 0, 0))
         d = ImageDraw.Draw(card)
@@ -2950,7 +2951,7 @@ class Clips(Editorial):
             mark = it.get("mark")
             txt = it["ko"]
             if mark and mark in txt and mk > 0 and "\n" not in txt:   # 한 줄일 때만 정확한 위치에 형광펜
-                fs = int(size * 0.78)
+                fs = int(size * 0.84)
                 x0 = T(txt[:txt.index(mark)], fs, (0, 0, 0), "ExtraBold").width if txt.index(mark) else 0
                 mw = T(mark, fs, (0, 0, 0), "ExtraBold").width
                 if x0 + mw <= w - 100:
@@ -2973,29 +2974,54 @@ class Clips(Editorial):
         items = sp["items"]
         top, bottom, w = (260 if sp.get("title") else 160), sp.get("bottom", 900), 1440
         size = sp.get("size", 54)
-        while True:   # 전부 자막 위에 들어오도록 글자 크기 자동
+        while True:   # 전부 자막 위에 들어오도록 글자 크기 자동 — 단 읽을 수 있게 44 아래로는 안 줄임
             cards = [self._card(it, size, w, 0.0) for it in items]
             total = sum(c.height for c in cards) + 26 * (len(cards) - 1)
-            if total <= bottom - top or size <= 28:
+            if total <= bottom - top or size <= 44:
                 break
             size -= 4
-        y = top + max(0, (bottom - top - total) // 2)
-        for i, (it, card) in enumerate(zip(items, cards)):
-            t0 = self.line_start(it.get("on", 1)) + it.get("offset", 0.0)
-            k = G.ease_out((t - t0) / 0.35)
-            yy = y
-            y += card.height + 26
-            if k <= 0:
+        # 그래도 넘치면: 겹치지 않고, 새 카드가 들어올 때 오래된 카드가 위로 밀려나며 사라진다(읽을 수 있는 것만 화면에)
+        avail = bottom - top
+        t0s = [self.line_start(it.get("on", 1)) + it.get("offset", 0.0) for it in items]
+        started = [i for i in range(len(items)) if t >= t0s[i]]
+
+        def layout(idx):
+            keep, hsum = [], 0
+            for i in reversed(idx):
+                hh = cards[i].height + (26 if keep else 0)
+                if keep and hsum + hh > avail:
+                    break
+                keep.insert(0, i)
+                hsum += hh
+            y, pos = top + max(0, (avail - hsum) // 2), {}
+            for i in keep:
+                pos[i] = y
+                y += cards[i].height + 26
+            return pos
+
+        cur = layout(started)
+        prev = layout(started[:-1]) if started else {}
+        kn = G.ease_out((t - t0s[started[-1]]) / 0.45) if started else 0
+        for i in sorted(set(cur) | set(prev)):
+            it, card = items[i], cards[i]
+            if i in cur and i in prev:
+                yy, alpha, k = prev[i] + (cur[i] - prev[i]) * kn, 1.0, 1.0
+            elif i in prev:                       # 밀려나는 카드
+                yy, alpha, k = prev[i] - 80 * kn, 1 - kn, 1.0
+            else:                                  # 새로 들어오는 카드
+                k = G.ease_out((t - t0s[i]) / 0.35)
+                yy, alpha = cur[i], 1.0
+            if alpha <= 0.01 or k <= 0:
                 continue
             if it.get("mark"):   # 카드가 자리 잡은 뒤 형광펜이 왼→오로 그어짐
-                card = self._card(it, size, w, G.ease_out((t - t0 - 0.45) / 0.6))
+                card = self._card(it, size, w, G.ease_out((t - t0s[i] - 0.45) / 0.6))
             rot = it.get("tilt", (-1.6, 1.2, -0.9, 1.4)[i % 4])
             c2 = card.rotate(rot * (1 + (1 - k) * 3), expand=True, resample=Image.BICUBIC)
             sh = Image.new("RGBA", c2.size, (0, 0, 0, 0))
             sh.putalpha(c2.getchannel("A").point(lambda v: int(v * 0.5)))
             x = S.W / 2 + (i % 2 * 2 - 1) * 40 + (1 - k) * 600 * (1 if i % 2 else -1)
-            G.blit(f, sh.filter(ImageFilter.GaussianBlur(14)), (x + 10, yy + 14), k * 0.8, "mt")
-            G.blit(f, c2, (x, yy), k, "mt")
+            G.blit(f, sh.filter(ImageFilter.GaussianBlur(14)), (x + 10, yy + 14), k * 0.8 * alpha, "mt")
+            G.blit(f, c2, (x, yy), k * alpha, "mt")
         self.finish(f, t)
 
 
