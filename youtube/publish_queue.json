@@ -350,6 +350,76 @@
   "done": "2026-11-24T19:51+09:00"
  },
  {
+  "channel": "science",
+  "id": "1Xrptv80t7M",
+  "at": "2026-11-24T23:20",
+  "note": "sci04_mbti 쇼츠1",
+  "done": "2026-11-24T23:26+09:00"
+ },
+ {
+  "channel": "science",
+  "id": "0VgPvPFeD7k",
+  "at": "2026-11-24T23:20",
+  "note": "sci04_mbti long",
+  "done": "2026-11-24T23:26+09:00"
+ },
+ {
+  "channel": "science",
+  "id": "mqsaWp_HjlA",
+  "at": "2026-11-25T05:00",
+  "note": "sci04_mbti 쇼츠2",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "T7X_L_02R3Y",
+  "at": "2026-11-25T05:30",
+  "note": "sci04_mbti 쇼츠3",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "yLwRPqiOcvQ",
+  "at": "2026-11-25T06:00",
+  "note": "sci04_mbti 쇼츠4",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "YcPEsxE4OgI",
+  "at": "2026-11-25T06:30",
+  "note": "sci04_mbti 쇼츠5",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "O85YY6Dm3Bo",
+  "at": "2026-11-25T07:00",
+  "note": "sci04_mbti 쇼츠6",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "qxa6MyianQc",
+  "at": "2026-11-25T07:30",
+  "note": "sci04_mbti 쇼츠7",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "8xW9wQMt5qk",
+  "at": "2026-11-25T08:00",
+  "note": "sci04_mbti 쇼츠8",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "gvKZ4iasIJc",
+  "at": "2026-11-25T08:30",
+  "note": "sci04_mbti 쇼츠9",
+  "done": null
+ },
+ {
   "channel": "stock",
   "id": "Wj-MzTkDgf4",
   "at": "2026-11-25T15:50",

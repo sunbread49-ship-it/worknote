@@ -38,36 +38,36 @@ clips:   # 2026-11-23 쇼츠 9개 (완결된 이야기 단위 · 15~35초)
   end: 20.5
   hook: "MBTI 할 때마다\n바뀌는 이유"
   hl: 바뀌는 이유
-- start: 25.0
-  end: 51.2
+- start: 25.1
+  end: 51.1
   hook: "MBTI를 만든 건\n엄마와 딸"
   hl: 엄마와 딸
-- start: 51.3
-  end: 75.5
+- start: 51.4
+  end: 75.7
   hook: "MBTI 만든 두 사람\n심리학 전공 0명"
   hl: 0명
-- start: 76.0
-  end: 92.3
+- start: 76.1
+  end: 92.2
   hook: "5주 뒤 다시 하면\n절반이 바뀐다"
   hl: 절반
 - start: 92.5
-  end: 126.0
+  end: 127.8
   hook: "51점 vs 49점\n정반대 유형"
   hl: 정반대
-- start: 126.5
-  end: 148.0
+- start: 128.2
+  end: 150.0
   hook: "모두 똑같은 결과지\n4.26점이 나왔다"
   hl: "4.26점"
-- start: 148.4
-  end: 163.0
+- start: 150.4
+  end: 165.0
   hook: "딱 내 얘기 같은 착각\n바넘 효과"
   hl: 바넘 효과
-- start: 163.3
-  end: 179.7
+- start: 165.3
+  end: 181.8
   hook: "인터넷 무료 MBTI\n공식이 아니다"
   hl: 공식이 아니다
-- start: 180.1
-  end: 211.0
+- start: 182.2
+  end: 213.1
   hook: "진짜 내 MBTI\n찾는 법"
   hl: 찾는 법
 scenes:
