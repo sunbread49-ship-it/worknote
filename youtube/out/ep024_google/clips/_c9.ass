@@ -1,0 +1,27 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.00,0:00:03.77,S,이제 빅7을 통째로 들고 있는\N분들을 위한 방법이에요.
+Dialogue: 0,0:00:03.77,0:00:05.15,S,물컵 7개로 볼게요.
+Dialogue: 0,0:00:05.15,0:00:08.74,S,10월 6일에 7개 종목에\N똑같이 나눠 담았다면,
+Dialogue: 0,0:00:08.74,0:00:13.05,S,지금은 엔비디아 컵이 제일 줄고,\N애플 컵은 오히려 늘었어요.
+Dialogue: 0,0:00:13.05,0:00:15.68,S,이때 많이 남은\N컵에서 조금 덜어서,
+Dialogue: 0,0:00:15.68,0:00:18.31,S,많이 줄어든 컵에\N채워 주는 거예요.
+Dialogue: 0,0:00:18.31,0:00:21.32,S,이걸 비율 맞추기,\N리밸런싱이라고 해요.
+Dialogue: 0,0:00:21.97,0:00:23.35,S,실제 숫자로 볼게요.
+Dialogue: 0,0:00:23.35,0:00:26.62,S,10월 6일에 1,000만\N원을 7등분했다면,
+Dialogue: 0,0:00:26.62,0:00:28.87,S,지금 합계는 837만 원이에요.
+Dialogue: 0,0:00:28.87,0:00:31.37,S,똑같이 맞추려면\N애플에서 27만 원,
+Dialogue: 0,0:00:31.37,0:00:33.53,S,아마존에서 18만 원을 덜어서,
+Dialogue: 0,0:00:33.53,0:00:36.37,S,엔비디아에 45만 원을\N채우는 식이에요.
+Dialogue: 0,0:00:36.37,0:00:37.98,S,많이 빠진 걸 싸게 더 사고,
+Dialogue: 0,0:00:37.98,0:00:40.09,S,덜 빠진 걸 비싸게\N조금 파는 거죠.
+Dialogue: 0,0:00:40.09,0:00:42.84,S,빅7은 결국 전고점을\N되찾아 왔으니까요.

@@ -1,0 +1,18 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.02,0:00:01.65,S,시장의 고민은 이거예요.
+Dialogue: 0,0:00:01.65,0:00:03.61,S,구글이 에이아이를 잘할수록,
+Dialogue: 0,0:00:03.61,0:00:06.22,S,검색 광고를 스스로\N갉아먹는 거 아니냐.
+Dialogue: 0,0:00:06.22,0:00:07.02,S,반대로 보면,
+Dialogue: 0,0:00:07.02,0:00:11.22,S,구글의 에이아이 제미나이는 사용자\N10억 명을 앞두고 있어요.
+Dialogue: 0,0:00:11.22,0:00:13.64,S,에이아이가 독이\N될지 약이 될지,
+Dialogue: 0,0:00:13.64,0:00:17.93,S,그걸 아직 아무도 확신 못\N하니까 주가가 흔들리는 거예요.
