@@ -1,0 +1,339 @@
+title: 코스피 반토막, 나라가 꺼낸 6번째 구조 펀드… 과거 5번 그때 산 사람들의 결말
+series_tag: 폭락장 데이터
+theme: 08
+pace: punchy
+clip_theme: stock
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    F4: 에프포
+    AI: 에이아이
+    9,114: 구천백십사
+    4,708: 사천칠백팔
+bgm:
+  volume: 0.22
+  chapters:
+    인트로: tense
+    지금 얼마나: tense
+    증안펀드가 뭐길래: drive
+    4번의 반등: hope
+    한 번은 달랐다: tense
+    그렇다면 지금은: drive
+    결말: hope
+chapter_titles:
+  인트로: 코스피 반토막 · 나라가 나서면 바닥일까
+  지금 얼마나: 9,114 → 4,708 · 6번째 구조 펀드
+  증안펀드가 뭐길래: 넘어지는 시장을 붙잡는 돈 · 10조의 크기
+  4번의 반등: 2003 카드 사태 · 2008 금융위기 · 2020 코로나 · 2022 금리
+  한 번은 달랐다: 1990 증시안정기금 · 펀드 나오고도 -28%
+  그렇다면 지금은: 바깥 충격형 vs 거품 꺼짐형
+  결말: 1,000만 원의 결말 · 지금 할 일
+scenes:
+- type: kinetic
+  chapter: 인트로
+  bg:
+    kind: video
+    file: market_crash_v
+    dark: 0.6
+    blur: 3
+  items:
+  - text: '내 국내 주식
+
+      반토막?'
+    highlight: 반토막
+    'on': 1
+    size: 150
+  - text: 나라가 6번째 구조 펀드를 꺼냈다
+    highlight: 6번째
+    'on': 2
+    size: 110
+  narration:
+  - 국내 주식 갖고 계신 분들, 요즘 계좌 보기 무서우시죠? 코스피가 반토막이 났어요.
+  - 그래서 나라가 6번째 구조 펀드를 꺼냈어요. 다들 이렇게 묻죠. 나라가 나서면, 이제 바닥일까?
+- type: grid
+  chapter: 인트로
+  kicker: 1990 ~ 2026 · 증시안정펀드
+  title: 과거에 딱 5번
+  highlight: 딱 5번
+  n: 5
+  cols: 5
+  cell: 220
+  k: 0
+  hits: []
+  labels: ['1990', '2003', '2008', '2020', '2022']
+  step: 0.2
+  headline: 그때 산 사람들은 어떻게 됐을까?
+  headline_hl: 어떻게
+  headline_on: 2
+  narration:
+  - 과거에도 딱 5번, 나라가 이 펀드를 꺼냈어요.
+  - 오늘은 그때마다 코스피에 1,000만 원을 넣은 사람이 어떻게 됐는지 볼게요. 그리고 한 번은, 완전히 달랐어요.
+- type: title
+  kicker: 폭락장 데이터 · 코스피 36년
+  title: '구조 펀드 나온 날
+
+    산 사람들'
+  highlight: 산 사람들
+  subtitle: 1990 · 2003 · 2008 · 2020 · 2022 · 그리고 지금
+  narration:
+  - 결말 시리즈, 시작합니다.
+- type: chart
+  chapter: 지금 얼마나
+  chart:
+    series: kospi
+    start: '2026-01-02'
+    end: '2026-11-24'
+    color: [240, 84, 84]
+    draw: {'on': 1, dur: 2.0}
+    marks:
+    - {date: '2026-06-22', label: '사상 최고 9,114', sub: '6.22', 'on': 1, offset: 1.0, dy: -70, dx: -60, color: gold}
+    - {date: '2026-11-23', label: '4,708 · -48%', sub: '11.23', 'on': 2, dy: 60, dx: -100, color: down, size: 36}
+    source: '자료: 코스피 일간 종가 (11.24 기준)'
+    title: 코스피 · 2026년
+  narration:
+  - 코스피는 6월에 9,114까지 올랐어요. 사상 최고였죠.
+  - 그런데 11월 23일엔 4,708. 다섯 달 만에 48%, 거의 반이 날아갔어요.
+- type: timeline
+  chapter: 지금 얼마나
+  kicker: 36년 동안 다섯 번
+  title: 나라가 구조 펀드를 꺼낸 날
+  highlight: 구조 펀드
+  ticks:
+  - {label: '1990', sub: 증시안정기금}
+  - {label: '2003', sub: 카드 사태}
+  - {label: '2008', sub: 금융위기}
+  - {label: '2020', sub: '코로나 · 10.7조'}
+  - {label: '2022', sub: 금리 쇼크}
+  - {label: '2026', sub: 지금 · 6번째, hl: true}
+  narration:
+  - 나라가 구조 펀드를 꺼낸 건 36년 동안 다섯 번이었어요. 1990년, 2003년, 2008년, 2020년, 2022년.
+  - 그리고 이번이 여섯 번째예요. 실제로 돈을 넣는다면 2008년 이후 18년 만이에요.
+- type: vbars
+  chapter: 지금 얼마나
+  title: 펀드가 나올 때, 얼마나 빠져 있었나
+  highlight: 얼마나
+  vmax: 55
+  rows:
+  - {label: '1990', value: 16, text: '-16%'}
+  - {label: '2003', value: 45, text: '-45%'}
+  - {label: '2008', value: 45, text: '-45%'}
+  - {label: '2020', value: 29, text: '-29%'}
+  - {label: '2022', value: 31, text: '-31%'}
+  - {label: '지금', value: 48, text: '-48%', hl: true}
+  note: '코스피 직전 1년 최고점 대비 · 일간 종가'
+  base_y: 800
+  narration:
+  - 펀드가 나왔을 때 코스피가 고점보다 얼마나 빠져 있었는지 볼게요. 1990년은 16%, 2003년과 2008년은 45%.
+  - 2020년 29%, 2022년 31%. 그리고 지금은 48%. 다섯 번 중 어느 때보다 깊게 빠져 있어요.
+- type: checklist
+  chapter: 지금 얼마나
+  bg: {kind: photo, file: krx_building, dark: 0.72, blur: 4}
+  kicker: 11월 22일 · 정부 긴급회의
+  title: 나라가 꺼낸 카드
+  title_size: 84
+  highlight: 카드
+  items:
+  - {text: '증시안정펀드 약 10조 원 가동 준비', highlight: 10조, 'on': 1}
+  - {text: '공매도 3개월 특별 감시', highlight: 공매도, 'on': 2}
+  - {text: '회사 자사주 매입 한도 완화', highlight: 자사주, 'on': 2, offset: 0.6}
+  narration:
+  - 그러자 정부가 긴급회의를 열었어요. 가장 큰 카드는 증시안정펀드, 줄여서 증안펀드예요.
+  - 공매도도 특별히 감시하고, 회사들이 자기 주식을 더 살 수 있게 풀어 줬어요.
+- type: kinetic
+  chapter: 증안펀드가 뭐길래
+  bg: {kind: photo, file: krx_building, dark: 0.65, blur: 3}
+  items:
+  - text: '넘어지는 시장을
+
+      붙잡는 돈'
+    highlight: 붙잡는 돈
+    'on': 1
+    size: 130
+  narration:
+  - 증안펀드가 뭐냐면요, 운동장에서 넘어지려는 아이를 선생님이 붙잡아 주는 거랑 비슷해요.
+  - 은행, 증권사 같은 금융회사들이 돈을 모아서, 주가가 너무 빠질 때 주식을 대신 사 주는 거예요.
+- type: vbars
+  chapter: 증안펀드가 뭐길래
+  title: 10조 원, 얼마나 큰 돈일까
+  highlight: 10조
+  vmax: 4400
+  rows:
+  - {label: 증안펀드, value: 10, text: 10조, hl: true, sub: 0.25%}
+  - {label: 코스피 · 코스닥 전체, value: 4000, text: '약 4,000조', sub: 시가총액}
+  note: '자료: 11월 기사(경향신문 · 매일경제) 기준 대략값'
+  narration:
+  - 10조 원, 엄청 큰돈 같죠? 그런데 우리 주식시장 전체는 약 4,000조 원이에요.
+  - 커다란 물통에 컵 하나 붓는 정도, 0.25%예요. 그래서 효과가 있냐는 말도 나와요.
+- type: kpi
+  chapter: 4번의 반등
+  bg: {kind: video, file: clock_anxiety_v, dark: 0.7, blur: 4}
+  kpis:
+  - {label: 1년 뒤 플러스, value: 4번, color: red, 'on': 1}
+  - {label: 1년 뒤 마이너스, value: 1번, color: navy, 'on': 2}
+  bars:
+  - {label: 2003, value: 65, text: +65%, hl: true}
+  - {label: 2008, value: 44, text: +44%, hl: false}
+  - {label: 2020, value: 86, text: +86%, hl: true}
+  - {label: 2022, value: 12, text: +12%, hl: false}
+  bars_on: 1
+  vmax: 100
+  narration:
+  - 먼저 결론부터 살짝. 펀드가 나온 날 코스피를 샀다면, 5번 중 4번은 1년 뒤 플러스였어요.
+  - 하나씩 볼게요.
+- type: punch
+  chapter: 4번의 반등
+  big: +65%
+  label: 2003년 3월 · 카드 사태 · 1,000만 원 → 1년 뒤
+  photo: {file: crash_screen, dark: 0.6, focus: [0.5, 0.4]}
+  tone: up
+  'on': 1
+  sub: 1,000만 원 → 1,650만 원 · 3년 뒤 2,593만 원
+  sub_on: 1
+  narration:
+  - 2003년, 신용카드 빚이 터지면서 코스피가 고점보다 45% 빠졌어요. 그때 산 1,000만 원은?
+  - 1년 뒤 1,650만 원, 3년 뒤엔 2,593만 원이 됐어요. 펀드가 나온 그날이 거의 바닥이었죠.
+- type: chart
+  chapter: 4번의 반등
+  chart:
+    series: kospi
+    start: '2003-03-17'
+    end: '2006-03-16'
+    base: 1000
+    unit: won
+    color: [70, 210, 150]
+    draw: {'on': 1, dur: 2.4}
+    marks:
+    - {date: '2004-03-16', label: '1년 뒤 1,650만', sub: +65%, 'on': 1, offset: 1.0, dy: -60, dx: 0, color: up}
+    - {date: '2006-03-16', label: '3년 뒤 2,593만', sub: +159%, 'on': 2, dy: -60, dx: -110, color: up, size: 36}
+    source: '자료: 코스피 일간 종가 (배당 제외)'
+    title: 2003년 3월 카드 사태 · 1,000만 원 (만 원)
+  narration:
+  - 그래프로 보면 이래요. 그날 이후로 거의 뒤돌아보지 않고 올라갔어요.
+- type: chart
+  chapter: 4번의 반등
+  chart:
+    series: kospi
+    start: '2008-11-13'
+    end: '2009-11-13'
+    base: 1000
+    unit: won
+    color: [70, 210, 150]
+    draw: {'on': 1, dur: 2.2}
+    marks:
+    - {date: '2008-11-20', label: '바닥 · 872만', sub: 일주일 뒤 -12.8%, 'on': 1, offset: 1.0, dy: 70, dx: 60, color: down}
+    - {date: '2009-11-13', label: '1년 뒤 1,444만', sub: +44%, 'on': 2, dy: -60, dx: -110, color: up, size: 36}
+    source: '자료: 코스피 일간 종가 (배당 제외)'
+    title: 2008년 11월 금융위기 · 1,000만 원 (만 원)
+  narration:
+  - 2008년 금융위기 때는 펀드가 나오고도 일주일 동안 13% 더 빠졌어요. 무서웠겠죠.
+  - 그래도 1년 뒤엔 1,444만 원. 44% 수익이었어요.
+- type: duel
+  chapter: 4번의 반등
+  heading: 코로나 vs 금리 쇼크
+  highlight: 코로나
+  left: {title: 2020.3 · 코로나 · 10.7조, value: +86%, sub: '1년 뒤 1,861만 원', color: up, 'on': 1}
+  right: {title: 2022.9 · 금리 쇼크, value: +12%, sub: '1년 뒤 1,116만 원', color: up, 'on': 2}
+  narration:
+  - 2020년 코로나 때는 10.7조 펀드를 만들었는데, 실제로 쓰기도 전에 시장이 먼저 올랐어요. 1년 뒤 86%.
+  - 2022년 금리 쇼크 때도 1년 뒤 12% 플러스. 두 번 다 발표한 날이 거의 바닥이었어요.
+- type: punch
+  chapter: 한 번은 달랐다
+  big: -28%
+  label: 1990년 5월 증시안정기금 · 펀드가 나오고도
+  photo: {file: krx_building, dark: 0.65, focus: [0.5, 0.4]}
+  tone: down
+  'on': 1
+  sub: 넉 달 뒤 더 빠짐 · 1년 뒤에도 825만 원
+  sub_on: 2
+  shake:
+  - {offset: 0.1, amp: 12, dur: 0.4}
+  narration:
+  - 그런데 한 번은 완전히 달랐어요. 첫 번째, 1990년이에요.
+  - 나라가 펀드를 만들었는데도 코스피는 넉 달 동안 28% 더 빠졌어요. 1년 뒤에도 1,000만 원이 825만 원이었죠.
+- type: chart
+  chapter: 한 번은 달랐다
+  chart:
+    series: kospi
+    start: '1990-05-04'
+    end: '1993-05-03'
+    base: 1000
+    unit: won
+    color: [240, 84, 84]
+    draw: {'on': 1, dur: 2.4}
+    marks:
+    - {date: '1990-09-17', label: '바닥 · 724만', sub: '-27.6%', 'on': 1, offset: 1.0, dy: 70, dx: 60, color: down}
+    - {date: '1993-05-03', label: '3년 뒤 919만', sub: 아직 마이너스, 'on': 2, dy: -60, dx: -110, color: down, size: 36}
+    source: '자료: 코스피 일간 종가 (배당 제외)'
+    title: 1990년 5월 증시안정기금 · 1,000만 원 (만 원)
+  narration:
+  - 3년이 지나도 919만 원. 여전히 원금을 못 찾았어요.
+- type: duel
+  chapter: 그렇다면 지금은
+  heading: 왜 1990년만 달랐을까
+  highlight: 1990년
+  left: {title: '반등한 4번', value: 바깥 충격, sub: '카드 · 금융위기 · 코로나 · 금리 → 공포의 바닥', color: up, 'on': 1}
+  right: {title: '1990년', value: 거품 꺼짐, sub: '3년 동안 4배 오른 뒤 → 하락의 시작', color: down, 'on': 2}
+  narration:
+  - 차이는 이거예요. 반등한 4번은 바깥에서 터진 충격 뒤, 공포가 가장 클 때 펀드가 나왔어요.
+  - 1990년은 그 전 3년 동안 주가가 4배나 오른 뒤, 거품이 막 꺼지기 시작할 때였어요. 펀드로 막기엔 너무 일렀던 거죠.
+- type: duel
+  chapter: 그렇다면 지금은
+  heading: 지금은 어느 쪽?
+  highlight: 어느 쪽
+  left: {title: 바깥 충격형, value: AI 매도 · 외국인 이탈, sub: 미국발 폭락이 번짐, color: up, 'on': 1}
+  right: {title: 거품 꺼짐형, value: '6월 9,114', sub: 그 전 1년 크게 오름, color: down, 'on': 2}
+  narration:
+  - 그렇다면 지금은 어느 쪽일까요? 미국발 에이아이 매도와 외국인 이탈은, 바깥 충격처럼 보여요.
+  - 하지만 6월까지 크게 올랐던 걸 보면 거품이 꺼지는 모습도 있어요. 둘 다 섞여 있는 셈이에요. 그래서 한 번에 다 넣는 건 위험해요.
+- type: lollipop
+  chapter: 결말
+  title: 구조 펀드 날 1,000만 원, 3년 뒤
+  highlight: 3년 뒤
+  kicker: 배당 제외 · 코스피 종가
+  'on': 1
+  step: 0.4
+  top: 380
+  row_h: 60
+  title_y: 140
+  vmax: 2800
+  rows:
+  - {label: 2003, value: 2593, text: '2,593만'}
+  - {label: 2008, value: 1748, text: '1,748만'}
+  - {label: 2022, value: 1592, text: '1,592만'}
+  - {label: 2020, value: 1500, text: '1,500만'}
+  - {label: 1990, value: 919, text: '919만', hl: true}
+  narration:
+  - 3년 뒤로 보면 결말은 더 분명해요. 다섯 번 중 네 번은 1,500만 원이 넘었어요.
+  - 단 1990년만, 3년이 지나도 원금이 안 됐어요.
+- type: checklist
+  chapter: 결말
+  bg: {kind: photo, file: ev_wallst, dark: 0.72, blur: 4}
+  kicker: 그래서 나는?
+  title: 지금 할 일 세 가지
+  title_size: 84
+  highlight: 세 가지
+  items:
+  - {text: '한 번에 말고, 나눠서 사기', highlight: 나눠서, 'on': 1}
+  - {text: '생활비 1년 치는 현금으로', highlight: 현금, 'on': 2}
+  - {text: '펀드보다 공포의 크기를 보기', highlight: 공포, 'on': 3}
+  narration:
+  - 그래서 지금 할 일은 세 가지예요. 첫째, 한 번에 다 넣지 말고 나눠서.
+  - 둘째, 생활비 1년 치는 꼭 현금으로 남겨 두기.
+  - 셋째, 펀드 소식보다 사람들이 얼마나 무서워하는지를 보세요. 과거 4번은, 공포가 가장 클 때가 바닥이었어요. | 이런 결말 이야기, 계속 보고 싶으시면 구독해 주세요.
+- type: outro
+  chapter: 결말
+  heading: '나라가 나선 지금
+
+    여러분은 사시겠어요?'
+  highlight: 사시겠어요?
+  sub: 지금 · 나눠서 · 더 기다린다 · 댓글로 남겨 주세요
+  subscribe_on: 2
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 3
+  disclaimer: '본 영상은 투자 교육 목적이며, 매수 · 매도 추천이 아닙니다.
+
+    과거 수익률이 미래 수익을 보장하지 않습니다. 배당 · 세금 제외 계산입니다.'
+  narration:
+  - 다음 결말은 어떤 순간으로 가 볼까요? 댓글로 남겨 주세요.
