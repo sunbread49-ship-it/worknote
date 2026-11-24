@@ -82,6 +82,8 @@ def bubble(text):
 
 
 def badge(text="결말 시리즈"):
+    if not text:   # 11/25 사용자: 결말 시리즈 박스는 내용에 따라 붙이거나 뗀다 (it["badge"] = None 이면 생략)
+        return Image.new("RGBA", (1, 1), (0, 0, 0, 0))
     t = TH.T(text, 44, (20, 22, 30), stroke=0)
     im = Image.new("RGBA", (t.width + 48, t.height + 22), (0, 0, 0, 0))
     ImageDraw.Draw(im).rounded_rectangle((0, 0, im.width - 1, im.height - 1), 16, fill=YEL + (255,))
@@ -92,7 +94,7 @@ def badge(text="결말 시리즈"):
 def make_a(it):
     f = photo_bg(it["photo"])
     TH.shadowed(f, bubble(it["bubble"]), (60, 50))
-    b = badge()
+    b = badge(it.get("badge", "결말 시리즈"))
     f.alpha_composite(b, (W - b.width - 40, 40))
     l1 = TH.fit(it["l1"], 170, 1800, color=WHITE, hl=it["hl"], hl_color=RED)
     l2 = TH.fit(it["l2"], 200, 1800, color=YEL, hl=it["hl"], hl_color=RED)
@@ -109,7 +111,7 @@ def make_b(it):
     sub = TH.fit(it["big_sub"], 120, 1700, color=WHITE)
     TH.shadowed(f, sub, (W / 2, 260 + big.height + 10), "mt")
     TH.shadowed(f, bubble(it["bubble"]), (60, 50))
-    b = badge()
+    b = badge(it.get("badge", "결말 시리즈"))
     f.alpha_composite(b, (W - b.width - 40, 40))
     return f.convert("RGB")
 
@@ -178,7 +180,7 @@ def make_s2(it):   # 컬러 사진(채도 낮춤) + 아래 빨간 띠에 결말 
     TH.shadowed(f, l1, (70, H - band.height - 50 - l1.height))
     bb = bubble(it["bubble"])
     TH.shadowed(f, bb, (W - bb.width - 60, 50))
-    b = badge()
+    b = badge(it.get("badge", "결말 시리즈"))
     f.alpha_composite(b, (60, 50))
     return f.convert("RGB")
 
@@ -198,7 +200,7 @@ def make_s3(it):   # 왼쪽 검은 패널에 문구 세로로 크게 · 오른�
     l2 = TH.fit(it["l2"], 190, 1150, color=YEL, hl=it["hl"], hl_color=RED)
     TH.shadowed(f, l1, (70, 420))
     TH.shadowed(f, l2, (70, 430 + l1.height))
-    b = badge()
+    b = badge(it.get("badge", "결말 시리즈"))
     f.alpha_composite(b, (W - b.width - 50, H - b.height - 50))
     return f.convert("RGB")
 
@@ -213,7 +215,7 @@ def make_s4(it):   # 남색 톤 사진 · 위 흰 줄 · 아래 검은 상자 �
     f.alpha_composite(box, (int(W / 2 - box.width / 2), H - box.height - 60))
     TH.shadowed(f, l2, (W / 2, H - box.height - 60 + 25), "mt")
     TH.shadowed(f, bubble(it["bubble"]), (60, 330))
-    b = badge()
+    b = badge(it.get("badge", "결말 시리즈"))
     f.alpha_composite(b, (W - b.width - 40, 340))
     return f.convert("RGB")
 
