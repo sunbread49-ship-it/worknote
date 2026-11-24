@@ -98,10 +98,8 @@ def make(v):
             q = k / 18
             px, py = sx, sy + (cy + r - 40 - sy) * q
             d.ellipse((px - 10, py - 10, px + 10, py + 10), fill=GOLD + (240,))
-        m = mascot(150, 180)
-        f.alpha_composite(m, (int(sx - m.width / 2), int(sy + 150)))
         qmark(f, sx, cy + r - 10, 220)
-        lines(f, [("땅을 계속 파면", 110, WHITE), ("반대편으로", 130, GOLD), ("나갈까?", 130, GOLD)], 70, 200)
+        lines(f, [("땅을 계속 파면", 110, WHITE), ("반대편으로", 130, GOLD), ("나갈 수", 130, GOLD), ("있을까?", 130, GOLD)], 70, 150)
     elif v == "T04":   # 총알 10배
         section(f, 1480, 560, 400, 560, 180, 170)
         b = _vehicle("bullet", 360)
