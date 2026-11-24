@@ -125,6 +125,78 @@ def _panel(f, tau, depth, v, extra=None):
     G.blit(f, p, (S.SAFE_X + 20, 150), 1, "lt")
 
 
+def _layer_col(depth):
+    dd = depth if depth <= R_KM else 2 * R_KM - depth
+    if dd < 35:
+        return (130, 100, 70)
+    if dd < 2900:
+        return (200, 80, 30)
+    if dd < 5150:
+        return (240, 150, 40)
+    return (255, 230, 150)
+
+
+def _cam(depth, v, t, faller, bg=None):
+    """악어새 시점 동그라미: 지금 지나는 층 색 + 위로 쏜살같이 지나가는 돌 알갱이"""
+    s = 300
+    im = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    inner = Image.new("RGBA", (s, s), _layer_col(depth) + (255,))
+    d = ImageDraw.Draw(inner)
+    import random
+    rnd = random.Random(3)
+    spd = min(1.0, v / 28000)
+    for i in range(46):
+        x = rnd.uniform(0, s)
+        y = (rnd.uniform(0, s) - t * (200 + 2400 * spd)) % (s + 120) - 60
+        ln = 6 + 80 * spd
+        c = tuple(min(255, int(v_ * rnd.uniform(0.6, 1.4))) for v_ in _layer_col(depth))
+        d.line((x, y, x, y + ln), fill=c + (255,), width=rnd.choice((3, 4, 6)))
+    fl = faller.rotate(15 * math.sin(t * 3), expand=True)
+    inner.alpha_composite(fl, ((s - fl.width) // 2, (s - fl.height) // 2))
+    m = Image.new("L", (s, s), 0)
+    ImageDraw.Draw(m).ellipse((0, 0, s - 1, s - 1), fill=255)
+    im.paste(inner, (0, 0), m)
+    ImageDraw.Draw(im).ellipse((0, 0, s - 1, s - 1), outline=(255, 255, 255, 230), width=6)
+    lab = T("악어새 시점", 26, (20, 22, 30), "Black")
+    pill = Image.new("RGBA", (lab.width + 28, lab.height + 12), (0, 0, 0, 0))
+    ImageDraw.Draw(pill).rounded_rectangle((0, 0, pill.width - 1, pill.height - 1), 14, fill=GOLD + (255,))
+    pill.alpha_composite(lab, (14, 6))
+    out = Image.new("RGBA", (s, s + 40), (0, 0, 0, 0))
+    out.alpha_composite(im, (0, 40))
+    out.alpha_composite(pill, ((s - pill.width) // 2, 20))
+    return out
+
+
+def _compass(s, ang):
+    im = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.ellipse((4, 4, s - 4, s - 4), fill=(245, 246, 250, 255), outline=(200, 160, 60, 255), width=8)
+    c = s / 2
+    a = math.radians(ang)
+    L = s * 0.36
+    tip = (c + L * math.sin(a), c - L * math.cos(a))
+    tail = (c - L * math.sin(a), c + L * math.cos(a))
+    side = (c + 12 * math.cos(a), c + 12 * math.sin(a))
+    side2 = (c - 12 * math.cos(a), c - 12 * math.sin(a))
+    d.polygon((tip, side, side2), fill=(220, 50, 50, 255))
+    d.polygon((tail, side, side2), fill=(60, 64, 80, 255))
+    d.text((c - 8, 10), "N", fill=(220, 50, 50, 255))
+    return im
+
+
+def _scale_img(kg):
+    w, h = 300, 220
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle((0, 40, w - 1, h - 1), 30, fill=(235, 238, 245, 255))
+    d.rounded_rectangle((40, 70, w - 40, 150), 14, fill=(20, 24, 36, 255))
+    num = T(f"{kg:,.0f} kg", 54, GOLD if kg > 1 else (120, 220, 255), "Black")
+    im.alpha_composite(num, ((w - num.width) // 2, 80))
+    lab = T("서 있다면 몸무게", 24, (60, 64, 80), "Bold")
+    im.alpha_composite(lab, ((w - lab.width) // 2, 170))
+    return im
+
+
 class Dive(Editorial):
     def base(self, f):
         f.alpha_composite(_space())
@@ -183,12 +255,44 @@ class Dive(Editorial):
         y = cy - r + r * depth / R_KM
         fh = sp.get("faller_h", 120)
         fl = self.faller(fh).rotate(180 if sp.get("head_down") else 0, expand=True)
-        wob = 6 * math.sin(t * 7)
+        wob = 6 * math.sin(t * 7) + (10 * math.sin(t * 70) if v > 25000 else 0)
         G.blit(f, fl, (cx + wob, y), 1, "mm")
         if v > 0:   # 속도선
             for k in range(5):
                 yy = y - fh * 0.6 - k * 22
                 d.line((cx - 40 + k * 18, yy, cx - 40 + k * 18, yy - min(80, v / 400)), fill=(255, 255, 255, 90), width=3)
+        if sp.get("field"):      # 지구 자석: 움직이는 자기력선 + 나침반
+            for k in (1.25, 1.5, 1.8):
+                for sgn in (-1, 1):
+                    pts = []
+                    for a in range(-80, 81, 4):
+                        th = math.radians(a)
+                        rr = r * k * math.cos(th) ** 2
+                        if rr < r:
+                            continue
+                        pts.append((cx + sgn * rr * math.cos(th), cy - rr * math.sin(th)))
+                    if len(pts) > 1:
+                        for i in range(len(pts) - 1):
+                            if (i + int(t * 8)) % 3:
+                                d.line((pts[i], pts[i + 1]), fill=SKY + (170,), width=3)
+            G.blit(f, _compass(150, 10 * math.sin(t * 3)), (cx - r - 220, cy - 120), G.appear(t, 0.5, 0.4), "mm")
+            G.blit(f, T("나침반", 28, SKY, "Black"), (cx - r - 220, cy - 20), 1, "mm")
+        if sp.get("swirl", True):   # 외핵 출렁임
+            ro = r * 0.37
+            for k in range(10):
+                a0 = (t * 40 + k * 36) % 360
+                d.arc((cx - ro, cy - ro, cx + ro, cy + ro), a0, a0 + 14, fill=(255, 240, 170, 120), width=4)
+        if sp.get("trail"):
+            for k in range(1, 8):
+                tk = max(sp.get("tau", [0, 0])[0], tau - k * 0.6)
+                dk, _ = fall_state(tk)
+                yk = cy - r + r * dk / R_KM
+                G.blit(f, self.faller(fh), (cx, yk), 0.08 * (8 - k), "mm")
+        if sp.get("cam", True) and v > 0:
+            G.blit(f, _cam(depth, v, t, self.faller(110), sp.get("cam_bg")), (S.SAFE_X + 200, 760), 1, "mm")
+        if sp.get("scale"):
+            kg = 60 * abs(R_KM - depth) / R_KM
+            G.blit(f, _scale_img(kg), (S.SAFE_X + 200, 490), 1, "mm")
         _gauge(f, S.W - 360, cy - r, cy + r, depth, sp.get("stops"), t, self)
         if sp.get("panel", True):
             _panel(f, tau, depth, v, sp.get("extra"))

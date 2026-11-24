@@ -5040,3 +5040,4 @@ TYPES.update({"vbars": VBars})
 
 
 from . import dive  # noqa: E402,F401  (sci05 지구 관통 낙하 장면)
+from . import viz5  # noqa: E402,F401  (sci05 그림 장면 모음)

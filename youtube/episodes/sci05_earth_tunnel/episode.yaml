@@ -23,6 +23,8 @@ tts:
     5,000도: 오천 도
     360만: 삼백육십만
     600마리: 육백 마리
+    KTX: 케이티엑스
+    2만 8천 km: 이만 팔천 킬로미터
     42분: 사십이 분
     38분: 삼십팔 분
     84분: 팔십사 분
@@ -43,59 +45,53 @@ chapter_titles:
   근데 사실은: 왕복 84분 · 인공위성 · 진짜 지구는 38분 · 어디로 뚫어도 42분 · 공기 · 자전
   엔딩: 인류는 12km에서 멈췄다
 scenes:
-# ── 인트로 (0~30초 · INTRO30) ───────────────────────────
-- type: sci_kinetic
+# ── 인트로 ───────────────────────────────────────────
+- type: globe
+  mode: pierce
   chapter: 인트로
-  media:
-    kind: photo
-    file: et_bluemarble
-    caption: 우리가 사는 공, 지구
-    side: right
-  items:
-  - text: '계속 파면
-
-      반대편?'
-    highlight: 반대편
-    'on': 1
+  title: 계속 파면 반대편?
+  highlight: 반대편
+  lat: 25
+  arrow_on: 1
+  sfx:
+  - {name: whoosh, on: 1, offset: 1.0}
   narration:
-  - 어릴 때 한 번쯤 상상해 보셨죠? 땅을 계속, 계속 파 내려가면, 지구 반대편으로 나갈 수 있을까.
-- type: sci_kinetic
+  - 어릴 때 한 번쯤 상상해 보셨죠? 땅을 계속, 계속 파 내려가면, 지구 반대편으로 쑥 나갈 수 있을까.
+- type: rabbit
   chapter: 인트로
-  media:
-    kind: photo
-    file: et_alice
-    caption: 이상한 나라의 앨리스 (1865)
-    side: left
-  items:
-  - text: '앨리스도
-
-      궁금했다'
-    highlight: 앨리스
-    'on': 1
+  title: 앨리스도 궁금했다
+  highlight: 앨리스
+  bubble: 이러다 지구를 뚫고 나가는 거 아냐?
+  bubble_on: 1
+  tag: 이상한 나라의 앨리스 (1865) 속 장면을 악어새가 재연
   narration:
-  - 이상한 나라의 앨리스도 토끼 굴에 떨어지면서 똑같은 걸 궁금해했어요. 이러다 지구를 뚫고 나가는 거 아닐까?
+  - 이상한 나라의 앨리스도 토끼 굴에 떨어지면서, 똑같은 걸 궁금해했어요. 이러다 지구를 뚫고 나가는 거 아냐?
 - type: dive
   chapter: 인트로
   mode: section
-  title: 서울에서 뛰어내리면?
-  highlight: 뛰어내리면
+  title: 과학자들이 진짜로 계산했다
+  highlight: 계산
   from: 서울
   to: '?'
   tau: [0, 3]
   stops: []
   narration:
   - 다들 불가능하잖아, 하고 끝내죠. 그런데 과학자들은 이걸 진짜로 계산해 봤어요. | 그리고 답이, 좀 이상해요.
-- type: accent_simple
+- type: stopwatch
   chapter: 인트로
-  palette: notyet
-  bg: a
-  ink: b
-  pop: c
-  big: 몇 분?
-  big_size: 240
-  caption: 하루? 한 시간? 생각하는 숫자가 아니다
+  title: 도착까지 몇 분?
+  highlight: 몇 분
+  choices:
+  - {text: '하루?', 'on': 2}
+  - {text: '한 시간?', 'on': 2, offset: 0.7}
+  - {text: '???', 'on': 3}
+  sfx:
+  - {name: tick, 'on': 1}
+  - {name: count_roll, 'on': 2}
   narration:
-  - 오늘 딱 하나만 해 볼게요. 서울에서 구멍으로 뛰어내리기. | 도착까지 하루일까요, 한 시간일까요? 생각하시는 숫자가 아니에요. 그리고 도착해도, 끝이 아니에요.
+  - 오늘 딱 하나만 해 볼게요. 서울에서 구멍으로 뛰어내리기.
+  - 도착까지 하루일까요, 한 시간일까요?
+  - 생각하시는 숫자가 아니에요. 그리고 도착해도, 끝이 아니에요.
 # ── 출발 ─────────────────────────────────────────────
 - type: sci_title
   chapter: 출발
@@ -107,51 +103,38 @@ scenes:
   subtitle: 출발 · 떨어지는 길 · 도착 · 그리고 반전
   narration:
   - 악어새가 먼저 뛰어내려 볼게요. 준비됐나요?
-- type: dive
+- type: ruler
   chapter: 출발
-  mode: section
-  title: 지구 반지름 6,371km
+  title: 한가운데까지 6,371km
   highlight: 6,371km
-  from: 서울
-  to: 반대편
-  tau: [0, 0]
-  panel: false
-  stops:
-  - km: 0
-    label: 출발
-  - km: 6371
-    label: 한가운데
-    'on': 2
+  'on': 2
   narration:
-  - 지구 한가운데까지만 6,371km. | 서울에서 부산까지 왕복 일곱 번을 해야 하는 거리예요. 그걸 땅속으로 가는 거죠.
-- type: sci_kinetic
+  - 지구 한가운데까지만, 6,371km예요.
+  - 감이 안 오시죠? 서울에서 부산까지, 기차로 일곱 번을 왔다 갔다 해야 하는 거리예요. 그걸 땅속으로, 똑바로 내려가는 거죠.
+- type: globe
+  mode: antipode
   chapter: 출발
-  media:
-    kind: photo
-    file: rough_sea
-    caption: 서울 반대편 = 대서양 바다
-    side: right
-  items:
-  - text: '서울 반대편은
-
-      바다'
-    highlight: 바다
-    'on': 1
+  title: 서울의 정반대편은?
+  highlight: 정반대편
+  turn_on: 1
+  tag: 대서양 · 우루과이와 브라질 앞바다
+  sfx:
+  - {name: glide, 'on': 1, offset: 0.6}
   narration:
-  - 그럼 서울 반대편은 어딜까요? 남아메리카, 우루과이와 브라질 사이 앞바다예요. 대서양 한가운데죠.
-  - 사실 지구는 반대편끼리 둘 다 땅인 곳이 아주 적어요. 대부분 한쪽은 바다예요.
+  - 그럼 서울의 정반대편은 어딜까요? 지구본을 반 바퀴 돌려 볼게요.
+  - 남아메리카, 우루과이와 브라질 사이 앞바다예요. 대서양 한가운데죠. | 사실 지구는, 반대편끼리 둘 다 땅인 곳이 아주 적어요. 대부분 한쪽은 바다예요.
 # ── 떨어지는 길 ────────────────────────────────────────
-- type: accent_simple
+- type: drill
   chapter: 떨어지는 길
-  palette: notyet
-  bg: a
-  ink: b
-  pop: c
-  big: 낙하 시작
-  big_size: 170
-  caption: 깊이 0km · 경과 0분
+  title: 낙하 시작
+  highlight: 낙하
+  to_m: 120
+  sfx:
+  - {name: riser, 'on': 1}
+  - {name: whoosh, 'on': 2, offset: 0.4}
   narration:
-  - 자, 뛰어내립니다. 첫 번째 정거장부터 볼게요.
+  - 자, 드릴로 구멍을 뚫고!
+  - 악어새, 뛰어내립니다.
 - type: dive
   chapter: 떨어지는 길
   mode: strata
@@ -180,8 +163,8 @@ scenes:
     hl: true
     'on': 3
   narration:
-  - 4km. 남아프리카공화국 금광이에요. 사람이 직접 걸어 내려가 본 가장 깊은 곳이죠. 바위가 60도가 넘게 뜨거워요.
-  - 에베레스트산을 거꾸로 꽂아도 9km, 가장 깊은 바다 마리아나 해구가 11km.
+  - 첫 정거장, 4km. 남아프리카공화국 금광이에요. 사람이 직접 걸어 내려가 본 가장 깊은 곳이죠. 바위가 60도가 넘게 뜨거워요.
+  - 에베레스트산을 거꾸로 꽂아도 9km, 가장 깊은 바다 마리아나 해구도 11km예요.
   - 그리고 12km. 인류가 판 가장 깊은 구멍이 여기 있어요.
 - type: sci_kinetic
   chapter: 떨어지는 길
@@ -202,58 +185,40 @@ scenes:
     highlight: 0.2%
     'on': 2
   narration:
-  - 러시아 콜라 시추공. 1970년부터 20년 가까이 파서 12,262m까지 내려갔어요.
-  - 그런데 지구 반지름으로 치면 고작 0.2%. 사과로 치면 껍질도 다 못 뚫은 거예요.
-- type: sci_kinetic
+  - 러시아 콜라 시추공. 1970년부터 20년 가까이 파서, 12,262m까지 내려갔어요.
+  - 그런데 지구 반지름으로 치면 고작 0.2%. 사과로 치면, 껍질도 다 못 뚫은 거예요.
+- type: thermo
   chapter: 떨어지는 길
-  media:
-    kind: photo
-    file: et_kola_site
-    caption: 멈춰 버린 시추 기지
-    side: left
-  items:
-  - text: '180도에서
-
-      멈췄다'
-    highlight: 180도
-    'on': 1
+  title: 왜 멈췄을까?
+  highlight: 멈췄을까
+  vmax: 300
+  rows:
+  - {label: 예상했던 온도, value: 100, text: 100도, 'on': 1}
+  - {label: 실제 바닥 온도, value: 180, text: 180도, 'on': 1, offset: 1.2}
   narration:
-  - 왜 멈췄냐고요? 바닥 온도가 180도. 예상보다 훨씬 뜨거웠어요. | 바위가 엿가락처럼 물러져서 구멍이 자꾸 막혔죠. 지금 그 구멍은, 쇠뚜껑으로 용접해서 막혀 있어요.
-- type: accent_simple
+  - 왜 멈췄냐고요? 바닥이 180도. 예상보다 훨씬 뜨거웠어요. | 바위가 엿가락처럼 물렁해져서, 구멍이 자꾸 막혔죠. 지금 그 구멍은, 쇠뚜껑으로 용접해서 막아 놨어요.
+- type: mic
   chapter: 떨어지는 길
-  palette: notyet
-  bg: a
-  ink: b
-  pop: c
-  big: 지옥의 비명?
-  big_size: 150
-  caption: 1989년 퍼진 괴담 → 가짜로 밝혀짐
+  title: 지옥의 비명?
+  highlight: 비명
+  stamp_on: 2
   narration:
   - 이 구멍엔 유명한 괴담도 있어요. 구멍 속에 마이크를 넣었더니, 지옥의 비명 소리가 녹음됐다는 이야기.
-  - 결론부터 말하면 가짜예요. 공포 영화 소리를 이어 붙인 거였죠. 실제 바닥엔 뜨거운 돌과 물뿐이었어요.
-- type: timeline
+  - 결론부터 말하면, 가짜예요. 공포 영화 소리를 이어 붙인 거였죠.
+- type: digrace
   chapter: 떨어지는 길
-  bg:
-    kind: paper
-  kicker: 우주 경쟁만 있던 게 아니다
-  title: 땅속 경쟁
-  highlight: 땅속
-  ticks:
-  - label: '1961'
-    sub: 미국 · 바다 밑 뚫기 (모홀 계획)
-  - label: '1966'
-    sub: 미국 · 돈 문제로 중단
-  - label: '1970'
-    sub: 소련 · 콜라 시추 시작
-    hl: true
-  - label: '1989'
-    sub: 12,262m 세계 기록
-    hl: true
-  - label: 지금
-    sub: 일본 탐사선 '지큐' 도전 중
+  title: 우주 경쟁 말고, 땅속 경쟁
+  highlight: 땅속 경쟁
+  max_m: 13000
+  teams:
+  - {flag: us, name: 미국, year: '1961', m: 183, sea_m: 3600, 'on': 1, grow: 1.5, badge: 돈 문제로 중단, bad: true}
+  - {flag: ussr, name: 소련, year: 1970~1989, m: 12262, 'on': 1, offset: 2.5, grow: 3.0, badge: 세계 기록, win: true}
+  - {flag: jp, name: 일본 '지큐', year: 지금, m: 3262, sea_m: 3900, 'on': 2, offset: 2.0, grow: 2.0, badge: 맨틀 도전 중}
+  sfx:
+  - {name: drum, 'on': 1}
   narration:
-  - 사실 땅속에도 우주처럼 경쟁이 있었어요. 1961년 미국이 먼저 바다 밑을 뚫기 시작했고, 소련이 1970년에 콜라에서 따라붙었죠.
-  - 미국은 돈 문제로 그만뒀고, 소련은 12km 세계 기록을 세웠어요. 지금은 일본 탐사선 지큐가 맨틀까지 뚫겠다고 도전 중이에요.
+  - 사실 땅속에도, 우주처럼 나라끼리 경쟁이 있었어요. 1961년 미국이 먼저 바다 밑을 뚫었는데, 돈 문제로 그만뒀어요. 소련은 콜라에서 12km 세계 기록을 세웠죠.
+  - 지금은 일본 탐사선 지큐가, 바다 밑에서 맨틀까지 뚫겠다고 도전 중이에요.
 - type: dive
   chapter: 떨어지는 길
   mode: section
@@ -267,15 +232,18 @@ scenes:
   - km: 2900
     label: 외핵 2,900km
     'on': 2
+  sfx:
+  - {name: fall_burn, 'on': 1}
   narration:
-  - 이제 악어새는 35km를 지나요. 지구의 껍질, 지각이 여기서 끝나요. 사과 껍질보다 얇은 거죠.
-  - 그 아래는 맨틀. 아주 천천히 흐르는, 뜨거운 돌덩어리예요.
+  - 이제 악어새는 35km를 지나요. 지구의 껍질, 지각이 여기서 끝나요. 사과 껍질보다도 얇은 거죠.
+  - 그 아래는 맨틀. 아주아주 천천히 흐르는, 뜨거운 돌덩어리예요. 왼쪽 동그라미가 악어새 눈에 보이는 풍경이에요.
 - type: dive
   chapter: 떨어지는 길
   mode: section
   title: 2,900km · 액체 쇠의 바다
   highlight: 액체 쇠
   head_down: true
+  field: true
   tau: [4, 12]
   stops:
   - km: 35
@@ -286,58 +254,42 @@ scenes:
     label: 내핵
     'on': 2
   narration:
-  - 2,900km. 여기부터 외핵이에요. 쇠가 녹아서 출렁이는 액체 쇠의 바다죠.
-  - 이 쇠 바다가 빙빙 돌면서 지구를 커다란 자석으로 만들어요. 나침반이 북쪽을 가리키는 게, 바로 이 덕분이에요.
-- type: vbars
+  - 2,900km. 여기부터 외핵이에요. 쇠가 녹아서 출렁출렁하는, 액체 쇠의 바다죠.
+  - 이 쇠 바다가 빙빙 돌면서, 지구를 커다란 자석으로 만들어요. 나침반이 늘 북쪽을 가리키는 게, 바로 이 덕분이에요.
+- type: thermo
   chapter: 떨어지는 길
   title: 내려갈수록 얼마나 뜨거울까
   highlight: 뜨거울까
   vmax: 6000
-  base_y: 780
-  height: 420
+  sun_on: 3
   rows:
-  - label: 금광 4km
-    value: 66
-    text: 60도+
-  - label: 콜라 12km
-    value: 180
-    text: 180도
-  - label: 지각 끝
-    value: 500
-    text: 약 500도
-  - label: 외핵
-    value: 4000
-    text: 4,000도
-  - label: 한가운데
-    value: 5200
-    text: 5,200도
-    hl: true
-  - label: 태양 표면
-    value: 5500
-    text: 5,500도
-    color: [255, 150, 60]
+  - {label: 금광 4km, value: 66, text: 60도+, 'on': 1}
+  - {label: 콜라 시추공 12km, value: 180, text: 180도, 'on': 1, offset: 1.0}
+  - {label: 맨틀 위쪽, value: 1000, text: '1,000도', 'on': 2}
+  - {label: 외핵, value: 4000, text: '4,000도', 'on': 2, offset: 1.2}
+  - {label: 지구 한가운데, value: 5200, text: '5,200도', 'on': 3}
+  - {label: 태양 표면, value: 5500, text: '5,500도', color: [255, 190, 60], 'on': 3, offset: 1.2}
   note: 지구 속 온도는 지진파 연구로 짐작한 값 (USGS · 학계 추정)
   narration:
-  - 내려갈수록 얼마나 뜨거울까요? 금광 60도, 콜라 시추공 180도.
-  - 그리고 지구 한가운데는 오천 도가 넘어요. 태양 표면이랑 거의 비슷한 온도예요.
-- type: accent_simple
+  - 내려갈수록 얼마나 뜨거울까요? 온도계를 따라가 볼게요. 금광 60도, 콜라 시추공 180도.
+  - 맨틀 위쪽은 천 도, 외핵은 사천 도.
+  - 그리고 지구 한가운데는 오천 도가 넘어요. 태양 표면이랑, 거의 비슷한 온도예요.
+- type: elephants
   chapter: 떨어지는 길
-  palette: notyet
-  bg: a
-  ink: b
-  pop: c
-  big: 360만 기압
-  big_size: 170
-  caption: 손톱만 한 곳에 코끼리 600마리가 올라선 힘
+  title: 누르는 힘 360만 기압
+  highlight: 360만 기압
+  n: 600
+  'on': 1
   narration:
-  - 누르는 힘도 엄청나요. 한가운데는 360만 기압. | 손톱만 한 자리에 코끼리 600마리가 올라선 것과 같은 힘이에요.
+  - 누르는 힘도 엄청나요. 한가운데는 360만 기압. | 손톱만 한 자리 위에, 코끼리 600마리가 올라서 있는 것과 같은 힘이에요.
 - type: dive
   chapter: 떨어지는 길
   mode: section
   title: 한가운데 · 그런데 무게는 0
   highlight: 무게는 0
   tau: [12, 21.1]
-  extra: 몸무게 0kg · 둥둥
+  scale: true
+  extra: 떨어지는 내내 둥둥
   stops:
   - km: 2900
     label: 외핵
@@ -347,47 +299,57 @@ scenes:
     label: 한가운데
   narration:
   - 그런데 이상한 게 있어요. 떨어지는 내내, 악어새는 몸이 둥둥 떠요. 우주정거장 우주인처럼요.
-  - 그리고 한가운데에 오면, 사방에서 똑같이 잡아당기니까 몸무게가 진짜로 0이 돼요.
+  - 게다가 한가운데로 갈수록, 체중계 숫자가 점점 줄어요. 사방에서 똑같이 잡아당기니까, 한가운데에선 몸무게가 진짜로 0이 돼요.
 # ── 도착 ─────────────────────────────────────────────
 - type: dive
   chapter: 도착
   mode: section
-  title: 그리고 반대편 도착
+  title: 점점 느려지고… 도착
   highlight: 도착
   from: 서울
   to: 반대편 바다
   tau: [21.1, 42.2]
+  trail: true
   stops:
   - km: 6371
     label: 한가운데
   - km: 12742
     label: 반대편 도착
+  sfx:
+  - {name: splash, 'on': 1, offset: 4.0}
   narration:
-  - 한가운데를 지나면 이번엔 점점 느려져요. 그리고 반대편 땅끝에 딱, 멈추죠.
-- type: accent_simple
+  - 한가운데를 지나면, 이번엔 점점 느려져요. 그리고 반대편 땅끝에서, 딱 멈추죠.
+- type: stopwatch
   chapter: 도착
-  palette: notyet
-  bg: a
-  ink: b
-  pop: c
-  big: 42분
-  big_size: 300
-  caption: 서울 → 지구 반대편, 단 42분
+  title: 걸린 시간
+  highlight: 시간
+  stop_at: 42.2
+  stop_on: 1
+  stop_offset: 1.2
+  stop_label: 42분!
+  sfx:
+  - {name: ding, 'on': 1, offset: 1.2}
   narration:
-  - 걸린 시간은, 딱 42분. | 점심 먹고 커피 한 잔 마실 시간에 지구 반대편이에요.
-- type: dive
+  - 걸린 시간은, 딱 42분. | 점심 먹고 커피 한 잔 마실 시간에, 지구 반대편이에요.
+- type: speedrace
   chapter: 도착
-  mode: section
   title: 한가운데 속도 · 총알의 10배
   highlight: 10배
-  tau: [20.5, 21.6]
-  linear: true
-  stops:
-  - km: 6371
-    label: 최고 속도
+  lanes:
+  - {label: KTX, kind: train, kmh: 300, 'on': 1}
+  - {label: 여객기, kind: plane, kmh: 900, 'on': 1}
+  - {label: 총알, kind: bullet, kmh: 3000, 'on': 1, offset: 0.4}
+  - {label: 악어새, kind: me, kmh: 28000, 'on': 2}
   narration:
-  - 한가운데를 지날 때 속도는 시속 2만 8천 km. 총알보다 열 배나 빨라요.
-  - 그네를 생각하면 쉬워요. 가장 낮은 곳에서 가장 빠르고, 끝에 가면 멈추잖아요. 지구 터널도 똑같아요.
+  - 한가운데를 지날 때 속도는요, 기차, 비행기, 총알이랑 같이 달려 볼게요.
+  - 시속 2만 8천 km. 총알보다 열 배나 빨라요.
+- type: swing
+  chapter: 도착
+  title: 그네랑 똑같다
+  highlight: 그네
+  narration:
+  - 왜 이렇게 빨라졌다가 멈출까요? 그네를 생각하면 쉬워요.
+  - 가장 낮은 곳에서 가장 빠르고, 양 끝에선 딱 멈추잖아요. 지구 터널도, 한가운데가 그네의 맨 아래인 거예요.
 # ── 근데 사실은 ────────────────────────────────────────
 - type: accent_simple
   chapter: 근데 사실은
@@ -406,11 +368,14 @@ scenes:
   title: '반전 1 · 도착해도 안 끝난다'
   highlight: 안 끝난다
   tau: [42.2, 84.4]
+  trail: true
   from: 서울
   to: 반대편
   stops:
   - km: 0
     label: 서울
+  sfx:
+  - {name: whoosh, 'on': 1, offset: 1.5}
   narration:
   - 첫 번째. 반대편에서 아무것도 안 잡으면? 다시 떨어져요. | 그리고 42분 뒤, 서울로 돌아와요. 왕복 84분. 영원히 왔다 갔다 하는 거죠.
 - type: dive
@@ -421,65 +386,49 @@ scenes:
   tau: [0, 84.4]
   link_on: 1
   narration:
-  - 두 번째. 이 84분, 어디서 들어 본 숫자 같지 않나요? | 땅에 닿을 듯 낮게 지구를 한 바퀴 도는 인공위성 시간과 똑같아요.
+  - 두 번째. 이 84분, 어디서 들어 본 숫자 같지 않나요? | 땅에 닿을 듯 낮게, 지구를 한 바퀴 도는 인공위성 시간이랑 똑같아요.
   - 보세요. 위성의 높이랑 악어새의 높이가, 처음부터 끝까지 딱 맞아요. 사실 둘은 같은 움직임이거든요.
-- type: vbars
+- type: twin
   chapter: 근데 사실은
   title: '반전 3 · 진짜 지구는 38분'
   highlight: 38분
-  vmax: 50
-  base_y: 780
-  height: 420
-  rows:
-  - label: 속이 고른 지구
-    value: 42.2
-    text: 42분
-  - label: 진짜 지구
-    value: 38.2
-    text: 38분
-    hl: true
-  note: 'Klotz (2015) · American Journal of Physics · 지진파로 잰 지구 속 밀도로 다시 계산'
+  note: 'Klotz (2015) · American Journal of Physics · 지진파로 잰 지구 속 무게로 다시 계산'
   narration:
   - 세 번째. 사실 42분은, 지구 속이 골고루 똑같이 무겁다고 치고 계산한 거예요.
-  - 진짜 지구는 쇠로 된 속이 훨씬 무거워요. 그걸 넣어서 다시 계산하면? 38분. 4분이나 빨라져요.
-- type: dive
+  - 진짜 지구는, 쇠로 된 속이 훨씬 무거워요. 더 세게 끌어당기니까, 더 빨리 도착해요. 38분. 4분이나 빨라져요.
+- type: globe
+  mode: chord3d
   chapter: 근데 사실은
-  mode: chord
   title: '반전 4 · 어디로 뚫어도 42분'
   highlight: 42분
-  tau: [0, 42.2]
+  r: 320
+  cx: 760
+  slides_on: 3
   tunnels:
-  - a: 165
-    b: 205
-    label: 서울→부산
-    'on': 1
-    dy: -30
-  - a: 215
-    b: 335
-    label: 서울→뉴욕
-    color: [120, 200, 255]
-    'on': 2
-    dy: 60
+  - {a: 서울, b: 부산, 'on': 2}
+  - {a: 서울, b: 뉴욕, 'on': 2, offset: 0.0, color: [120, 200, 255]}
   narration:
-  - 네 번째가 제일 이상해요. 지구 한가운데를 안 지나는, 곧은 터널을 뚫어도 시간이 똑같아요.
-  - 서울에서 부산까지 곧게 뚫어도 42분, 서울에서 뉴욕까지 뚫어도 42분. | 그래서 1966년엔 이걸 중력 열차라고 부르며 진지하게 논문까지 나왔어요.
+  - 네 번째가 제일 이상해요. 지구 한가운데를 안 지나는, 비스듬한 곧은 터널을 뚫어도 시간이 똑같아요.
+  - 서울에서 부산까지 뚫어도 42분, 서울에서 뉴욕까지 뚫어도 42분. | 짧은 터널은 완만한 미끄럼틀, 긴 터널은 가파른 미끄럼틀이라서, 결국 똑같아지는 거예요. 1966년엔 이걸 중력 열차라고 부르며 논문까지 나왔어요.
 - type: dive
   chapter: 근데 사실은
   mode: air
   title: '반전 5 · 공기가 있으면 갇힌다'
   highlight: 갇힌다
   narration:
-  - 다섯 번째. 지금까진 터널 속에 공기가 없다고 쳤어요. | 공기가 있으면, 바람 때문에 점점 덜 올라가요.
+  - 다섯 번째. 지금까진 터널 속에 공기가 없다고 쳤어요. | 공기가 있으면, 바람에 막혀서 점점 덜 올라가요.
   - 결국 악어새는 왔다 갔다 하다가, 지구 한가운데에 둥둥 떠서 갇혀 버려요.
-- type: dive
+- type: globe
+  mode: spin3d
   chapter: 근데 사실은
-  mode: spin
   title: '반전 6 · 지구가 돈다'
   highlight: 돈다
   on2: 2
+  sfx:
+  - {name: boom, 'on': 1, offset: 2.4}
   narration:
   - 마지막 여섯 번째. 지구는 빙글빙글 돌고 있죠. 그래서 똑바로 못 떨어지고, 터널 벽에 쾅 부딪혀요.
-  - 그래서 진짜로 하려면, 도는 축을 따라 북극에서 남극으로 뚫어야 해요.
+  - 그래서 진짜로 하려면, 지구가 도는 축을 따라, 북극에서 남극으로 뚫어야 해요.
 # ── 엔딩 ─────────────────────────────────────────────
 - type: dive
   chapter: 엔딩
