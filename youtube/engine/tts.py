@@ -573,13 +573,25 @@ def gemini_scene(lines, cfg, cache, log=print):
                 v_ = _vf0(x_[:int(SR * 12)])
                 v_ = v_[v_ > 0]
                 return float(np.median(v_)) if len(v_) > 20 else None
+            # 2026-11-25 한도 절약: ① 기준 = 지금까지 받아들인 장면들의 중앙값(첫 장면 하나에 휘둘리지 않게)
+            #   ② 음높이 측정의 옥타브 오류(절반 · 두 배로 잘못 잼)는 접어서 비교 ③ 허용 ±10% · 추가 take 최대 1개
+            def _dev(m, r):
+                q = m / r
+                while q > 1.6:
+                    q /= 2
+                while q < 0.625:
+                    q *= 2
+                return abs(q - 1)
             m0 = _med(p)
-            ref = cfg.get("_f0_ref")
+            hist = cfg.setdefault("_f0_hist", [])
+            ref = float(np.median(hist)) if hist else None
             if ref is None and m0:
-                cfg["_f0_ref"] = m0
-            elif m0 and abs(m0 / ref - 1) > 0.07:
-                cand = [(abs(m0 / ref - 1), ratio, p, words)]
-                for take in range(3, 5):   # 하루 한도 아끼기: 추가 take 최대 2개
+                hist.append(m0)
+            elif m0 and _dev(m0, ref) <= 0.10:
+                hist.append(m0)
+            elif m0:
+                cand = [(_dev(m0, ref), ratio, p, words)]
+                for take in range(3, 4):   # 추가 take 최대 1개
                     p2 = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
                     m2 = _med(p2)
                     if not m2:
@@ -588,10 +600,9 @@ def gemini_scene(lines, cfg, cache, log=print):
                     import difflib as _dl
                     r2 = _dl.SequenceMatcher(None, _hn(" ".join(lines)), _hn("".join(w for w, _, _ in w2))).ratio()
                     if r2 >= 0.85:
-                        cand.append((abs(m2 / ref - 1), r2, p2, w2))
-                    if abs(m2 / ref - 1) <= 0.07 and r2 >= 0.85:
-                        break
+                        cand.append((_dev(m2, ref), r2, p2, w2))
                 cand.sort(key=lambda c: c[0])
+                hist.append(_med(cand[0][2]) or ref)
                 log(f"  음높이 맞춤: {lines[0][:20]} {cand[-1][0] * 100 if len(cand) > 1 else 0:.0f}% → {cand[0][0] * 100:.0f}% (take {len(cand)}개 중)")
                 _, ratio, p, words = cand[0]
         except Exception as e:
