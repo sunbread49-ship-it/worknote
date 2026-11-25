@@ -179,7 +179,7 @@ def make_s2(it):   # 컬러 사진(채도 낮춤) + 아래 빨간 띠에 결말 
     l1 = TH.fit(it["l1"], 150, 1700, color=WHITE, hl=it["hl"], hl_color=YEL)
     TH.shadowed(f, l1, (70, H - band.height - 50 - l1.height))
     bb = bubble(it["bubble"])
-    TH.shadowed(f, bb, (W - bb.width - 60, 50))
+    TH.shadowed(f, bb, (W - bb.width - 60, it.get("bubble_y", 50)))
     b = badge(it.get("badge", "결말 시리즈"))
     f.alpha_composite(b, (60, 50))
     return f.convert("RGB")
