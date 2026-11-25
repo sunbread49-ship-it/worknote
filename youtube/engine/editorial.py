@@ -3741,6 +3741,7 @@ TYPES.update({"press": Press})
 # chain — 지분 사다리 도식 (2026-11-22 · 글 나열 대신 원 · 선 · 숫자)
 #   kicker/title · nodes: [{label, sub, face, focus, logo, on, hl}] · links: [{text, on}] (노드 사이 화살표 위 %)
 class Chain(Editorial):
+    own_note = True
     def draw(self, f, t):
         sp = self.spec
         self.base(f)
@@ -4112,6 +4113,7 @@ class PhotoVS(Editorial):
 
 
 class Scale(Editorial):
+    own_note = True
     """저울(시소): 무거운 쪽으로 기울어짐. left/right: {label, value(표시), weight(숫자), sub, on, color} · heading · note"""
 
     def draw(self, f, t):

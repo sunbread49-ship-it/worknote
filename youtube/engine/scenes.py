@@ -71,7 +71,7 @@ class Scene:
                 G.blit(f, _callout(c.get("label", ""), c.get("value", ""), c.get("sub", ""),
                                    col(c.get("color"), S.GOLD), c.get("width", 440)),
                        (c["pos"][0], c["pos"][1] + (1 - o) * 24), o, c.get("anchor", "lt"))
-        if self.spec.get("note"):
+        if self.spec.get("note") and not getattr(self, "own_note", False):   # 11/25: 장면이 note를 크게 직접 그리면 작은 중복 표기 생략
             G.blit(f, G.text_img(self.spec["note"], "Regular", 22, S.MUTED), (S.W - S.SAFE_X, 898), 1, "rt")
         self.draw_fun(f, t)
 

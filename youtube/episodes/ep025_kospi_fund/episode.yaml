@@ -229,15 +229,25 @@ scenes:
   narration:
   - 2008년 금융위기 때는 펀드가 나오고도 일주일 동안 13% 더 빠졌어요. 무서웠겠죠.
   - 그래도 1년 뒤엔 1,444만 원. 44% 수익이었어요.
-- type: duel
+- type: chain
   chapter: 4번의 반등
-  heading: 코로나 vs 금리 쇼크
-  highlight: 코로나
-  left: {title: 2020.3 · 코로나 · 10.7조, value: +86%, sub: '1년 뒤 1,861만 원', color: up, 'on': 1}
-  right: {title: 2022.9 · 금리 쇼크, value: +12%, sub: '1년 뒤 1,116만 원', color: up, 'on': 2}
+  kicker: 2020년 3월 코로나 · 10.7조 펀드
+  title: 돈 한 푼 안 쓰고 올랐다
+  highlight: 한 푼
+  nodes:
+  - {label: 3월 24일, sub: 펀드 발표, text: 발표, 'on': 1}
+  - {label: 실제 투입, sub: 거의 안 씀, text: '0원?', hl: true, 'on': 1, offset: 1.2}
+  - {label: 1년 뒤, sub: '1,000만 → 1,861만', text: +86%, 'on': 2}
+  links:
+  - {text: 그런데, 'on': 1, offset: 0.8}
+  - {text: 결과, 'on': 2}
+  note: 시장을 살린 건 돈이 아니라 '신호'
+  note_hl: 신호
+  note_on: 3
   narration:
-  - 2020년 코로나 때는 10.7조 펀드를 만들었는데, 실제로 쓰기도 전에 시장이 먼저 올랐어요. 1년 뒤 86%.
-  - 2022년 금리 쇼크 때도 1년 뒤 12% 플러스. 두 번 다 발표한 날이 거의 바닥이었어요.
+  - 2020년 코로나 때는 10.7조 펀드를 만들었는데, 실제로는 거의 쓰지도 않았어요.
+  - 그런데도 1년 뒤 86%. 2022년 금리 쇼크 때도 발표한 날이 바닥이었고, 1년 뒤 12% 플러스였어요.
+  - 시장을 살린 건 돈이 아니었어요. 나라가 '여기서 더는 안 둔다'고 외친 신호였죠.
 - type: punch
   chapter: 한 번은 달랐다
   big: -28%
@@ -269,24 +279,35 @@ scenes:
     title: 1990년 5월 증시안정기금 · 1,000만 원 (만 원)
   narration:
   - 3년이 지나도 919만 원. 여전히 원금을 못 찾았어요.
-- type: duel
+- type: columns
   chapter: 그렇다면 지금은
-  heading: 왜 1990년만 달랐을까
-  highlight: 1990년
-  left: {title: '반등한 4번', value: 바깥 충격, sub: '카드 · 금융위기 · 코로나 · 금리 → 공포의 바닥', color: up, 'on': 1}
-  right: {title: '1990년', value: 거품 꺼짐, sub: '3년 동안 4배 오른 뒤 → 하락의 시작', color: down, 'on': 2}
+  title: 무너지기 전, 몇 배 올랐었나
+  highlight: 몇 배
+  kicker: 폭락 직전 고점 ÷ 그 전 3년 최저점 · 코스피 종가
+  'on': 1
+  rows:
+  - {label: 지금, sub: '2023.10 → 2026.6', text: 4.0배, value: 4.0, sub_hl: 지금}
+  - {label: '2008', sub: 금융위기 전, text: 2.6배, value: 2.56}
+  - {label: '2022', sub: 금리 쇼크 전, text: 2.3배, value: 2.27}
+  - {label: '2003', sub: 카드 사태 전, text: 2.0배, value: 2.0}
+  - {label: '2020', sub: 코로나 전, text: 1.4배, value: 1.37}
   narration:
-  - 차이는 이거예요. 반등한 4번은 바깥에서 터진 충격 뒤, 공포가 가장 클 때 펀드가 나왔어요.
-  - 1990년은 그 전 3년 동안 주가가 4배나 오른 뒤, 거품이 막 꺼지기 시작할 때였어요. 펀드로 막기엔 너무 일렀던 거죠.
-- type: duel
+  - 그럼 1990년은 왜 실패했을까요? 그 전에 3저 호황으로 주가가 몇 배나 부풀어 있었거든요. 거품이 꺼지는 중이라, 펀드로는 못 막았어요.
+  - 그런데 이 숫자를 보세요. 무너지기 직전 3년 동안 몇 배 올랐었는지예요. 반등한 4번은 1.4배에서 2.6배.
+  - 지금은요? 3년도 안 돼서 4배. 다섯 번 중 가장 많이 부풀었어요.
+- type: scale
   chapter: 그렇다면 지금은
-  heading: 지금은 어느 쪽?
+  heading: 지금은 어느 쪽에 더 닮았나
   highlight: 어느 쪽
-  left: {title: 바깥 충격형, value: AI 매도 · 외국인 이탈, sub: 미국발 폭락이 번짐, color: up, 'on': 1}
-  right: {title: 거품 꺼짐형, value: '6월 9,114', sub: 그 전 1년 크게 오름, color: down, 'on': 2}
+  left: {label: '바깥 충격형 (반등한 4번)', value: AI 매도, weight: 1.0, sub: '미국발 폭락 · 외국인 이탈', color: [90, 220, 150], 'on': 1}
+  right: {label: '거품 꺼짐형 (1990)', value: 4배 상승, weight: 1.5, sub: '3년 만에 4배 · 사상 최대', color: [255, 90, 80], 'on': 2}
+  note: 저울은 1990 쪽으로 기울어 있다
+  note_hl: '1990'
+  note_on: 3
   narration:
-  - 그렇다면 지금은 어느 쪽일까요? 미국발 에이아이 매도와 외국인 이탈은, 바깥 충격처럼 보여요.
-  - 하지만 6월까지 크게 올랐던 걸 보면 거품이 꺼지는 모습도 있어요. 둘 다 섞여 있는 셈이에요. 그래서 한 번에 다 넣는 건 위험해요.
+  - 지금을 저울에 올려 볼게요. 한쪽엔 미국발 에이아이 매도, 외국인 이탈. 이건 반등한 4번처럼 바깥 충격이에요.
+  - 다른 쪽엔 3년 만에 4배라는 거품. 이건 1990년이에요.
+  - 솔직히 말할게요. 저울은 1990년 쪽으로 조금 더 기울어 있어요.
 - type: lollipop
   chapter: 결말
   title: 구조 펀드 날 1,000만 원, 3년 뒤
@@ -307,21 +328,41 @@ scenes:
   narration:
   - 3년 뒤로 보면 결말은 더 분명해요. 다섯 번 중 네 번은 1,500만 원이 넘었어요.
   - 단 1990년만, 3년이 지나도 원금이 안 됐어요.
-- type: checklist
+- type: kpi
   chapter: 결말
-  bg: {kind: photo, file: ev_wallst, dark: 0.72, blur: 4}
-  kicker: 그래서 나는?
-  title: 지금 할 일 세 가지
-  title_size: 84
-  highlight: 세 가지
-  items:
-  - {text: '한 번에 말고, 나눠서 사기', highlight: 나눠서, 'on': 1}
-  - {text: '생활비 1년 치는 현금으로', highlight: 현금, 'on': 2}
-  - {text: '펀드보다 공포의 크기를 보기', highlight: 공포, 'on': 3}
+  bg: {kind: photo, file: krx_building, dark: 0.75, blur: 4}
+  kpis:
+  - {label: '2008처럼 13% 더 빠지면', value: '4,100', color: red, 'on': 2}
+  - {label: '1990처럼 28% 더 빠지면', value: '3,400', color: navy, 'on': 3}
+  bars:
+  - {label: 지금, value: 4708, text: '4,708', hl: false}
+  - {label: 2008식, value: 4106, text: '4,106', hl: true}
+  - {label: 1990식, value: 3409, text: '3,409', hl: true}
+  bars_on: 1
+  vmax: 5000
   narration:
-  - 그래서 지금 할 일은 세 가지예요. 첫째, 한 번에 다 넣지 말고 나눠서.
-  - 둘째, 생활비 1년 치는 꼭 현금으로 남겨 두기.
-  - 셋째, 펀드 소식보다 사람들이 얼마나 무서워하는지를 보세요. 과거 4번은, 공포가 가장 클 때가 바닥이었어요. | 이런 결말 이야기, 계속 보고 싶으시면 구독해 주세요.
+  - 그래서 결론은 직설적으로 갈게요. 첫째, 펀드 뉴스는 바닥 신호가 아니에요. 공포 신호예요.
+  - 2008년처럼 발표 뒤 13% 더 빠지면 4,100. 마침 증권가에서 말하는 바닥 후보랑 같은 숫자예요.
+  - 1990년처럼 28% 더 빠지면 3,400. 3년 만에 4배 오른 시장은, 나라 돈으로도 못 막을 수 있어요.
+- type: kinetic
+  chapter: 결말
+  bg: {kind: video, file: market_crash_v, dark: 0.65, blur: 3}
+  items:
+  - text: '총알은
+
+      층마다 한 발씩'
+    highlight: 층마다
+    'on': 1
+    size: 140
+  - text: '공포가 꼭대기일 때가
+
+      바닥이었다'
+    highlight: 꼭대기
+    'on': 2
+    size: 120
+  narration:
+  - 둘째, 계단을 내려가듯 생각하세요. 4,700에서 다 쏘면, 4,100과 3,400에선 손가락만 빨아야 해요. 총알은 층마다 한 발씩이에요.
+  - 셋째, 반등한 4번의 바닥은 늘 뉴스가 가장 무서울 때였어요. 펀드 소식에 환호할 때가 아니라, 다들 도망칠 때를 보세요. | 이런 결말, 계속 보고 싶으시면 구독해 주세요.
 - type: outro
   chapter: 결말
   heading: '나라가 나선 지금
