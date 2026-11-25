@@ -565,7 +565,8 @@ def gemini_scene(lines, cfg, cache, log=print):
     ratio, p, words = best
     # 2026-11-22 사용자: '음성이 아직 통일이 안 된다' → 장면마다 음높이가 ±17%까지 달랐음(EP023).
     # 첫 장면 음높이를 기준으로, 벗어나면(±7%) take를 더 만들어 기준에 가장 가까운 것을 쓴다 ([낮게] 장면은 제외)
-    if cfg.get("voice_lock", True) and not low:
+    # 2026-11-25 사용자: "1편에 한도가 꽉 차" → 음높이 맞춤용 추가 녹음은 기본 끔(장면당 1번). 필요한 편만 tts.voice_lock: true
+    if cfg.get("voice_lock", False) and not low:
         try:
             from voice_check import _f0 as _vf0
             def _med(path):
