@@ -484,16 +484,16 @@
  },
  {
   "channel": "stock",
-  "id": "P4gT3Rd0npk",
-  "at": "2026-11-26T15:50",
-  "note": "ep025_kospi_fund long",
+  "id": "FJhJ5Z-xygg",
+  "at": "2026-11-25T19:50",
+  "note": "ep024_google 쇼츠9",
   "done": null
  },
  {
   "channel": "stock",
-  "id": "FJhJ5Z-xygg",
-  "at": "2026-11-25T19:50",
-  "note": "ep024_google 쇼츠9",
+  "id": "P4gT3Rd0npk",
+  "at": "2026-11-26T15:50",
+  "note": "ep025_kospi_fund long",
   "done": null
  },
  {
@@ -550,6 +550,13 @@
   "id": "6AHDPzq4ku4",
   "at": "2026-11-26T19:20",
   "note": "ep025_kospi_fund 쇼츠8",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "y1uto7wkBis",
+  "at": "2026-11-26T19:50",
+  "note": "ep025_kospi_fund 쇼츠9",
   "done": null
  }
 ]
