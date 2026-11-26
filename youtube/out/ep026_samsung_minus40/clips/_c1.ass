@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.20,0:00:03.45,S,삼성전자 갖고 계신 분들,\N요즘 앱 열기 무서우시죠?
+Dialogue: 0,0:00:03.45,0:00:06.21,S,36만 원 하던 주식이\N17만 원이 됐어요.
+Dialogue: 0,0:00:06.21,0:00:09.52,S,며칠 전엔 하루에만\N10% 가까이 빠졌고,
+Dialogue: 0,0:00:09.52,0:00:12.01,S,고점보다 52%나 빠져 있어요.
+Dialogue: 0,0:00:12.01,0:00:14.08,S,지금 고민은 셋 중 하나죠.
+Dialogue: 0,0:00:14.08,0:00:16.16,S,더 살까, 손절할까, 버틸까.
+Dialogue: 0,0:00:16.81,0:00:21.52,S,2년 전 4만 9천 원이던 주식이,\N1년 반 만에 7배가 됐다가,
+Dialogue: 0,0:00:21.52,0:00:24.59,S,다섯 달 만에 반이 날아갔어요.

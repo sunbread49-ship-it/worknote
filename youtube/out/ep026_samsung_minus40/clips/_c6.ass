@@ -1,0 +1,18 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.22,0:00:02.59,S,그런데 두 번은\N완전히 달랐어요.
+Dialogue: 0,0:00:02.59,0:00:06.42,S,줍줍이가 들어간 뒤에, 거기서\N또 반이 날아갔거든요.
+Dialogue: 0,0:00:07.07,0:00:11.37,S,1995년 꼭대기에서 산\N버팀이의 1,000만 원은,
+Dialogue: 0,0:00:11.37,0:00:15.48,S,1997년 IMF 바닥에서\N279만 원이 됐어요.
+Dialogue: 0,0:00:15.48,0:00:17.24,S,72%가 사라진 거예요.
+Dialogue: 0,0:00:17.24,0:00:19.49,S,원금을 찾기까지 3년 8개월.
+Dialogue: 0,0:00:19.49,0:00:22.11,S,그 사이 나라가 부도\N위기를 맞았죠.
