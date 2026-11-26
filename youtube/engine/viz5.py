@@ -670,7 +670,7 @@ class SpeedRace(Viz):
                 im = _vehicle(ln["kind"], 160)
             G.blit(f, im, (x, y), 1, "mm")
             if ln.get("kind") == "me" and prog >= 1:
-                G.blit(f, G.pill("총알의 10배", "Black", 44, (20, 22, 30), GOLD, pad=(22, 8)), (x1 - 40, y - 80), 1, "rm")
+                G.blit(f, G.pill(sp.get("me_pill", "총알의 10배"), "Black", 44, (20, 22, 30), GOLD, pad=(22, 8)), (x1 - 40, y - 80), 1, "rm")
 
     def extra_sfx(self):
         out = []

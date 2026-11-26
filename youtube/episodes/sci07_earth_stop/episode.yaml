@@ -1,0 +1,403 @@
+title: 지구가 딱 1초 멈추면 생기는 일 | 시속 1,330km의 비밀
+series_tag: 상상 실험
+clip_theme: science
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  tone: ivory
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  tempo: 1.08
+  say:
+    2번: 이 번
+    1,330km: 천삼백삼십 킬로미터
+    1,670km: 천육백칠십 킬로미터
+    1,225km: 천이백이십오 킬로미터
+    940km: 구백사십 킬로미터
+    900km: 구백 킬로미터
+    300km: 삼백 킬로미터
+    216km: 이백십육 킬로미터
+    486km: 사백팔십육 킬로미터
+    50km: 오십 킬로미터
+    21km: 이십일 킬로미터
+    4만 km: 사만 킬로미터
+    1.7밀리초: 일쩜칠 밀리초
+    210g: 이백십 그램
+    60kg: 육십 킬로그램
+    KTX: 케이티엑스
+    1851년: 천팔백오십일 년
+    1.8마이크로초: 일쩜팔 마이크로초
+bgm:
+  volume: 0.18
+  chapters:
+    인트로: tense
+    지금도 달리는 중: drive
+    멈추는 순간: tense
+    계속 멈춰 있다면: drive
+    진짜 지구는: hope
+    엔딩: hope
+chapter_titles:
+  인트로: 지금 이 순간에도 시속 1,330km · 퀴즈 1
+  지금도 달리는 중: 적도 1,670km · 서울 1,330km · 소리보다 빠르다
+  멈추는 순간: 동쪽으로 날아가는 모든 것 · 바람 · 바다
+  계속 멈춰 있다면: 퀴즈 2 · 하루가 1년 · 몸무게
+  진짜 지구는: 하루는 점점 길어지는 중
+  엔딩: 멈추기 전에 태양이 먼저
+scenes:
+- type: hf
+  template: globe3d
+  chapter: 인트로
+  theme: space
+  title: 지금 이 순간에도 서울은
+  tag: 시속 1,330km
+  lon0: 112
+  spin: 9
+  title_on:
+  - 1
+  - 0.2
+  tag_on:
+  - 1
+  - 1.6
+  narration:
+  - 지금 이 순간에도 서울은, 시속 1,330km로 달리고 있어요.
+  - 의자에 가만히 앉아 있는 여러분도요. | 소리보다 빠르게요.
+- type: hf
+  template: quiz
+  chapter: 인트로
+  theme: space
+  kicker: 퀴즈 1
+  question: 지구가 딱 1초 멈추면, 우리는?
+  highlight: 1초
+  choices:
+  - 그대로 있다
+  - 동쪽으로 날아간다
+  - 하늘로 뜬다
+  answer: 1
+  hint: 힌트 · 버스가 급정거하면?
+  countdown_on: 2
+  beat_line: 2
+  reveal_on: 3
+  narration:
+  - 그럼 지구가 갑자기, 딱 1초만 멈추면 어떻게 될까요? 그 순간 우리는?
+  - 3초 드릴게요. | 셋. | 둘. | 하나.
+  - 정답은 2번. 동쪽으로 날아가요. | 그것도 총알처럼요.
+- type: sci_title
+  chapter: 인트로
+  kicker: 악어새 지식창고 · 상상 실험
+  title: '지구가 딱 1초
+
+    멈추면'
+  highlight: 1초
+  subtitle: 시속 1,330km · 바람 · 바다 · 하루가 1년이 되는 세상
+  narration:
+  - 오늘은 지구를 딱 1초만 멈춰 볼게요. 무슨 일이 벌어지는지, 순서대로 따라가 봐요.
+- type: accent_simple
+  chapter: 지금도 달리는 중
+  palette: notyet
+  bg: b
+  ink: a
+  pop: c
+  big: '1851'
+  big_size: 170
+  caption: 푸코의 진자 · 지구가 돈다는 첫 증거
+  photos:
+  - file: sn_foucault
+    caption: 파리 팡테옹의 푸코 진자
+    x: 1440
+    y: 540
+    w: 560
+    h: 420
+    'on': 1
+    tilt: 3
+  narration:
+  - 지구가 돈다는 걸 눈으로 처음 보여 준 건 1851년, 프랑스의 푸코예요.
+  - 커다란 추를 매달아 흔들었더니, 몇 시간 뒤 흔들리는 방향이 조금씩 돌아가 있었어요. | 추가 아니라, 바닥이, 지구가 돌고 있었던 거죠.
+- type: hf
+  template: stat
+  chapter: 지금도 달리는 중
+  theme: space
+  kicker: 적도에서 지구가 도는 속도
+  value: 1670
+  suffix: km/h
+  sub: 하루에 한 바퀴, 둘레 4만 km
+  sub_hl: 4만 km
+  'on': 2
+  sub_on: 1
+  narration:
+  - 지구 둘레는 약 4만 km예요. 이걸 하루 24시간에 한 바퀴 돌아요.
+  - 그러니까 적도에 사는 사람은, 시속 1,670km로 돌고 있는 셈이에요.
+- type: hf
+  template: bars
+  chapter: 지금도 달리는 중
+  theme: space
+  title: 북쪽으로 갈수록 느려진다
+  title_hl: 느려진다
+  vmax: 1700
+  rows:
+  - label: 적도 싱가포르
+    value: 1670
+    text: 1,670km
+    'on': 1
+    offset: 0.6
+  - label: 서울
+    value: 1330
+    text: 1,330km
+    hl: true
+    'on': 2
+  - label: 모스크바
+    value: 940
+    text: 940km
+    'on': 2
+    offset: 2.2
+  - label: 북극점
+    value: 0
+    text: 0km · 제자리 빙글
+    'on': 3
+  narration:
+  - 그런데 북쪽으로 갈수록 도는 원이 작아져요. 그래서 속도도 느려져요.
+  - 서울은 시속 1,330km, 모스크바는 940km.
+  - 북극점은 0이에요. 그 자리에서 빙글빙글 돌기만 하죠.
+- type: speedrace
+  chapter: 지금도 달리는 중
+  title: 서울의 나 vs 가장 빠른 것들
+  highlight: 서울의 나
+  me_pill: 소리보다 빠르다
+  lanes:
+  - label: KTX
+    kind: train
+    kmh: 300
+    'on': 1
+  - label: 여객기
+    kind: plane
+    kmh: 900
+    'on': 1
+    offset: 0.6
+  - label: 서울의 나
+    kind: me
+    kmh: 1330
+    'on': 2
+  narration:
+  - KTX가 시속 300km, 여객기가 900km예요.
+  - 서울에 앉아 있는 우리는 1,330km. 소리의 속도인 1,225km보다도 빨라요.
+  - 그런데 왜 아무것도 못 느낄까요? 땅도, 공기도, 우리도 다 같이 같은 속도로 달리고 있어서예요. | 비행기 안에서 커피가 안 쏟아지는 것처럼요.
+- type: hf
+  template: globe3d
+  chapter: 멈추는 순간
+  theme: space
+  title: 딱 1초, 멈춘다면
+  tag: 멈춤!
+  lon0: 118
+  spin: 9
+  title_on:
+  - 1
+  - 0.1
+  stop_at:
+  - 2
+  - 0.2
+  tag_on:
+  - 2
+  - 0.3
+  narration:
+  - 자, 이제 지구를 멈춰 볼게요.
+  - 쾅. | 땅은 멈췄어요. 그런데 그 위에 있는 건, 아무것도 멈추지 않아요.
+- type: sci_kinetic
+  chapter: 멈추는 순간
+  items:
+  - text: '버스 급정거
+
+      시속 50km'
+    highlight: 50km
+    'on': 1
+  - text: '지구 급정거
+
+      시속 1,330km'
+    highlight: 1,330km
+    'on': 2
+  - text: '동쪽으로
+
+      총알처럼'
+    highlight: 동쪽
+    'on': 3
+  narration:
+  - 버스가 시속 50km로 달리다 급정거하면 몸이 앞으로 확 쏠리죠?
+  - 지금은 그 속도가 시속 1,330km예요.
+  - 땅에 붙어 있지 않은 모든 것이 동쪽으로, 총알처럼 날아가요. | 사람도, 자동차도, 나무도요.
+- type: hf
+  template: bars
+  chapter: 멈추는 순간
+  theme: space
+  title: 더 무서운 건 바람
+  title_hl: 바람
+  vmax: 1400
+  rows:
+  - label: 태풍 매미
+    value: 216
+    text: 216km
+    'on': 2
+  - label: 최강 토네이도
+    value: 486
+    text: 486km
+    'on': 2
+    offset: 2.2
+  - label: 멈춘 지구의 바람
+    value: 1330
+    text: 1,330km
+    hl: true
+    'on': 3
+  narration:
+  - 더 무서운 건 공기예요. 하늘의 공기도 멈추지 않고 계속 달리거든요.
+  - 2003년 우리나라를 덮친 태풍 매미의 순간 최고 풍속이 시속 216km, 역사상 가장 강한 토네이도가 시속 486km였어요.
+  - 멈춘 지구에는 그 세 배 가까운 바람이, 지구 전체에 한꺼번에 불어요. | 건물도 숲도 남아나지 않아요.
+- type: accent_simple
+  chapter: 멈추는 순간
+  palette: notyet
+  bg: a
+  ink: b
+  pop: c
+  big: 바다도
+  big_size: 160
+  caption: 바닷물이 통째로 동쪽으로 · 대륙을 덮치는 해일
+  narration:
+  - 바다도 마찬가지예요. 바닷물이 통째로 동쪽으로 쏟아지면서, 대륙의 동쪽 해안을 거대한 해일이 덮쳐요.
+  - 딱 1초 멈췄을 뿐인데, 지구 표면은 완전히 다른 모습이 돼요.
+- type: hf
+  template: quiz
+  chapter: 계속 멈춰 있다면
+  theme: space
+  kicker: 퀴즈 2
+  question: 멈춘 지구에서 해는 1년에 몇 번 뜰까?
+  highlight: 몇 번
+  choices:
+  - 365번
+  - 1번
+  - 0번
+  answer: 1
+  hint: 힌트 · 지구는 여전히 태양 주위를 돌아요
+  countdown_on: 2
+  beat_line: 2
+  reveal_on: 3
+  narration:
+  - 그럼 지구가 그대로 계속 멈춰 있으면요? 해는 1년에 몇 번 뜰까요?
+  - 3초 드릴게요. | 셋. | 둘. | 하나.
+  - 정답은 2번, 딱 한 번이에요.
+- type: hf
+  template: headline
+  chapter: 계속 멈춰 있다면
+  theme: space
+  lines:
+  - text: 하루 = 1년
+    hl: 1년
+    'on': 1
+  - text: 6개월 낮 · 6개월 밤
+    hl: 6개월 밤
+    'on': 2
+  - text: 한쪽은 타고 · 한쪽은 언다
+    hl: 언다
+    'on': 3
+  narration:
+  - 지구는 멈춰도 태양 주위는 계속 돌거든요. 그래서 하루가 1년이 돼요.
+  - 6개월은 계속 낮, 6개월은 계속 밤이에요.
+  - 낮인 쪽은 뜨겁게 타들어 가고, 밤인 쪽은 꽁꽁 얼어붙어요. | 사람이 살 수 있는 곳은 그 경계의 좁은 띠뿐이에요.
+- type: sci_kinetic
+  chapter: 계속 멈춰 있다면
+  items:
+  - text: '적도가
+
+      21km 볼록'
+    highlight: 21km
+    'on': 1
+  - text: '바다는
+
+      남극 · 북극으로'
+    highlight: 남극 · 북극
+    'on': 2
+  - text: '적도엔
+
+      거대한 대륙 하나'
+    highlight: 대륙 하나
+    'on': 3
+  narration:
+  - 지금 지구는 빨리 돌아서, 적도가 극지방보다 21km쯤 볼록 튀어나와 있어요.
+  - 회전이 멈추면 이 볼록함을 붙잡던 힘이 사라져요. 그래서 바닷물이 남극과 북극 쪽으로 흘러가요.
+  - 결국 바다는 위아래 두 개로 갈라지고, 적도엔 지구를 한 바퀴 두르는 거대한 대륙이 드러난다고 해요.
+- type: hf
+  template: stat
+  chapter: 계속 멈춰 있다면
+  theme: space
+  kicker: 적도에 사는 60kg인 사람
+  value: 210
+  prefix: +
+  suffix: g
+  sub: 원심력이 사라져서 몸무게가 늘어요
+  sub_hl: 몸무게가 늘어요
+  'on': 1
+  sub_on: 2
+  narration:
+  - 재밌는 것도 하나 있어요. 적도에 사는 60kg인 사람은, 몸무게가 210g쯤 늘어나요.
+  - 지구가 돌면서 바깥으로 밀어내던 힘, 원심력이 사라지거든요.
+- type: thennow
+  chapter: 진짜 지구는
+  title: 지구는 진짜로 느려지는 중
+  highlight: 느려지는 중
+  then:
+    scene: grass
+    label: 7천만 년 전 · 하루 23시간 30분
+  now:
+    scene: city
+    label: 지금 · 하루 24시간
+  wipe_on: 2
+  caption: 100년마다 하루가 약 1.7밀리초씩 길어진다
+  caption_on: 3
+  narration:
+  - 그런데 사실, 지구는 진짜로 조금씩 느려지고 있어요. 달이 바닷물을 잡아당기면서 브레이크를 걸거든요.
+  - 공룡이 살던 7천만 년 전엔 하루가 23시간 30분이었어요.
+  - 지금도 100년마다 하루가 1.7밀리초씩 길어지고 있어요. | 눈 한 번 깜빡이는 시간의 백분의 일이요.
+- type: cheatsheet
+  chapter: 진짜 지구는
+  title: 지구의 하루를 바꾸는 것들
+  highlight: 하루
+  rows:
+  - h: 月
+    ko: 달의 브레이크
+    ex: 100년에 1.7밀리초 길어짐
+    'on': 1
+  - h: 震
+    ko: 2011 동일본 대지진
+    ex: 하루가 1.8마이크로초 짧아짐
+    'on': 2
+  - h: 氷
+    ko: 녹는 빙하
+    ex: 물이 적도로 퍼지며 하루가 길어짐
+    'on': 3
+  narration:
+  - 하루의 길이를 바꾸는 범인은 셋이에요. 첫째는 달, 지금 본 브레이크예요.
+  - 둘째는 지진. 2011년 동일본 대지진 때 지구 질량이 살짝 안쪽으로 몰리면서, 하루가 1.8마이크로초 짧아졌어요.
+  - 셋째는 녹는 빙하예요. 극지방 얼음이 녹아 물이 적도 쪽으로 퍼지면, 피겨 선수가 팔을 벌릴 때처럼 회전이 느려져요.
+- type: hf
+  template: headline
+  chapter: 엔딩
+  theme: space
+  lines:
+  - text: 지구가 멈추기 전에
+    'on': 1
+  - text: 태양이 먼저 꺼진다
+    hl: 태양
+    'on': 2
+  narration:
+  - 그럼 언젠가 지구가 멈출까요? 이 속도라면 걱정 안 하셔도 돼요.
+  - 지구가 멈추기 한참 전에, 태양이 먼저 수명을 다하니까요. | 오늘도 우리는 안전하게, 시속 1,330km로 달리고 있어요.
+- type: sci_outro
+  chapter: 엔딩
+  heading: '여러분이라면
+
+    멈춘 지구 어디에 살래요?'
+  highlight: 어디에
+  sub: 낮 쪽 · 밤 쪽 · 경계의 띠 · 댓글로 알려 주세요
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  narration:
+  - 여러분이라면 멈춘 지구의 어디에 살래요? 낮 쪽, 밤 쪽, 아니면 경계의 띠? 댓글로 알려 주세요.
+  - 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.

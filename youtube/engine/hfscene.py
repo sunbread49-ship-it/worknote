@@ -30,6 +30,8 @@ FONTS = {"Myeongjo": "NanumMyeongjo-ExtraBold.ttf", "Pen": "NanumPenScript-Regul
 THEMES = {
     "paper": {"bg": "#F7F1E4", "grid": "rgba(0,0,0,.05)", "ink": "#262834", "acc": "#E25C40", "mark": "#FFD678", "sub": "#786E5E",
               "card": "#FFFDF6", "font": "Myeongjo"},
+    "space": {"bg": "#05070F", "grid": "rgba(255,255,255,.035)", "ink": "#F2F4FA", "acc": "#FFC93C", "mark": "#3D6BFF", "sub": "#8E9AB8",
+              "card": "#111933", "font": "Pretendard"},
     "navy": {"bg": "#0E1630", "grid": "rgba(255,255,255,.05)", "ink": "#F4F6FB", "acc": "#FFC93C", "mark": "#E8453C", "sub": "#9AA6C4",
              "card": "#17213F", "font": "Pretendard"},
 }
@@ -306,7 +308,45 @@ tl.fromTo("#tag",{{opacity:0,x:-20}},{{opacity:1,x:0,duration:.45,ease:"expo.out
     return body, css, js
 
 
-TEMPLATES = {"quiz": t_quiz, "stat": t_stat, "headline": t_headline, "equation": t_equation, "globe3d": t_globe3d}
+def t_bars(v, th, dur):
+    """가로 막대 경주: 줄마다 막대가 자라며 숫자가 굴러 올라감 · 강조 줄(hl)은 마지막에 쾅 (주식 · 지식 공용)
+    title, unit, vmax, rows:[{label, value, text, hl, T}]"""
+    rows = v["rows"]
+    vmax = float(v.get("vmax") or max(r["value"] for r in rows))
+    n = len(rows)
+    rh = min(150, 560 / max(1, n))
+    y0 = 300 + (560 - rh * n) / 2
+    body = f'<div id="ttl" class="abs">{_hl(v.get("title", ""), v.get("title_hl"), "mk")}</div>'
+    for i, r in enumerate(rows):
+        body += (f'<div id="r{i}" class="abs row" style="top:{y0 + i * rh:.0f}px;height:{rh - 26:.0f}px">'
+                 f'<div class="lab">{_esc(r["label"])}</div><div class="track"><div id="b{i}" class="bar{" hl" if r.get("hl") else ""}"></div>'
+                 f'<div id="v{i}" class="val">{_esc(r.get("text", ""))}</div></div></div>')
+    css = f"""#ttl{{left:0;right:0;top:120px;text-align:center;font-size:84px;}}
+#ttl span{{display:inline-block;margin:0 .12em;}}
+.row{{left:150px;right:150px;display:flex;align-items:center;gap:30px;opacity:0;}}
+.lab{{width:330px;text-align:right;font-size:{min(60, rh * 0.42):.0f}px;color:{th['ink']};}}
+.track{{flex:1;position:relative;height:100%;}}
+.bar{{position:absolute;left:0;top:12%;height:76%;width:100%;border-radius:18px;background:{th['sub']};transform-origin:left center;transform:scaleX(0);}}
+.bar.hl{{background:{th['acc']};box-shadow:0 0 40px {th['acc']}88;}}
+.val{{position:absolute;top:50%;transform:translateY(-50%);font-size:{min(64, rh * 0.45):.0f}px;color:{th['ink']};white-space:nowrap;}}"""
+    js = f"""tl.fromTo("#ttl span",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.18,ease:"power4.out",stagger:.067}},0.1);
+tl.fromTo("#mk",{{scaleX:0}},{{scaleX:1,duration:.45,ease:"expo.out"}},0.6);"""
+    W = 1920 - 300 - 360
+    for i, r in enumerate(rows):
+        k = max(0.02, r["value"] / vmax)
+        t0 = r["T"]
+        js += f"""
+tl.fromTo("#r{i}",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.35,ease:"expo.out"}},{t0:.3f});
+tl.fromTo("#b{i}",{{scaleX:0}},{{scaleX:{k * 0.86:.4f},duration:{1.1 if r.get('hl') else .8},ease:"{'power2.in' if r.get('hl') else 'expo.out'}"}},{t0 + 0.1:.3f});
+tl.fromTo("#v{i}",{{x:0,opacity:0}},{{x:{W * k * 0.86 + 24:.0f},opacity:1,duration:{1.1 if r.get('hl') else .8},ease:"{'power2.in' if r.get('hl') else 'expo.out'}"}},{t0 + 0.1:.3f});"""
+        if r.get("hl"):
+            js += f"""
+tl.fromTo("#r{i}",{{scale:1}},{{scale:1.06,duration:.12,ease:"power2.out",yoyo:true,repeat:1}},{t0 + 1.2:.3f});
+tl.to("#v{i}",{{color:"{th['acc']}",duration:.2}},{t0 + 1.2:.3f});"""
+    return body, css, js
+
+
+TEMPLATES = {"quiz": t_quiz, "stat": t_stat, "headline": t_headline, "equation": t_equation, "globe3d": t_globe3d, "bars": t_bars}
 
 
 def build(template, v, theme, dur):
@@ -370,6 +410,12 @@ class HFScene(Editorial):
                 v["S0"] = self.line_start(sp["sub_on"]) + 0.1
             if sp.get("stamp_on"):
                 v["ST"] = self.line_start(sp["stamp_on"]) + 0.2
+        elif tpl == "bars":
+            v["rows"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp["rows"]]
+        elif tpl == "globe3d":
+            for k in ("stop_at", "tag_on", "title_on"):
+                if isinstance(sp.get(k), list):
+                    v[k] = self.line_start(sp[k][0]) + sp[k][1]
         elif tpl == "equation":
             for k in ("A0", "A1", "A2", "A3"):
                 on, off = sp.get(k.lower(), [1, 0.1])
@@ -405,6 +451,11 @@ class HFScene(Editorial):
         if sp["template"] == "stat":
             v = self._vars()
             return [(v["T0"], "count_roll", 0.6), (v["T0"] + 1.1, "boom", 0.6)] + ([(v["ST"], "pop", 0.6)] if "ST" in v else [])
+        if sp["template"] == "bars":
+            return [(r["T"], "whoosh", 0.35) for r in self._vars()["rows"]] + [(r["T"] + 1.2, "boom", 0.5) for r in self._vars()["rows"] if r.get("hl")]
+        if sp["template"] == "globe3d":
+            v = self._vars()
+            return [(v["stop_at"], "boom", 0.9)] if v.get("stop_at") is not None else []
         if sp["template"] == "equation":
             v = self._vars()
             return [(v["A1"], "boom", 0.5), (v["A2"], "pop", 0.4), (v["A3"], "whoosh", 0.4)]
