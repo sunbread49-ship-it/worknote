@@ -541,7 +541,10 @@ scenes:
   photo: sn_noryangjin
   photo_xy:
   - 150
-  - 585
+  - 560
+  photo_wh:
+  - 400
+  - 230
 - type: sci_kinetic
   chapter: 한강
   items:
@@ -602,7 +605,10 @@ scenes:
   - 그 경마장 자리가 지금의 서울숲이에요. | 깃발 꽂던 섬이, 이제는 숲이 된 거죠.
   photo_xy:
   - 150
-  - 585
+  - 560
+  photo_wh:
+  - 400
+  - 230
 - type: hf
   chapter: 한강
   template: equation
