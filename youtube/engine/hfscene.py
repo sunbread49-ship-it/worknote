@@ -398,6 +398,11 @@ class HFScene(Editorial):
         sp = dict(self.spec)
         v = {k: sp[k] for k in sp if k not in ("narration", "type", "chapter")}
         tpl = sp["template"]
+        for k in list(sp):   # 공통: at_<이름>: [문장, 초] → <이름> = 초
+            if k.startswith("at_") and isinstance(sp[k], list):
+                v[k[3:]] = self.line_start(sp[k][0]) + sp[k][1]
+        if isinstance(sp.get("rows"), list) and tpl not in ("bars",):
+            v["rows"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp["rows"]]
         if tpl == "quiz":
             bt = sp.get("_beats") or []
             cl = sp.get("countdown_on", 2)
@@ -459,9 +464,18 @@ class HFScene(Editorial):
         if sp["template"] == "equation":
             v = self._vars()
             return [(v["A1"], "boom", 0.5), (v["A2"], "pop", 0.4), (v["A3"], "whoosh", 0.4)]
+        if sp["template"] in ("latitude", "impact", "inertia", "wave", "orbit", "bulge", "scale", "daylength"):
+            v = self._vars()
+            ev = [(v[k[3:]], "whoosh", 0.35) for k in sp if k.startswith("at_")]
+            if sp["template"] == "impact":
+                ev.append((v["stop"], "boom", 0.9))
+            if sp["template"] == "wave":
+                ev.append((v["hit"], "boom", 0.6))
+            return ev
         if sp["template"] == "headline":
             return [(ln["T"], "whoosh", 0.4) for ln in self._vars()["lines"]]
         return []
 
 
 TYPES.update({"hf": HFScene})
+from . import hfscene2  # noqa: E402,F401  (그림 장면 2탄)

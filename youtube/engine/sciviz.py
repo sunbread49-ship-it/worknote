@@ -564,7 +564,7 @@ class CheatSheet(SciBase):
         self.title(f, t)
         rows = sp["rows"]
         n = len(rows)
-        top, bot = 240, 800   # 11/26 사용자: 자막과 겹침 → 아래 여백
+        top, bot = 320, 870   # 11/26 사용자: 자막과 겹침 → 아래 여백
         rh = min(130, (bot - top) / n)
         # 수첩 종이
         d = ImageDraw.Draw(f)
