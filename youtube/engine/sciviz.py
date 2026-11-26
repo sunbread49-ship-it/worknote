@@ -247,8 +247,20 @@ class ThenNow(SciBase):
         self.title(f, t)
         w, h = 1440, 620
         x0, y0 = (S.W - w) // 2, 300
-        then = _scene(sp["then"].get("scene", "river"), w, h, t, tone)
-        now = _scene("city", w, h, t, tone)
+        from .editorial import _photo_fit
+        crs = []
+
+        def side(dd, default):
+            if dd.get("photo"):   # 11/26 사용자: 실사
+                im, cr = _photo_fit(dd["photo"], w, h, tuple(dd.get("focus", (0.5, 0.5))))
+                if cr:
+                    crs.append(cr.replace("사진: ", ""))
+                return im
+            return _scene(dd.get("scene", default), w, h, t, tone)
+        then = side(sp["then"], "river")
+        now = side(sp["now"], "city")
+        if crs and not sp.get("credit"):
+            sp["credit"] = "사진: " + " · ".join(dict.fromkeys(crs))
         st = self.line_start(sp.get("wipe_on", 2))
         k = _e((t - st) / 1.4) if t >= st else 0
         cut = int(w * (1 - k))
@@ -552,8 +564,8 @@ class CheatSheet(SciBase):
         self.title(f, t)
         rows = sp["rows"]
         n = len(rows)
-        top, bot = 270, 1000
-        rh = min(150, (bot - top) / n)
+        top, bot = 240, 800   # 11/26 사용자: 자막과 겹침 → 아래 여백
+        rh = min(130, (bot - top) / n)
         # 수첩 종이
         d = ImageDraw.Draw(f)
         px0, px1 = 260, S.W - 260

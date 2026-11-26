@@ -18,6 +18,7 @@ tts:
     1946년: 천구백사십육 년
     1970년대: 천구백칠십 년대
     10리: 십 리
+    2번: 이 번
 bgm:
   volume: 0.18
   chapters:
@@ -242,7 +243,6 @@ scenes:
     ko: 정자 정
   meaning: 갈매기와 친한 정자
   meaning_hl: 갈매기
-  icon: gull
   'on': 1
   flip_on: 2
   flip_offset: 0.2
@@ -251,13 +251,25 @@ scenes:
   - 압구정은 한자로 이렇게 써요.
   - 친할 압, 갈매기 구, 정자 정.
   - 갈매기와 친하게 지내는 정자라는 뜻이에요.
+  photos:
+  - file: sn_apgujeong_painting
+    caption: 겸재 정선 〈압구정〉
+    x: 1660
+    y: 800
+    w: 400
+    h: 260
+    'on': 3
+    tilt: 4
 - type: thennow
   chapter: 갈매기와 누에
   title: 정자 주인은 한명회
   highlight: 한명회
   then:
-    scene: river
-    label: 조선 · 한강 언덕의 정자
+    photo: sn_apgujeong_painting
+    label: 조선 · 정선이 그린 압구정
+    focus:
+    - 0.5
+    - 0.5
   now:
     scene: city
     label: 지금 · 압구정동
@@ -279,7 +291,6 @@ scenes:
     ko: 집 실
   meaning: 누에 치던 방
   meaning_hl: 누에
-  icon: silkworm
   'on': 1
   flip_on: 2
   flip_offset: 0.2
@@ -288,6 +299,18 @@ scenes:
   - 잠실도 한자를 보면 바로 풀려요.
   - 누에 잠, 집 실.
   - 누에를 치던 방이라는 뜻이에요.
+  photos:
+  - file: sn_silkworm
+    caption: 진짜 누에
+    x: 1660
+    y: 800
+    w: 400
+    h: 260
+    'on': 3
+    tilt: 4
+    focus:
+    - 0.5
+    - 0.45
 - type: thennow
   chapter: 갈매기와 누에
   title: 뽕밭이 타워가 되다
@@ -296,8 +319,11 @@ scenes:
     scene: silkworm
     label: 조선 · 나라의 누에 방 · 뽕밭
   now:
-    scene: city
+    photo: sn_lotte_tower2
     label: 지금 · 555m 롯데월드타워
+    focus:
+    - 0.6
+    - 0.4
   wipe_on: 3
   caption: 상전벽해 · 뽕밭이 푸른 바다가 되다
   caption_on: 3
@@ -317,6 +343,15 @@ scenes:
   narration:
   - 하나 더. 잠실은 원래 한강 위에 떠 있던 섬이었어요.
   - 1970년대에 물길 하나를 막아서 육지로 붙였는데, | 그때 남은 옛 물길이 지금의 석촌호수예요.
+  photos:
+  - file: sn_seokchon
+    caption: 석촌호수 · 옛 송파강 물길
+    x: 1460
+    y: 560
+    w: 600
+    h: 400
+    'on': 2
+    tilt: -3
 - type: quizcard
   chapter: 왕십리
   kicker: 퀴즈 2
@@ -372,6 +407,15 @@ scenes:
   - 조선을 세울 때, 무학대사가 도읍 터를 찾다가 여기서 멈췄대요. 여기가 딱이다.
   - 그때 소를 몰던 노인이 한마디 했어요. | 미련하기는, 여기서 십 리를 더 가라.
   - 그 말대로 십 리, 4킬로미터쯤 더 가서 찾은 곳이 지금의 경복궁 자리라는 전설이에요. | 갈 왕, 열 십, 마을 리. 왕십리예요.
+  photos:
+  - file: sp_gyeongbok
+    caption: 십 리 뒤 · 경복궁
+    x: 1540
+    y: 560
+    w: 520
+    h: 340
+    'on': 3
+    tilt: 3
 - type: riverline
   chapter: 한강
   title: 한강이 지어 준 이름들
@@ -474,7 +518,7 @@ scenes:
   - 150
   - 210
   tag: 백로 나루
-  caption: ''
+  caption: 지금의 노량진역
   notes:
   - text: 백로가 놀던 한강 나루
     'on': 1
@@ -492,6 +536,7 @@ scenes:
   - 노량진엔 기록도 하나 있어요.
   - 1899년, 우리나라 첫 기차가 노량진에서 인천 제물포까지 달렸어요.
   - 배가 서던 나루에서 기차가 서는 역으로. | 이름 그대로, 서울의 출발점이었던 셈이죠.
+  photo: sn_noryangjin
 - type: sci_kinetic
   chapter: 한강
   items:
@@ -518,6 +563,11 @@ scenes:
   - 홍수가 나면 거의 다 잠기는 쓸모없는 모래섬이라, 너나 가져라, 했다는 이야기가 전해져요.
   - 너 여, 어조사 의, 섬 도. 너의 섬, 여의도예요.
   - 그 쓸모없던 섬에 1916년, 우리나라 첫 비행장이 생겼고, | 지금은 국회와 증권가가 모였죠. 이름이 좀 억울하겠죠?
+  media:
+    kind: photo
+    file: sn_yeouido
+    caption: 지금의 여의도
+    side: right
 - type: journal
   chapter: 한강
   gu: 성동구
@@ -528,8 +578,8 @@ scenes:
   - 92
   - 64
   tag: 큰 깃발 섬
-  photo: sp_seongsu
-  caption: 성수동 · 옛 뚝섬 자리
+  photo: sn_seoulforest
+  caption: 서울숲 · 옛 경마장 자리
   notes:
   - text: 조선 · 임금의 사냥터 · 군대 사열
     'on': 1
@@ -673,6 +723,14 @@ scenes:
   narration:
   - 광화문통은 세종로가 됐어요. 세종대왕이죠.
   - 그러니까 서울 길 이름은, 그 자체로 한 권의 역사책인 셈이에요. | 장군, 임금, 그리고 옛 동네 이름까지.
+  media:
+    kind: photo
+    file: sn_sejong2
+    focus:
+    - 0.5
+    - 0.08
+    caption: 세종로 · 세종대왕 동상
+    side: right
 - type: sci_outro
   chapter: 엔딩
   heading: '여러분 동네 이름은

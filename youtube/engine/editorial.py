@@ -268,9 +268,65 @@ class Editorial(Scene):
         return header(f, self.spec, t, 0.0, fg=self.fg, acc=self.acc, **kw)
 
     def finish(self, f, t):
+        _polaroids(self, f, t)
         (riso_credit if getattr(self, "paper", False) else credit)(f, self.spec)
         _pins(self, f, t)
         self.draw_common(f, t)
+
+
+
+_POL_CACHE = {}
+
+
+def _photo_fit(name, w, h, focus=(0.5, 0.5)):
+    """실사 사진을 w×h 로 꽉 채워 자름 (출처 문자열도 반환)"""
+    key = (name, w, h, tuple(focus))
+    if key not in _POL_CACHE:
+        from pathlib import Path as _P
+        import json as _j
+        root = _P(__file__).resolve().parents[1] / "assets/photos"
+        im = Image.open(next(root.glob(name + ".*")) if not (root / (name + ".jpg")).exists() else root / (name + ".jpg")).convert("RGB")
+        r0 = max(w / im.width, h / im.height)
+        im = im.resize((int(im.width * r0) + 1, int(im.height * r0) + 1), Image.LANCZOS)
+        fx, fy = focus
+        x = int((im.width - w) * fx); y = int((im.height - h) * fy)
+        im = im.crop((x, y, x + w, y + h)).convert("RGBA")
+        js = root / (name + ".json")
+        cr = _j.loads(js.read_text()).get("credit", "") if js.exists() else ""
+        _POL_CACHE[key] = (im, cr)
+    return _POL_CACHE[key]
+
+
+def _polaroids(sc, f, t):
+    """2026-11-26 사용자: 그 동네 얘기할 때 그 동네 대표 실사(마스코트 같은 사진)를 폴라로이드로
+    photos: [{file, caption, x, y(중심), w, h, tilt, on, offset, focus}]"""
+    phs = sc.spec.get("photos") or []
+    crs = []
+    for p in phs:
+        t0 = sc.line_start(p.get("on", 1)) + p.get("offset", 0.0)
+        w, h = p.get("w", 520), p.get("h", 360)
+        im, cr = _photo_fit(p["file"], w, h, tuple(p.get("focus", (0.5, 0.5))))
+        if cr:
+            crs.append(cr.replace("사진: ", ""))
+        k = (t - t0) / 0.45
+        if k <= 0:
+            continue
+        e = G.ease_out(min(1.0, k))
+        pol = Image.new("RGBA", (w + 32, h + (84 if p.get("caption") else 32)), (253, 252, 248, 255))
+        pol.alpha_composite(im, (16, 16))
+        if p.get("caption"):
+            cp = _ink(p["caption"], "NanumPenScript-Regular.ttf", 44, (40, 40, 52))
+            pol.alpha_composite(cp, ((pol.width - cp.width) // 2, h + 22))
+        rot = pol.rotate(p.get("tilt", 3) * (2 - e), expand=True, resample=Image.BICUBIC)
+        sh = Image.new("RGBA", rot.size, (0, 0, 0, 0))
+        sh.putalpha(rot.split()[3].filter(ImageFilter.GaussianBlur(14)).point(lambda v: int(v * 0.32)))
+        x, y = p["x"], p["y"] + (1 - e) * 60
+        G.blit(f, sh, (x + 12, y + 16), e, "mm")
+        G.blit(f, rot, (x, y), e, "mm")
+        tp = Image.new("RGBA", (150, 42), (255, 214, 120, 190)).rotate(-8, expand=True, resample=Image.BICUBIC)
+        G.blit(f, tp, (x, y - rot.height / 2 + 8), e, "mm")
+    if crs and not sc.spec.get("credit"):
+        sc.spec["credit"] = "사진: " + " · ".join(dict.fromkeys(crs))
 
 
 def _pins(sc, f, t):
@@ -4480,7 +4536,7 @@ class SciKinetic(Editorial):
                 from . import bgvideo
                 fr = bgvideo.at({"kind": "video", "file": md["file"], "dark": 0.0, "blur": 0}, getattr(self, "_now", t)).convert("RGB")
             else:
-                fr, cr = photo_backdrop({"file": md["file"], "dark": 0.0, "gray": 0.0})
+                fr, cr = photo_backdrop({"file": md["file"], "dark": 0.0, "gray": 0.0, "focus": tuple(md.get("focus", (0.5, 0.4)))})
                 fr = fr.convert("RGB")
                 if cr and not sp.get("credit"):
                     sp["credit"] = cr

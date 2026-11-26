@@ -740,6 +740,10 @@ def _beat_line(pcm, spans, li, beat=1.0):
                 ins.append((ia + g, add)); shift += add
         beats.append((o + shift) / SR)
     parts.append(seg[last:])
+    # 마지막 '하나'도 1초를 다 채우고 다음 문장(정답)으로 (11/26 사용자: 화면 1이 0.2초만 보임)
+    tail_need = int((beats[-1] + beat) * SR) - (len(seg) + shift)
+    if tail_need > 0:
+        parts.append(np.zeros(tail_need, dtype=seg.dtype)); ins.append((ib - 1, tail_need)); shift += tail_need
     new = np.concatenate([pcm[:ia]] + parts + [pcm[ib:]])
 
     def mp(t):
