@@ -42,8 +42,11 @@ def _esc(s):
 def _hl(text, hl, mark_id):
     """강조어에 형광펜 띠(i#mark_id) 붙여 단어 span 으로 쪼갬"""
     out = []
-    for w in str(text).split(" "):
-        if hl and hl in w:
+    ws = str(text).split(" ")
+    strip = lambda w: w.strip("'\"‘’“”,.?!·")
+    pick = next((i for i, w in enumerate(ws) if hl and strip(w) == hl), next((i for i, w in enumerate(ws) if hl and hl in w), -1))
+    for k, w in enumerate(ws):   # 형광펜은 한 단어만 (정확히 같은 단어 우선)
+        if k == pick:
             a, b = w.split(hl, 1)
             out.append(f'<span>{_esc(a)}<b class="hlw">{_esc(hl)}<i id="{mark_id}"></i></b>{_esc(b)}</span>')
         else:
@@ -108,7 +111,7 @@ def t_quiz(v, th, dur):
 .num{{position:absolute;left:28px;top:16px;font-size:56px;color:{th['sub']};}}
 .back .num{{color:rgba(255,255,255,.75);}}
 #hint{{left:0;right:0;top:820px;text-align:center;font-family:"Pen";font-size:74px;color:{th['sub']};}}
-#timer{{left:1630px;top:60px;width:220px;height:220px;opacity:0;}}
+#timer{{left:1610px;top:120px;width:220px;height:220px;opacity:0;}}
 #timer svg{{position:absolute;inset:0;}}
 #digit{{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:140px;color:{th['acc']};font-family:"Myeongjo";}}
 #stamp{{left:{x0 + v['answer'] * (cw + gap) + cw - 140:.0f}px;top:370px;font-family:"Pretendard";font-size:58px;color:{th['acc']};border:7px solid {th['acc']};border-radius:18px;padding:4px 22px;background:{th['card']};opacity:0;}}"""
