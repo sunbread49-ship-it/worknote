@@ -97,6 +97,7 @@ def setup(ep_dir, only=None, log=print):
     ep, channel = load(ep_dir)
     scenes = build_scenes(ep, channel)
     for sc in scenes:
+        sc.out_dir = ROOT / "out" / ep_dir.name   # HyperFrames 장면 작업 폴더
         sc.prepare()
     tts_cfg = ep.get("tts") if TTS_OVERRIDE is None else {**(ep.get("tts") or {}), **TTS_OVERRIDE}
     if tts_cfg and tts_cfg.get("enabled", True) and not any((ep_dir / "audio").glob("*.*")):
@@ -110,6 +111,10 @@ def setup(ep_dir, only=None, log=print):
     c.ep, c.channel, c.scenes, c.narr, c.mode = ep, channel, scenes, narr, mode
     c.total = scenes[-1].start + scenes[-1].dur
     c.cues = timeline.cues(scenes)
+    for sc in scenes:   # 2026-11-26 HyperFrames 장면은 프레임 렌더 전에 한 번 미리 굽기 (작업자들은 결과만 읽음)
+        if sc.spec.get("type") == "hf" and not (only and not (only[0] <= sc.idx <= only[1])):
+            log(f"  HyperFrames 장면 {sc.idx:02d} ({sc.spec.get('template')}) 렌더…")
+            sc._frames()
     if ep.get("pace") == "punchy":   # 2026-11-14 사용자: "단조롭다 → 한 컷당 빠르게 · 통통 튀게"
         for sc in scenes:
             if sc.spec.get("type") in ("title", "outro") or sc.spec.get("camera") not in (None, "off"):
