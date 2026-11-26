@@ -26,3 +26,9 @@
 - 11/26 새 도안: building(회사 = 층별 건물) · drop(가격표가 바닥을 뚫고 지하실로) · dominoes(원인→결과 도미노) · ladder(가격 자에 다음 정거장 깃발)
 - 같은 장면 타입은 한 편에 2번까지 · 연달아 금지 (차트처럼 데이터 장면도 색 · 구간 · 포인트로 변주)
 - 11/26 사용자 아이디어: **중간 퀴즈 + 3초 카운트다운** — "3초 드릴게요. 3, 2, 1. 아셨나요? 정답은…" → 썰 → 다음 퀴즈. 주제에 맞을 때만 가끔(한 편 1~3개). 도구: quizcard (choices · answer · countdown_on · reveal_on) — 오른쪽 위 원형 타이머 + 틱 소리
+
+## HyperFrames (2026-11-26 도입 시험) — HTML+GSAP로 장면을 영상으로
+- 설치: `youtube/hf` (npm `hyperframes@0.9.98` 고정 · 공식 heygen-com/hyperframes · 텔레메트리 끔). 시험 장면: `hf/quiz/index.html` → `npx hyperframes render -q looks -w 3 -o quiz.mp4`
+- 규칙(공식 스킬 요약): 타임라인 1개 `{paused:true}` 를 `window.__timelines["<composition-id>"]`에 등록 · `fromTo`만 · `Math.random`/타이머 금지 · 글꼴은 `@font-face`(assets/fonts)
+- 모션 원칙: 도착은 느리게 긴 꼬리(expo.out/power4.out) · 퇴장은 40~50% 짧게(power3.in) · 다음 요소는 앞 요소가 30~50% 진행됐을 때 · 단어 간격 60~120ms, 목록 40~80ms · 제목은 단어별 blur 8px→0 (0.13~0.2초), 착지 후 정지 · 숨쉬기/둥둥 반복 금지 · 전환은 화면 속 물체가 원인이 되게
+- 시간은 TTS 박자에서 계산(예: 퀴즈 C0='셋' 시각, RV=정답 줄 시작)
