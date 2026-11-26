@@ -331,8 +331,11 @@ def plan(scenes, cfg, work_dir: Path, log=print):
             st0 = nz[0] if len(nz) else 0
             pcm = pcm[max(0, st0 - 480):]
             off = max(0, st0 - 480) / SR
+            spans = [(max(0.0, a - off), max(0.0, b - off)) for a, b in spans]
+            off = 0.0
+            pcm, spans = _squeeze_pauses(pcm, spans, cfg.get("max_pause", 0.8), cfg.get("squeeze_to", 0.45))
             clips.append((t + cur, pcm))
-            lines = [(cur + max(0.0, a - off), cur + max(0.0, b - off)) for a, b in spans]
+            lines = [(cur + a, cur + b) for a, b in spans]
             cur += len(pcm) / SR + gap
             sc.lines = lines
             sc.dur = max(cur - gap + tail, sc.spec.get("min_dur", 2.0))
@@ -659,3 +662,47 @@ def gemini_scene(lines, cfg, cache, log=print):
             bounds.append(dur * a / sum(L))
     bounds.append(dur)
     return p, [(bounds[i], bounds[i + 1]) for i in range(len(lines))]
+
+
+def _squeeze_pauses(pcm, spans, max_pause=0.8, to=0.45):
+    """11/26 사용자: 장면 한 번 녹음 안에서 문장 사이 침묵이 너무 길면(예: 2.5초) 줄임 · 문장 시각도 같이 당김"""
+    if not max_pause:
+        return pcm, spans
+    win = int(SR * 0.02)
+    n = len(pcm) // win
+    if n < 3:
+        return pcm, spans
+    env = np.abs(pcm[:n * win]).reshape(n, win).max(axis=1)
+    quiet = env < 0.012
+    cuts = []   # (시작 샘플, 잘라낼 샘플 수)
+    i = 0
+    while i < n:
+        if quiet[i]:
+            j = i
+            while j < n and quiet[j]:
+                j += 1
+            dur = (j - i) * win / SR
+            if dur > max_pause and j < n:      # 끝부분 침묵은 원래 로직에 맡김
+                keep = int(to * SR)
+                a = i * win + keep // 2
+                cuts.append((a, (j - i) * win - keep))
+            i = j
+        else:
+            i += 1
+    if not cuts:
+        return pcm, spans
+    out, last = [], 0
+    for a, k in cuts:
+        out.append(pcm[last:a]); last = a + k
+    out.append(pcm[last:])
+
+    def mp(tt):
+        x = tt * SR
+        sh = 0
+        for a, k in cuts:
+            if x >= a + k:
+                sh += k
+            elif x > a:
+                sh += x - a
+        return (x - sh) / SR
+    return np.concatenate(out), [(mp(a), mp(b)) for a, b in spans]
