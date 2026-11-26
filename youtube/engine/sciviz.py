@@ -7,6 +7,7 @@ type: thennow   옛날 그림 ↔ 지금 그림을 가르는 슬라이더가 좌
   then: {scene: river|mulberry|ferry|island|grass, label} · now: {scene: city, label} · year
 type: signflip  도로 표지판(파란 판) — 옛 이름 판이 뜯겨 떨어지고 새 이름이 나타남 (여러 개 차례로)
   signs: [{old, new, sub, on}]
+type: nametags  이름표 카드 2~4장 (그림 · 이름 · 한자 · 뜻) · type: riverline 한강 띠 + 강변 동네 핀 + 작은 배
 type: quizcard  카드 3장(보기) 중 정답이 뒤집혀 빛남 · 오답은 흐려짐
   question · choices: [텍스트 3개] · answer: 인덱스 · reveal_on
 """
@@ -21,6 +22,18 @@ from .editorial import Editorial, TYPES, _ink, _marker_text, _sci_frame, _sci_to
 
 MJ = "NanumMyeongjo-ExtraBold.ttf"
 PEN = "NanumPenScript-Regular.ttf"
+
+
+HZ = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"   # 명조 폰트엔 한자가 없음 → 한자는 이 글꼴로
+
+
+def _hz(text, size, color):
+    from PIL import ImageFont
+    fnt = ImageFont.truetype(HZ, size)
+    l, t_, r, b = fnt.getbbox(text)
+    im = Image.new("RGBA", (r - l + 8, b - t_ + 8), (0, 0, 0, 0))
+    ImageDraw.Draw(im).text((4 - l, 4 - t_), text, font=fnt, fill=color)
+    return im
 
 
 def _e(x):
@@ -106,7 +119,7 @@ def icon(kind, s, ink, acc, t=0.0):
         for i in range(5):
             x = s * (0.15 + i * 0.17)
             d.ellipse((x, s * 0.55 + (i % 2) * s * 0.1, x + s * 0.09, s * 0.62 + (i % 2) * s * 0.1), fill=c)
-        G.blit(im, _ink("十里", MJ, int(s * 0.28), acc), (s * 0.5, s * 0.25), 1, "mm")
+        G.blit(im, _hz("十里", int(s * 0.28), acc), (s * 0.5, s * 0.25), 1, "mm")
     return im
 
 
@@ -159,11 +172,11 @@ class Hanja(SciBase):
             cd = ImageDraw.Draw(card)
             if front:
                 cd.rounded_rectangle((0, 0, tw - 1, tw + 59), 24, fill=(255, 253, 246, 255), outline=tone["ink"] + (255,), width=5)
-                hz = _ink(ch["h"], MJ, 170, tone["ink"])
+                hz = _hz(ch["h"], 170, tone["ink"])
                 card.alpha_composite(hz, ((tw - hz.width) // 2, (tw + 60 - hz.height) // 2))
             else:
                 cd.rounded_rectangle((0, 0, tw - 1, tw + 59), 24, fill=tone["acc"] + (255,))
-                hz = _ink(ch["h"], MJ, 90, (255, 255, 255))
+                hz = _hz(ch["h"], 90, (255, 255, 255))
                 card.alpha_composite(hz, ((tw - hz.width) // 2, 30))
                 ko = _ink(ch["ko"], MJ, 44, (255, 255, 255))
                 card.alpha_composite(ko, ((tw - ko.width) // 2, tw - 40))
@@ -366,3 +379,212 @@ class QuizCard(SciBase):
 
 
 TYPES.update({"hanja": Hanja, "thennow": ThenNow, "signflip": SignFlip, "quizcard": QuizCard})
+
+
+# ── 11/26 서울 동네 이름 편 추가 도안 ─────────────────────
+class NameTags(SciBase):
+    """동네 이름표 카드: 2~4장이 차례로 위에서 툭 떨어져 비뚤게 붙음(테이프) · 그림 + 이름 + 한자 + 뜻
+    cards: [{name, h, meaning, hl, icon, on, offset}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.frame(f, t)
+        tone = self.tone
+        self.title(f, t)
+        cards = sp["cards"]
+        n = len(cards)
+        cw, chh = (400, 540) if n >= 4 else (440, 560)
+        gap = 40
+        x0 = S.W / 2 - (n * cw + (n - 1) * gap) / 2
+        tilts = (-3, 2.5, -2, 3)
+        starts = [self.line_start(c.get("on", 1)) + c.get("offset", 0) for c in cards]
+        cur = max([i for i, st in enumerate(starts) if t >= st] or [-1])
+        for i, c in enumerate(cards):
+            k = _e((t - starts[i]) / 0.5)
+            if k <= 0:
+                continue
+            card = Image.new("RGBA", (cw, chh), (0, 0, 0, 0))
+            cd = ImageDraw.Draw(card)
+            now = i == cur
+            cd.rounded_rectangle((0, 0, cw - 1, chh - 1), 22, fill=(255, 253, 246, 255),
+                                 outline=(tone["acc"] if now else tone["ink"]) + (255,), width=7 if now else 4)
+            ic = icon(c.get("icon", "pond"), 210, tone["ink"], tone["acc"], t)
+            card.alpha_composite(ic, ((cw - 210) // 2, 26))
+            nm = _ink(c["name"], MJ, 84, tone["ink"])
+            card.alpha_composite(nm, ((cw - nm.width) // 2, 248))
+            if c.get("h"):
+                hz = _hz(c["h"], 42, tone["sub"])
+                card.alpha_composite(hz, ((cw - hz.width) // 2, 352))
+            mo = _e((t - starts[i] - 0.35) / 0.4)
+            if mo > 0:
+                lines = c["meaning"].split("\n")
+                yy = 418
+                for ln in lines:
+                    mt = _ink(ln, PEN, 54, tone["ink"])
+                    if c.get("hl") and c["hl"] in ln:
+                        bar = Image.new("RGBA", (int(mt.width * mo), 22), tone["mark"] + (220,))
+                        card.alpha_composite(bar, ((cw - mt.width) // 2, yy + mt.height - 26))
+                    card.alpha_composite(mt, ((cw - mt.width) // 2, yy))
+                    yy += 56
+            ang = tilts[i % 4] + (1 - k) * 18
+            rc = card.rotate(ang, expand=True, resample=Image.BICUBIC)
+            cx = x0 + i * (cw + gap) + cw / 2
+            cy = 600 - (1 - k) * 380
+            sh = Image.new("RGBA", rc.size, (0, 0, 0, 0))
+            sh.putalpha(rc.split()[3].filter(ImageFilter.GaussianBlur(12)).point(lambda v: int(v * 0.25)))
+            G.blit(f, sh, (cx + 10, cy + 14), k, "mm")
+            G.blit(f, rc, (cx, cy), k, "mm")
+            tp = Image.new("RGBA", (150, 42), tone["mark"] + (190,)).rotate(-tilts[i % 4] * 2, expand=True, resample=Image.BICUBIC)
+            G.blit(f, tp, (cx, cy - chh / 2 + 4), k, "mm")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(c.get("on", 1)) + c.get("offset", 0), "pop", 0.5) for c in self.spec["cards"]]
+
+
+class RiverLine(SciBase):
+    """한강 띠(서→동)가 그려지고 강변 동네 핀이 차례로 꽂힘 · 작은 배가 최신 핀으로 이동
+    spots: [{name, x(0~1), side: n|s|mid, sub, icon, on, offset}]"""
+
+    def _ry(self, x):
+        return 610 + 46 * math.sin(x / 260.0) + 22 * math.sin(x / 97.0 + 1)
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.frame(f, t)
+        tone = self.tone
+        self.title(f, t)
+        d = ImageDraw.Draw(f)
+        xa, xb = 70, S.W - 70
+        dk = _e(t / 1.2)
+        xe = xa + (xb - xa) * dk
+        water = (120, 178, 222, 255)
+        pts_top = [(x, self._ry(x) - 62) for x in range(xa, int(xe) + 1, 8)]
+        pts_bot = [(x, self._ry(x) + 62) for x in range(int(xe), xa - 1, -8)]
+        if len(pts_top) > 1:
+            d.polygon(pts_top + pts_bot, fill=water)
+            d.line(pts_top, fill=tone["ink"] + (255,), width=4)
+            d.line(pts_bot[::-1], fill=tone["ink"] + (255,), width=4)
+            for k in range(3):
+                for x in range(xa, int(xe) - 60, 120):
+                    off = (t * 50 + k * 40) % 120
+                    yy = self._ry(x + off) - 30 + k * 30
+                    d.arc((x + off, yy - 8, x + off + 50, yy + 8), 0, 180, fill=(255, 255, 255, 170), width=3)
+        G.blit(f, _ink(sp.get("west", "서쪽"), PEN, 48, tone["sub"]), (xa + 10, 470), G.appear(t, 0.3, 0.3), "lm")
+        G.blit(f, _ink(sp.get("east", "동쪽 →"), PEN, 48, tone["sub"]), (xb - 10, 470), G.appear(t, 0.9, 0.3), "rm")
+        G.blit(f, _ink("강북", MJ, 40, tone["sub"]), (S.W / 2, 300), G.appear(t, 0.6, 0.3), "mm")
+        G.blit(f, _ink("강남", MJ, 40, tone["sub"]), (S.W / 2, 1000), G.appear(t, 0.6, 0.3), "mm")
+        pins = sp["spots"]
+        starts = [self.line_start(p.get("on", 1)) + p.get("offset", 0) for p in pins]
+        cur = max([i for i, st in enumerate(starts) if t >= st] or [-1])
+        # 배
+        if cur >= 0:
+            prev = pins[cur - 1]["x"] if cur > 0 else 0.0
+            kb = _e((t - starts[cur]) / 0.8)
+            bx = xa + (xb - xa) * (prev + (pins[cur]["x"] - prev) * kb)
+        else:
+            bx = xa + 20
+        by = self._ry(bx) + 4 * math.sin(t * 4)
+        if dk > 0.2:
+            d.polygon([(bx - 44, by - 6), (bx + 44, by - 6), (bx + 30, by + 16), (bx - 30, by + 16)], fill=tone["acc"] + (255,))
+            d.line((bx, by - 6, bx, by - 64), fill=tone["ink"] + (255,), width=4)
+            d.polygon([(bx + 2, by - 62), (bx + 40, by - 18), (bx + 2, by - 18)], fill=(255, 253, 246, 255), outline=tone["ink"] + (255,))
+        for i, p in enumerate(pins):
+            k = _e((t - starts[i]) / 0.45)
+            if k <= 0:
+                continue
+            x = xa + (xb - xa) * p["x"]
+            side = p.get("side", "n")
+            ry = self._ry(x)
+            if side == "mid":
+                d.ellipse((x - 70, ry - 26, x + 70, ry + 26), fill=(226, 206, 150, 255), outline=tone["ink"] + (255,), width=3)
+                base, sgn = ry - 26, -1
+            elif side == "n":
+                base, sgn = ry - 62, -1
+            else:
+                base, sgn = ry + 62, 1
+            tip = base + sgn * 70 * k
+            d.line((x, base, x, tip), fill=tone["ink"] + (255,), width=4)
+            d.ellipse((x - 10, base - 10, x + 10, base + 10), fill=tone["acc"] + (255,), outline=tone["ink"] + (255,), width=3)
+            # 카드
+            now = i == cur
+            nm = _ink(p["name"], MJ, 58 if now else 50, tone["acc"] if now else tone["ink"])
+            sb = _ink(p.get("sub", ""), PEN, 40, tone["ink"]) if p.get("sub") else None
+            iw = 0
+            cw = max(nm.width, sb.width if sb else 0) + 40
+            chh = nm.height + (sb.height if sb else 0) + 30
+            card = Image.new("RGBA", (cw, chh), (0, 0, 0, 0))
+            ImageDraw.Draw(card).rounded_rectangle((0, 0, cw - 1, chh - 1), 16, fill=(255, 253, 246, 245),
+                                                   outline=(tone["acc"] if now else tone["ink"]) + (255,), width=4 if now else 3)
+            card.alpha_composite(nm, ((cw - nm.width) // 2, 10))
+            if sb:
+                card.alpha_composite(sb, ((cw - sb.width) // 2, 10 + nm.height))
+            cy = tip + sgn * chh / 2
+            G.blit(f, card, (x, cy), k, "mm")
+            if p.get("icon") and now:
+                ic = icon(p["icon"], 150, tone["ink"], tone["acc"], t)
+                G.blit(f, ic, (x + cw / 2 + 80, cy), k, "mm")
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(0.1, "whoosh", 0.5)] + [(self.line_start(p.get("on", 1)) + p.get("offset", 0), "pop", 0.45) for p in self.spec["spots"]]
+
+
+TYPES.update({"nametags": NameTags, "riverline": RiverLine})
+
+
+class CheatSheet(SciBase):
+    """수첩 한 장 '이 글자만 알면 동네 이름이 읽힌다': 줄마다 한자 도장 쾅 → 뜻 → 예시 동네가 손글씨로 써짐 → 빨간 체크
+    rows: [{h, ko, ex, on, offset}]"""
+
+    def draw(self, f, t):
+        sp = self.spec
+        self.frame(f, t)
+        tone = self.tone
+        self.title(f, t)
+        rows = sp["rows"]
+        n = len(rows)
+        top, bot = 270, 1000
+        rh = min(150, (bot - top) / n)
+        # 수첩 종이
+        d = ImageDraw.Draw(f)
+        px0, px1 = 260, S.W - 260
+        d.rounded_rectangle((px0 + 10, top - 30 + 12, px1 + 10, top + rh * n + 20 + 12), 20, fill=(0, 0, 0, 30))
+        d.rounded_rectangle((px0, top - 30, px1, top + rh * n + 20), 20, fill=(255, 253, 246, 255), outline=tone["ink"] + (255,), width=4)
+        d.line((px0 + 230, top - 30, px0 + 230, top + rh * n + 20), fill=tone["acc"] + (160,), width=3)
+        for i, r in enumerate(rows):
+            ts = self.line_start(r.get("on", 1)) + r.get("offset", 0)
+            y = top + i * rh + rh / 2
+            d.line((px0 + 20, top + (i + 1) * rh - 4, px1 - 20, top + (i + 1) * rh - 4), fill=(200, 210, 230, 255), width=2)
+            k = (t - ts) / 0.35
+            if k <= 0:
+                continue
+            sc = 1 + 0.6 * max(0.0, 1 - k) ** 2   # 도장 쾅
+            st = Image.new("RGBA", (int(rh * 0.82), int(rh * 0.82)), (0, 0, 0, 0))
+            ImageDraw.Draw(st).rounded_rectangle((0, 0, st.width - 1, st.height - 1), 14, fill=tone["acc"] + (255,))
+            hz = _hz(r["h"], int(rh * 0.56), (255, 255, 255))
+            st.alpha_composite(hz, ((st.width - hz.width) // 2, (st.height - hz.height) // 2))
+            st = st.rotate(-4 + 3 * (i % 2), expand=True, resample=Image.BICUBIC)
+            st = st.resize((int(st.width * sc), int(st.height * sc)), Image.LANCZOS)
+            G.blit(f, st, (px0 + 115, y), min(1.0, k), "mm")
+            ko = _ink(r["ko"], MJ, int(rh * 0.42), tone["ink"])
+            G.blit(f, ko, (px0 + 270, y), G.appear(t, ts + 0.2, 0.25), "lm")
+            # 예시: 왼→오 손글씨로 써지듯(가로로 열림)
+            ex = _ink(r["ex"], PEN, int(rh * 0.4), tone["sub"])
+            kw = _e((t - ts - 0.45) / 0.7)
+            if kw > 0:
+                cut = ex.crop((0, 0, max(1, int(ex.width * kw)), ex.height))
+                G.blit(f, cut, (px0 + 300 + ko.width, y + 4), 1, "lm")
+            if t > ts + 1.1:
+                cx = px1 - 70
+                kc = _e((t - ts - 1.1) / 0.3)
+                d.line((cx - 26, y, cx - 26 + 18 * kc, y + 20 * kc), fill=tone["acc"] + (255,), width=9)
+                if kc >= 1:
+                    d.line((cx - 8, y + 20, cx + 30, y - 26), fill=tone["acc"] + (255,), width=9)
+        self.finish(f, t)
+
+    def extra_sfx(self):
+        return [(self.line_start(r.get("on", 1)) + r.get("offset", 0), "pop", 0.55) for r in self.spec["rows"]]
+
+
+TYPES.update({"cheatsheet": CheatSheet})

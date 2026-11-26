@@ -1,0 +1,597 @@
+title: 압구정 · 잠실 · 왕십리, 이름에 숨은 뜻 | 서울 동네 이름의 비밀
+series_tag: 생활상식
+clip_theme: science
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  tone: ivory
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  tempo: 1.08
+  say:
+    555미터: 오백오십오 미터
+    4킬로미터: 사 킬로미터
+    1946년: 천구백사십육 년
+    1970년대: 천구백칠십 년대
+    10리: 십 리
+bgm:
+  volume: 0.18
+  chapters:
+    인트로: drive
+    갈매기와 누에: hope
+    왕십리: tense
+    한강: drive
+    되찾은 이름: tense
+    엔딩: hope
+chapter_titles:
+  인트로: 동네 이름, 다 뜻이 있다 · 퀴즈 1
+  갈매기와 누에: 압구정 · 잠실 · 원래 섬이었던 잠실
+  왕십리: 퀴즈 2 · 십 리를 더 가라
+  한강: 마포 · 노량진 · 청담 · 뚝섬 · 여의도 · 서초 · 대치
+  되찾은 이름: 1946년 · 을지로 · 충무로 · 명동 · 세종로
+  엔딩: 우리 동네 이름은?
+scenes:
+- type: seoulmap
+  chapter: 인트로
+  bg:
+    kind: paper
+  names: none
+  markers:
+  - name: 압구정
+    kind: palace
+    'on': 1
+    offset: 0.0
+    dx: -60
+    dy: -38
+    size: 28
+  - name: 잠실
+    kind: palace
+    'on': 1
+    offset: 0.5
+    dx: 0
+    dy: -40
+    size: 28
+  - name: 왕십리
+    kind: palace
+    'on': 1
+    offset: 1.0
+    dx: 0
+    dy: -40
+    size: 28
+  - name: 여의도
+    kind: palace
+    'on': 1
+    offset: 1.5
+    dx: -50
+    dy: -40
+    size: 28
+  - name: 노량진
+    kind: palace
+    'on': 2
+    offset: 0.0
+    dx: 0
+    dy: 44
+    size: 28
+  - name: 청담
+    kind: palace
+    'on': 2
+    offset: 0.2
+    dx: 40
+    dy: -38
+    size: 28
+  - name: 마포
+    kind: palace
+    'on': 2
+    offset: 0.4
+    dx: 0
+    dy: -40
+    size: 28
+  - name: 뚝섬
+    kind: palace
+    'on': 2
+    offset: 0.6
+    dx: 30
+    dy: -40
+    size: 28
+  - name: 대치
+    kind: palace
+    'on': 2
+    offset: 0.8
+    dx: 20
+    dy: 44
+    size: 28
+  - name: 서초
+    kind: palace
+    'on': 2
+    offset: 1.0
+    dx: -20
+    dy: 44
+    size: 28
+  narration:
+  - 압구정, 잠실, 왕십리, 여의도.
+  - 매일 부르는 이 동네 이름들, 사실 하나하나 뜻이 있어요. | 그것도 꽤 엉뚱한 뜻이요.
+- type: quizcard
+  chapter: 인트로
+  kicker: 퀴즈 1
+  title: 압구정의 '압', 무슨 뜻?
+  highlight: 압
+  question: 힌트 · 한강에 사는 새와 관련 있어요
+  choices:
+  - 누르다
+  - 친하다
+  - 오리
+  answer: 1
+  countdown_on: 2
+  reveal_on: 3
+  narration:
+  - 바로 문제 하나 갈게요. 압구정의 압, 무슨 뜻일까요?
+  - 3초 드릴게요. | 셋. | 둘. | 하나.
+  - 정답은 2번, 친하다예요. | 그럼 뭐랑 친하다는 걸까요?
+- type: sci_title
+  chapter: 인트로
+  kicker: 악어새 지식창고 · 생활상식
+  title: '서울 동네
+
+    이름의 비밀'
+  highlight: 이름의 비밀
+  subtitle: 갈매기 · 누에 · 십 리 · 깃발 · 그리고 되찾은 이름
+  narration:
+  - 오늘은 서울 동네 이름 열네 곳의 숨은 뜻을 풀어 볼게요. | 다 보고 나면, 지하철 안내 방송이 다르게 들릴 거예요.
+- type: hanja
+  chapter: 갈매기와 누에
+  title: 압구정
+  name: 압구정
+  chars:
+  - h: 狎
+    ko: 친할 압
+  - h: 鷗
+    ko: 갈매기 구
+  - h: 亭
+    ko: 정자 정
+  meaning: 갈매기와 친한 정자
+  meaning_hl: 갈매기
+  icon: gull
+  'on': 1
+  flip_on: 2
+  flip_offset: 0.2
+  meaning_on: 3
+  narration:
+  - 압구정은 한자로 이렇게 써요.
+  - 친할 압, 갈매기 구, 정자 정.
+  - 갈매기와 친하게 지내는 정자라는 뜻이에요.
+- type: thennow
+  chapter: 갈매기와 누에
+  title: 정자 주인은 한명회
+  highlight: 한명회
+  then:
+    scene: river
+    label: 조선 · 한강 언덕의 정자
+  now:
+    scene: city
+    label: 지금 · 압구정동
+  wipe_on: 3
+  caption: 정자 터 표석은 지금 아파트 단지 안에
+  caption_on: 3
+  narration:
+  - 주인은 조선 세조 때 최고 권력자, 한명회예요.
+  - 벼슬 다 내려놓고 갈매기랑 벗하며 살겠다고 붙인 이름인데, | 정작 본인은 끝까지 권력을 놓지 않았대요.
+  - 그 정자가 서 있던 언덕이 지금의 압구정동이에요. 중국 사신들도 꼭 들러 보고 싶어 할 만큼 이름난 곳이었대요. | 정자 터를 알리는 돌은, 지금 아파트 단지 안에 있어요.
+- type: hanja
+  chapter: 갈매기와 누에
+  title: 잠실
+  name: 잠실
+  chars:
+  - h: 蠶
+    ko: 누에 잠
+  - h: 室
+    ko: 집 실
+  meaning: 누에 치던 방
+  meaning_hl: 누에
+  icon: silkworm
+  'on': 1
+  flip_on: 2
+  flip_offset: 0.2
+  meaning_on: 3
+  narration:
+  - 잠실도 한자를 보면 바로 풀려요.
+  - 누에 잠, 집 실.
+  - 누에를 치던 방이라는 뜻이에요.
+- type: thennow
+  chapter: 갈매기와 누에
+  title: 뽕밭이 타워가 되다
+  highlight: 타워
+  then:
+    scene: silkworm
+    label: 조선 · 나라의 누에 방 · 뽕밭
+  now:
+    scene: city
+    label: 지금 · 555m 롯데월드타워
+  wipe_on: 3
+  caption: 상전벽해 · 뽕밭이 푸른 바다가 되다
+  caption_on: 3
+  narration:
+  - 조선은 나라가 직접 누에를 쳐서 비단을 만들었어요. 그 나라의 누에 방이 여기 있었죠.
+  - 주변은 온통 뽕나무 밭이었고요.
+  - 그 뽕밭 자리에, 지금은 555미터짜리 타워가 서 있어요. | 뽕밭이 바다가 된다는 상전벽해, 딱 이 동네 얘기예요.
+- type: accent_simple
+  chapter: 갈매기와 누에
+  palette: notyet
+  bg: a
+  ink: b
+  pop: c
+  big: 원래 섬
+  big_size: 160
+  caption: 잠실은 한강 위 섬이었다 · 석촌호수 = 옛 물길
+  narration:
+  - 하나 더. 잠실은 원래 한강 위에 떠 있던 섬이었어요.
+  - 1970년대에 물길 하나를 막아서 육지로 붙였는데, | 그때 남은 옛 물길이 지금의 석촌호수예요.
+- type: quizcard
+  chapter: 왕십리
+  kicker: 퀴즈 2
+  title: 왕십리는 왜 왕십리?
+  highlight: 왕십리
+  question: 힌트 · 누군가의 한마디에서 나왔어요
+  choices:
+  - 왕이 살던 마을
+  - 십 리를 더 가라
+  - 열 개의 마을
+  answer: 1
+  countdown_on: 2
+  reveal_on: 3
+  narration:
+  - 두 번째 문제. 왕십리는 왜 왕십리일까요?
+  - 3초 드릴게요. | 셋. | 둘. | 하나.
+  - 정답은 2번. 십 리를 더 가라, 예요.
+- type: seoulmap
+  chapter: 왕십리
+  bg:
+    kind: paper
+  names: none
+  focus:
+  - 성동구
+  - 종로구
+  - 중구
+  - 동대문구
+  - 광진구
+  - 성북구
+  - 용산구
+  steps:
+  - gu: 성동구
+    'on': 1
+  - gu: 종로구
+    'on': 3
+  markers:
+  - name: 왕십리
+    kind: gate
+    'on': 1
+    offset: 0.3
+    label: 왕십리 · 여기다!
+  - name: 경복궁
+    kind: palace
+    'on': 3
+    offset: 0.5
+    label: 십 리 뒤 · 경복궁
+  guide:
+    text: 십 리를 더 가라!
+    'on': 2
+    size: 260
+  narration:
+  - 조선을 세울 때, 무학대사가 도읍 터를 찾다가 여기서 멈췄대요. 여기가 딱이다.
+  - 그때 소를 몰던 노인이 한마디 했어요. | 미련하기는, 여기서 십 리를 더 가라.
+  - 그 말대로 십 리, 4킬로미터쯤 더 가서 찾은 곳이 지금의 경복궁 자리라는 전설이에요. | 갈 왕, 열 십, 마을 리. 왕십리예요.
+- type: riverline
+  chapter: 한강
+  title: 한강이 지어 준 이름들
+  highlight: 한강
+  spots:
+  - name: 여의도
+    x: 0.16
+    side: mid
+    sub: 너섬
+    'on': 2
+    offset: 0.0
+  - name: 마포
+    x: 0.25
+    side: n
+    sub: 삼개
+    'on': 2
+    offset: 0.5
+  - name: 노량진
+    x: 0.32
+    side: s
+    sub: 백로 나루
+    'on': 2
+    offset: 1.0
+  - name: 압구정
+    x: 0.58
+    side: s
+    sub: 갈매기 정자
+    'on': 2
+    offset: 1.5
+  - name: 뚝섬
+    x: 0.68
+    side: n
+    sub: 큰 깃발
+    'on': 2
+    offset: 2.0
+  - name: 청담
+    x: 0.75
+    side: s
+    sub: 맑은 못
+    'on': 2
+    offset: 2.5
+  - name: 잠실
+    x: 0.86
+    side: s
+    sub: 누에 방
+    'on': 2
+    offset: 3.0
+  narration:
+  - 이제 배를 타고 한강을, 서쪽에서 동쪽으로 따라가 볼게요.
+  - 강변 동네 이름엔, 거의 다 물 이야기가 들어 있어요. | 나루, 포구, 못, 섬.
+- type: nametags
+  chapter: 한강
+  title: 물가 동네 네 곳
+  highlight: 물가
+  cards:
+  - name: 마포
+    h: 麻浦
+    meaning: '삼을 싣던
+
+      포구, 삼개'
+    hl: 삼개
+    icon: hemp
+    'on': 1
+  - name: 노량진
+    h: 鷺梁津
+    meaning: '백로가 놀던
+
+      나루'
+    hl: 백로
+    icon: egret
+    'on': 2
+  - name: 청담
+    h: 淸潭
+    meaning: '맑은 물이
+
+      고인 못'
+    hl: 맑은
+    icon: pond
+    'on': 3
+  - name: 뚝섬
+    h: 纛島
+    meaning: '임금의
+
+      큰 깃발 섬'
+    hl: 큰 깃발
+    icon: flag
+    'on': 4
+  narration:
+  - 마포의 옛 이름은 삼개예요. 삼베 만드는 삼, 그리고 포구라는 뜻의 개. 그 삼개를 한자로 옮긴 게 마포예요.
+  - 노량진은 백로가 놀던 나루. 백로 노, 다리 량, 나루 진이에요.
+  - 청담은 맑을 청, 못 담. 한강 물이 맑게 고인 못이 있던 곳이에요.
+  - 뚝섬은 큰 깃발 둑에서 왔어요. 임금이 군대를 살펴볼 때, 여기에 큰 깃발을 꽂았거든요.
+- type: journal
+  chapter: 한강
+  gu: 동작구
+  name: 노량진
+  eng: Noryangjin
+  color:
+  - 90
+  - 150
+  - 210
+  tag: 백로 나루
+  caption: ''
+  notes:
+  - text: 백로가 놀던 한강 나루
+    'on': 1
+  - text: 1899 · 우리나라 첫 기차 출발
+    'on': 2
+    hl: true
+  - text: 노량진 ↔ 제물포(인천)
+    'on': 2
+  seal:
+    top: '1899'
+    big: 첫 기차
+    bottom: 노량진
+    'on': 3
+  narration:
+  - 노량진엔 기록도 하나 있어요.
+  - 1899년, 우리나라 첫 기차가 노량진에서 인천 제물포까지 달렸어요.
+  - 배가 서던 나루에서 기차가 서는 역으로. | 이름 그대로, 서울의 출발점이었던 셈이죠.
+- type: sci_kinetic
+  chapter: 한강
+  items:
+  - text: '원래 이름은
+
+      너섬'
+    highlight: 너섬
+    'on': 1
+  - text: 너나 가져라?
+    highlight: 너나
+    'on': 2
+  - text: '너의 섬
+
+      = 여의도'
+    highlight: 너의 섬
+    'on': 3
+  - text: '1916
+
+      첫 비행장'
+    highlight: 첫 비행장
+    'on': 4
+  narration:
+  - 여의도는 더 재밌어요. 원래 이름이 너섬이에요.
+  - 홍수가 나면 거의 다 잠기는 쓸모없는 모래섬이라, 너나 가져라, 했다는 이야기가 전해져요.
+  - 너 여, 어조사 의, 섬 도. 너의 섬, 여의도예요.
+  - 그 쓸모없던 섬에 1916년, 우리나라 첫 비행장이 생겼고, | 지금은 국회와 증권가가 모였죠. 이름이 좀 억울하겠죠?
+- type: journal
+  chapter: 한강
+  gu: 성동구
+  name: 뚝섬
+  eng: Ttukseom
+  color:
+  - 226
+  - 92
+  - 64
+  tag: 큰 깃발 섬
+  photo: sp_seongsu
+  caption: 성수동 · 옛 뚝섬 자리
+  notes:
+  - text: 조선 · 임금의 사냥터 · 군대 사열
+    'on': 1
+  - text: 1954~1989 뚝섬 경마장
+    'on': 2
+  - text: 지금은 서울숲
+    'on': 3
+    hl: true
+  seal:
+    top: 뚝섬
+    big: 깃발
+    bottom: 큰 깃발 섬
+    'on': 3
+  narration:
+  - 뚝섬은 조선 임금의 사냥터이기도 했어요. 넓은 모래벌판에서 말을 달렸죠.
+  - 1954년부터는 경마장이 들어서서, 서른다섯 해 동안 말이 달렸어요.
+  - 그 경마장 자리가 지금의 서울숲이에요. | 깃발 꽂던 섬이, 이제는 숲이 된 거죠.
+- type: accent_simple
+  chapter: 한강
+  palette: notyet
+  bg: b
+  ink: a
+  pop: c
+  big: 영동
+  big_size: 170
+  caption: 강남의 옛 이름 · 영등포의 동쪽
+  narration:
+  - 그런데 강남이라는 이름, 사실 꽤 최근 거예요. 1970년대 개발 때 이 동네 이름은 영동이었어요.
+  - 영등포의 동쪽이라서 영동. | 지금도 영동대로, 영동시장에 그 흔적이 남아 있죠.
+- type: nametags
+  chapter: 한강
+  title: 강남 · 그리고 강북 하나 더
+  highlight: 하나 더
+  cards:
+  - name: 서초
+    h: 瑞草
+    meaning: '서리풀
+
+      마을'
+    hl: 서리풀
+    icon: grass
+    'on': 1
+  - name: 대치
+    h: 大峙
+    meaning: '한티,
+
+      큰 고개'
+    hl: 큰 고개
+    icon: hill
+    'on': 2
+  - name: 잠원
+    h: 蠶院
+    meaning: '또 하나의
+
+      누에 마을'
+    hl: 누에
+    icon: silkworm
+    'on': 3
+  - name: 이태원
+    h: 梨泰院
+    meaning: '배나무가
+
+      많던 역원'
+    hl: 배나무
+    icon: pear
+    'on': 4
+  narration:
+  - 강 건너 강남 쪽도 볼게요. 서초는 서리풀이라는 순우리말 마을 이름에서 왔어요. 한자로는 상서로울 서, 풀 초.
+  - 대치동은 한티. 한은 크다, 티는 고개. 큰 고개라는 뜻이에요. | 옛날엔 넘기 힘든 고개였는데, 지금은 학원비가 큰 고개죠.
+  - 잠원동에도 누에가 있어요. 잠실처럼 누에를 치던 마을이 있던 곳이에요.
+  - 강북 하나만 더. 이태원은 조선 시대 길손이 묵던 역원 자리인데, 주변에 배나무가 많아서 배 이 자를 쓰게 됐다는 이야기가 전해져요.
+- type: cheatsheet
+  chapter: 한강
+  title: 이 글자만 알면 동네 이름이 읽힌다
+  highlight: 읽힌다
+  rows:
+  - h: 津
+    ko: 진 · 나루
+    ex: 노량진 · 양화진
+    'on': 2
+  - h: 浦
+    ko: 포 · 포구
+    ex: 마포 · 영등포 · 목포
+    'on': 3
+  - h: 島
+    ko: 도 · 섬
+    ex: 여의도 · 제주도
+    'on': 4
+  - h: 潭
+    ko: 담 · 못
+    ex: 청담 · 백담사
+    'on': 5
+  - h: 峙
+    ko: 치 · 고개
+    ex: 대치 · 한티
+    'on': 6
+  narration:
+  - 여기까지 왔으면, 꿀팁 하나 챙겨 가세요. 이 다섯 글자만 알면, 처음 가는 동네 이름도 읽혀요.
+  - 진은 나루. 노량진, 양화진.
+  - 포는 포구. 마포, 영등포, 그리고 목포까지.
+  - 도는 섬. 여의도, 제주도.
+  - 담은 못. 청담동, 그리고 설악산 백담사.
+  - 치는 고개. 대치동, 그래서 한티예요.
+- type: signflip
+  chapter: 되찾은 이름
+  title: 1946년, 일본 이름을 뜯어내다
+  highlight: 1946년
+  signs:
+  - old: 황금정
+    new: 을지로
+    sub: 을지문덕
+    'on': 3
+  - old: 본정
+    new: 충무로
+    sub: 충무공 이순신
+    'on': 4
+  - old: 명치정
+    new: 명동
+    sub: 명례방
+    'on': 5
+  narration:
+  - 그런데 서울엔, 이름을 빼앗겼던 길도 있어요. 일제강점기에 붙은 일본식 이름들이요.
+  - 해방 이듬해인 1946년, 서울은 이 이름들을 한꺼번에 갈아 치워요.
+  - 황금정은 을지로. 고구려 장군 을지문덕의 이름을 땄어요.
+  - 본정은 충무로. 충무공 이순신이에요.
+  - 일본 왕의 연호를 딴 명치정은, 조선 시대 동네 이름 명례방에서 따와 명동이 됐어요.
+  - 우리가 매일 지나는 길 이름들이, 사실은 해방 직후에 되찾은 이름들인 거예요.
+- type: sci_kinetic
+  chapter: 되찾은 이름
+  items:
+  - text: '광화문통
+
+      → 세종로'
+    highlight: 세종로
+    'on': 1
+  - text: '길 이름이
+
+      곧 역사책'
+    highlight: 역사책
+    'on': 2
+  narration:
+  - 광화문통은 세종로가 됐어요. 세종대왕이죠.
+  - 그러니까 서울 길 이름은, 그 자체로 한 권의 역사책인 셈이에요. | 장군, 임금, 그리고 옛 동네 이름까지.
+- type: sci_outro
+  chapter: 엔딩
+  heading: '여러분 동네 이름은
+
+    무슨 뜻일까요?'
+  highlight: 무슨 뜻
+  sub: 궁금한 동네를 댓글로 · 다음 편에서 풀어 드릴게요
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  narration:
+  - 여러분 동네 이름은 무슨 뜻일까요? 궁금한 동네를 댓글로 남겨 주시면, 다음 편에서 풀어 드릴게요.
+  - 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
