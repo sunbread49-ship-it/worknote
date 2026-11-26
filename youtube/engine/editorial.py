@@ -269,7 +269,65 @@ class Editorial(Scene):
 
     def finish(self, f, t):
         (riso_credit if getattr(self, "paper", False) else credit)(f, self.spec)
+        _pins(self, f, t)
         self.draw_common(f, t)
+
+
+def _pins(sc, f, t):
+    """2026-11-26 사용자: 이모티콘 크기의 작고 세련된 포인트(동그라미 · 화살표 · 상자)를 말에 맞춰 — 남발 금지(장면당 1~3개)
+    pins: [{kind: ring|arrow|box|dot, x, y, on, offset, text, color, r, dir: down|up|left|right}]"""
+    for p in sc.spec.get("pins", []):
+        t0 = sc.line_start(p.get("on", 1)) + p.get("offset", 0.0)
+        k = (t - t0) / 0.35
+        if k <= 0:
+            continue
+        k = min(1.0, k)
+        e = G.ease_out(k)
+        c = _col(p["color"]) if p.get("color") else (S.RED_L if S.THEME == "08" else Y)
+        x, y = p["x"], p["y"]
+        d = ImageDraw.Draw(f)
+        kind = p.get("kind", "ring")
+        if kind == "ring":   # 펄스 링
+            r = p.get("r", 46) * (0.6 + 0.4 * e)
+            pulse = 1 + 0.08 * math.sin((t - t0) * 6)
+            rr = r * pulse
+            d.ellipse((x - rr, y - rr, x + rr, y + rr), outline=c + (int(255 * e),), width=5)
+            if k >= 1:
+                ro = r * (1 + ((t - t0 - 0.35) % 1.2) / 1.2 * 0.6)
+                a = int(160 * (1 - ((t - t0 - 0.35) % 1.2) / 1.2))
+                d.ellipse((x - ro, y - ro, x + ro, y + ro), outline=c + (a,), width=3)
+        elif kind == "dot":
+            r = p.get("r", 10)
+            d.ellipse((x - r, y - r, x + r, y + r), fill=c + (int(255 * e),))
+        elif kind == "arrow":   # 작은 화살표가 톡 떨어져 가리킴
+            dr = p.get("dir", "down")
+            bob = 6 * math.sin((t - t0) * 5)
+            L = p.get("r", 40)
+            if dr == "down":
+                yy = y - 20 - (1 - e) * 40 + bob
+                d.polygon([(x, yy), (x - L * 0.45, yy - L * 0.6), (x + L * 0.45, yy - L * 0.6)], fill=c + (int(255 * e),))
+                d.rectangle((x - L * 0.14, yy - L * 1.2, x + L * 0.14, yy - L * 0.6), fill=c + (int(255 * e),))
+            elif dr == "up":
+                yy = y + 20 + (1 - e) * 40 - bob
+                d.polygon([(x, yy), (x - L * 0.45, yy + L * 0.6), (x + L * 0.45, yy + L * 0.6)], fill=c + (int(255 * e),))
+                d.rectangle((x - L * 0.14, yy + L * 0.6, x + L * 0.14, yy + L * 1.2), fill=c + (int(255 * e),))
+            else:
+                sg = 1 if dr == "right" else -1
+                xx = x - sg * (20 + (1 - e) * 40) + sg * bob
+                d.polygon([(xx, y), (xx - sg * L * 0.6, y - L * 0.45), (xx - sg * L * 0.6, y + L * 0.45)], fill=c + (int(255 * e),))
+                x1, x2 = sorted([xx - sg * L * 1.2, xx - sg * L * 0.6])
+                d.rectangle((x1, y - L * 0.14, x2, y + L * 0.14), fill=c + (int(255 * e),))
+        elif kind == "box":   # 둥근 테두리 상자
+            w, h = p.get("w", 180), p.get("h", 90)
+            sc_ = 0.85 + 0.15 * e
+            w2, h2 = w * sc_ / 2, h * sc_ / 2
+            d.rounded_rectangle((x - w2, y - h2, x + w2, y + h2), 16, outline=c + (int(255 * e),), width=5)
+        if p.get("text"):
+            tx = T(p["text"], p.get("size", 30), (255, 255, 255), "Black")
+            pill = Image.new("RGBA", (tx.width + 28, tx.height + 14), (0, 0, 0, 0))
+            ImageDraw.Draw(pill).rounded_rectangle((0, 0, pill.width - 1, pill.height - 1), 12, fill=c + (255,))
+            pill.alpha_composite(tx, (14, 7))
+            G.blit(f, pill, (x + p.get("tx", 0), y + p.get("ty", -70)), e, "mm")
 
 
 class Timeline(Editorial):
@@ -5043,3 +5101,4 @@ TYPES.update({"vbars": VBars})
 
 from . import dive  # noqa: E402,F401  (sci05 지구 관통 낙하 장면)
 from . import viz5  # noqa: E402,F401  (sci05 그림 장면 모음)
+from . import stockviz  # noqa: E402,F401  (주식 그림 장면: building · drop · dominoes)
