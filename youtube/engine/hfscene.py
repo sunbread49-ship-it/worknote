@@ -102,7 +102,7 @@ def t_quiz(v, th, dur):
 #q span{{display:inline-block;margin:0 .12em;}}
 .card{{top:440px;height:330px;perspective:1400px;}}
 .inner{{position:absolute;inset:0;transform-style:preserve-3d;}}
-.face{{position:absolute;inset:0;border-radius:30px;display:flex;align-items:center;justify-content:center;font-size:{84 if cw >= 500 else 70}px;backface-visibility:hidden;box-shadow:0 14px 30px rgba(0,0,0,.16);}}
+.face{{position:absolute;inset:0;border-radius:30px;display:flex;align-items:center;justify-content:center;font-size:{min(84 if cw >= 500 else 70, int((cw - 70) / max(len(c) for c in ch)))}px;backface-visibility:hidden;box-shadow:0 14px 30px rgba(0,0,0,.16);}}
 .front{{background:{th['card']};border:6px solid {th['ink']};}}
 .back{{background:{th['acc']};color:#fff;transform:rotateY(180deg);}}
 .num{{position:absolute;left:28px;top:16px;font-size:56px;color:{th['sub']};}}

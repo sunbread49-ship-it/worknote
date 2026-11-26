@@ -202,12 +202,11 @@ scenes:
   narration:
   - 압구정, 잠실, 왕십리, 여의도.
   - 매일 부르는 이 동네 이름들, 사실 하나하나 뜻이 있어요. | 그것도 꽤 엉뚱한 뜻이요.
-- type: quizcard
+- type: hf
   chapter: 인트로
   kicker: 퀴즈 1
-  title: 압구정의 '압', 무슨 뜻?
   highlight: 압
-  question: 힌트 · 한강에 사는 새와 관련 있어요
+  question: 압구정의 '압', 무슨 뜻?
   choices:
   - 누르다
   - 친하다
@@ -220,6 +219,9 @@ scenes:
   - 바로 문제 하나 갈게요. 압구정의 압, 무슨 뜻일까요?
   - 3초 드릴게요. | 셋. | 둘. | 하나.
   - 정답은 2번, 친하다예요. | 그럼 뭐랑 친하다는 걸까요?
+  template: quiz
+  theme: paper
+  hint: 힌트 · 한강에 사는 새와 관련 있어요
 - type: sci_title
   chapter: 인트로
   kicker: 악어새 지식창고 · 생활상식
@@ -352,12 +354,11 @@ scenes:
     h: 400
     'on': 2
     tilt: -3
-- type: quizcard
+- type: hf
   chapter: 왕십리
   kicker: 퀴즈 2
-  title: 왕십리는 왜 왕십리?
   highlight: 왕십리
-  question: 힌트 · 누군가의 한마디에서 나왔어요
+  question: 왕십리는 왜 왕십리?
   choices:
   - 왕이 살던 마을
   - 십 리를 더 가라
@@ -370,6 +371,9 @@ scenes:
   - 두 번째 문제. 왕십리는 왜 왕십리일까요?
   - 3초 드릴게요. | 셋. | 둘. | 하나.
   - 정답은 2번. 십 리를 더 가라, 예요.
+  template: quiz
+  theme: paper
+  hint: 힌트 · 누군가의 한마디에서 나왔어요
 - type: seoulmap
   chapter: 왕십리
   bg:
