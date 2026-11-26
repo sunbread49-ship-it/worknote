@@ -56,8 +56,8 @@ scenes:
   theme: space
   title: 지금 이 순간에도 서울은
   tag: 시속 1,330km
-  lon0: 112
-  spin: 9
+  lon0: 116
+  spin: 4
   title_on:
   - 1
   - 0.2
@@ -67,7 +67,9 @@ scenes:
   narration:
   - 지금 이 순간에도 서울은, 시속 1,330km로 달리고 있어요.
   - 의자에 가만히 앉아 있는 여러분도요. | 소리보다 빠르게요.
-  tilt_x: 0.3
+  tilt_x: 0.6
+  cam_y: 0.0
+  zoom: 0.82
 - type: hf
   template: quiz
   chapter: 인트로
@@ -193,8 +195,8 @@ scenes:
   theme: space
   title: 딱 1초, 멈춘다면
   tag: 멈춤!
-  lon0: 118
-  spin: 9
+  lon0: 116
+  spin: 4
   title_on:
   - 1
   - 0.1
@@ -207,7 +209,9 @@ scenes:
   narration:
   - 자, 이제 지구를 멈춰 볼게요.
   - 쾅. | 땅은 멈췄어요. 그런데 그 위에 있는 건, 아무것도 멈추지 않아요.
-  tilt_x: 0.3
+  tilt_x: 0.6
+  cam_y: 0.0
+  zoom: 0.82
 - type: sci_kinetic
   chapter: 멈추는 순간
   items:

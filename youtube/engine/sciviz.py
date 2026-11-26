@@ -570,12 +570,14 @@ class CheatSheet(SciBase):
         d = ImageDraw.Draw(f)
         px0, px1 = 260, S.W - 260
         d.rounded_rectangle((px0 + 10, top - 30 + 12, px1 + 10, top + rh * n + 20 + 12), 20, fill=(0, 0, 0, 30))
-        d.rounded_rectangle((px0, top - 30, px1, top + rh * n + 20), 20, fill=(255, 253, 246, 255), outline=tone["ink"] + (255,), width=4)
+        dark = sum(tone["paper"]) < 200   # 11/27 밤 톤: 카드도 어둡게(글자가 밝은 색이라)
+        cardc = (26, 32, 58) if dark else (255, 253, 246)
+        d.rounded_rectangle((px0, top - 30, px1, top + rh * n + 20), 20, fill=cardc + (255,), outline=tone["ink"] + (255,), width=4)
         d.line((px0 + 230, top - 30, px0 + 230, top + rh * n + 20), fill=tone["acc"] + (160,), width=3)
         for i, r in enumerate(rows):
             ts = self.line_start(r.get("on", 1)) + r.get("offset", 0)
             y = top + i * rh + rh / 2
-            d.line((px0 + 20, top + (i + 1) * rh - 4, px1 - 20, top + (i + 1) * rh - 4), fill=(200, 210, 230, 255), width=2)
+            d.line((px0 + 20, top + (i + 1) * rh - 4, px1 - 20, top + (i + 1) * rh - 4), fill=((60, 70, 100) if dark else (200, 210, 230)) + (255,), width=2)
             k = (t - ts) / 0.35
             if k <= 0:
                 continue

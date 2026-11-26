@@ -271,7 +271,7 @@ def t_globe3d(v, th, dur):
     js = f"""
 const W=1920,H=1080, cv=document.getElementById('gl');
 const R=new THREE.WebGLRenderer({{canvas:cv,antialias:true,preserveDrawingBuffer:true}}); R.setSize(W,H,false);
-const sc=new THREE.Scene(); const cam=new THREE.PerspectiveCamera(30,W/H,0.1,100); cam.position.set(0,{float(v.get('cam_y', -0.35)):.2f},{8.2 / float(v.get('zoom', 0.9)):.3f});
+const CY={float(v.get('cam_y', 0.0)):.2f}; const sc=new THREE.Scene(); const cam=new THREE.PerspectiveCamera(30,W/H,0.1,100); cam.position.set(0,{float(v.get('cam_y', -0.35)):.2f},{8.2 / float(v.get('zoom', 0.9)):.3f});
 // 별(시드 고정)
 let sd=7; const rnd=()=>{{sd=(sd*16807)%2147483647;return sd/2147483647;}};
 const sg=new THREE.BufferGeometry(); const sp=[]; for(let i=0;i<2500;i++){{const a=rnd()*6.283,b=Math.acos(2*rnd()-1),r=40;sp.push(r*Math.sin(b)*Math.cos(a),r*Math.sin(b)*Math.sin(a),r*Math.cos(b));}}
@@ -292,7 +292,7 @@ function rotAt(t){{const tt=Math.min(t,STOP);return (-(LON0+90)+SPIN*tt)*Math.PI
 function draw(){{
   const t=S.t; earth.rotation.y=rotAt(t);
   let shx=0,shy=0; if(t>=STOP&&t<STOP+0.6){{const k=1-(t-STOP)/0.6;shx=Math.sin(t*90)*0.06*k;shy=Math.cos(t*77)*0.05*k;}}
-  cam.position.x=shx; cam.position.y=shy; cam.lookAt(0,0,0);
+  cam.position.x=shx; cam.position.y=CY+shy; cam.lookAt(0,CY*0.0,0);
   R.render(sc,cam);
   const p=new THREE.Vector3(Math.cos(LAT)*Math.cos(LON)*2.02, Math.sin(LAT)*2.02, -Math.cos(LAT)*Math.sin(LON)*2.02);
   earth.localToWorld(p); const vis=p.clone().sub(cam.position).dot(p)<0; p.project(cam);
