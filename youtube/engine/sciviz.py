@@ -342,10 +342,27 @@ class QuizCard(SciBase):
             G.blit(f, card, (cx, cy - (12 * math.sin(t * 3 + i) if k == 0 else 0)), alpha, "mm")
         if sp.get("question"):
             G.blit(f, _ink(sp["question"], PEN, 64, tone["ink"]), (S.W / 2, 860), G.appear(t, 0.1, 0.3), "mt")
+        # 11/26 사용자: 퀴즈 카운트다운 '3 · 2 · 1' (countdown_on 줄에서 시작 · 대사로도 '3, 2, 1')
+        if sp.get("countdown_on"):
+            c0 = self.line_start(sp["countdown_on"]) + sp.get("countdown_offset", 0.3)
+            n = sp.get("countdown", 3)
+            if c0 <= t < min(rv, c0 + n + 0.3):
+                left = n - int(t - c0)
+                ph = (t - c0) % 1
+                cx, cy, r = S.W - 210, 230, 110
+                d = ImageDraw.Draw(f)
+                d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(255, 253, 246, 240), outline=tone["ink"] + (255,), width=6)
+                d.arc((cx - r + 10, cy - r + 10, cx + r - 10, cy + r - 10), -90, -90 + 360 * (1 - ph), fill=tone["acc"] + (255,), width=14)
+                num = _ink(str(max(1, left)), MJ, int(130 * (1.25 - 0.25 * min(1, ph * 4))), tone["acc"])
+                G.blit(f, num, (cx, cy), 1, "mm")
         self.finish(f, t)
 
     def extra_sfx(self):
-        return [(self.line_start(self.spec.get("reveal_on", 2)) + self.spec.get("reveal_offset", 0), "ding", 0.8)]
+        ev = [(self.line_start(self.spec.get("reveal_on", 2)) + self.spec.get("reveal_offset", 0), "ding", 0.8)]
+        if self.spec.get("countdown_on"):
+            c0 = self.line_start(self.spec["countdown_on"]) + self.spec.get("countdown_offset", 0.3)
+            ev += [(c0 + i, "tick", 0.7) for i in range(self.spec.get("countdown", 3))]
+        return ev
 
 
 TYPES.update({"hanja": Hanja, "thennow": ThenNow, "signflip": SignFlip, "quizcard": QuizCard})
