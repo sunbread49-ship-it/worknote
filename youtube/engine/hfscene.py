@@ -57,7 +57,7 @@ def _hl(text, hl, mark_id):
 def _page(th, dur, body, css, js):
     faces = "".join(f'@font-face{{font-family:"{k}";src:url("assets/fonts/{v}");}}' for k, v in FONTS.items())
     return f"""<!doctype html><html><head><meta charset="utf-8">
-<script src="assets/gsap.min.js"></script>
+<script src="assets/gsap.min.js"></script><script src="assets/three.min.js"></script>
 <style>{faces}
 html,body{{margin:0;background:{th['bg']};}}
 #root{{position:relative;width:1920px;height:1080px;overflow:hidden;background:{th['bg']};font-family:"{th['font']}";color:{th['ink']};}}
@@ -250,7 +250,63 @@ tl.fromTo(".sign",{{opacity:0,y:50}},{{opacity:1,y:0,duration:.55,ease:"expo.out
     return body, css, js
 
 
-TEMPLATES = {"quiz": t_quiz, "stat": t_stat, "headline": t_headline, "equation": t_equation}
+def t_globe3d(v, th, dur):
+    """실제 위성사진(NASA) 3D 지구본 — three.js · 자전 → 급정지(흔들림 · 번쩍) · 서울 표시 · 속도 태그 · 낮/밤 경계
+    lon0(처음 정면 경도) · spin(초당 도) · stop_at(초, 없으면 계속) · tag(서울 옆 글자) · tag_on(초) · title · title_on · zoom(1~)"""
+    tex = v.get("texture", "earth_day.jpg")
+    title = _esc(v.get("title", ""))
+    tag = _esc(v.get("tag", ""))
+    body = f"""<canvas id="gl" width="1920" height="1080" class="abs" style="inset:0"></canvas>
+<div id="flash" class="abs" style="inset:0;background:#fff;opacity:0"></div>
+<div id="ttl" class="abs">{title}</div>
+<div id="pin" class="abs"><div id="dot"></div><div id="tag">{tag}</div></div>"""
+    css = """#grid{display:none;}
+#root{background:#03050c !important;}
+#ttl{left:0;right:0;top:70px;text-align:center;font-family:"Pretendard";font-size:84px;color:#fff;text-shadow:0 6px 24px rgba(0,0,0,.6);opacity:0;}
+#pin{left:0;top:0;width:0;height:0;}
+#dot{position:absolute;left:-12px;top:-12px;width:24px;height:24px;border-radius:50%;background:#FFC93C;box-shadow:0 0 0 6px rgba(255,201,60,.35),0 0 30px #FFC93C;}
+#tag{position:absolute;left:30px;top:-40px;white-space:nowrap;font-family:"Pretendard";font-size:56px;color:#111;background:#FFC93C;border-radius:16px;padding:6px 20px;opacity:0;}"""
+    js = f"""
+const W=1920,H=1080, cv=document.getElementById('gl');
+const R=new THREE.WebGLRenderer({{canvas:cv,antialias:true,preserveDrawingBuffer:true}}); R.setSize(W,H,false);
+const sc=new THREE.Scene(); const cam=new THREE.PerspectiveCamera(30,W/H,0.1,100); cam.position.set(0,0,{8.2 / float(v.get('zoom', 1)):.3f});
+// 별(시드 고정)
+let sd=7; const rnd=()=>{{sd=(sd*16807)%2147483647;return sd/2147483647;}};
+const sg=new THREE.BufferGeometry(); const sp=[]; for(let i=0;i<2500;i++){{const a=rnd()*6.283,b=Math.acos(2*rnd()-1),r=40;sp.push(r*Math.sin(b)*Math.cos(a),r*Math.sin(b)*Math.sin(a),r*Math.cos(b));}}
+sg.setAttribute('position',new THREE.Float32BufferAttribute(sp,3)); sc.add(new THREE.Points(sg,new THREE.PointsMaterial({{color:0xffffff,size:0.06,transparent:true,opacity:.8}})));
+const tx=new THREE.TextureLoader().load('assets/{tex}'); tx.colorSpace=THREE.SRGBColorSpace; tx.anisotropy=8;
+const earth=new THREE.Mesh(new THREE.SphereGeometry(2,128,128),new THREE.MeshStandardMaterial({{map:tx,roughness:.9,metalness:0}}));
+const tilt=new THREE.Group(); tilt.rotation.z={float(v.get('tilt', 0.41)):.3f}; tilt.rotation.x={float(v.get('tilt_x', 0.5)):.3f}; tilt.add(earth); sc.add(tilt);
+// 대기 빛
+const atm=new THREE.Mesh(new THREE.SphereGeometry(2.12,64,64),new THREE.ShaderMaterial({{transparent:true,side:THREE.BackSide,blending:THREE.AdditiveBlending,
+ vertexShader:'varying vec3 n;void main(){{n=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}}',
+ fragmentShader:'varying vec3 n;void main(){{float i=pow(0.72-dot(n,vec3(0,0,1.0)),3.0);gl_FragColor=vec4(0.35,0.6,1.0,1.0)*i*1.6;}}'}}));
+sc.add(atm);
+sc.add(new THREE.AmbientLight(0xffffff,{float(v.get('ambient', 0.55)):.2f}));
+const sun=new THREE.DirectionalLight(0xffffff,{float(v.get('sun', 2.6)):.2f}); sun.position.set(-3,1.5,6); sc.add(sun);
+const LAT={float(v.get('lat', 37.57)):.3f}*Math.PI/180, LON={float(v.get('lon', 126.98)):.3f}*Math.PI/180;
+const S={{t:0}}, LON0={float(v.get('lon0', 110)):.2f}, SPIN={float(v.get('spin', 14)):.2f}, STOP={float(v['stop_at']) if v.get('stop_at') is not None else 1e9:.3f};
+function rotAt(t){{const tt=Math.min(t,STOP);return (-(LON0+90)+SPIN*tt)*Math.PI/180;}}
+function draw(){{
+  const t=S.t; earth.rotation.y=rotAt(t);
+  let shx=0,shy=0; if(t>=STOP&&t<STOP+0.6){{const k=1-(t-STOP)/0.6;shx=Math.sin(t*90)*0.06*k;shy=Math.cos(t*77)*0.05*k;}}
+  cam.position.x=shx; cam.position.y=shy; cam.lookAt(0,0,0);
+  R.render(sc,cam);
+  const p=new THREE.Vector3(Math.cos(LAT)*Math.cos(LON)*2.02, Math.sin(LAT)*2.02, -Math.cos(LAT)*Math.sin(LON)*2.02);
+  earth.localToWorld(p); const vis=p.clone().sub(cam.position).dot(p)<0; p.project(cam);
+  const pin=document.getElementById('pin'); pin.style.transform='translate('+((p.x+1)/2*W)+'px,'+((1-p.y)/2*H)+'px)'; pin.style.opacity=vis?1:0;
+}}
+tl.to(S,{{t:{dur:.3f},duration:{dur:.3f},ease:"none",onUpdate:draw}},0);
+tl.call(draw,null,0);
+tl.fromTo("#ttl",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.22,ease:"power4.out"}},{float(v.get('title_on', 0.3)):.3f});
+tl.fromTo("#tag",{{opacity:0,x:-20}},{{opacity:1,x:0,duration:.45,ease:"expo.out"}},{float(v.get('tag_on', 1.0)):.3f});
+"""
+    if v.get("stop_at") is not None:
+        js += f'tl.fromTo("#flash",{{opacity:.85}},{{opacity:0,duration:.35,ease:"power3.out",immediateRender:false}},{float(v["stop_at"]):.3f});\n'
+    return body, css, js
+
+
+TEMPLATES = {"quiz": t_quiz, "stat": t_stat, "headline": t_headline, "equation": t_equation, "globe3d": t_globe3d}
 
 
 def build(template, v, theme, dur):
@@ -278,6 +334,10 @@ def render_frames(page, work, dur):
             if not dst.exists():
                 shutil.copy(ROOT / "assets/fonts" / f, dst)
         shutil.copy(HF / "node_modules/gsap/dist/gsap.min.js", work / "assets/gsap.min.js")
+        shutil.copy(HF / "node_modules/three/build/three.min.js", work / "assets/three.min.js")
+        tex = ROOT / "assets/photos/sn_earth_day.jpg"
+        if tex.exists():
+            shutil.copy(tex, work / "assets/earth_day.jpg")
         (work / "index.html").write_text(page, encoding="utf-8")
         mp4 = work / "hf.mp4"
         r = subprocess.run(["npx", "hyperframes", "render", str(work), "-q", "delivery", "-w", "3", "--fps", str(S.FPS), "-o", str(mp4), "--quiet"],
