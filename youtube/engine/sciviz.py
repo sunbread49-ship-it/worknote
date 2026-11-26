@@ -319,6 +319,14 @@ class SignFlip(SciBase):
 
 
 class QuizCard(SciBase):
+    def _c0(self):
+        sp = self.spec
+        bt = sp.get("_beats") or []
+        k = sp.get("countdown_beat", 1)   # beat_line 줄의 몇 번째 말 덩어리부터 카운트(0='3초 드릴게요', 1='셋')
+        if bt and sp.get("beat_line") == sp.get("countdown_on") and k < len(bt):
+            return self.line_start(sp["countdown_on"]) + bt[k]
+        return self.line_start(sp["countdown_on"]) + sp.get("countdown_offset", 0.3)
+
     def draw(self, f, t):
         sp = self.spec
         self.frame(f, t)
@@ -357,7 +365,7 @@ class QuizCard(SciBase):
             G.blit(f, _ink(sp["question"], PEN, 64, tone["ink"]), (S.W / 2, 860), G.appear(t, 0.1, 0.3), "mt")
         # 11/26 사용자: 퀴즈 카운트다운 '3 · 2 · 1' (countdown_on 줄에서 시작 · 대사로도 '3, 2, 1')
         if sp.get("countdown_on"):
-            c0 = self.line_start(sp["countdown_on"]) + sp.get("countdown_offset", 0.3)
+            c0 = self._c0()
             n = sp.get("countdown", 3)
             if c0 <= t < min(rv, c0 + n + 0.3):
                 left = n - int(t - c0)
@@ -373,7 +381,7 @@ class QuizCard(SciBase):
     def extra_sfx(self):
         ev = [(self.line_start(self.spec.get("reveal_on", 2)) + self.spec.get("reveal_offset", 0), "ding", 0.8)]
         if self.spec.get("countdown_on"):
-            c0 = self.line_start(self.spec["countdown_on"]) + self.spec.get("countdown_offset", 0.3)
+            c0 = self._c0()
             ev += [(c0 + i, "tick", 0.7) for i in range(self.spec.get("countdown", 3))]
         return ev
 

@@ -334,6 +334,9 @@ def plan(scenes, cfg, work_dir: Path, log=print):
             spans = [(max(0.0, a - off), max(0.0, b - off)) for a, b in spans]
             off = 0.0
             pcm, spans = _squeeze_pauses(pcm, spans, cfg.get("max_pause", 0.8), cfg.get("squeeze_to", 0.45))
+            if sc.spec.get("beat_line"):   # 퀴즈 '셋 · 둘 · 하나'를 정확히 1초 간격으로 (녹음 다시 안 함 · 사이에 침묵 삽입)
+                pcm, spans, beats = _beat_line(pcm, spans, sc.spec["beat_line"] - 1, sc.spec.get("beat", 1.0))
+                sc.spec["_beats"] = beats
             clips.append((t + cur, pcm))
             lines = [(cur + a, cur + b) for a, b in spans]
             cur += len(pcm) / SR + gap
@@ -706,3 +709,41 @@ def _squeeze_pauses(pcm, spans, max_pause=0.8, to=0.45):
                 sh += x - a
         return (x - sh) / SR
     return np.concatenate(out), [(mp(a), mp(b)) for a, b in spans]
+
+
+def _beat_line(pcm, spans, li, beat=1.0):
+    """spans[li] 안의 말 덩어리 시작점 간격을 최소 beat초로 벌림. 반환: pcm, spans, 덩어리 시작 시각(그 줄 시작 기준)"""
+    if li >= len(spans):
+        return pcm, spans, []
+    a, b = spans[li]
+    ia, ib = int(a * SR), int(b * SR)
+    win = int(SR * 0.01)
+    seg = pcm[ia:ib]
+    n = len(seg) // win
+    env = np.abs(seg[:n * win]).reshape(n, win).max(axis=1) > 0.012
+    onsets, q = [], 99
+    for i, v in enumerate(env):
+        if v and q >= 12:          # 0.12초 이상 조용하다가 소리 시작
+            onsets.append(i * win)
+        q = 0 if v else q + 1
+    if not onsets:
+        return pcm, spans, []
+    parts, last, shift, ins, beats = [], 0, 0, [], []
+    for k, o in enumerate(onsets):
+        if k:
+            want = beats[-1] + beat
+            cur = (o + shift) / SR
+            if cur < want:
+                add = int((want - cur) * SR)
+                g = o - int(0.06 * SR)                 # 소리 바로 앞 조용한 곳에 끼움
+                parts.append(seg[last:g]); parts.append(np.zeros(add, dtype=seg.dtype)); last = g
+                ins.append((ia + g, add)); shift += add
+        beats.append((o + shift) / SR)
+    parts.append(seg[last:])
+    new = np.concatenate([pcm[:ia]] + parts + [pcm[ib:]])
+
+    def mp(t):
+        x = int(t * SR)
+        return (x + sum(k for g, k in ins if x > g)) / SR
+    spans2 = [(mp(x), mp(y)) if i != li else (x, mp(y)) for i, (x, y) in enumerate(spans)]
+    return new, spans2, beats

@@ -126,6 +126,7 @@ scenes:
   - 오리
   answer: 1
   countdown_on: 2
+  beat_line: 2
   reveal_on: 3
   narration:
   - 바로 문제 하나 갈게요. 압구정의 압, 무슨 뜻일까요?
@@ -241,6 +242,7 @@ scenes:
   - 열 개의 마을
   answer: 1
   countdown_on: 2
+  beat_line: 2
   reveal_on: 3
   narration:
   - 두 번째 문제. 왕십리는 왜 왕십리일까요?
