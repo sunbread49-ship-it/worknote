@@ -31,11 +31,15 @@ def t_latitude(v, th, dur):
         col = acc if r.get("hl") else "#9FB4E8"
         rings += (f'<ellipse id="g{i}" cx="{cx}" cy="{y:.0f}" rx="{hw:.0f}" ry="{hw * 0.2:.0f}" fill="none" stroke="{col}" stroke-width="{7 if r.get("hl") else 5}" opacity="0"/>'
                   f'<circle id="d{i}" r="{14 if r.get("hl") else 11}" fill="{col}" opacity="0" style="filter:drop-shadow(0 0 10px {col})"/>')
-        labels += (f'<div id="l{i}" class="abs lab" style="top:{y - 38:.0f}px"><span class="ln" style="background:{col}"></span>'
+        order = sorted(range(len(rows)), key=lambda j: -rows[j]["lat"])
+        ly = 290 + order.index(i) * (560 / max(1, len(rows) - 1))
+        rings += f'<line id="ld{i}" x1="{cx + hw:.0f}" y1="{y:.0f}" x2="1060" y2="{ly + 30:.0f}" stroke="{col}" stroke-width="3" opacity="0"/>'
+        labels += (f'<div id="l{i}" class="abs lab" style="top:{ly - 20:.0f}px"><span class="ln" style="background:{col}"></span>'
                    f'<b>{_esc(r["label"])}</b><em id="n{i}" style="color:{col}">0</em><small>km/h</small></div>')
         T = r["T"]
         js += (f'tl.fromTo("#g{i}",{{opacity:0,attr:{{rx:0}}}},{{opacity:1,attr:{{rx:{hw:.0f}}},duration:.7,ease:"expo.out"}},{T:.3f});\n'
                f'tl.fromTo("#l{i}",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.5,ease:"expo.out"}},{T + 0.1:.3f});\n'
+               f'tl.fromTo("#ld{i}",{{opacity:0}},{{opacity:.8,duration:.3}},{T + 0.2:.3f});\n'
                f'tl.set("#d{i}",{{opacity:1}},{T + 0.2:.3f});\n'
                f'(function(){{const o={{v:0}};tl.to(o,{{v:{r["kmh"]},duration:1.0,ease:"power3.out",onUpdate:()=>{{document.getElementById("n{i}").textContent=Math.round(o.v).toLocaleString("en-US");}}}},{T + 0.2:.3f});}})();\n')
     # 점이 고리를 따라 돎 (속도 ∝ 반지름 → 같은 시간에 한 바퀴)
@@ -58,7 +62,7 @@ def t_impact(v, th, dur):
     tb, tc, tj = _title(v, th)
     import math
     ST = v["stop"]
-    cx, cy, R = 960, 690, 360
+    cx, cy, R = 960, 700, 330
     ticks = ""
     for k in range(0, 15):
         a = math.radians(180 - k * 180 / 14)
@@ -77,10 +81,10 @@ def t_impact(v, th, dur):
 <div id="cap" class="abs">{_esc(v.get('caption', '서울의 자전 속도'))}</div></div>
 <div id="flash" class="abs" style="inset:0;background:#fff;opacity:0"></div>
 <div id="fly" class="abs">{_esc(v.get('fly', '그 위의 모든 건 계속 1,330km/h →'))}</div>"""
-    css = tc + f"""#read{{left:0;right:0;top:720px;text-align:center;font-size:130px;color:{ink};font-family:"Pretendard";}}
+    css = tc + f"""#read{{left:0;right:0;top:470px;text-align:center;font-size:120px;color:{ink};font-family:"Pretendard";}}
 #read small{{font-size:48px;color:{sub};}}
-#cap{{left:0;right:0;top:250px;text-align:center;font-size:44px;color:{sub};}}
-#fly{{left:0;right:0;top:880px;text-align:center;font-size:62px;color:{acc};opacity:0;}}"""
+#cap{{left:0;right:0;top:200px;text-align:center;font-size:44px;color:{sub};}}
+#fly{{left:0;right:0;top:760px;text-align:center;font-size:62px;color:{acc};opacity:0;}}"""
     deg = 1330 / 1400 * 180
     js = tj + f"""const K={{v:0}};
 tl.to(K,{{v:1330,duration:1.4,ease:"power2.out",onUpdate:()=>{{document.getElementById('kmh').textContent=Math.round(K.v).toLocaleString('en-US');}}}},0.4);
@@ -100,11 +104,11 @@ tl.fromTo("#fly",{{opacity:0,x:-160,filter:"blur(10px)"}},{{opacity:1,x:0,filter
 
 # ── 3. 관성: 버스 급정거 → 지구 급정거 ─────────────────────
 def _person(x, y, s, col, pid):
-    return (f'<g id="{pid}" transform="translate({x} {y})"><g class="pp" style="transform-origin:0px 0px">'
+    return (f'<g transform="translate({x} {y})"><g id="{pid}"><g class="pp" style="transform-origin:0px 0px">'
             f'<circle cx="0" cy="{-s * 1.55:.0f}" r="{s * 0.28:.0f}" fill="{col}"/>'
             f'<rect x="{-s * 0.22:.0f}" y="{-s * 1.25:.0f}" width="{s * 0.44:.0f}" height="{s * 0.8:.0f}" rx="{s * 0.18:.0f}" fill="{col}"/>'
             f'<rect x="{-s * 0.2:.0f}" y="{-s * 0.5:.0f}" width="{s * 0.15:.0f}" height="{s * 0.5:.0f}" rx="6" fill="{col}"/>'
-            f'<rect x="{s * 0.05:.0f}" y="{-s * 0.5:.0f}" width="{s * 0.15:.0f}" height="{s * 0.5:.0f}" rx="6" fill="{col}"/></g></g>')
+            f'<rect x="{s * 0.05:.0f}" y="{-s * 0.5:.0f}" width="{s * 0.15:.0f}" height="{s * 0.5:.0f}" rx="6" fill="{col}"/></g></g></g>')
 
 
 def t_inertia(v, th, dur):
@@ -128,14 +132,14 @@ def t_inertia(v, th, dur):
     body = f"""<div id="pa" class="abs" style="inset:0"><svg class="abs" style="inset:0" viewBox="0 0 1920 1080">
 <rect x="0" y="830" width="1920" height="12" fill="{sub}"/>
 <g id="road">{''.join(f'<rect x="{k * 240}" y="880" width="120" height="10" fill="{sub}" opacity=".6"/>' for k in range(10))}</g>
-<g id="busw" transform="translate(700 600)">{bus}{_person(300, 140, 90, '#13203F', 'rider')}</g></svg>
+<g transform="translate(700 600)"><g id="busw">{bus}{_person(300, 140, 90, '#13203F', 'rider')}</g></g></svg>
 <div id="la" class="abs tagc">버스 급정거 · 시속 50km</div></div>
 <div id="pb" class="abs" style="inset:0;opacity:0"><svg class="abs" style="inset:0" viewBox="0 0 1920 1080">
-<path d="M -200 1300 A 1500 520 0 0 1 2120 1300" fill="#1E3A2A" stroke="#3FAF5F" stroke-width="10"/>
+<rect x="0" y="800" width="1920" height="280" fill="#1E3A2A"/><rect x="0" y="796" width="1920" height="10" fill="#3FAF5F"/>
 <g id="objs">{objs}</g>
 <g id="lines" opacity="0">{''.join(f'<rect x="{100 + (k * 137) % 1500}" y="{560 + (k * 53) % 260}" width="{180 + (k * 31) % 160}" height="6" rx="3" fill="{ink}" opacity=".5"/>' for k in range(14))}</g></svg>
 <div id="lb" class="abs tagc">지구 급정거 · 시속 1,330km</div>
-<div id="lc" class="abs tagc" style="top:220px;color:{acc};font-size:90px;opacity:0">동쪽으로 →</div></div>"""
+<div id="lc" class="abs tagc" style="top:330px;color:{acc};font-size:120px;opacity:0">동쪽으로 →</div></div>"""
     css = f""".tagc{{left:0;right:0;top:120px;text-align:center;font-size:72px;font-family:"Pretendard";}}"""
     js = f"""tl.fromTo("#busw",{{x:-1400}},{{x:0,duration:{max(0.8, A - 0.2):.2f},ease:"power2.out"}},0.1);
 tl.to("#road",{{x:-480,duration:{A:.2f},ease:"power2.out"}},0);
@@ -192,7 +196,7 @@ def t_orbit(v, th, dur):
 <div id="hc" class="abs"><span style="color:#FF8A4C">낮 쪽 · 타들어 감</span> &nbsp;|&nbsp; <span style="color:#7FC8FF">밤 쪽 · 얼어붙음</span></div>"""
     css = f"""#big{{left:0;right:0;top:80px;text-align:center;font-size:96px;color:{ink};}}
 #dn{{left:0;top:0;font-family:"Pretendard";font-size:52px;padding:6px 22px;border-radius:14px;background:{acc};color:#111;opacity:0;}}
-#hc{{left:0;right:0;top:900px;text-align:center;font-size:56px;font-family:"Pretendard";opacity:0;}}"""
+#hc{{left:0;right:0;top:770px;text-align:center;font-size:56px;font-family:"Pretendard";opacity:0;}}"""
     js = f"""tl.fromTo("#big",{{opacity:0,scale:1.3,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:.35,ease:"power4.out"}},0.2);
 const S={{a:0.0}};
 function pos(){{const a=S.a, x={cx}+{RX}*Math.cos(a), y={cy}+{RY}*Math.sin(a);
