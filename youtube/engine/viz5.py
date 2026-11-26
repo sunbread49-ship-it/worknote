@@ -661,7 +661,7 @@ class SpeedRace(Viz):
                 continue
             st = self.ls(ln.get("on", 1), ln.get("offset", 0))
             prog = (t - st) * 0.12 * (ln["kmh"] / vmax) * 8
-            x = x0 + (x1 - x0) * (min(1.0, prog) if ln.get("kind") == "me" else min(1.2, prog))
+            x = x0 + (x1 - x0) * (min(1.0, prog) if ln.get("kind") == "me" else min(ln["kmh"] / vmax, prog))
             if ln.get("kind") == "me":
                 im = self.mascot(110)
                 for k in range(8):

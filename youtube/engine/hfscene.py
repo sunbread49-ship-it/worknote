@@ -213,7 +213,7 @@ def t_equation(v, th, dur):
     row = ""
     for i, p in enumerate(parts):
         if i:
-            row += f'<div id="plus{i}" class="op">+</div>'
+            row += f'<div id="plus{i}" class="op">{_esc(v.get("op", "+"))}</div>'
         row += tile(i, p)
     row += '<div id="eq" class="op">=</div>' + f'<div id="res" class="tile res">{_esc(v["answer"])}</div>'
     signs = "".join(f'<div id="s{i}" class="sign">{_esc(x)}</div>' for i, x in enumerate(v.get("signs", [])))
@@ -271,7 +271,7 @@ def t_globe3d(v, th, dur):
     js = f"""
 const W=1920,H=1080, cv=document.getElementById('gl');
 const R=new THREE.WebGLRenderer({{canvas:cv,antialias:true,preserveDrawingBuffer:true}}); R.setSize(W,H,false);
-const sc=new THREE.Scene(); const cam=new THREE.PerspectiveCamera(30,W/H,0.1,100); cam.position.set(0,0,{8.2 / float(v.get('zoom', 1)):.3f});
+const sc=new THREE.Scene(); const cam=new THREE.PerspectiveCamera(30,W/H,0.1,100); cam.position.set(0,{float(v.get('cam_y', -0.35)):.2f},{8.2 / float(v.get('zoom', 0.9)):.3f});
 // 별(시드 고정)
 let sd=7; const rnd=()=>{{sd=(sd*16807)%2147483647;return sd/2147483647;}};
 const sg=new THREE.BufferGeometry(); const sp=[]; for(let i=0;i<2500;i++){{const a=rnd()*6.283,b=Math.acos(2*rnd()-1),r=40;sp.push(r*Math.sin(b)*Math.cos(a),r*Math.sin(b)*Math.sin(a),r*Math.cos(b));}}
