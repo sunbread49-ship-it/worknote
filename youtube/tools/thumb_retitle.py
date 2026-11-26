@@ -207,8 +207,8 @@ def make_s3(it):   # 왼쪽 검은 패널에 문구 세로로 크게 · 오른�
 
 def make_s4(it):   # 남색 톤 사진 · 위 흰 줄 · 아래 검은 상자 속 노랑 결말 · 말풍선 가운데 왼쪽
     f = photo_tint(it["photo"], (20, 50, 140), dark=0.5)
-    l1 = TH.fit(it["l1"], 160, 1800, color=WHITE, hl=it["hl"], hl_color=YEL)
-    TH.shadowed(f, l1, (W / 2, 60), "mt")
+    l1 = TH.fit(it["l1"], 200, 1800, color=WHITE, hl=it["hl"], hl_color=YEL)
+    TH.shadowed(f, l1, (W / 2, it.get("l1_y", 330)), "mm")   # 11/26: 조금 크게 · 가운데보다 살짝 위
     l2 = TH.fit(it["l2"], 190, 1700, color=YEL, hl=it["hl"], hl_color=RED)
     box = Image.new("RGBA", (l2.width + 100, l2.height + 50), (0, 0, 0, 0))
     ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 30, fill=(8, 10, 16, 235), outline=YEL + (255,), width=6)
