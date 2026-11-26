@@ -214,8 +214,10 @@ def make_s4(it):   # 남색 톤 사진 · 위 흰 줄 · 아래 검은 상자 �
     ImageDraw.Draw(box).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 30, fill=(8, 10, 16, 235), outline=YEL + (255,), width=6)
     f.alpha_composite(box, (int(W / 2 - box.width / 2), H - box.height - 60))
     TH.shadowed(f, l2, (W / 2, H - box.height - 60 + 25), "mt")
-    bb = bubble(it["bubble"])   # 11/26 사용자: S4 말풍선은 항상 가운데 오른쪽
-    TH.shadowed(f, bb, (W - bb.width - 70, 300))
+    bb = bubble(it["bubble"])   # 11/26 사용자: S4 말풍선은 가운데 오른쪽 · 아래 상자 바로 위에 붙여 말하듯
+    box_top = H - box.height - 60
+    box_right = int(W / 2 + box.width / 2)
+    TH.shadowed(f, bb, (min(W - bb.width - 40, box_right - bb.width + 60), box_top - bb.height + 30))
     b = badge(it.get("badge", "결말 시리즈"))
     f.alpha_composite(b, (W - b.width - 40, 340))
     return f.convert("RGB")
