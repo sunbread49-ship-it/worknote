@@ -558,5 +558,145 @@
   "at": "2026-11-26T19:50",
   "note": "ep025_kospi_fund 쇼츠9",
   "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "VLYcgWN-vOY",
+  "at": "2026-11-27T15:50",
+  "note": "ep026_samsung_minus40 long",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "MzIa2fkB8TE",
+  "at": "2026-11-27T15:50",
+  "note": "ep026_samsung_minus40 쇼츠1",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "bBsz04filjU",
+  "at": "2026-11-27T15:50",
+  "note": "sci05_earth_tunnel long",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "Zygdtgokluw",
+  "at": "2026-11-27T15:50",
+  "note": "sci05_earth_tunnel 쇼츠1",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "3k8pj01uM6o",
+  "at": "2026-11-27T16:20",
+  "note": "ep026_samsung_minus40 쇼츠2",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "2SAMIGYDp3E",
+  "at": "2026-11-27T16:20",
+  "note": "sci05_earth_tunnel 쇼츠2",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "JPBuDlVI8eU",
+  "at": "2026-11-27T16:50",
+  "note": "ep026_samsung_minus40 쇼츠3",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "YEpRQXfHijA",
+  "at": "2026-11-27T16:50",
+  "note": "sci05_earth_tunnel 쇼츠3",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "BNyO5CxDjVA",
+  "at": "2026-11-27T17:20",
+  "note": "ep026_samsung_minus40 쇼츠4",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "4IcEs0mSQhA",
+  "at": "2026-11-27T17:20",
+  "note": "sci05_earth_tunnel 쇼츠4",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "hwXl53FPcXA",
+  "at": "2026-11-27T17:50",
+  "note": "ep026_samsung_minus40 쇼츠5",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "JUrTbJAWzD8",
+  "at": "2026-11-27T17:50",
+  "note": "sci05_earth_tunnel 쇼츠5",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "v3YnyRBMrSY",
+  "at": "2026-11-27T18:20",
+  "note": "ep026_samsung_minus40 쇼츠6",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "h3kk2lnzSBM",
+  "at": "2026-11-27T18:20",
+  "note": "sci05_earth_tunnel 쇼츠6",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "i2vZLJnkOIg",
+  "at": "2026-11-27T18:50",
+  "note": "ep026_samsung_minus40 쇼츠7",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "ArEQuaD49QY",
+  "at": "2026-11-27T18:50",
+  "note": "sci05_earth_tunnel 쇼츠7",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "IE68uBFdQdk",
+  "at": "2026-11-27T19:20",
+  "note": "ep026_samsung_minus40 쇼츠8",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "8Eeh92eOrJA",
+  "at": "2026-11-27T19:20",
+  "note": "sci05_earth_tunnel 쇼츠8",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "e7n9SL35V_M",
+  "at": "2026-11-27T19:50",
+  "note": "ep026_samsung_minus40 쇼츠9",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "efAx4aBEG5w",
+  "at": "2026-11-27T19:50",
+  "note": "sci05_earth_tunnel 쇼츠9",
+  "done": null
  }
 ]
