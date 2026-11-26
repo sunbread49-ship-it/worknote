@@ -140,8 +140,8 @@ def t05():   # T01 + 다른 동네도(말풍선 + 미니 이름표 3장)
         shadow(f, hanja_card(h, ko, 250), (1000 + i * 280, 120 + (i % 2) * 34), rot=(-4, 3, -2)[i])
     headline(f, [("압구정의", 140, INK), ("'압'은", 190, RED), ("무슨 뜻?", 150, INK)], 90, 200)
     for i, (n, ic) in enumerate((("잠실", "silkworm"), ("왕십리", "walk"), ("여의도", "island"))):
-        shadow(f, mini(n, 250, ic), (1000 + i * 290, 770 + (i % 2) * 16), rot=(3, -2, 2)[i])
-    shadow(f, bubble("이 동네들도 알고 보면 소름", 58), (980, 610))
+        shadow(f, mini(n, 250), (1000 + i * 290, 770 + (i % 2) * 16), rot=(3, -2, 2)[i])
+    shadow(f, bubble("다른 동네들도 알고 보면 소름", 58), (980, 610))
     return f
 
 
