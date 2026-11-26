@@ -108,14 +108,62 @@ def t04():   # 잠실 = 누에 방 + 한자 2장
     return f
 
 
+def mini(name, s=230):
+    c = Image.new("RGBA", (s, int(s * 0.72)), (0, 0, 0, 0))
+    ImageDraw.Draw(c).rounded_rectangle((0, 0, s - 1, c.height - 1), 20, fill=(255, 253, 246, 255), outline=INK + (255,), width=5)
+    n = E._ink(name, MJ, int(s * 0.24), INK)
+    c.alpha_composite(n, ((s - n.width) // 2, int(c.height * 0.14)))
+    q = E._ink("?", MJ, int(s * 0.26), ORG)
+    c.alpha_composite(q, ((s - q.width) // 2, int(c.height * 0.5)))
+    return c
+
+
+def bubble(text, size=64, col=INK, fill=(255, 214, 120)):
+    t = E._ink(text, MJ, size, col)
+    w, h = t.width + 70, t.height + 44
+    b = Image.new("RGBA", (w, h + 40), (0, 0, 0, 0))
+    d = ImageDraw.Draw(b)
+    d.rounded_rectangle((0, 0, w - 1, h - 1), 34, fill=fill + (255,), outline=INK + (255,), width=5)
+    d.polygon([(w * 0.22, h - 4), (w * 0.3, h - 4), (w * 0.2, h + 36)], fill=fill + (255,), outline=INK + (255,))
+    d.line((w * 0.22, h - 3, w * 0.3, h - 3), fill=fill + (255,), width=8)
+    b.alpha_composite(t, (35, 20))
+    return b
+
+
+def t05():   # T01 + 다른 동네도(말풍선 + 미니 이름표 3장)
+    f = base()
+    for i, (h, ko) in enumerate((("狎", "친할 압"), ("鷗", "갈매기 구"), ("亭", "정자 정"))):
+        shadow(f, hanja_card(h, ko, 250), (1000 + i * 280, 120 + (i % 2) * 34), rot=(-4, 3, -2)[i])
+    headline(f, [("압구정의", 140, INK), ("'압'은", 190, RED), ("무슨 뜻?", 150, INK)], 90, 200)
+    for i, n in enumerate(("잠실", "왕십리", "여의도")):
+        shadow(f, mini(n, 250), (1000 + i * 290, 770 + (i % 2) * 16), rot=(3, -2, 2)[i])
+    shadow(f, bubble("이 동네들도 알고 보면 소름", 58), (980, 610))
+    return f
+
+
+def t06():   # T01 + 아래 띠 박스
+    f = base()
+    for i, (h, ko) in enumerate((("狎", "친할 압"), ("鷗", "갈매기 구"), ("亭", "정자 정"))):
+        shadow(f, hanja_card(h, ko, 270), (980 + i * 300, 150 + (i % 2) * 40), rot=(-4, 3, -2)[i])
+    headline(f, [("압구정의", 130, INK), ("'압'은", 175, RED), ("무슨 뜻?", 140, INK)], 90, 130)
+    box = Image.new("RGBA", (1740, 190), (0, 0, 0, 0))
+    ImageDraw.Draw(box).rounded_rectangle((0, 0, 1739, 189), 30, fill=INK + (255,))
+    t = E._ink("잠실 · 왕십리 · 여의도 · 대치", MJ, 74, (255, 255, 255))
+    box.alpha_composite(t, (50, (190 - t.height) // 2))
+    t2 = E._ink("알고 보면 소름", MJ, 74, (255, 214, 120))
+    box.alpha_composite(t2, (1740 - t2.width - 50, (190 - t2.height) // 2))
+    shadow(f, box, (90, 820))
+    return f
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     ims = []
-    for k, fn in enumerate((t01, t02, t03, t04), 1):
+    for k, fn in enumerate((t01, t02, t03, t04, t05, t06), 1):
         im = fn().convert("RGB")
         im.save(OUT / f"T0{k}.png")
         ims.append(im.resize((960, 540)))
-    sheet = Image.new("RGB", (1920, 1080), "black")
+    sheet = Image.new("RGB", (1920, 540 * ((len(ims) + 1) // 2)), "black")
     for i, im in enumerate(ims):
         sheet.paste(im, ((i % 2) * 960, (i // 2) * 540))
     sheet.save(OUT / "비교표.jpg", quality=88)
