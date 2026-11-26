@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.18,0:00:02.04,S,그런데 신기한 게 있어요.
+Dialogue: 0,0:00:02.04,0:00:06.14,S,떨어지는 동안, 악어새는 몸이\N둥둥 떠요. 우주인처럼요.
+Dialogue: 0,0:00:06.14,0:00:09.53,S,그리고 한가운데로 갈수록\N몸무게가 줄어요.
+Dialogue: 0,0:00:09.53,0:00:14.22,S,한가운데에선 사방에서 똑같이\N당기니까, 몸무게가 0이 돼요.
+Dialogue: 0,0:00:14.89,0:00:17.90,S,한가운데를 지나면\N점점 느려져요.
+Dialogue: 0,0:00:17.90,0:00:20.91,S,그리고 반대편\N땅끝에서, 딱 멈춰요.
+Dialogue: 0,0:00:21.59,0:00:23.08,S,걸린 시간은, 딱 42분.
+Dialogue: 0,0:00:23.08,0:00:25.57,S,점심 먹고 커피 한\N잔 마실 시간이에요.

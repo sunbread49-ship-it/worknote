@@ -1,0 +1,20 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.22,0:00:01.94,S,러시아 콜라 시추공이에요.
+Dialogue: 0,0:00:01.94,0:00:04.91,S,20년 가까이 파서,\N12km까지 내려갔어요.
+Dialogue: 0,0:00:04.91,0:00:09.75,S,대단하죠? 그런데 지구\N크기에 비하면 0.2%예요.
+Dialogue: 0,0:00:09.75,0:00:13.57,S,사과로 치면, 껍질도\N다 못 뚫은 거예요.
+Dialogue: 0,0:00:14.24,0:00:15.24,S,왜 멈췄을까요?
+Dialogue: 0,0:00:15.24,0:00:16.90,S,바닥이 180도였어요.
+Dialogue: 0,0:00:16.90,0:00:18.56,S,생각보다 훨씬 뜨거웠죠.
+Dialogue: 0,0:00:18.56,0:00:21.89,S,바위가 엿처럼 말랑해져서,\N구멍이 자꾸 막혔어요.
+Dialogue: 0,0:00:21.89,0:00:24.21,S,지금은 쇠뚜껑으로\N꽉 막아 놨어요.
