@@ -36,56 +36,56 @@ chapter_titles:
   되찾은 이름: 1946년 · 을지로 · 충무로 · 명동 · 세종로
   엔딩: 우리 동네 이름은?
 clips:
-- start: 0
-  end: 20.7
+- start: 0.0
+  end: 20.9
   hook: '압구정의 ''압''
 
     무슨 뜻일까?'
   hl: 압
-- start: 28.4
-  end: 57.9
+- start: 28.6
+  end: 58.1
   hook: '압구정 =
 
     갈매기와 친한 정자'
   hl: 갈매기
-- start: 58.1
-  end: 91.1
+- start: 58.3
+  end: 91.3
   hook: '잠실의 ''잠''은
 
     누에였다'
   hl: 누에
-- start: 91.3
-  end: 121.4
+- start: 91.5
+  end: 122.2
   hook: '왕십리는
 
     왜 왕십리?'
   hl: 왕십리
-- start: 131.2
-  end: 155.6
+- start: 132.0
+  end: 156.4
   hook: '한강 동네 이름
 
     다 물 얘기'
   hl: 물
-- start: 168.8
-  end: 190.2
+- start: 169.6
+  end: 191.0
   hook: '여의도 =
 
     너나 가져라?'
   hl: 너나
-- start: 205.9
-  end: 236.8
+- start: 206.7
+  end: 237.6
   hook: '강남의 옛 이름은
 
     영동'
   hl: 영동
-- start: 250.6
-  end: 274.5
+- start: 251.4
+  end: 275.3
   hook: '이 다섯 글자면
 
     동네 이름이 읽힌다'
   hl: 다섯 글자
-- start: 274.6
-  end: 312.4
+- start: 275.4
+  end: 313.2
   hook: '을지로 · 충무로 · 명동
 
     원래 일본 이름'
