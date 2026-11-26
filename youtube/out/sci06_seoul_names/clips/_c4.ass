@@ -1,0 +1,26 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.19,0:00:01.04,S,두 번째 문제.
+Dialogue: 0,0:00:01.04,0:00:02.89,S,왕십리는 왜 왕십리일까요?
+Dialogue: 0,0:00:02.89,0:00:04.84,S,3초 드릴게요.
+Dialogue: 0,0:00:04.84,0:00:05.17,S,셋.
+Dialogue: 0,0:00:05.17,0:00:05.49,S,둘.
+Dialogue: 0,0:00:05.49,0:00:06.14,S,하나.
+Dialogue: 0,0:00:06.14,0:00:10.38,S,정답은 2번. 십 리를\N더 가라, 예요.
+Dialogue: 0,0:00:11.02,0:00:15.51,S,조선을 세울 때, 무학대사가 도읍\N터를 찾다가 여기서 멈췄대요.
+Dialogue: 0,0:00:15.51,0:00:16.59,S,여기가 딱이다.
+Dialogue: 0,0:00:16.59,0:00:19.23,S,그때 소를 몰던 노인이\N한마디 했어요.
+Dialogue: 0,0:00:19.23,0:00:21.68,S,미련하기는, 여기서\N십 리를 더 가라.
+Dialogue: 0,0:00:21.68,0:00:22.75,S,그 말대로 십 리,
+Dialogue: 0,0:00:22.75,0:00:25.05,S,4킬로미터쯤 더 가서 찾은 곳이
+Dialogue: 0,0:00:25.05,0:00:27.70,S,지금의 경복궁\N자리라는 전설이에요.
+Dialogue: 0,0:00:27.70,0:00:29.82,S,갈 왕, 열 십, 마을\N리. 왕십리예요.
