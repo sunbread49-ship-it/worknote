@@ -526,11 +526,9 @@ scenes:
   notes:
   - text: 백로가 놀던 한강 나루
     'on': 1
-  - text: 1899 · 우리나라 첫 기차 출발
+  - text: 1899 · 첫 기차 노량진 → 제물포
     'on': 2
     hl: true
-  - text: 노량진 ↔ 제물포(인천)
-    'on': 2
   seal:
     top: '1899'
     big: 첫 기차
@@ -541,6 +539,9 @@ scenes:
   - 1899년, 우리나라 첫 기차가 노량진에서 인천 제물포까지 달렸어요.
   - 배가 서던 나루에서 기차가 서는 역으로. | 이름 그대로, 서울의 출발점이었던 셈이죠.
   photo: sn_noryangjin
+  photo_xy:
+  - 150
+  - 585
 - type: sci_kinetic
   chapter: 한강
   items:
@@ -587,10 +588,8 @@ scenes:
   notes:
   - text: 조선 · 임금의 사냥터 · 군대 사열
     'on': 1
-  - text: 1954~1989 뚝섬 경마장
+  - text: 1954~1989 뚝섬 경마장 → 서울숲
     'on': 2
-  - text: 지금은 서울숲
-    'on': 3
     hl: true
   seal:
     top: 뚝섬
@@ -601,15 +600,37 @@ scenes:
   - 뚝섬은 조선 임금의 사냥터이기도 했어요. 넓은 모래벌판에서 말을 달렸죠.
   - 1954년부터는 경마장이 들어서서, 서른다섯 해 동안 말이 달렸어요.
   - 그 경마장 자리가 지금의 서울숲이에요. | 깃발 꽂던 섬이, 이제는 숲이 된 거죠.
-- type: accent_simple
+  photo_xy:
+  - 150
+  - 585
+- type: hf
   chapter: 한강
-  palette: notyet
-  bg: b
-  ink: a
-  pop: c
-  big: 영동
-  big_size: 170
-  caption: 강남의 옛 이름 · 영등포의 동쪽
+  template: equation
+  theme: paper
+  kicker: 강남의 옛 이름
+  question: 강남 = ?
+  q_hl: '?'
+  answer: 영동
+  parts:
+  - text: 영등포
+    key: 영
+  - text: 동쪽
+    key: 동
+  signs:
+  - 영동대로
+  - 영동시장
+  a0:
+  - 1
+  - 0.1
+  a1:
+  - 1
+  - 3.1
+  a2:
+  - 2
+  - 0.05
+  a3:
+  - 2
+  - 2.2
   narration:
   - 그런데 강남이라는 이름, 사실 꽤 최근 거예요. 1970년대 개발 때 이 동네 이름은 영동이었어요.
   - 영등포의 동쪽이라서 영동. | 지금도 영동대로, 영동시장에 그 흔적이 남아 있죠.

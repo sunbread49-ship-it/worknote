@@ -197,7 +197,60 @@ def t_headline(v, th, dur):
     return body, css, js
 
 
-TEMPLATES = {"quiz": t_quiz, "stat": t_stat, "headline": t_headline}
+def t_equation(v, th, dur):
+    """말 조립 도식 (11/26 사용자: 말만 하고 화면이 멈춰 지루) — 질문 → 큰 답 쾅 → 조각 분해(글자 강조) → 흔적(표지판)
+    kicker, question, answer, parts:[{text, key}], signs:[...]; 시각 A0(질문) A1(답) A2(분해) A3(표지판)"""
+    A0, A1, A2, A3 = v["A0"], v["A1"], v["A2"], v["A3"]
+    def tile(i, p):
+        t = _esc(p["text"]); k = p.get("key", "")
+        if k and k in p["text"]:
+            a, b = p["text"].split(k, 1)
+            t = f'{_esc(a)}<em>{_esc(k)}</em>{_esc(b)}'
+        return f'<div id="p{i}" class="tile">{t}</div>'
+    parts = v["parts"]
+    row = ""
+    for i, p in enumerate(parts):
+        if i:
+            row += f'<div id="plus{i}" class="op">+</div>'
+        row += tile(i, p)
+    row += '<div id="eq" class="op">=</div>' + f'<div id="res" class="tile res">{_esc(v["answer"])}</div>'
+    signs = "".join(f'<div id="s{i}" class="sign">{_esc(x)}</div>' for i, x in enumerate(v.get("signs", [])))
+    body = f"""<div id="kicker" class="abs">{_esc(v.get('kicker', ''))}</div>
+<div id="qq" class="abs">{_hl(v.get('question', ''), v.get('q_hl'), 'mk')}</div>
+<div id="big" class="abs">{_esc(v['answer'])}</div>
+<div id="row" class="abs">{row}</div>
+<div id="signs" class="abs">{signs}</div>"""
+    css = f"""#kicker{{left:0;right:0;top:150px;text-align:center;font-family:"Pen";font-size:80px;color:{th['acc']};}}
+#qq{{left:0;right:0;top:250px;text-align:center;font-size:110px;}}
+#qq span{{display:inline-block;margin:0 .12em;}}
+#big{{left:0;right:0;top:390px;text-align:center;font-size:300px;line-height:1;color:{th['acc']};}}
+#row{{left:0;right:0;top:400px;display:flex;justify-content:center;align-items:center;gap:34px;}}
+.tile{{background:{th['card']};border:6px solid {th['ink']};border-radius:28px;padding:22px 44px;font-size:110px;box-shadow:0 14px 30px rgba(0,0,0,.14);opacity:0;}}
+.tile em{{font-style:normal;color:{th['acc']};}}
+.res{{background:{th['acc']};color:#fff;border-color:{th['acc']};}}
+.op{{font-size:110px;color:{th['sub']};opacity:0;}}
+#signs{{left:0;right:0;top:640px;display:flex;justify-content:center;gap:50px;}}
+.sign{{background:#1F5FB4;color:#fff;font-family:"Pretendard";font-size:72px;padding:16px 40px;border-radius:16px;border:6px solid #fff;box-shadow:0 0 0 4px #1F5FB4,0 14px 26px rgba(0,0,0,.2);opacity:0;}}"""
+    n = len(parts)
+    js = f"""tl.fromTo("#kicker",{{opacity:0,rotation:-5,scale:.8}},{{opacity:1,rotation:-2,scale:1,duration:.5,ease:"back.out(1.6)"}},{A0:.3f});
+tl.fromTo("#qq span",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.18,ease:"power4.out",stagger:.067}},{A0 + 0.1:.3f});
+tl.fromTo("#mk",{{scaleX:0}},{{scaleX:1,duration:.45,ease:"expo.out"}},{A0 + 0.6:.3f});
+tl.fromTo("#big",{{opacity:0,scale:2.4,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:.4,ease:"power4.out"}},{A1:.3f});
+tl.to("#big",{{opacity:0,y:-60,scale:.7,filter:"blur(6px)",duration:.3,ease:"power3.in"}},{A2 - 0.15:.3f});
+tl.to("#qq",{{y:-40,scale:.8,duration:.4,ease:"power2.inOut"}},{A2 - 0.15:.3f});"""
+    for i in range(n):
+        js += f'\ntl.fromTo("#p{i}",{{opacity:0,y:70,scale:.9}},{{opacity:1,y:0,scale:1,duration:.6,ease:"back.out(1.5)"}},{A2 + 0.35 * i:.3f});'
+        if i:
+            js += f'\ntl.fromTo("#plus{i}",{{opacity:0,scale:.5}},{{opacity:1,scale:1,duration:.3,ease:"expo.out"}},{A2 + 0.35 * i - 0.1:.3f});'
+    js += f"""
+tl.fromTo(".tile em",{{color:"{th['ink']}"}},{{color:"{th['acc']}",duration:.3,ease:"power2.out",stagger:.15}},{A2 + 0.35 * n + 0.1:.3f});
+tl.fromTo("#eq",{{opacity:0,scale:.5}},{{opacity:1,scale:1,duration:.3,ease:"expo.out"}},{A2 + 0.35 * n + 0.3:.3f});
+tl.fromTo("#res",{{opacity:0,scale:1.8,rotation:8}},{{opacity:1,scale:1,rotation:0,duration:.45,ease:"back.out(1.8)"}},{A2 + 0.35 * n + 0.5:.3f});
+tl.fromTo(".sign",{{opacity:0,y:50}},{{opacity:1,y:0,duration:.55,ease:"expo.out",stagger:.12}},{A3:.3f});"""
+    return body, css, js
+
+
+TEMPLATES = {"quiz": t_quiz, "stat": t_stat, "headline": t_headline, "equation": t_equation}
 
 
 def build(template, v, theme, dur):
@@ -257,6 +310,10 @@ class HFScene(Editorial):
                 v["S0"] = self.line_start(sp["sub_on"]) + 0.1
             if sp.get("stamp_on"):
                 v["ST"] = self.line_start(sp["stamp_on"]) + 0.2
+        elif tpl == "equation":
+            for k in ("A0", "A1", "A2", "A3"):
+                on, off = sp.get(k.lower(), [1, 0.1])
+                v[k] = self.line_start(on) + off
         elif tpl == "headline":
             v["lines"] = [dict(ln, T=self.line_start(ln.get("on", i + 1)) + ln.get("offset", 0.05)) for i, ln in enumerate(sp["lines"])]
         return v
@@ -288,6 +345,9 @@ class HFScene(Editorial):
         if sp["template"] == "stat":
             v = self._vars()
             return [(v["T0"], "count_roll", 0.6), (v["T0"] + 1.1, "boom", 0.6)] + ([(v["ST"], "pop", 0.6)] if "ST" in v else [])
+        if sp["template"] == "equation":
+            v = self._vars()
+            return [(v["A1"], "boom", 0.5), (v["A2"], "pop", 0.4), (v["A3"], "whoosh", 0.4)]
         if sp["template"] == "headline":
             return [(ln["T"], "whoosh", 0.4) for ln in self._vars()["lines"]]
         return []
