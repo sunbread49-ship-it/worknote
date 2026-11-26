@@ -1,0 +1,358 @@
+title: 삼성전자 반토막, 과거 -40% 땐 어땠을까? 고점에 버틴 사람 vs 바닥에 산 사람
+series_tag: 폭락장 데이터
+theme: 08
+pace: punchy
+clip_theme: stock
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    HBM4: 에이치비엠 포
+    HBM: 에이치비엠
+    D램: 디램
+    CXMT: 씨엑스엠티
+    TSMC: 티에스엠씨
+    AI: 에이아이
+    362,500원: 삼십육만 이천오백 원
+    49,900원: 사만 구천구백 원
+bgm:
+  volume: 0.22
+  chapters:
+    인트로: tense
+    두 사람: drive
+    삼성전자는 어떤 회사: drive
+    금방 돌아온 때: hope
+    더 빠진 때: tense
+    두 사람의 성적표: drive
+    그렇다면 지금은: tense
+    결말: hope
+chapter_titles:
+  인트로: 36만 원 → 17만 원 · 반토막
+  두 사람: 고점에 버틴 사람 vs -40%에 산 사람
+  삼성전자는 어떤 회사: 3층 백화점 · 강점과 약점
+  금방 돌아온 때: 2008 금융위기 · 2022 반도체 겨울 · 1992
+  더 빠진 때: 1996 IMF · 2000 닷컴
+  두 사람의 성적표: 원금 회복까지 · 3년 뒤
+  그렇다면 지금은: -40% 찍고 얼마나 더 · 13만 원 · 10만 원
+  결말: 볼 숫자는 메모리값 · 3년짜리 돈
+youtube:
+  title: 삼성전자 반토막, 과거 -40% 땐 어땠을까? 고점에 버틴 사람 vs 바닥에 산 사람
+  description: |-
+    삼성전자가 6월 고점 362,500원에서 17만 원대까지, 반토막이 났습니다.
+    과거에도 삼성전자가 고점에서 -40% 넘게 빠진 적이 있었어요. 그때 ① 고점에 사서 끝까지 버틴 사람 ② -40% 찍은 날 새로 산 사람은 어떻게 됐을까요?
+
+    ✔ 2008 금융위기 · 2022 반도체 겨울 · 1992: 금방 돌아온 때
+    ✔ 1996 IMF · 2000 닷컴: -40%에서 또 반이 빠진 때
+    ✔ 고점에 버틴 사람이 원금을 찾기까지 걸린 시간
+    ✔ 그렇다면 지금은? 13만 원 · 10만 원이 의미하는 것
+
+    자료: 삼성전자 일간 종가(네이버 금융, 액면분할 반영) · 삼성전자 2026년 3분기 실적 발표 · 언론 보도(2026.10~11)
+    ※ 계산은 배당 · 세금 제외. 본 영상은 투자 교육 목적이며 매수 · 매도 추천이 아닙니다. 과거 수익률이 미래 수익을 보장하지 않습니다.
+  tags: [삼성전자, 삼성전자주가, 삼성전자반토막, 반도체, 국내주식, 코스피, 폭락장, 메모리, HBM, 결말시리즈, 주식악어새]
+scenes:
+# ── 인트로 ──
+- type: kinetic
+  chapter: 인트로
+  bg: {kind: video, file: market_crash_v, dark: 0.6, blur: 3}
+  items:
+  - {text: "36만 원 →\n17만 원", highlight: 17만 원, 'on': 1, size: 160}
+  - {text: 국민주식 삼성전자 반토막, highlight: 반토막, 'on': 2, size: 110}
+  narration:
+  - 삼성전자 갖고 계신 분들, 요즘 앱 열기 무서우시죠? 36만 원 하던 주식이 17만 원이 됐어요.
+  - 며칠 전엔 하루에만 10% 가까이 빠졌죠. 국민주식이 반토막이에요.
+- type: chart
+  chapter: 인트로
+  chart:
+    series: samsung
+    start: '2024-06-03'
+    end: '2026-11-26'
+    color: [240, 84, 84]
+    draw: {'on': 1, dur: 2.2}
+    marks:
+    - {date: '2024-11-14', label: '바닥 49,900원', sub: '2024.11', 'on': 1, offset: 0.6, dy: 60, dx: 60, color: down}
+    - {date: '2026-06-18', label: '고점 362,500원', sub: 7배, 'on': 1, offset: 1.6, dy: -70, dx: -80, color: gold}
+    - {date: '2026-11-25', label: '166,900원', sub: '-54%', 'on': 2, dy: 60, dx: -90, color: down, size: 36}
+    source: '자료: 삼성전자 일간 종가 (액면분할 반영 · 11.26 기준)'
+    title: 삼성전자 · 2024 ~ 2026
+  narration:
+  - 2년 전 4만 9천 원이던 주식이, 1년 반 만에 7배가 됐다가,
+  - 다섯 달 만에 반이 날아갔어요.
+# ── 두 사람 ──
+- type: duel
+  chapter: 두 사람
+  heading: 오늘의 두 사람
+  highlight: 두 사람
+  left: {title: 버팀이, value: 고점에 샀다, sub: '팔지 않고 끝까지 버팀', color: down, 'on': 1}
+  right: {title: 줍줍이, value: '-40%에 샀다', sub: '무서울 때 새로 들어감', color: up, 'on': 2}
+  narration:
+  - 오늘은 두 사람을 따라가 볼게요. 첫 번째 버팀이. 꼭대기에서 사서, 팔지 않고 버티는 사람이에요. 지금 많은 분들이 여기 계시죠.
+  - 두 번째 줍줍이. 고점에서 40% 빠진 날, 무서울 때 새로 들어간 사람이에요.
+- type: timeline
+  chapter: 두 사람
+  kicker: 1990 ~ 2026 · 삼성전자
+  title: 고점에서 -40%, 과거에도 다섯 번
+  highlight: 다섯 번
+  ticks:
+  - {label: '1992', sub: 증시 침체}
+  - {label: '1996', sub: IMF 직전}
+  - {label: '2000', sub: 닷컴 버블}
+  - {label: '2008', sub: 금융위기}
+  - {label: '2022', sub: 반도체 겨울}
+  - {label: '2026', sub: 지금, hl: true}
+  narration:
+  - 삼성전자가 고점에서 40% 넘게 빠진 건 과거에도 다섯 번 있었어요.
+  - 그때 버팀이와 줍줍이는 어떻게 됐을까요? 한 번은 둘 다 웃었고, 한 번은 둘 다 울었어요.
+- type: title
+  kicker: 폭락장 데이터 · 삼성전자 36년
+  title: "삼성전자 -40%\n그때 사람들은?"
+  highlight: 그때 사람들은?
+  subtitle: 버팀이 vs 줍줍이 · 1992 · 1996 · 2000 · 2008 · 2022
+  narration:
+  - 결말 시리즈, 시작합니다.
+# ── 회사 ──
+- type: kinetic
+  chapter: 삼성전자는 어떤 회사
+  bg: {kind: photo, file: samsung_bldg, dark: 0.62, blur: 2}
+  items:
+  - {text: "1층 반도체\n컴퓨터의 기억력", highlight: 반도체, 'on': 1, size: 110}
+  - {text: "2층 갤럭시\n3층 TV · 가전", highlight: 갤럭시, 'on': 2, size: 110}
+  narration:
+  - 그 전에, 삼성전자가 뭘 파는 회사인지 딱 30초만 볼게요. 큰 백화점이라고 생각해 보세요. 1층은 반도체. 컴퓨터와 에이아이가 기억하는 데 쓰는 메모리 칩이에요. 돈의 대부분이 여기서 나와요.
+  - 2층은 갤럭시 스마트폰, 3층은 TV와 가전이에요. 그러니까 삼성전자 주가는, 결국 1층 메모리 장사에 달려 있어요.
+- type: scale
+  chapter: 삼성전자는 어떤 회사
+  heading: 지금 삼성전자의 저울
+  highlight: 저울
+  left: {label: 좋은 점, value: 역대 최대 이익, weight: 1.0, sub: '3분기 영업이익 107조 · HBM4 엔비디아 공급 예정', color: [90, 220, 150], 'on': 1}
+  right: {label: 걱정거리, value: 메모리값 꺾임, weight: 1.15, sub: '낸드 값 -20% · 중국 추격 · 파운드리 적자', color: [255, 90, 80], 'on': 2}
+  note: 주가는 실적보다 먼저 움직인다
+  note_hl: 먼저
+  note_on: 3
+  narration:
+  - 지금 저울에 올려 보면요. 좋은 점은 분명해요. 3분기에 영업이익 107조, 역대 최대예요. 에이아이용 고급 메모리도 엔비디아에 공급할 예정이고요.
+  - 걱정거리도 있어요. 메모리값이 꺾이기 시작했고, 중국이 무섭게 쫓아오고, 남의 칩을 만들어 주는 파운드리는 아직 고전 중이에요.
+  - 그리고 주가는, 늘 실적보다 먼저 움직여요. 그래서 과거를 보는 거예요.
+# ── 금방 돌아온 때 ──
+- type: punch
+  chapter: 금방 돌아온 때
+  big: +85%
+  label: 2008년 10월 · 금융위기 · 줍줍이의 1,000만 원 → 1년 뒤
+  video: {file: money_count_v, dark: 0.55, blur: 2}
+  tone: up
+  'on': 1
+  sub: '-40% 찍은 그날이 바닥 · 1,000만 원 → 1,848만 원'
+  sub_on: 1
+  narration:
+  - 2008년 금융위기. 줍줍이가 -40% 찍은 날 1,000만 원을 넣었는데, 그날이 바로 바닥이었어요.
+  - 1년 뒤 1,848만 원. 85% 수익이었어요.
+- type: chart
+  chapter: 금방 돌아온 때
+  chart:
+    series: samsung
+    start: '2008-05-15'
+    end: '2009-09-30'
+    base: 1000
+    unit: won
+    color: [70, 210, 150]
+    draw: {'on': 1, dur: 2.2}
+    marks:
+    - {date: '2008-10-24', label: '바닥 533만', sub: '-47%', 'on': 1, offset: 1.0, dy: 70, dx: 60, color: down}
+    - {date: '2009-08-24', label: 원금 회복, sub: 1년 3개월, 'on': 2, dy: -60, dx: -90, color: up, size: 36}
+    source: '자료: 삼성전자 일간 종가 (배당 제외)'
+    title: 2008년 5월 고점에 산 버팀이의 1,000만 원 (만 원)
+  narration:
+  - 버팀이는요? 고점에서 산 1,000만 원이 533만 원까지 줄었어요. 반 가까이요.
+  - 그래도 1년 3개월 만에 원금을 되찾았어요. 이때는 둘 다 웃었죠.
+- type: chain
+  chapter: 금방 돌아온 때
+  kicker: 2022년 반도체 겨울
+  title: 버팀이에겐 4년 9개월
+  highlight: 4년 9개월
+  nodes:
+  - {label: 2021.1 고점, sub: '91,000원', text: 고점, 'on': 1}
+  - {label: 2024.11 바닥, sub: '49,900원 · -45%', text: 바닥, hl: true, 'on': 1, offset: 1.0}
+  - {label: '2025.10', sub: 원금 회복, text: 회복, 'on': 2}
+  links:
+  - {text: 3년 10개월, 'on': 1, offset: 0.6}
+  - {text: 11개월, 'on': 2}
+  note: 줍줍이(-40%에 산 사람) 3년 뒤 1,535만 원
+  note_hl: 1,535만 원
+  note_on: 3
+  narration:
+  - 2022년 반도체 겨울은 달랐어요. 2021년 1월 9만 1천 원에 산 버팀이는, 바닥까지 3년 10개월을 끌려 내려갔어요.
+  - 원금을 찾은 건 2025년 10월. 무려 4년 9개월이 걸렸어요.
+  - 그 사이 -40%에 들어간 줍줍이는 3년 뒤 1,535만 원. 같은 회사인데 결말이 이렇게 달라요.
+- type: kpi
+  chapter: 금방 돌아온 때
+  bg: {kind: photo, file: chip_dark, dark: 0.72, blur: 3}
+  kpis:
+  - {label: 1992년 줍줍이 · 1년 뒤, value: '1,565만', color: red, 'on': 1}
+  - {label: 3년 뒤, value: '5,550만', color: navy, 'on': 2}
+  bars:
+  - {label: 처음, value: 1000, text: '1,000만', hl: false}
+  - {label: 1년 뒤, value: 1565, text: '1,565만', hl: false}
+  - {label: 3년 뒤, value: 5550, text: '5,550만', hl: true}
+  bars_on: 1
+  vmax: 6000
+  narration:
+  - 1992년에 들어간 줍줍이는 대박이 났어요. 1년 뒤 1,565만 원,
+  - 3년 뒤엔 5,550만 원. 다섯 배가 넘었죠.
+# ── 더 빠진 때 (2:30 훅) ──
+- type: kinetic
+  chapter: 더 빠진 때
+  bg: {kind: video, file: clock_anxiety_v, dark: 0.65, blur: 3}
+  items:
+  - {text: "그런데\n두 번은 달랐다", highlight: 달랐다, 'on': 1, size: 150}
+  narration:
+  - 그런데 두 번은 완전히 달랐어요. 줍줍이가 들어간 뒤에, 거기서 또 반이 날아갔거든요.
+- type: punch
+  chapter: 더 빠진 때
+  big: 279만 원
+  label: 1996년 · 고점에 산 버팀이의 1,000만 원 · IMF 바닥에서
+  photo: {file: crash_screen, dark: 0.6, focus: [0.5, 0.4]}
+  tone: down
+  'on': 1
+  sub: 고점 대비 -72% · 원금까지 3년 8개월
+  sub_on: 2
+  shake:
+  - {offset: 0.1, amp: 12, dur: 0.4}
+  narration:
+  - 1995년 꼭대기에서 산 버팀이의 1,000만 원은, 1997년 IMF 바닥에서 279만 원이 됐어요. 72%가 사라진 거예요.
+  - 원금을 찾기까지 3년 8개월. 그 사이 나라가 부도 위기를 맞았죠.
+- type: ticket
+  chapter: 더 빠진 때
+  kicker: 1996년 · -40%에 들어간 줍줍이
+  title: 거기서 또
+  label: 1996.5 매수 → 1997.12 바닥
+  value: '-52'
+  unit: '%'
+  stub: "1년 뒤 848만 원\n3년 뒤 1,246만 원\n바닥인 줄 알았는데"
+  highlight: '-52%'
+  narration:
+  - 줍줍이도 안전하지 않았어요. -40%에 들어갔는데, 거기서 또 52%가 빠졌어요.
+  - 바닥인 줄 알고 샀는데, 지하실이 하나 더 있었던 거죠.
+- type: chart
+  chapter: 더 빠진 때
+  chart:
+    series: samsung
+    start: '2000-09-15'
+    end: '2003-09-22'
+    base: 1000
+    unit: won
+    color: [240, 84, 84]
+    draw: {'on': 1, dur: 2.4}
+    marks:
+    - {date: '2000-10-18', label: '628만', sub: '한 달 만에 -37%', 'on': 1, offset: 1.0, dy: 70, dx: 60, color: down}
+    - {date: '2001-09-24', label: '1년 뒤 754만', sub: 아직 마이너스, 'on': 2, dy: 60, dx: 0, color: down, size: 34}
+    source: '자료: 삼성전자 일간 종가 (배당 제외)'
+    title: 2000년 9월 닷컴 버블 · 줍줍이의 1,000만 원 (만 원)
+  narration:
+  - 2000년 닷컴 버블 때도 마찬가지예요. 줍줍이가 들어가고 한 달 만에 37%가 더 빠졌어요.
+  - 1년 뒤에도 754만 원. 두 번 다 공통점이 있어요. 반도체가 최고 호황이라던 직후였다는 거예요.
+# ── 성적표 ──
+- type: lollipop
+  chapter: 두 사람의 성적표
+  title: 버팀이, 원금 찾기까지
+  highlight: 원금
+  kicker: 고점에 산 1,000만 원이 다시 1,000만 원이 될 때까지
+  'on': 1
+  step: 0.4
+  top: 380
+  row_h: 60
+  title_y: 140
+  vmax: 5
+  rows:
+  - {label: 2022 반도체 겨울, value: 4.7, text: 4년 9개월, hl: true}
+  - {label: 1996 IMF, value: 3.7, text: 3년 8개월}
+  - {label: 1992 증시 침체, value: 3.6, text: 3년 7개월}
+  - {label: 2000 닷컴, value: 1.7, text: 1년 9개월}
+  - {label: 2008 금융위기, value: 1.3, text: 1년 3개월}
+  narration:
+  - 버팀이의 성적표예요. 결국 다섯 번 모두 원금은 찾았어요.
+  - 하지만 짧게는 1년 3개월, 길게는 4년 9개월. 그 시간을 견딜 수 있느냐가 문제였죠.
+- type: columns
+  chapter: 두 사람의 성적표
+  title: 줍줍이, 3년 뒤
+  highlight: 3년 뒤
+  kicker: -40% 찍은 날 넣은 1,000만 원
+  'on': 1
+  rows:
+  - {label: '1992', sub: 증시 침체, text: '5,550만', value: 5550}
+  - {label: '2008', sub: 금융위기, text: '2,309만', value: 2309}
+  - {label: '2000', sub: 닷컴, text: '2,011만', value: 2011}
+  - {label: '2022', sub: 반도체 겨울, text: '1,535만', value: 1535}
+  - {label: '1996', sub: IMF, text: '1,246만', value: 1246, sub_hl: IMF}
+  narration:
+  - 줍줍이는요? 3년 뒤로 보면 다섯 번 모두 플러스였어요.
+  - 1년 뒤엔 두 번이나 마이너스였지만, 3년을 기다린 줍줍이는 다 웃었어요.
+# ── 그렇다면 지금은 ──
+- type: vbars
+  chapter: 그렇다면 지금은
+  title: -40% 찍고, 얼마나 더 빠졌나
+  highlight: 얼마나 더
+  vmax: 60
+  base_y: 800
+  rows:
+  - {label: '2008', value: 1, text: '0%'}
+  - {label: '1992', value: 4, text: '-4%'}
+  - {label: '2022', value: 8, text: '-8%'}
+  - {label: 지금, value: 20, text: '-20%', hl: true}
+  - {label: '2000', value: 37, text: '-37%'}
+  - {label: '1996', value: 52, text: '-52%'}
+  note: '-40% 첫날 종가 대비 이후 최저점 · 지금은 11.25 종가'
+  narration:
+  - 그렇다면 지금은 어디쯤일까요? 이번엔 7월 말에 -40%를 찍었어요. 20만 8천 원이요.
+  - 거기서 벌써 20%가 더 빠졌어요. 금방 돌아온 때는 0에서 8%였는데, 지금은 이미 그걸 넘었어요. 남은 건 2000년과 1996년 쪽이에요.
+- type: kpi
+  chapter: 그렇다면 지금은
+  bg: {kind: photo, file: samsung_bldg, dark: 0.75, blur: 4}
+  kpis:
+  - {label: 2000년처럼 더 빠지면, value: 13만 원, color: red, 'on': 1}
+  - {label: 1996년처럼 더 빠지면, value: 10만 원, color: navy, 'on': 2}
+  bars:
+  - {label: 지금, value: 172600, text: '17.3만', hl: false}
+  - {label: 2000식, value: 131000, text: 13만, hl: true}
+  - {label: 1996식, value: 100000, text: 10만, hl: true}
+  bars_on: 1
+  vmax: 200000
+  narration:
+  - 숫자로 콕 집어 볼게요. 2000년처럼 빠지면 13만 원.
+  - 1996년처럼 빠지면 10만 원. 이 두 숫자, 기억해 두세요. 과거가 말해 주는 다음 정거장이에요.
+# ── 결말 ──
+- type: chain
+  chapter: 결말
+  kicker: 볼 숫자는 주가가 아니다
+  title: 메모리값 → 실적 → 주가
+  highlight: 메모리값
+  nodes:
+  - {label: 메모리값, sub: '지금: 꺾이는 중', text: D램 낸드, hl: true, 'on': 1}
+  - {label: 실적, sub: 몇 달 뒤 따라감, text: 이익, 'on': 1, offset: 0.8}
+  - {label: 주가, sub: 그보다 먼저 움직임, text: 주가, 'on': 2}
+  note: 메모리값 하락이 멈출 때가 과거의 바닥 근처
+  note_hl: 멈출 때
+  note_on: 3
+  narration:
+  - 그래서 결론은 직설적으로 갈게요. 첫째, 주가 말고 메모리값을 보세요. 삼성전자 주가는 1층 메모리 장사에 달려 있다고 했죠.
+  - 메모리값이 꺾이면 실적이 따라 꺾이고, 주가는 그보다 먼저 움직여요.
+  - 과거 바닥은, 메모리값 하락이 멈춘다는 뉴스가 나올 때쯤이었어요. 역대 최대 실적 뉴스는, 오히려 조심하라는 신호였던 적이 많았고요.
+- type: kinetic
+  chapter: 결말
+  bg: {kind: video, file: market_crash_v, dark: 0.68, blur: 3}
+  items:
+  - {text: "국민주식은 돌아온다\n단, 3년짜리 약속", highlight: 3년짜리, 'on': 1, size: 120}
+  - {text: "3년 못 기다릴 돈이면\n지금 들어가지 마라", highlight: 들어가지 마라, 'on': 2, size: 110}
+  narration:
+  - 둘째, 국민주식은 돌아온다? 과거엔 맞았어요. 단, 1년이 아니라 3년짜리 약속이었어요.
+  - 셋째, 그래서 3년 동안 꺼내 쓸 일 없는 돈이 아니라면, 지금은 들어가지 마세요. 버팀이도 줍줍이도, 결국 시간을 가진 사람이 이겼어요. | 이런 결말 이야기, 계속 보고 싶으시면 구독해 주세요.
+- type: outro
+  chapter: 결말
+  heading: "삼성전자\n여러분은 몇 만 원에 사시겠어요?"
+  highlight: 몇 만 원
+  sub: 지금 17만 · 13만 · 10만 · 안 산다 · 댓글로 남겨 주세요
+  subscribe_on: 2
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 3
+  disclaimer: "본 영상은 투자 교육 목적이며, 매수 · 매도 추천이 아닙니다.\n과거 수익률이 미래 수익을 보장하지 않습니다. 배당 · 세금 제외 계산입니다."
+  narration:
+  - 여러분은 삼성전자, 몇 만 원에 사시겠어요? 댓글로 남겨 주세요.
