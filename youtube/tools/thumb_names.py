@@ -109,13 +109,13 @@ def t04():   # 잠실 = 누에 방 + 한자 2장
 
 
 def mini(name, s=230, ic=None):
-    c = Image.new("RGBA", (s, int(s * 0.72)), (0, 0, 0, 0))
+    c = Image.new("RGBA", (s, int(s * 0.95)), (0, 0, 0, 0))
     ImageDraw.Draw(c).rounded_rectangle((0, 0, s - 1, c.height - 1), 20, fill=(255, 253, 246, 255), outline=INK + (255,), width=5)
     n = E._ink(name, MJ, int(s * 0.24), INK)
     c.alpha_composite(n, ((s - n.width) // 2, int(c.height * 0.14)))
     if ic:   # 11/26 사용자: '?' 대신 그림 힌트
-        g = icon(ic, int(c.height * 0.5), INK, ORG, 0.3)
-        c.alpha_composite(g, ((s - g.width) // 2, int(c.height * 0.46)))
+        g = icon(ic, int(c.height * 0.78), INK, ORG, 0.3)
+        c.alpha_composite(g, ((s - g.width) // 2, int(c.height * 0.3)))
     else:
         q = E._ink("?", MJ, int(s * 0.26), ORG)
         c.alpha_composite(q, ((s - q.width) // 2, int(c.height * 0.5)))
@@ -140,7 +140,7 @@ def t05():   # T01 + 다른 동네도(말풍선 + 미니 이름표 3장)
         shadow(f, hanja_card(h, ko, 250), (1000 + i * 280, 120 + (i % 2) * 34), rot=(-4, 3, -2)[i])
     headline(f, [("압구정의", 140, INK), ("'압'은", 190, RED), ("무슨 뜻?", 150, INK)], 90, 200)
     for i, (n, ic) in enumerate((("잠실", "silkworm"), ("왕십리", "walk"), ("여의도", "island"))):
-        shadow(f, mini(n, 250), (1000 + i * 290, 770 + (i % 2) * 16), rot=(3, -2, 2)[i])
+        shadow(f, mini(n, 250, ic), (1000 + i * 290, 740 + (i % 2) * 16), rot=(3, -2, 2)[i])
     shadow(f, bubble("다른 동네들도 알고 보면 소름", 58), (980, 610))
     return f
 
