@@ -579,37 +579,47 @@ def _elephant(w, col=(170, 176, 196)):
 
 
 class Elephants(Viz):
+    """11/26 사용자: 자막에 손톱이 가려짐 + 쌓인 코끼리가 안 와닿음 → 심플하게
+    화면 가운데(자막 위) 큰 손가락 끝 + 손톱 1cm² · 그 위에 큰 코끼리 한 마리가 '쿵' 앉고 옆 숫자가 ×1 → ×600 으로 올라감 · 손톱이 눌려 찌그러짐"""
     def scene(self, f, t):
         sp = self.spec
         d = ImageDraw.Draw(f)
         n_total = sp.get("n", 600)
-        # 손가락 끝(살구색) + 손톱
-        fx, fy = S.W / 2, 980
-        d.rounded_rectangle((fx - 120, fy - 40, fx + 120, S.H + 200), 110, fill=(240, 196, 170, 255))
-        d.rounded_rectangle((fx - 70, fy - 20, fx + 70, fy + 70), 30, fill=(255, 226, 224, 255), outline=(220, 170, 160, 255), width=4)
-        G.blit(f, T("손톱 1cm²", 30, (120, 70, 60), "Black"), (fx, fy + 25), 1, "mm")
         st = self.ls(sp.get("on", 1), 0.3)
-        k = _ease((t - st) / max(1.0, self.dur - st - 1.0))
-        n = int(n_total * k)
-        # 피라미드로 쌓기(작은 코끼리)
-        ew = 30
+        k = _ease((t - st) / max(1.0, self.dur - st - 1.2))
+        n = max(1, int(n_total * k)) if t >= st else 0
+        land = G.clamp((t - st) / 0.35)
+        squash = 0.10 * min(1.0, k * 3) + (0.04 * math.sin((t - st) * 30) * max(0.0, 1 - (t - st) * 3) if t >= st else 0)
+        fx, base = 620, 860                     # 자막(아래 900~) 위로 올림
+        # 손가락 (아래로 흐려지며 사라짐)
+        fw, fh = 280, 330
+        ny = base - fh
+        top = ny + int(40 * squash * 3)
+        fing = Image.new("RGBA", (fw, fh + 40), (0, 0, 0, 0))
+        fd = ImageDraw.Draw(fing)
+        fd.rounded_rectangle((0, top - ny, fw, fh + 200), 130, fill=(240, 196, 170, 255))
+        nh = int(150 * (1 - squash))
+        fd.rounded_rectangle((45, top - ny + 22, fw - 45, top - ny + 22 + nh), 40, fill=(255, 228, 226, 255), outline=(214, 160, 150, 255), width=6)
+        mask = Image.linear_gradient("L").resize((fw, fh + 40)).point(lambda v: 255 if v < 150 else int(255 * (255 - v) / 105))
+        fing.putalpha(Image.composite(fing.split()[3], Image.new("L", fing.size, 0), mask))
+        f.alpha_composite(fing, (int(fx - fw / 2), ny))
+        G.blit(f, T("손톱 1cm²", 32, (130, 70, 60), "Black"), (fx, top + 22 + nh / 2), 1, "mm")
+        # 코끼리 한 마리 (위에서 쿵)
+        ew = 300
         el = _elephant(ew)
-        rows_ = []
-        left = n
-        width = 40
-        while left > 0:
-            m = min(width, left)
-            rows_.append(m)
-            left -= m
-            width = max(6, width - 2)
-        y = fy - 40
-        for m in rows_:
-            y -= el.height * 0.8
-            x0 = fx - m * ew * 0.42
-            for j in range(m):
-                f.alpha_composite(el, (int(x0 + j * ew * 0.84), int(y)))
-        G.blit(f, T(f"코끼리 {n}마리", 80, GOLD, "Black"), (S.W - 140, 420), 1, "rm")
-        G.blit(f, T("= 지구 한가운데 누르는 힘", 36, WHITE, "Bold"), (S.W - 140, 500), 1, "rm")
+        el = el.resize((ew, int(el.height * (1 - squash * 0.6))), Image.LANCZOS)
+        ey = top + 10 - el.height - (1 - land) * 400
+        if t >= st - 0.4:
+            f.alpha_composite(el, (int(fx - ew / 2), int(ey)))
+        # 오른쪽 숫자
+        if t >= st:
+            G.blit(f, T(f"코끼리 × {n}", 110, GOLD, "Black"), (1040, 420), 1, "lm")
+            G.blit(f, T("손톱만 한 자리에 올라탄 무게", 44, WHITE, "Bold"), (1040, 530), 1, "lm")
+            o = G.appear(t, st + 1.2, 0.4)
+            G.blit(f, G.pill("= 지구 한가운데 360만 기압", "Black", 46, (20, 22, 30), GOLD, pad=(24, 10)), (1040, 650), o, "lm")
+
+    def extra_sfx(self):
+        return [(self.ls(self.spec.get("on", 1), 0.3), "boom", 0.6)]
 
 
 # ── 속도 경주 ──────────────────────────────────────────
