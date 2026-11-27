@@ -313,3 +313,102 @@ tl.fromTo("#m2",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.5,ease:"expo.out"}
 
 TEMPLATES.update({"latitude": t_latitude, "impact": t_impact, "inertia": t_inertia, "wave": t_wave, "orbit": t_orbit,
                   "bulge": t_bulge, "scale": t_scale, "daylength": t_daylength})
+
+
+# ── 9. 실사 2.5D (11/27 사용자: "이미지 퀄 → 실사 + 입체감 · 비용 0") ─────────
+def layers_25d(name, W=1920, H=1080, focus=(0.5, 0.5)):
+    """사진 → 화면 크기로 자른 배경(bg) + 깊이로 오려 낸 앞쪽(fg, 알파) PNG 두 장. 반환: (bg 경로, fg 경로, 출처)"""
+    import json as _j
+    import numpy as np
+    from PIL import Image, ImageFilter
+    from . import depth as DP
+    root = DP.PHOTOS
+    out_bg, out_fg = root / f"{name}.bg25.jpg", root / f"{name}.fg25.png"
+    meta = root / f"{name}.json"
+    cr = _j.loads(meta.read_text()).get("credit", "") if meta.exists() else ""
+    if out_bg.exists() and out_fg.exists():
+        return out_bg, out_fg, cr
+    im = Image.open(DP.photo_path(name)).convert("RGB")
+    r = max(W / im.width, H / im.height) * 1.12          # 카메라 이동 여유
+    im = im.resize((int(im.width * r) + 1, int(im.height * r) + 1), Image.LANCZOS)
+    w2, h2 = int(W * 1.12), int(H * 1.12)
+    x = int((im.width - w2) * focus[0]); y = int((im.height - h2) * focus[1])
+    im = im.crop((x, y, x + w2, y + h2))
+    d = DP.estimate(im)
+    d = (d - d.min()) / max(1e-6, d.max() - d.min())
+    thr = float(np.quantile(d, 0.62))
+    a = np.clip((d - thr) / 0.12, 0, 1)
+    am = Image.fromarray((a * 255).astype(np.uint8), "L").filter(ImageFilter.GaussianBlur(3))
+    fg = im.copy(); fg.putalpha(am)
+    im.save(out_bg, quality=92); fg.save(out_fg)
+    return out_bg, out_fg, cr
+
+
+def t_photo25d(v, th, dur):
+    """실사 1~2컷 2.5D: 앞(fg)은 많이, 뒤(bg)는 조금 → 카메라가 파고드는 입체감. 그 위에 칩 · 큰 글자 · 계기 숫자 · 속도선 · SVG 도식
+    shots:[{file, T, zoom, dx, dy, dark, jolt(초), whip(초)}] · chips:[{text, T, x, y, kind: tag|big|stamp}] · lcd:{x,y,w,h, from,to,dec,unit,T}
+    svg: 원본 SVG 조각(1920×1080 좌표, id 를 붙이면 svg_anim 으로 움직임) · svg_anim: JS 문자열"""
+    shots = v["shots"]
+    body, css, js = "", "", ""
+    for i, s in enumerate(shots):
+        z = float(s.get("zoom", 0.08))
+        dark = float(s.get("dark", 0.25))
+        body += (f'<div id="s{i}" class="abs shot" style="inset:0;opacity:{1 if i == 0 else 0}">'
+                 f'<img id="b{i}" class="abs lay" src="assets/{s["_bg"]}"/><img id="f{i}" class="abs lay" src="assets/{s["_fg"]}"/>'
+                 f'<div class="abs" style="inset:0;background:radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,{0.35 + dark}) 100%),rgba(0,0,0,{dark * 0.6:.2f})"></div></div>')
+        T = s["T"]
+        end = shots[i + 1]["T"] if i + 1 < len(shots) else dur
+        L = max(0.5, end - T + 0.4)
+        dx, dy = float(s.get("dx", 0.02)) * 1920, float(s.get("dy", -0.01)) * 1080
+        js += (f'tl.fromTo("#b{i}",{{scale:1.0,x:0,y:0}},{{scale:{1 + z * 0.45:.3f},x:{dx * 0.4:.0f},y:{dy * 0.4:.0f},duration:{L:.2f},ease:"none"}},{T:.3f});\n'
+               f'tl.fromTo("#f{i}",{{scale:1.0,x:0,y:0}},{{scale:{1 + z:.3f},x:{dx:.0f},y:{dy:.0f},duration:{L:.2f},ease:"none"}},{T:.3f});\n')
+        if i:
+            js += (f'tl.fromTo("#s{i}",{{opacity:0,filter:"blur(14px)"}},{{opacity:1,filter:"blur(0px)",duration:.35,ease:"power3.out"}},{T:.3f});\n'
+                   f'tl.to("#s{i - 1}",{{opacity:0,duration:.3,ease:"power3.in"}},{T:.3f});\n')
+        if s.get("jolt") is not None:     # 급정거: 앞으로 확 쏠리는 카메라 + 흔들림
+            J = s["jolt"]
+            js += (f'tl.to("#s{i}",{{scale:1.08,duration:.12,ease:"power4.out"}},{J:.3f});\n'
+                   f'tl.to("#s{i}",{{scale:1.0,duration:.6,ease:"elastic.out(1,0.45)"}},{J + 0.12:.3f});\n'
+                   f'for(let k=0;k<6;k++){{tl.to("#s{i}",{{x:(k%2?1:-1)*(18-k*3),duration:.045,ease:"none"}},{J}+k*0.045);}}\n'
+                   f'tl.to("#s{i}",{{x:0,duration:.08}},{J + 0.3:.3f});\n'
+                   f'tl.fromTo("#red",{{opacity:.45}},{{opacity:0,duration:.6,ease:"power2.out",immediateRender:false}},{J:.3f});\n')
+        if s.get("whip") is not None:     # 동쪽으로 휙: 가로 모션블러 + 속도선
+            Wp = s["whip"]
+            js += (f'tl.to("#s{i}",{{x:-260,filter:"blur(10px)",duration:.5,ease:"power3.in"}},{Wp:.3f});\n'
+                   f'tl.fromTo("#lines",{{opacity:0,x:-600}},{{opacity:1,x:900,duration:1.2,ease:"power1.in"}},{Wp:.3f});\n')
+    body += '<div id="red" class="abs" style="inset:0;background:radial-gradient(ellipse at center,rgba(255,40,40,0) 30%,rgba(255,40,40,.7) 100%);opacity:0"></div>'
+    body += '<div id="lines" class="abs" style="inset:0;opacity:0">' + "".join(
+        f'<div class="abs" style="left:{(k * 211) % 1700}px;top:{120 + (k * 67) % 820}px;width:{220 + (k * 53) % 260}px;height:{4 + k % 3}px;background:rgba(255,255,255,.65);border-radius:3px"></div>' for k in range(22)) + '</div>'
+    if v.get("svg"):
+        body += f'<svg class="abs" style="inset:0" viewBox="0 0 1920 1080">{v["svg"]}</svg>'
+        js += v.get("svg_anim", "")
+    lcd = v.get("lcd")
+    if lcd:
+        body += f'<div id="lcd" class="abs" style="left:{lcd["x"]}px;top:{lcd["y"]}px;width:{lcd["w"]}px;height:{lcd["h"]}px"><span id="lv">{lcd["from"]:.{lcd.get("dec", 2)}f}</span><small> {_esc(lcd.get("unit", "kg"))}</small></div>'
+        css += f"""#lcd{{display:flex;align-items:center;justify-content:center;font-family:"Pretendard";font-size:{int(lcd["h"] * 0.42)}px;color:#1B2A1E;background:#B9C9A8;border-radius:10px;box-shadow:inset 0 0 18px rgba(0,0,0,.25);}}
+#lcd small{{font-size:.4em;margin-left:8px;}}"""
+        js += (f'const LV={{v:{lcd["from"]}}};tl.to(LV,{{v:{lcd["to"]},duration:1.3,ease:"power3.out",onUpdate:()=>{{document.getElementById("lv").textContent=LV.v.toFixed({lcd.get("dec", 2)});}}}},{lcd["T"]:.3f});\n'
+               f'tl.fromTo("#lcd",{{scale:1}},{{scale:1.06,duration:.15,yoyo:true,repeat:1,ease:"power2.out"}},{lcd["T"] + 1.3:.3f});\n')
+    for i, c in enumerate(v.get("chips", [])):
+        kind = c.get("kind", "tag")
+        st = {"tag": f"font-size:46px;background:rgba(8,12,26,.72);border:2px solid rgba(255,255,255,.25);color:#fff;padding:10px 26px;border-radius:14px;",
+              "big": f"font-size:110px;color:#fff;text-shadow:0 8px 40px rgba(0,0,0,.7);",
+              "stamp": f"font-size:84px;color:{th['acc']};border:8px solid {th['acc']};border-radius:20px;padding:6px 28px;background:rgba(8,12,26,.6);"}[kind]
+        pos = f"left:{c['x']}px;top:{c['y']}px;" if "x" in c else f"left:0;right:0;top:{c.get('y', 120)}px;text-align:center;"
+        inner = _hl(c["text"], c.get("hl"), f"mkc{i}") if kind == "big" else _esc(c["text"])
+        body += f'<div id="c{i}" class="abs chip" style="{pos}opacity:0;font-family:Pretendard"><span class="ci" style="display:inline-block;{st}">{inner}</span></div>'
+        T = c["T"]
+        if kind == "stamp":
+            js += f'tl.fromTo("#c{i}",{{opacity:0,scale:2.2,rotation:12}},{{opacity:1,scale:1,rotation:-6,duration:.35,ease:"power4.out"}},{T:.3f});\n'
+        elif kind == "big":
+            js += (f'tl.fromTo("#c{i}",{{opacity:0,filter:"blur(12px)",scale:1.08}},{{opacity:1,filter:"blur(0px)",scale:1,duration:.25,ease:"power4.out"}},{T:.3f});\n'
+                   f'tl.fromTo("#mkc{i}",{{scaleX:0}},{{scaleX:1,duration:.45,ease:"expo.out"}},{T + 0.3:.3f});\n')
+        else:
+            js += f'tl.fromTo("#c{i}",{{opacity:0,x:-30}},{{opacity:1,x:0,duration:.45,ease:"expo.out"}},{T:.3f});\n'
+        if c.get("out") is not None:
+            js += f'tl.to("#c{i}",{{opacity:0,filter:"blur(6px)",duration:.2,ease:"power3.in"}},{c["out"]:.3f});\n'
+    css += ".lay{left:-4%;top:-4%;width:108%;height:108%;object-fit:cover;transform-origin:50% 50%;}\n#grid{display:none;}\n#root{background:#000 !important;}"
+    return body, css, js
+
+
+TEMPLATES.update({"photo25d": t_photo25d})

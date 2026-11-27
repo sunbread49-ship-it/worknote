@@ -355,7 +355,7 @@ def build(template, v, theme, dur):
     return _page(th, dur, body, css, js)
 
 
-def render_frames(page, work, dur):
+def render_frames(page, work, dur, files=None):
     """같은 내용이면 다시 렌더하지 않음(해시). 결과: work/frames/000001.jpg …"""
     work.mkdir(parents=True, exist_ok=True)
     key = hashlib.sha1(page.encode()).hexdigest()[:12]
@@ -378,6 +378,8 @@ def render_frames(page, work, dur):
         tex = ROOT / "assets/photos/sn_earth_day.jpg"
         if tex.exists():
             shutil.copy(tex, work / "assets/earth_day.jpg")
+        for fp in files or []:
+            shutil.copy(fp, work / "assets" / Path(fp).name)
         (work / "index.html").write_text(page, encoding="utf-8")
         mp4 = work / "hf.mp4"
         r = subprocess.run(["npx", "hyperframes", "render", str(work), "-q", "delivery", "-w", "3", "--fps", str(S.FPS), "-o", str(mp4), "--quiet"],
@@ -401,6 +403,19 @@ class HFScene(Editorial):
         for k in list(sp):   # 공통: at_<이름>: [문장, 초] → <이름> = 초
             if k.startswith("at_") and isinstance(sp[k], list):
                 v[k[3:]] = self.line_start(sp[k][0]) + sp[k][1]
+        if tpl == "photo25d":
+            ts = lambda x: self.line_start(x[0]) + x[1] if isinstance(x, list) else x
+            v["shots"] = [dict(s, T=ts(s.get("at", [1, 0])), jolt=ts(s["jolt"]) if s.get("jolt") is not None else None,
+                               whip=ts(s["whip"]) if s.get("whip") is not None else None) for s in sp["shots"]]
+            v["chips"] = [dict(c, T=ts(c.get("at", [1, 0.2])), out=ts(c["out"]) if c.get("out") is not None else None) for c in sp.get("chips", [])]
+            if sp.get("lcd"):
+                v["lcd"] = dict(sp["lcd"], T=ts(sp["lcd"].get("at", [1, 1.0])))
+            if sp.get("svg_anim"):
+                a = sp["svg_anim"]
+                for k in sp:
+                    if k.startswith("at_"):
+                        a = a.replace("T_" + k[3:].upper(), f"{v[k[3:]]:.3f}")
+                v["svg_anim"] = a
         if isinstance(sp.get("rows"), list) and tpl not in ("bars",):
             v["rows"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp["rows"]]
         if tpl == "quiz":
@@ -429,12 +444,29 @@ class HFScene(Editorial):
             v["lines"] = [dict(ln, T=self.line_start(ln.get("on", i + 1)) + ln.get("offset", 0.05)) for i, ln in enumerate(sp["lines"])]
         return v
 
+    def _prep_photos(self, v):
+        if self.spec["template"] != "photo25d":
+            return []
+        from .hfscene2 import layers_25d
+        files, crs = [], []
+        for s in v["shots"]:
+            bg, fg, cr = layers_25d(s["file"], focus=tuple(s.get("focus", (0.5, 0.5))))
+            s["_bg"], s["_fg"] = bg.name, fg.name
+            files += [bg, fg]
+            if cr:
+                crs.append(cr.replace("사진: ", ""))
+        if crs and not self.spec.get("credit"):
+            self.spec["credit"] = "사진: " + " · ".join(dict.fromkeys(crs))
+        return files
+
     def _frames(self):
         if getattr(self, "_fdir", None) is None:
             out = Path(getattr(self, "out_dir", ROOT / "out" / "_hf"))
             work = out / "hf" / f"{getattr(self, 'idx', 0):02d}_{self.spec['template']}"
-            page = build(self.spec["template"], self._vars(), self.spec.get("theme", "paper"), self.dur)
-            self._fdir = render_frames(page, work, self.dur)
+            v = self._vars()
+            files = self._prep_photos(v)
+            page = build(self.spec["template"], v, self.spec.get("theme", "paper"), self.dur)
+            self._fdir = render_frames(page, work, self.dur, files)
             self._n = len(list(self._fdir.glob("*.jpg")))
         return self._fdir
 
@@ -464,6 +496,11 @@ class HFScene(Editorial):
         if sp["template"] == "equation":
             v = self._vars()
             return [(v["A1"], "boom", 0.5), (v["A2"], "pop", 0.4), (v["A3"], "whoosh", 0.4)]
+        if sp["template"] == "photo25d":
+            v = self._vars()
+            ev = [(x["jolt"], "boom", 0.6) for x in v["shots"] if x.get("jolt") is not None] + [(x["whip"], "whoosh", 0.8) for x in v["shots"] if x.get("whip") is not None]
+            ev += [(c["T"], "pop", 0.4) for c in v["chips"] if c.get("kind") == "stamp"]
+            return ev
         if sp["template"] in ("latitude", "impact", "inertia", "wave", "orbit", "bulge", "scale", "daylength"):
             v = self._vars()
             ev = [(v[k[3:]], "whoosh", 0.35) for k in sp if k.startswith("at_")]
