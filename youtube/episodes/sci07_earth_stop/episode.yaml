@@ -78,6 +78,61 @@ youtube:
   - 원심력
   - 지식
   - 악어새지식창고
+clips:
+- start: 0
+  end: 22.6
+  hook: '지구가 1초 멈추면
+
+    우리는?'
+  hl: 1초
+- start: 52.8
+  end: 65.4
+  hook: '서울은 시속
+
+    1,330km로 달리는 중'
+  hl: 1,330km
+- start: 65.6
+  end: 84.8
+  hook: '소리보다 빠른데
+
+    왜 못 느낄까?'
+  hl: 못 느낄까
+- start: 84.9
+  end: 106.6
+  hook: '지구 급정거
+
+    총알처럼 날아간다'
+  hl: 급정거
+- start: 106.8
+  end: 129.2
+  hook: '토네이도 3배
+
+    바람이 분다'
+  hl: 3배
+- start: 139.8
+  end: 168.5
+  hook: '멈춘 지구에서
+
+    해는 1년에 몇 번?'
+  hl: 몇 번
+- start: 185.9
+  end: 196.0
+  hook: '지구가 멈추면
+
+    몸무게가 는다'
+  hl: 몸무게
+- start: 196.2
+  end: 213.9
+  hook: '17배 빨리 돌면
+
+    몸무게 0'
+  hl: 몸무게 0
+- start: 253.7
+  end: 274.0
+  hook: '지구가 멈추기 전에
+
+    태양이 먼저'
+  hl: 태양
 scenes:
 - type: hf
   template: globe3d

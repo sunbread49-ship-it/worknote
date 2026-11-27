@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.19,0:00:01.92,S,더 무서운 건 공기예요.
+Dialogue: 0,0:00:01.92,0:00:05.39,S,하늘의 공기도 멈추지\N않고 계속 달리거든요.
+Dialogue: 0,0:00:05.39,0:00:07.88,S,2003년 우리나라를\N덮친 태풍 매미의
+Dialogue: 0,0:00:07.88,0:00:09.93,S,순간 최고 풍속이\N시속 216km,
+Dialogue: 0,0:00:09.93,0:00:13.16,S,역사상 가장 강한 토네이도가\N시속 486km였어요.
+Dialogue: 0,0:00:13.16,0:00:16.60,S,멈춘 지구에는 그 세\N배 가까운 바람이,
+Dialogue: 0,0:00:16.60,0:00:19.35,S,지구 전체에 한꺼번에 불어요.
+Dialogue: 0,0:00:19.35,0:00:22.10,S,건물도 숲도 남아나지 않아요.

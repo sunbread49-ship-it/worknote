@@ -1,0 +1,22 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.20,0:00:03.92,S,지금 이 순간에도 서울은, 시속\N1,330km로 달리고 있어요.
+Dialogue: 0,0:00:03.92,0:00:06.36,S,의자에 가만히 앉아\N있는 여러분도요.
+Dialogue: 0,0:00:06.36,0:00:07.67,S,소리보다 빠르게요.
+Dialogue: 0,0:00:08.33,0:00:11.66,S,그럼 지구가 갑자기, 딱\N1초만 멈추면 어떻게 될까요?
+Dialogue: 0,0:00:11.66,0:00:12.61,S,그 순간 우리는?
+Dialogue: 0,0:00:12.61,0:00:14.71,S,3초 드릴게요.
+Dialogue: 0,0:00:14.71,0:00:15.06,S,셋.
+Dialogue: 0,0:00:15.06,0:00:15.41,S,둘.
+Dialogue: 0,0:00:15.41,0:00:16.10,S,하나.
+Dialogue: 0,0:00:16.10,0:00:19.94,S,정답은 2번.\N동쪽으로 날아가요.
+Dialogue: 0,0:00:19.94,0:00:22.30,S,그것도 총알처럼요.
