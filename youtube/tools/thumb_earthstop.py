@@ -35,10 +35,10 @@ def shade(f, side="left"):
 def t1():
     f = frame("globe")
     f = f.transform(f.size, Image.AFFINE, (1, 0, -430, 0, 1, 0), Image.BICUBIC)
-    d = ImageDraw.Draw(f); d.ellipse((1125 - 18, 495 - 18, 1125 + 18, 495 + 18), fill=Y, outline=(5, 8, 18), width=5)
+    d = ImageDraw.Draw(f); d.ellipse((1192 - 16, 522 - 16, 1192 + 16, 522 + 16), fill=Y, outline=(5, 8, 18), width=5)
     shade(f)
-    txt(f, "지구가 딱 1초", 150, (80, 250)); txt(f, "멈추면?", 230, (80, 430), Y)
-    txt(f, "시속 1,330km로 달리는 중", 64, (90, 760))
+    # 11/27 사용자: '지구가 딱 1초 멈추면 생기는 일' · 중요 부분 노란색
+    txt(f, "지구가 딱", 150, (80, 190)); txt(f, "1초 멈추면", 210, (70, 360), Y); txt(f, "생기는 일", 150, (80, 620))
     return f
 
 
