@@ -399,7 +399,7 @@ def t_photo25d(v, th, dur):
                f'tl.fromTo("#lcd",{{scale:1}},{{scale:1.06,duration:.15,yoyo:true,repeat:1,ease:"power2.out"}},{lcd["T"] + 1.3:.3f});\n')
     for i, c in enumerate(v.get("chips", [])):
         kind = c.get("kind", "tag")
-        st = {"tag": f"font-size:46px;background:rgba(8,12,26,.72);border:2px solid rgba(255,255,255,.25);color:#fff;padding:10px 26px;border-radius:14px;",
+        st = {"tag": f"font-size:46px;white-space:nowrap;background:rgba(8,12,26,.72);border:2px solid rgba(255,255,255,.25);color:#fff;padding:10px 26px;border-radius:14px;",
               "big": f"font-size:110px;color:#fff;text-shadow:0 8px 40px rgba(0,0,0,.7);",
               "stamp": f"font-size:84px;color:{th['acc']};border:8px solid {th['acc']};border-radius:20px;padding:6px 28px;background:rgba(8,12,26,.6);"}[kind]
         pos = f"left:{c['x']}px;top:{c['y']}px;" if "x" in c else f"left:0;right:0;top:{c.get('y', 120)}px;text-align:center;"
