@@ -33,6 +33,7 @@ tts:
     1.8마이크로초: 일쩜팔 마이크로초
     17배: 십칠 배
     1시간 25분: 한 시간 이십오 분
+    50억 년: 오십억 년
 bgm:
   volume: 0.18
   chapters:
@@ -208,55 +209,18 @@ scenes:
   - 자, 이제 지구를 멈춰 볼게요.
   - 쾅. | 땅은 멈췄어요. 그런데 그 위에 있는 건, 아무것도 멈추지 않아요.
 - type: hf
-  template: photo25d
+  template: horizon
   chapter: 멈추는 순간
   theme: space
-  shots:
-  - file: sn_bus_inside
-    at:
-    - 1
-    - 0
-    zoom: 0.1
-    dx: 0.02
-    dy: -0.01
-    dark: 0.15
-    jolt:
-    - 1
-    - 1.7
-  - file: seoul_night_still
-    at:
-    - 2
-    - 0
-    zoom: 0.12
-    dx: 0.03
-    dy: 0
-    dark: 0.2
-    whip:
-    - 3
-    - 0.3
-  chips:
-  - text: 버스 급정거 · 시속 50km
-    at:
-    - 1
-    - 0.3
-    x: 90
-    y: 150
-    out:
-    - 2
-    - 0
-  - text: 지구 급정거 · 시속 1,330km
-    at:
-    - 2
-    - 0.3
-    x: 90
-    y: 150
-  - text: 동쪽으로 →
-    hl: 동쪽
-    kind: big
-    at:
-    - 3
-    - 0.5
-    y: 420
+  at_a:
+  - 1
+  - 1.6
+  at_b:
+  - 2
+  - 0.2
+  at_c:
+  - 3
+  - 0.2
   narration:
   - 버스가 시속 50km로 달리다 급정거하면 몸이 앞으로 확 쏠리죠?
   - 지금은 그 속도가 시속 1,330km예요.
@@ -288,42 +252,21 @@ scenes:
   - 2003년 우리나라를 덮친 태풍 매미의 순간 최고 풍속이 시속 216km, 역사상 가장 강한 토네이도가 시속 486km였어요.
   - 멈춘 지구에는 그 세 배 가까운 바람이, 지구 전체에 한꺼번에 불어요. | 건물도 숲도 남아나지 않아요.
 - type: hf
-  template: photo25d
+  template: artwave
   chapter: 멈추는 순간
   theme: space
-  shots:
-  - file: sn_tsunami
-    at:
-    - 1
-    - 0
-    zoom: 0.14
-    dx: -0.01
-    dy: -0.02
-    dark: 0.15
-    jolt:
-    - 1
-    - 1.2
-  chips:
-  - text: 실제 2004년 인도양 지진해일 · 태국
-    at:
-    - 1
-    - 0.3
-    x: 90
-    y: 150
-  - text: 바닷물도 시속 1,330km로
-    hl: 1,330km
-    kind: big
-    at:
-    - 1
-    - 1.4
-    y: 380
-  - text: 딱 1초 만에
-    kind: stamp
-    at:
-    - 2
-    - 0.2
-    x: 1220
-    y: 640
+  assets:
+  - sn_greatwave.jpg
+  - sn_greatwave_cut.png
+  at_a:
+  - 1
+  - 0.4
+  at_b:
+  - 1
+  - 1.8
+  at_c:
+  - 2
+  - 0.0
   narration:
   - 바다도 마찬가지예요. 바닷물이 통째로 동쪽으로 쏟아지면서, 대륙의 동쪽 해안을 거대한 해일이 덮쳐요.
   - 딱 1초 멈췄을 뿐인데, 지구 표면은 완전히 다른 모습이 돼요.
@@ -435,50 +378,18 @@ scenes:
   - 회전이 멈추면 이 볼록함을 붙잡던 힘이 사라져요. 그래서 바닷물이 남극과 북극 쪽으로 흘러가요.
   - 결국 바다는 위아래 두 개로 갈라지고, 적도엔 지구를 한 바퀴 두르는 거대한 대륙이 드러난다고 해요.
 - type: hf
-  template: photo25d
+  template: product
   chapter: 계속 멈춰 있다면
   theme: space
-  shots:
-  - file: sn_scale
-    at:
-    - 1
-    - 0
-    zoom: 0.02
-    dx: 0
-    dy: 0
-    dark: 0.05
-  lcd:
-    x: 790
-    y: 120
-    w: 340
-    h: 300
-    from: 60.0
-    to: 60.21
-    dec: 2
-    unit: kg
-    at:
-    - 1
-    - 1.6
-  chips:
-  - text: 적도에 사는 60kg인 사람
-    at:
-    - 1
-    - 0.2
-    x: 80
-    y: 880
-  - text: +210g
-    kind: stamp
-    at:
-    - 1
-    - 3.2
-    x: 1260
-    y: 200
-  - text: 원심력이 사라져서
-    at:
-    - 2
-    - 0.2
-    x: 1260
-    y: 420
+  assets:
+  - sn_scale_cut.png
+  kicker: 적도에 사는 60kg인 사람
+  at_a:
+  - 1
+  - 1.4
+  at_b:
+  - 2
+  - 0.1
   narration:
   - 재밌는 것도 하나 있어요. 적도에 사는 60kg인 사람은, 몸무게가 210g쯤 늘어나요.
   - 지구가 돌면서 바깥으로 밀어내던 힘, 원심력이 사라지거든요.
@@ -557,18 +468,25 @@ scenes:
   - 셋째는 녹는 빙하예요. 극지방 얼음이 녹아 물이 적도 쪽으로 퍼지면, 피겨 선수가 팔을 벌릴 때처럼 회전이 느려져요.
   tone: night
 - type: hf
-  template: headline
+  template: sunend
   chapter: 엔딩
   theme: space
-  lines:
-  - text: 지구가 멈추기 전에
-    'on': 1
-  - text: 태양이 먼저 꺼진다
-    hl: 태양
-    'on': 2
+  assets:
+  - sn_sun_cut.png
+  - sn_earth_cut.png
+  at_a:
+  - 1
+  - 0.3
+  at_b:
+  - 2
+  - 0.0
+  at_c:
+  - 3
+  - 0.0
   narration:
-  - 그럼 언젠가 지구가 멈출까요? 이 속도라면 걱정 안 하셔도 돼요.
-  - 지구가 멈추기 한참 전에, 태양이 먼저 수명을 다하니까요. | 오늘도 우리는 안전하게, 시속 1,330km로 달리고 있어요.
+  - 그럼 언젠가 지구가 완전히 멈출까요? 이 속도라면 걱정 안 하셔도 돼요.
+  - 약 50억 년 뒤, 태양은 지금보다 훨씬 크게 부풀어 올라요.
+  - 그리고 작게 쪼그라들며 식어 가요. 지구가 멈추기 한참 전에, 태양이 먼저 수명을 다하는 거죠. | 오늘도 우리는 시속 1,330km로, 안전하게 달리고 있어요.
 - type: sci_outro
   chapter: 엔딩
   heading: '여러분이라면

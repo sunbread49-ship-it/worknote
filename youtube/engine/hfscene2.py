@@ -420,3 +420,162 @@ def t_photo25d(v, th, dur):
 
 
 TEMPLATES.update({"photo25d": t_photo25d})
+
+
+# ── 10~13. 실물 오려낸 재료로 만든 고급 모션그래픽 (11/27 사용자: "배경 사진 통째 X · 모션그래픽 속 이미지 퀄") ──────
+def t_horizon(v, th, dur):
+    """3D 지구 지평선(실제 위성사진) · 서울 근처 표면의 빛 입자들 → 급정거 순간 동쪽으로 흩날림
+    A(버스 급정거 · 작게 출렁) B(지구 급정거 · 크게 · 번쩍) C(입자들 동쪽으로)"""
+    A, B, C = v["a"], v["b"], v["c"]
+    body = """<canvas id="gl" width="1920" height="1080" class="abs" style="inset:0"></canvas>
+<div id="flash" class="abs" style="inset:0;background:#fff;opacity:0"></div>
+<div id="ta" class="abs tt">버스 급정거 · <b>50km/h</b></div>
+<div id="tb" class="abs tt">지구 급정거 · <b>1,330km/h</b></div>
+<div id="tc" class="abs tt2">동쪽으로 →</div>"""
+    css = f"""#grid{{display:none;}} #root{{background:#02040a !important;}}
+.tt{{left:0;right:0;top:110px;text-align:center;font-family:"Pretendard";font-size:76px;color:#fff;opacity:0;text-shadow:0 6px 30px rgba(0,0,0,.8);}}
+.tt b{{color:{th['acc']};}} .tt2{{left:0;right:0;top:230px;text-align:center;font-family:"Pretendard";font-size:120px;color:{th['acc']};opacity:0;text-shadow:0 0 40px rgba(255,201,60,.5);}}"""
+    js = f"""
+const W=1920,H=1080; const R=new THREE.WebGLRenderer({{canvas:document.getElementById('gl'),antialias:true,preserveDrawingBuffer:true}}); R.setSize(W,H,false);
+const sc=new THREE.Scene(); const cam=new THREE.PerspectiveCamera(34,W/H,0.01,100);
+const tx=new THREE.TextureLoader().load('assets/earth_day.jpg'); tx.colorSpace=THREE.SRGBColorSpace; tx.anisotropy=8;
+const earth=new THREE.Mesh(new THREE.SphereGeometry(2,160,160),new THREE.MeshStandardMaterial({{map:tx,roughness:.95}}));
+const g=new THREE.Group(); g.add(earth); sc.add(g);
+const atm=new THREE.Mesh(new THREE.SphereGeometry(2.08,96,96),new THREE.ShaderMaterial({{transparent:true,side:THREE.BackSide,blending:THREE.AdditiveBlending,
+ vertexShader:'varying vec3 n;void main(){{n=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}}',
+ fragmentShader:'varying vec3 n;void main(){{float i=pow(0.75-dot(n,vec3(0,0,1.0)),2.6);gl_FragColor=vec4(0.35,0.62,1.0,1.0)*i*2.2;}}'}})); sc.add(atm);
+sc.add(new THREE.AmbientLight(0xffffff,.25)); const sun=new THREE.DirectionalLight(0xfff1d6,3.2); sun.position.set(2,3,-1.5); sc.add(sun);
+// 카메라: 한반도 위 낮은 고도에서 지평선을 봄
+const LAT=37.5*Math.PI/180, LON=127*Math.PI/180;
+const P=(la,lo,r)=>new THREE.Vector3(Math.cos(la)*Math.cos(lo)*r,Math.sin(la)*r,-Math.cos(la)*Math.sin(lo)*r);
+const base=P(LAT,LON,2); const up=base.clone().normalize();
+const east=new THREE.Vector3(0,1,0).cross(up).normalize(); const north=up.clone().cross(east).normalize();
+// 표면의 빛 입자(사람 · 차 · 집 · 나무를 상징) — 시드 고정
+let sd=11; const rnd=()=>{{sd=(sd*16807)%2147483647;return sd/2147483647;}};
+const N=1400, pos=new Float32Array(N*3), base0=[], vel=[];
+for(let i=0;i<N;i++){{const la=LAT+(rnd()-0.5)*0.5, lo=LON+(rnd()-0.5)*0.75; const p=P(la,lo,2.004); base0.push(p); vel.push(0.6+rnd()*1.4); pos.set([p.x,p.y,p.z],i*3);}}
+const pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+const pm=new THREE.PointsMaterial({{color:0xffd27a,size:0.012,transparent:true,opacity:.95,blending:THREE.AdditiveBlending}}); sc.add(new THREE.Points(pg,pm));
+// 꼬리(속도선)
+const lp=new Float32Array(N*6); const lg=new THREE.BufferGeometry(); lg.setAttribute('position',new THREE.BufferAttribute(lp,3));
+const lm=new THREE.LineBasicMaterial({{color:0xffc93c,transparent:true,opacity:0,blending:THREE.AdditiveBlending}}); sc.add(new THREE.LineSegments(lg,lm));
+const S={{t:0}};
+function draw(){{const t=S.t;
+ const camPos=base.clone().add(up.clone().multiplyScalar(0.55)).add(north.clone().multiplyScalar(-0.9)).add(east.clone().multiplyScalar(-0.15));
+ let sh=0; const k1=(t>={A:.3f}&&t<{A + 0.5:.3f})?(1-(t-{A:.3f})/0.5)*0.004:0, k2=(t>={B:.3f}&&t<{B + 0.8:.3f})?(1-(t-{B:.3f})/0.8)*0.02:0;
+ sh=Math.sin(t*80)*(k1+k2);
+ cam.position.copy(camPos).add(east.clone().multiplyScalar(sh)); cam.up.copy(up); cam.lookAt(base.clone().add(north.clone().multiplyScalar(0.9)).add(up.clone().multiplyScalar(-0.1)));
+ g.rotation.y=(t<{B:.3f})?-t*0.004:-{B:.3f}*0.004;
+ const f=Math.max(0,t-{C:.3f});
+ for(let i=0;i<N;i++){{const b=base0[i]; const d=f*f*vel[i]*0.55; const p=b.clone().add(east.clone().multiplyScalar(d)).add(up.clone().multiplyScalar(d*0.25));
+  pos[i*3]=p.x;pos[i*3+1]=p.y;pos[i*3+2]=p.z; const tail=p.clone().add(east.clone().multiplyScalar(-Math.min(0.25,d*0.5)));
+  lp.set([p.x,p.y,p.z,tail.x,tail.y,tail.z],i*6);}}
+ pg.attributes.position.needsUpdate=true; lg.attributes.position.needsUpdate=true; lm.opacity=f>0?Math.min(.75,f*1.5):0;
+ R.render(sc,cam);}}
+tl.to(S,{{t:{dur:.3f},duration:{dur:.3f},ease:"none",onUpdate:draw}},0); tl.call(draw,null,0);
+tl.fromTo("#ta",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.22,ease:"power4.out"}},{max(0.1, A - 1.3):.3f});
+tl.to("#ta",{{opacity:0,filter:"blur(6px)",duration:.2,ease:"power3.in"}},{B - 0.2:.3f});
+tl.fromTo("#tb",{{opacity:0,scale:1.15,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:.25,ease:"power4.out"}},{B:.3f});
+tl.fromTo("#flash",{{opacity:.7}},{{opacity:0,duration:.5,ease:"power3.out",immediateRender:false}},{B:.3f});
+tl.fromTo("#tc",{{opacity:0,x:-160,filter:"blur(12px)"}},{{opacity:1,x:0,filter:"blur(0px)",duration:.45,ease:"expo.out"}},{C + 0.3:.3f});
+"""
+    return body, css, js
+
+
+def t_artwave(v, th, dur):
+    """미술관: 호쿠사이 〈가나가와 해변의 높은 파도〉(퍼블릭 도메인) 액자 → 파도만 액자를 뚫고 화면 밖으로 쏟아져 나옴"""
+    A, B, C = v["a"], v["b"], v["c"]
+    fw, fh = 1000, 685
+    x0, y0 = 460, 230
+    body = f"""<div id="spot" class="abs" style="inset:0;background:radial-gradient(ellipse 60% 70% at 50% 45%,rgba(255,230,180,.16),rgba(0,0,0,0) 70%)"></div>
+<div id="frame" class="abs" style="left:{x0 - 34}px;top:{y0 - 34}px;width:{fw + 68}px;height:{fh + 68}px;background:linear-gradient(135deg,#6b4b1e,#d8b26a 40%,#7a5522);box-shadow:0 30px 80px rgba(0,0,0,.8);border-radius:6px">
+<img class="abs" style="left:34px;top:34px;width:{fw}px;height:{fh}px" src="assets/sn_greatwave.jpg"/></div>
+<img id="wave" class="abs" style="left:{x0}px;top:{y0}px;width:{fw}px;height:{fh}px;transform-origin:30% 60%" src="assets/sn_greatwave_cut.png"/>
+<div id="cap" class="abs">가쓰시카 호쿠사이 〈가나가와 해변의 높은 파도〉 1831년경</div>
+<div id="t1" class="abs tt">바닷물도 <b>1,330km/h</b>로 →</div>
+<div id="t2" class="abs tt" style="top:930px;font-size:58px">대륙의 동쪽 해안을 덮치는 해일</div>"""
+    css = f"""#grid{{display:none;}} #root{{background:#05060a !important;}}
+#cap{{left:{x0}px;top:{y0 + fh + 50}px;font-size:30px;color:#9a8f7a;font-family:"Pretendard";}}
+.tt{{left:0;right:0;top:80px;text-align:center;font-family:"Pretendard";font-size:74px;color:#fff;opacity:0;}} .tt b{{color:{th['acc']};}}"""
+    js = f"""tl.fromTo("#frame",{{opacity:0,y:40,scale:.96}},{{opacity:1,y:0,scale:1,duration:.9,ease:"expo.out"}},0.1);
+tl.fromTo("#wave",{{opacity:0,y:40,scale:.96}},{{opacity:1,y:0,scale:1,duration:.9,ease:"expo.out"}},0.1);
+tl.fromTo("#cap",{{opacity:0}},{{opacity:1,duration:.5}},0.6);
+tl.fromTo("#t1",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.22,ease:"power4.out"}},{A:.3f});
+tl.to("#wave",{{x:420,y:-40,scale:1.55,rotation:4,duration:1.4,ease:"power2.in"}},{B:.3f});
+tl.to("#wave",{{x:1500,y:60,scale:2.4,rotation:8,opacity:.0,duration:1.0,ease:"power3.in"}},{B + 1.4:.3f});
+for(let i=0;i<8;i++){{tl.to("#frame",{{x:(i%2?1:-1)*(14-i*1.6),rotation:(i%2?.4:-.4),duration:.05,ease:"none"}},{B + 1.0}+i*0.05);}}
+tl.to("#frame",{{x:0,rotation:0,duration:.1}},{B + 1.45:.3f});
+tl.fromTo("#t2",{{opacity:0,y:20}},{{opacity:1,y:0,duration:.4,ease:"expo.out"}},{C:.3f});
+"""
+    return body, css, js
+
+
+def t_product(v, th, dur):
+    """스튜디오 제품 컷: 오려낸 실물 체중계가 조명 아래 기울어 등장 · 화면 숫자 60.00 → 60.21 · 원심력 화살표가 지워짐"""
+    A, B = v["a"], v["b"]
+    sw = 980
+    k = sw / 1584
+    lx, ly, lw, lh = 634 * k, 153 * k, 300 * k, 367 * k
+    body = f"""<div class="abs" style="inset:0;background:radial-gradient(ellipse 50% 55% at 50% 58%,rgba(160,190,255,.18),rgba(0,0,0,0) 70%)"></div>
+<div id="stage" class="abs" style="left:{960 - sw / 2:.0f}px;top:300px;width:{sw}px;height:{1160 * k:.0f}px;perspective:1600px">
+ <div id="sc" class="abs" style="inset:0;transform-style:preserve-3d;transform-origin:50% 60%">
+  <img class="abs" style="left:0;top:0;width:{sw}px" src="assets/sn_scale_cut.png"/>
+  <div id="lcd" class="abs" style="left:{lx:.0f}px;top:{ly:.0f}px;width:{lw:.0f}px;height:{lh:.0f}px"><span id="lv">60.00</span></div>
+ </div></div>
+<div id="shadow" class="abs" style="left:{960 - sw * 0.45:.0f}px;top:{300 + 1160 * k - 30:.0f}px;width:{sw * 0.9:.0f}px;height:60px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.6),rgba(0,0,0,0) 70%)"></div>
+<div id="kk" class="abs">{_esc(v.get('kicker', '적도에 사는 60kg인 사람'))}</div>
+<svg class="abs" style="inset:0" viewBox="0 0 1920 1080"><g id="cf"><line x1="1450" y1="360" x2="1700" y2="360" stroke="{th['acc']}" stroke-width="12" stroke-linecap="round"/><polygon points="1700,338 1745,360 1700,382" fill="{th['acc']}"/></g>
+<line id="xx" x1="1440" y1="320" x2="1760" y2="400" stroke="#FF4D4D" stroke-width="14" stroke-linecap="round" opacity="0"/></svg>
+<div id="cfl" class="abs">원심력</div><div id="dl" class="abs">+210g</div>"""
+    css = f"""#grid{{display:none;}} #root{{background:#05070f !important;}}
+#lcd{{display:flex;align-items:center;justify-content:center;font-family:"Pretendard";font-size:{lh * 0.36:.0f}px;color:#16241A;background:linear-gradient(#C3D3B0,#A9BB97);border-radius:8px;box-shadow:inset 0 0 14px rgba(0,0,0,.3);}}
+#kk{{left:0;right:0;top:120px;text-align:center;font-size:68px;font-family:"Pretendard";color:#fff;}}
+#cfl{{left:1470px;top:270px;font-size:48px;font-family:"Pretendard";color:{th['acc']};}} #dl{{left:1440px;top:600px;font-family:"Pretendard";font-size:110px;color:{th['acc']};opacity:0;}}"""
+    js = f"""tl.fromTo("#sc",{{rotationX:62,rotationZ:-8,y:120,opacity:0}},{{rotationX:38,rotationZ:-3,y:0,opacity:1,duration:1.2,ease:"expo.out"}},0.1);
+tl.to("#sc",{{rotationX:30,rotationZ:0,duration:{max(1, dur - 1.3):.2f},ease:"none"}},1.3);
+tl.fromTo("#kk",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.22}},0.2);
+tl.fromTo(["#cf","#cfl"],{{opacity:0,x:-30}},{{opacity:1,x:0,duration:.4,ease:"expo.out"}},0.9);
+const LV={{v:60}}; tl.to(LV,{{v:60.21,duration:1.3,ease:"power3.out",onUpdate:()=>{{document.getElementById('lv').textContent=LV.v.toFixed(2);}}}},{A:.3f});
+tl.fromTo("#lcd",{{boxShadow:"inset 0 0 14px rgba(0,0,0,.3)"}},{{boxShadow:"inset 0 0 14px rgba(0,0,0,.3), 0 0 40px rgba(180,255,170,.8)",duration:.3,yoyo:true,repeat:1}},{A + 1.3:.3f});
+tl.fromTo("#dl",{{opacity:0,scale:2,rotation:10}},{{opacity:1,scale:1,rotation:-6,duration:.4,ease:"power4.out"}},{A + 1.4:.3f});
+tl.to("#xx",{{opacity:1,duration:.2}},{B:.3f}); tl.to(["#cf","#cfl"],{{opacity:.25,duration:.3}},{B + 0.2:.3f});
+"""
+    return body, css, js
+
+
+def t_sunend(v, th, dur):
+    """태양의 일생: 실제 태양(NASA SDO) → 부풀어 붉은 거성 → 작게 쪼그라든 백색왜성 · 작은 지구는 그동안 빛을 잃음"""
+    A, B, C = v["a"], v["b"], v["c"]
+    body = f"""<div id="glow" class="abs" style="left:260px;top:140px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,60,.55),rgba(255,120,20,0) 65%)"></div>
+<img id="sun" class="abs" style="left:410px;top:290px;width:500px;height:500px" src="assets/sn_sun_cut.png"/>
+<img id="earth" class="abs" style="left:1420px;top:470px;width:120px;height:120px" src="assets/sn_earth_cut.png"/>
+<div id="l1" class="abs tt">지구가 멈추기 전에</div><div id="l2" class="abs tt" style="top:200px;font-size:110px">태양이 먼저 <b>꺼진다</b></div>
+<div id="tagA" class="abs tag" style="left:1180px;top:640px">지금 · 46억 살</div>
+<div id="tagB" class="abs tag" style="left:1180px;top:640px">약 50억 년 뒤 · 붉은 거성</div>
+<div id="tagC" class="abs tag" style="left:1180px;top:640px">그 뒤 · 작게 식어 가는 별</div>"""
+    css = f"""#grid{{display:none;}} #root{{background:#03040a !important;}}
+.tt{{left:0;right:0;top:90px;text-align:center;font-family:"Pretendard";font-size:72px;color:#fff;opacity:0;}} .tt b{{color:#FF6A3D;}}
+.tag{{font-family:"Pretendard";font-size:44px;color:#fff;background:rgba(20,24,40,.8);border:2px solid rgba(255,255,255,.2);padding:8px 22px;border-radius:12px;opacity:0;}}
+#sun{{transform-origin:50% 50%;}}"""
+    js = f"""tl.fromTo("#sun",{{opacity:0,scale:.85}},{{opacity:1,scale:1,duration:1.0,ease:"expo.out"}},0.1);
+tl.fromTo("#glow",{{opacity:0}},{{opacity:1,duration:1.2}},0.2);
+tl.to("#sun",{{rotation:6,duration:{dur:.2f},ease:"none"}},0);
+tl.fromTo("#earth",{{opacity:0,x:40}},{{opacity:1,x:0,duration:.8,ease:"expo.out"}},0.4);
+tl.fromTo("#tagA",{{opacity:0,x:-20}},{{opacity:1,x:0,duration:.4,ease:"expo.out"}},0.8);
+tl.fromTo("#l1",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.22,ease:"power4.out"}},{A:.3f});
+tl.to("#tagA",{{opacity:0,duration:.2}},{B - 0.1:.3f});
+tl.fromTo("#l2",{{opacity:0,scale:1.12,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:.3,ease:"power4.out"}},{B:.3f});
+tl.to("#sun",{{scale:2.3,filter:"hue-rotate(-18deg) saturate(1.6) brightness(.85)",duration:1.6,ease:"power2.inOut"}},{B:.3f});
+tl.to("#glow",{{scale:2.2,background:"radial-gradient(circle,rgba(255,70,30,.6),rgba(255,40,10,0) 65%)",duration:1.6,ease:"power2.inOut"}},{B:.3f});
+tl.to("#earth",{{filter:"brightness(.35) sepia(.6)",x:-60,duration:1.6,ease:"power2.inOut"}},{B:.3f});
+tl.fromTo("#tagB",{{opacity:0,x:-20}},{{opacity:1,x:0,duration:.4,ease:"expo.out"}},{B + 0.4:.3f});
+tl.to("#tagB",{{opacity:0,duration:.2}},{C - 0.1:.3f});
+tl.to("#sun",{{scale:.12,filter:"grayscale(1) brightness(2.2)",duration:1.4,ease:"power3.inOut"}},{C:.3f});
+tl.to("#glow",{{scale:.25,opacity:.5,background:"radial-gradient(circle,rgba(200,220,255,.7),rgba(200,220,255,0) 65%)",duration:1.4,ease:"power3.inOut"}},{C:.3f});
+tl.to("#earth",{{filter:"brightness(.12)",duration:1.2}},{C:.3f});
+tl.fromTo("#tagC",{{opacity:0,x:-20}},{{opacity:1,x:0,duration:.4,ease:"expo.out"}},{C + 0.5:.3f});
+"""
+    return body, css, js
+
+
+TEMPLATES.update({"horizon": t_horizon, "artwave": t_artwave, "product": t_product, "sunend": t_sunend})

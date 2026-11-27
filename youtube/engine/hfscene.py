@@ -445,6 +445,20 @@ class HFScene(Editorial):
         return v
 
     def _prep_photos(self, v):
+        if self.spec.get("assets"):   # 오려낸 실물 재료(assets/photos/<파일>) 그대로 복사
+            root = ROOT / "assets/photos"
+            files = [root / a for a in self.spec["assets"]]
+            crs = []
+            for a in self.spec["assets"]:
+                j = root / (a.split(".")[0].replace("_cut", "").replace("_raw", "") + ".json")
+                j2 = root / (a.split(".")[0] + ".json")
+                for jj in (j2, j):
+                    if jj.exists():
+                        crs.append(json.loads(jj.read_text()).get("credit", "").replace("사진: ", "")); break
+            crs = [c for c in crs if c]
+            if crs and not self.spec.get("credit"):
+                self.spec["credit"] = "사진: " + " · ".join(dict.fromkeys(crs))
+            return files
         if self.spec["template"] != "photo25d":
             return []
         from .hfscene2 import layers_25d
@@ -510,6 +524,11 @@ class HFScene(Editorial):
             ev = [(x["jolt"], "boom", 0.6) for x in v["shots"] if x.get("jolt") is not None] + [(x["whip"], "whoosh", 0.8) for x in v["shots"] if x.get("whip") is not None]
             ev += [(c["T"], "pop", 0.4) for c in v["chips"] if c.get("kind") == "stamp"]
             return ev
+        if sp["template"] in ("horizon", "artwave", "product", "sunend"):
+            v = self._vars()
+            m = {"horizon": [("b", "boom", 0.9), ("c", "whoosh", 0.8)], "artwave": [("b", "whoosh", 0.7), ("c", "boom", 0.5)],
+                 "product": [("a", "count_roll", 0.5)], "sunend": [("b", "riser", 0.6), ("c", "whoosh", 0.5)]}[sp["template"]]
+            return [(v[k], n, g) for k, n, g in m if k in v]
         if sp["template"] in ("latitude", "impact", "inertia", "wave", "orbit", "bulge", "scale", "daylength"):
             v = self._vars()
             ev = [(v[k[3:]], "whoosh", 0.35) for k in sp if k.startswith("at_")]
