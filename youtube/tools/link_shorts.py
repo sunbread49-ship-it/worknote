@@ -28,6 +28,22 @@ for ep, v in json.loads((ROOT / "uploads.json").read_text()).items():
     if shorts:
         MAP[v["long"]["id"]] = shorts
 
+# 지식채널 쇼츠는 uploads.json["science"]["<ep>_clipN"] 에 따로 기록됨 → 같은 ep 의 롱폼과 묶기 (11/27)
+_up = json.loads((ROOT / "uploads.json").read_text())
+for k, rec in ((_up.get("science") or {}) if U.CHANNEL == "SCIENCE" else {}).items():   # 지식채널 토큰일 때만(주식 계정이 지식 영상에 댓글 다는 일 방지)
+    if "_clip" in k and rec.get("id"):
+        ep = k.rsplit("_clip", 1)[0]
+        lid = (_up.get(ep) or {}).get("long", {}).get("id")
+        if lid:
+            MAP.setdefault(lid, [])
+            if rec["id"] not in MAP[lid]:
+                MAP[lid].append(rec["id"])
+if U.CHANNEL != "SCIENCE":
+    for ep, v in _up.items():
+        if str(ep).startswith("sci") and isinstance(v, dict):
+            MAP.pop(v.get("long", {}).get("id"), None)
+else:
+    MAP = {k: v for k, v in MAP.items() if any(str(ep).startswith("sci") and isinstance(e, dict) and e.get("long", {}).get("id") == k for ep, e in _up.items())}
 MARK = "▶ 전체 영상"
 LOG = ROOT / "link_shorts.json"  # git에 커밋 (댓글 중복 방지)
 
