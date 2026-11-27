@@ -768,5 +768,75 @@
   "at": "2026-11-29T15:00",
   "note": "sci06_seoul_names 쇼츠9",
   "done": null
+ },
+ {
+  "channel": "science",
+  "id": "G3I10LsEGyk",
+  "at": "2026-11-29T15:50",
+  "note": "sci07_earth_stop long",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "pg2mHqTzgEQ",
+  "at": "2026-11-29T15:50",
+  "note": "sci07_earth_stop 쇼츠1",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "Yp1c3phjjWQ",
+  "at": "2026-11-29T18:00",
+  "note": "sci07_earth_stop 쇼츠2",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "DCXVbGhuVxM",
+  "at": "2026-11-29T20:00",
+  "note": "sci07_earth_stop 쇼츠3",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "nbVNAxF4GBE",
+  "at": "2026-11-29T22:00",
+  "note": "sci07_earth_stop 쇼츠4",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "I_xK49ifbYY",
+  "at": "2026-11-30T07:30",
+  "note": "sci07_earth_stop 쇼츠5",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "GbFURhB31pQ",
+  "at": "2026-11-30T09:30",
+  "note": "sci07_earth_stop 쇼츠6",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "ep7rDh_w6sw",
+  "at": "2026-11-30T12:00",
+  "note": "sci07_earth_stop 쇼츠7",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "HgX2tB1iutk",
+  "at": "2026-11-30T13:30",
+  "note": "sci07_earth_stop 쇼츠8",
+  "done": null
+ },
+ {
+  "channel": "science",
+  "id": "1eU2EtATito",
+  "at": "2026-11-30T15:00",
+  "note": "sci07_earth_stop 쇼츠9",
+  "done": null
  }
 ]
