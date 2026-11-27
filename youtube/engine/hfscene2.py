@@ -353,6 +353,14 @@ def t_photo25d(v, th, dur):
     for i, s in enumerate(shots):
         z = float(s.get("zoom", 0.08))
         dark = float(s.get("dark", 0.25))
+        if s.get("contain"):
+            hh = int(s.get("size", 860)); cyy = int(s.get("cy", 500))
+            body += (f'<div id="s{i}" class="abs shot" style="inset:0;opacity:{1 if i == 0 else 0}">'
+                     f'<img id="b{i}" class="abs" style="left:{960 - hh // 2}px;top:{cyy - hh // 2}px;width:{hh}px;height:{hh}px;transform-origin:50% 50%" src="assets/{s["_raw"]}"/>'
+                     f'<img id="f{i}" class="abs" style="display:none" src="assets/{s["_raw"]}"/></div>')
+            T = s["T"]; L = max(0.5, dur - T)
+            js += f'tl.fromTo("#b{i}",{{scale:1.0,rotation:0}},{{scale:{1 + float(s.get("zoom", 0.03)):.3f},rotation:{float(s.get("rot", 2)):.1f},duration:{L:.2f},ease:"none"}},{T:.3f});\n'
+            continue
         body += (f'<div id="s{i}" class="abs shot" style="inset:0;opacity:{1 if i == 0 else 0}">'
                  f'<img id="b{i}" class="abs lay" src="assets/{s["_bg"]}"/><img id="f{i}" class="abs lay" src="assets/{s["_fg"]}"/>'
                  f'<div class="abs" style="inset:0;background:radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,{0.35 + dark}) 100%),rgba(0,0,0,{dark * 0.6:.2f})"></div></div>')
@@ -374,7 +382,7 @@ def t_photo25d(v, th, dur):
                    f'tl.fromTo("#red",{{opacity:.45}},{{opacity:0,duration:.6,ease:"power2.out",immediateRender:false}},{J:.3f});\n')
         if s.get("whip") is not None:     # 동쪽으로 휙: 가로 모션블러 + 속도선
             Wp = s["whip"]
-            js += (f'tl.to("#s{i}",{{x:-260,filter:"blur(10px)",duration:.5,ease:"power3.in"}},{Wp:.3f});\n'
+            js += (f'tl.to("#s{i}",{{x:-140,scale:1.14,filter:"blur(10px)",duration:.5,ease:"power3.in"}},{Wp:.3f});\n'
                    f'tl.fromTo("#lines",{{opacity:0,x:-600}},{{opacity:1,x:900,duration:1.2,ease:"power1.in"}},{Wp:.3f});\n')
     body += '<div id="red" class="abs" style="inset:0;background:radial-gradient(ellipse at center,rgba(255,40,40,0) 30%,rgba(255,40,40,.7) 100%);opacity:0"></div>'
     body += '<div id="lines" class="abs" style="inset:0;opacity:0">' + "".join(
@@ -407,7 +415,7 @@ def t_photo25d(v, th, dur):
             js += f'tl.fromTo("#c{i}",{{opacity:0,x:-30}},{{opacity:1,x:0,duration:.45,ease:"expo.out"}},{T:.3f});\n'
         if c.get("out") is not None:
             js += f'tl.to("#c{i}",{{opacity:0,filter:"blur(6px)",duration:.2,ease:"power3.in"}},{c["out"]:.3f});\n'
-    css += ".lay{left:-4%;top:-4%;width:108%;height:108%;object-fit:cover;transform-origin:50% 50%;}\n#grid{display:none;}\n#root{background:#000 !important;}"
+    css += ".ci span{display:inline-block;margin:0 .12em;}\n.lay{left:-4%;top:-4%;width:108%;height:108%;object-fit:cover;transform-origin:50% 50%;}\n#grid{display:none;}\n#root{background:#000 !important;}"
     return body, css, js
 
 

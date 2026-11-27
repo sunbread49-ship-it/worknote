@@ -450,6 +450,15 @@ class HFScene(Editorial):
         from .hfscene2 import layers_25d
         files, crs = [], []
         for s in v["shots"]:
+            if s.get("contain"):
+                from . import depth as DP
+                import json as _j
+                rp = DP.photo_path(s["file"]); s["_raw"] = rp.name; files.append(rp)
+                mj = DP.PHOTOS / f'{s["file"]}.json'
+                cr = _j.loads(mj.read_text()).get("credit", "") if mj.exists() else ""
+                if cr:
+                    crs.append(cr.replace("사진: ", ""))
+                continue
             bg, fg, cr = layers_25d(s["file"], focus=tuple(s.get("focus", (0.5, 0.5))))
             s["_bg"], s["_fg"] = bg.name, fg.name
             files += [bg, fg]

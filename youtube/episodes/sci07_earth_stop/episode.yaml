@@ -374,22 +374,26 @@ scenes:
     at:
     - 1
     - 0
-    zoom: 0.04
+    zoom: 0.03
     dx: 0
     dy: 0
     dark: 0.0
-  svg: <ellipse id="bo" cx="960" cy="560" rx="470" ry="400" fill="none" stroke="#FFC93C" stroke-width="6" stroke-dasharray="16 12" opacity="0"/><line id="eq" x1="430" y1="560" x2="1490" y2="560" stroke="#FFC93C" stroke-width="4" stroke-dasharray="12 10" opacity="0"/><ellipse id="pn" cx="960" cy="200" rx="230" ry="60" fill="#3D8BFF" opacity="0"/><ellipse id="ps" cx="960" cy="920" rx="230" ry="60" fill="#3D8BFF" opacity="0"/><path id="an" d="M 1380 520 Q 1360 300 1150 220" fill="none" stroke="#7FC8FF" stroke-width="10" opacity="0"/><path id="as" d="M 1380 600 Q 1360 820 1150 900" fill="none" stroke="#7FC8FF" stroke-width="10" opacity="0"/><rect id="band" x="530" y="520" width="860" height="80" rx="40" fill="#C9965A" opacity="0"/>
-  svg_anim: 'tl.fromTo("#bo",{opacity:0,attr:{rx:400}},{opacity:1,attr:{rx:470},duration:1,ease:"expo.out"},T_BULGE);
+    contain: true
+    size: 860
+    cy: 500
+    rot: 3
+  svg: <ellipse id="bo" cx="960" cy="500" rx="470" ry="417" fill="none" stroke="#FFC93C" stroke-width="6" stroke-dasharray="16 12" opacity="0"/><line id="eq" x1="500" y1="500" x2="1420" y2="500" stroke="#FFC93C" stroke-width="4" stroke-dasharray="12 10" opacity="0"/><ellipse id="pn" cx="960" cy="125" rx="210" ry="50" fill="#3D8BFF" opacity="0"/><ellipse id="ps" cx="960" cy="875" rx="210" ry="50" fill="#3D8BFF" opacity="0"/><path id="an" d="M 1360 470 Q 1340 250 1140 150" fill="none" stroke="#7FC8FF" stroke-width="10" opacity="0"/><path id="as" d="M 1360 530 Q 1340 750 1140 850" fill="none" stroke="#7FC8FF" stroke-width="10" opacity="0"/><rect id="band" x="548" y="465" width="824" height="70" rx="35" fill="#C9965A" opacity="0"/>
+  svg_anim: 'tl.fromTo("#bo",{opacity:0,attr:{rx:417}},{opacity:1,attr:{rx:470},duration:1,ease:"expo.out"},T_BULGE);
 
     tl.fromTo("#eq",{opacity:0},{opacity:1,duration:.4},T_BULGE+0.2);
 
-    tl.to("#bo",{attr:{rx:400},opacity:.35,duration:1.2,ease:"power2.inOut"},T_FLOW);
+    tl.to("#bo",{attr:{rx:417},opacity:.35,duration:1.2,ease:"power2.inOut"},T_FLOW);
 
     tl.fromTo(["#an","#as"],{opacity:0,strokeDasharray:"0 600"},{opacity:1,strokeDasharray:"600 0",duration:.9,ease:"power2.out"},T_FLOW+0.2);
 
-    tl.fromTo(["#pn","#ps"],{opacity:0,attr:{ry:0}},{opacity:.75,attr:{ry:60},duration:1,ease:"expo.out"},T_FLOW+0.8);
+    tl.fromTo(["#pn","#ps"],{opacity:0,attr:{ry:0}},{opacity:.75,attr:{ry:50},duration:1,ease:"expo.out"},T_FLOW+0.8);
 
-    tl.fromTo("#band",{opacity:0,scaleX:.2,transformOrigin:"960px 560px"},{opacity:.85,scaleX:1,duration:.7,ease:"expo.out"},T_LAND);
+    tl.fromTo("#band",{opacity:0,scaleX:.2,transformOrigin:"960px 500px"},{opacity:.85,scaleX:1,duration:.7,ease:"expo.out"},T_LAND);
 
     '
   at_bulge:
@@ -407,19 +411,19 @@ scenes:
     - 1
     - 0.8
     x: 80
-    y: 880
+    y: 470
   - text: 바다 → 북극 · 남극
     at:
     - 2
     - 0.8
-    x: 1400
-    y: 180
+    x: 1440
+    y: 150
   - text: 적도엔 거대한 대륙 하나
     at:
     - 3
     - 0.6
-    x: 1380
-    y: 640
+    x: 1440
+    y: 560
   narration:
   - 지금 지구는 빨리 돌아서, 적도가 극지방보다 21km쯤 볼록 튀어나와 있어요.
   - 회전이 멈추면 이 볼록함을 붙잡던 힘이 사라져요. 그래서 바닷물이 남극과 북극 쪽으로 흘러가요.
