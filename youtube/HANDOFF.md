@@ -1,5 +1,10 @@
 # 이어받기 메모 (2026-11-27 저녁 · 새 세션은 이것부터)
 
+## 11/28 새 세션 (session_01XzgYRuMiqWnt41spL6daXw)
+- 쇼츠 배치: 11/29 공개분까지 옛 배치 그대로 · **11/30 공개분부터 15:50 → 16:50~19:50(1시간) → 다음날 06:50~09:50** (STRATEGY.md)
+- 다음 주식 편: **ep027 닷컴 시스코 결말** (AI 거품 × 2000년 '그때의 엔비디아' · 사용자 픽) — 트렌드 · 조회수(나스닥 결말 8.7천) 근거로 선정
+- 주제 고를 때: `uploads.json` 최근 롱폼과 겹치는지 먼저 · 구글 트렌드 한국 화면(playwright로 trends.google.com/trending?geo=KR) 상위권 + `tools/channel_stats.py` 조회수 참고
+
 ## 지금 상태
 - 공개 대기열: `publish_queue.json` · 예약 작업(트리거)이 시간마다 `tools/publish_queue.py due` 실행
   - 11/27 삼성전자(ep026) · 지구 관통(sci05) 쇼츠 공개 중 → 19:51 마지막 회차에 link_shorts
