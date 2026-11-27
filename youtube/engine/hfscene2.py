@@ -493,7 +493,7 @@ def t_artwave(v, th, dur):
 <img id="wave" class="abs" style="left:{x0}px;top:{y0}px;width:{fw}px;height:{fh}px;transform-origin:30% 60%" src="assets/sn_greatwave_cut.png"/>
 <div id="cap" class="abs">가쓰시카 호쿠사이 〈가나가와 해변의 높은 파도〉 1831년경</div>
 <div id="t1" class="abs tt">바닷물도 <b>1,330km/h</b>로 →</div>
-<div id="t2" class="abs tt" style="top:930px;font-size:58px">대륙의 동쪽 해안을 덮치는 해일</div>"""
+<div id="t2" class="abs tt" style="top:80px;color:#9FD3FF">대륙의 동쪽 해안을 덮치는 해일</div>"""
     css = f"""#grid{{display:none;}} #root{{background:#05060a !important;}}
 #cap{{left:{x0}px;top:{y0 + fh + 50}px;font-size:30px;color:#9a8f7a;font-family:"Pretendard";}}
 .tt{{left:0;right:0;top:80px;text-align:center;font-family:"Pretendard";font-size:74px;color:#fff;opacity:0;}} .tt b{{color:{th['acc']};}}"""
@@ -501,10 +501,14 @@ def t_artwave(v, th, dur):
 tl.fromTo("#wave",{{opacity:0,y:40,scale:.96}},{{opacity:1,y:0,scale:1,duration:.9,ease:"expo.out"}},0.1);
 tl.fromTo("#cap",{{opacity:0}},{{opacity:1,duration:.5}},0.6);
 tl.fromTo("#t1",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.22,ease:"power4.out"}},{A:.3f});
-tl.to("#wave",{{x:420,y:-40,scale:1.55,rotation:4,duration:1.4,ease:"power2.in"}},{B:.3f});
-tl.to("#wave",{{x:1500,y:60,scale:2.4,rotation:8,opacity:.0,duration:1.0,ease:"power3.in"}},{B + 1.4:.3f});
-for(let i=0;i<8;i++){{tl.to("#frame",{{x:(i%2?1:-1)*(14-i*1.6),rotation:(i%2?.4:-.4),duration:.05,ease:"none"}},{B + 1.0}+i*0.05);}}
-tl.to("#frame",{{x:0,rotation:0,duration:.1}},{B + 1.45:.3f});
+tl.to("#frame img",{{filter:"grayscale(1) brightness(.35)",duration:.5,ease:"power2.out"}},{B:.3f});
+tl.to("#wave",{{x:260,y:-60,scale:1.45,rotation:3,filter:"drop-shadow(0 30px 40px rgba(0,0,0,.7))",duration:1.1,ease:"back.out(1.4)"}},{B:.3f});
+tl.to("#wave",{{x:330,y:-40,scale:1.5,duration:{max(0.5, v["c"] - v["b"] - 1.1):.2f},ease:"none"}},{B + 1.1:.3f});
+tl.to("#wave",{{x:1300,y:120,scale:2.3,rotation:9,duration:.9,ease:"power3.in"}},{C:.3f});
+tl.to("#wave",{{opacity:0,duration:.3}},{C + 0.7:.3f});
+for(let i=0;i<8;i++){{tl.to("#frame",{{x:(i%2?1:-1)*(14-i*1.6),rotation:(i%2?.4:-.4),duration:.05,ease:"none"}},{B:.3f}+i*0.05);}}
+tl.to("#frame",{{x:0,rotation:0,duration:.1}},{B + 0.45:.3f});
+tl.to("#t1",{{opacity:0,filter:"blur(6px)",duration:.2,ease:"power3.in"}},{C - 0.2:.3f});
 tl.fromTo("#t2",{{opacity:0,y:20}},{{opacity:1,y:0,duration:.4,ease:"expo.out"}},{C:.3f});
 """
     return body, css, js
