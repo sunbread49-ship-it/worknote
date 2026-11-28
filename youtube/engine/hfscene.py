@@ -429,6 +429,9 @@ class HFScene(Editorial):
             cl = sp.get("countdown_on", 2)
             k = sp.get("countdown_beat", 1)
             v["C0"] = self.line_start(cl) + (bt[k] if bt and sp.get("beat_line") == cl and k < len(bt) else 0.3)
+            if bt and sp.get("beat_line") == cl and len(bt) >= 3 and "countdown_beat" not in sp:   # 11/28: 실제 소리 난 마지막 3박 = 셋 · 둘 · 하나
+                v["BT"] = [self.line_start(cl) + x for x in bt[-3:]]
+                v["C0"] = v["BT"][0]
             v["RV"] = self.line_start(sp.get("reveal_on", 3)) + sp.get("reveal_offset", 0)
         elif tpl == "stat":
             v["T0"] = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.2)
@@ -513,7 +516,7 @@ class HFScene(Editorial):
         sp = self.spec
         if sp["template"] in ("quiz", "quizorder"):
             v = self._vars()
-            return [(v["C0"] + i, "tick", 0.7) for i in range(3)] + [(v["RV"], "ding", 0.8), (v["RV"] + 0.4, "pop", 0.5)]
+            return [(v.get("BT", [v["C0"] + i for i in range(3)])[i], "tick", 0.7) for i in range(3)] + [(v["RV"], "ding", 0.8), (v["RV"] + 0.4, "pop", 0.5)]
         if sp["template"] == "stat":
             v = self._vars()
             return [(v["T0"], "count_roll", 0.6), (v["T0"] + 1.1, "boom", 0.6)] + ([(v["ST"], "pop", 0.6)] if "ST" in v else [])

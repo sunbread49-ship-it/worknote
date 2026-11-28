@@ -145,12 +145,12 @@ def t_quizorder(v, th, dur):
     for i, c in enumerate(ch):
         rows += (f'<div id="o{i}" class="abs od" style="top:{400 + i * 150}px"><div class="no">{i + 1}</div><div class="tx">{_esc(c)}</div>'
                  f'<div class="bt">선택</div><div id="fl{i}" class="fl"></div></div>')
-    body = f"""<div id="hd" class="abs"><span class="dot"></span>{_esc(v.get('kicker', '퀴즈 · 체결 전 3초'))}</div>
+    body = f"""<div id="hd" class="abs"><span class="dot"></span>{_esc(v.get('kicker', '퀴즈 · 3초 안에 맞혀 보세요'))}</div>
 <div id="q" class="abs">{_hl(v['question'], v.get('highlight'), 'mk')}</div>
 {rows}
-<div id="led" class="abs"><div class="lb">체결까지</div><div id="dg">3</div><div id="pb"><i id="pf"></i></div></div>
+<div id="led" class="abs"><div class="lb">정답 공개까지</div><div id="dg">3</div><div id="pb"><i id="pf"></i></div></div>
 <div id="hint" class="abs">{_esc(v.get('hint', ''))}</div>
-<div id="st" class="abs">체결</div>"""
+<div id="st" class="abs">정답</div>"""
     css = f"""#hd{{left:120px;top:150px;font-family:Pretendard;font-size:44px;color:{GOLD};letter-spacing:3px}}
 .dot{{display:inline-block;width:20px;height:20px;border-radius:50%;background:{RED};margin-right:18px;box-shadow:0 0 14px {RED}}}
 #q{{left:120px;right:520px;top:215px;font-family:Pretendard;font-size:84px;color:#fff;line-height:1.2}} #q span{{display:inline-block;margin-right:.24em}}
@@ -173,7 +173,8 @@ tl.fromTo("#mk",{{scaleX:0}},{{scaleX:1,duration:.45,ease:"expo.out"}},0.8);
 tl.fromTo(".od",{{opacity:0,x:120}},{{opacity:1,x:0,duration:.5,ease:"expo.out",stagger:.1}},0.6);
 tl.fromTo("#hint",{{opacity:0}},{{opacity:1,duration:.3}},1.4);
 tl.fromTo("#led",{{opacity:0,x:60}},{{opacity:1,x:0,duration:.45,ease:"expo.out"}},{C0 - 0.45:.3f});
-for (let i=0;i<3;i++){{const t={C0:.3f}+i;
+const BT={json.dumps([round(x, 3) for x in v.get("BT", [C0, C0 + 1, C0 + 2])])};
+for (let i=0;i<3;i++){{const t=BT[i];
  tl.set("#dg",{{textContent:String(3-i)}},t);
  tl.fromTo("#dg",{{scale:1.5,opacity:.3}},{{scale:1,opacity:1,duration:.35,ease:"expo.out"}},t);
  tl.fromTo("#pf",{{scaleX:1-i/3}},{{scaleX:1-(i+1)/3,duration:.98,ease:"none"}},t);}}

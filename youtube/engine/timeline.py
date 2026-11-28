@@ -224,7 +224,16 @@ def cues(scenes):
     """[(global_start, global_end, text)]"""
     out = []
     for sc in scenes:
-        for (s, e), text in zip(sc.lines, sc.narration):
+        bl, bts = sc.spec.get("beat_line"), sc.spec.get("_beats") or []
+        for li, ((s, e), text) in enumerate(zip(sc.lines, sc.narration)):
+            if bl and li == bl - 1 and len(bts) >= 3 and "|" in text:   # 11/28: 퀴즈 '셋 · 둘 · 하나' 자막을 실제 소리 위치에
+                ps = [x.strip() for x in text.split("|") if x.strip()]
+                if len(ps) >= 4:
+                    st = [s] + [s + x for x in bts[-3:]] + [e]
+                    pre = " ".join(ps[:-3])
+                    for k, p_ in enumerate([pre] + ps[-3:]):
+                        out.append((sc.start + st[k], sc.start + st[k + 1], p_))
+                    continue
             parts = _balance(chunks(text.replace("[낮게]", "").strip()))
             w = [max(1, syllables(p)) for p in parts]
             tot, acc = sum(w), s

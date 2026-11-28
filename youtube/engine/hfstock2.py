@@ -185,9 +185,9 @@ def t_teaser(v, th, dur):
     css = f"""#grid{{display:none}} #root{{background:linear-gradient(#141A2E,#070A14) !important}}
 .cld{{border-radius:50%;background:radial-gradient(ellipse at 50% 60%,#3A4258,#1B2033 70%,rgba(0,0,0,0) 72%);opacity:.9}}
 #rn{{inset:0}} #rn i{{position:absolute;top:-60px;width:3px;height:60px;background:linear-gradient(transparent,#8FA3D6)}}
-#kk{{left:0;right:0;top:300px;text-align:center;font-family:Pretendard;font-size:46px;color:{GOLD};letter-spacing:8px}}
-#sh{{left:810px;top:370px}} #tt{{left:0;right:0;top:760px;text-align:center;font-family:Pretendard;font-size:92px;color:#fff}} #tt span{{display:inline-block;margin:0 .12em}} #tt .hlw{{color:{GOLD}}}
-#sb{{left:0;right:0;top:880px;text-align:center;font-family:Pretendard;font-size:44px;color:#C9D2E8}}"""
+#kk{{left:0;right:0;top:200px;text-align:center;font-family:Pretendard;font-size:46px;color:{GOLD};letter-spacing:8px}}
+#sh{{left:810px;top:270px}} #tt{{left:0;right:0;top:660px;text-align:center;font-family:Pretendard;font-size:92px;color:#fff}} #tt span{{display:inline-block;margin:0 .12em}} #tt .hlw{{color:{GOLD}}}
+#sb{{left:0;right:0;top:780px;text-align:center;font-family:Pretendard;font-size:44px;color:#C9D2E8}}"""
     js = f"""document.querySelectorAll('#rn i').forEach((d,i)=>{{tl.fromTo(d,{{y:0}},{{y:1200,duration:.9,ease:"none",repeat:{int(dur / 0.9) + 1}}},(i%9)*0.1);}});
 tl.fromTo(".cld",{{opacity:0,y:-60}},{{opacity:.9,y:0,duration:.8,ease:"expo.out",stagger:.08}},0);
 tl.fromTo("#kk",{{opacity:0,letterSpacing:"30px"}},{{opacity:1,letterSpacing:"8px",duration:.6,ease:"expo.out"}},{A:.3f});

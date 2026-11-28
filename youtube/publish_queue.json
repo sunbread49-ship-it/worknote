@@ -854,10 +854,38 @@
   "done": null
  },
  {
+  "channel": "stock",
+  "id": "yycMKaswBVc",
+  "at": "2026-11-29T15:50",
+  "note": "ep028_samsung_dividend long",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "gNcSB26QRp8",
+  "at": "2026-11-29T15:50",
+  "note": "ep028_samsung_dividend 쇼츠1",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "SuDpLX4ld1A",
+  "at": "2026-11-29T18:00",
+  "note": "ep028_samsung_dividend 쇼츠2",
+  "done": null
+ },
+ {
   "channel": "science",
   "id": "Yp1c3phjjWQ",
   "at": "2026-11-29T18:00",
   "note": "sci07_earth_stop 쇼츠2",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "tVV4EdyEU14",
+  "at": "2026-11-29T20:00",
+  "note": "ep028_samsung_dividend 쇼츠3",
   "done": null
  },
  {
@@ -868,10 +896,24 @@
   "done": null
  },
  {
+  "channel": "stock",
+  "id": "E2o07OFRmIo",
+  "at": "2026-11-29T22:00",
+  "note": "ep028_samsung_dividend 쇼츠4",
+  "done": null
+ },
+ {
   "channel": "science",
   "id": "nbVNAxF4GBE",
   "at": "2026-11-29T22:00",
   "note": "sci07_earth_stop 쇼츠4",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "ypWcLKoj16k",
+  "at": "2026-11-30T07:30",
+  "note": "ep028_samsung_dividend 쇼츠5",
   "done": null
  },
  {
@@ -882,10 +924,24 @@
   "done": null
  },
  {
+  "channel": "stock",
+  "id": "C3e_YcvN5yk",
+  "at": "2026-11-30T09:30",
+  "note": "ep028_samsung_dividend 쇼츠6",
+  "done": null
+ },
+ {
   "channel": "science",
   "id": "GbFURhB31pQ",
   "at": "2026-11-30T09:30",
   "note": "sci07_earth_stop 쇼츠6",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "bbjYWdeAAQI",
+  "at": "2026-11-30T12:00",
+  "note": "ep028_samsung_dividend 쇼츠7",
   "done": null
  },
  {
@@ -896,10 +952,24 @@
   "done": null
  },
  {
+  "channel": "stock",
+  "id": "7fw3ZlYCK6o",
+  "at": "2026-11-30T13:30",
+  "note": "ep028_samsung_dividend 쇼츠8",
+  "done": null
+ },
+ {
   "channel": "science",
   "id": "HgX2tB1iutk",
   "at": "2026-11-30T13:30",
   "note": "sci07_earth_stop 쇼츠8",
+  "done": null
+ },
+ {
+  "channel": "stock",
+  "id": "s4uQSq79WNE",
+  "at": "2026-11-30T15:00",
+  "note": "ep028_samsung_dividend 쇼츠9",
   "done": null
  },
  {

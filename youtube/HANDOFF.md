@@ -6,6 +6,10 @@
   - **11/28 업로드 완료(비공개 · 롱폼 tAJeJzNHmtg) → 오늘 11/28 15:50 공개** · 쇼츠 9개: 15:50 · 18 · 20 · 22 · 11/29 07:30 · 09:30 · 12:00 · 13:30 · 15:00
   - 공개 작업: 옛 세션 트리거가 같은 시각 `due`로 함께 처리 + **이 세션(session_01XzgYRuMiqWnt41spL6daXw)에 3분 뒤 예비 트리거** → 이 세션도 11/29 15:03까지 보관 금지
   - 주식채널은 매일 15:50 공개(지식채널과 같은 날) — '다음 날'로 미루지 말 것 (11/28 사용자)
+- **ep028 삼성 배당(보너스의 함정)**: 11/28 업로드(비공개 · yycMKaswBVc) → **11/29 15:50 공개** · 쇼츠 18 · 20 · 22 · 11/30 07:30 · 09:30 · 12:00 · 13:30 · 15:00 · 썸네일 E
+  - 끝에 예고: '진짜 하락장, 배당의 힘'(KEEP K2) → 다음 주식 주제 후보
+  - 엔진: 퀴즈 셋·둘·하나 = 실제 소리 난 마지막 3박에 자막 · 화면 숫자 · 틱 맞춤(timeline.cues · hfscene BT) · 장면별 다시 녹음 `tts_take: N`
+- 블로그 자동화(tools/blog.py · BLOG.md): 사용자 결정 대기(발행 방식 · 시점 · 분량 · 지식채널)
   - 데이터: `assets/data/ep027_{csco,amzn,nvda,msft}_daily.csv` (달러 종가 · 배당 제외 · 11.25까지) · 숫자 근거는 episode.yaml 머리 주석
   - 확인할 것: 시스코 2000 회계연도 매출 189억 달러(10-K 원문) · clips 시각은 렌더 후 채우기
 - 새 컨테이너 준비: `python3 tools/fetch_assets.py`(폰트) · `cd hf && npm ci`(HyperFrames) · 배경 영상 mp4 상당수 없음(market_crash_v · money_count_v · datacenter_v · clock_anxiety_v 등 → json만 있음, Pixabay 키 등록 후 다시 받기)
