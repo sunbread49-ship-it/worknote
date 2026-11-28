@@ -118,7 +118,7 @@ class Scene:
                     bx = x - size / 2 - 10 if m.get("side", "left") == "left" else x + size / 2 + 10
                     G.blit(f, b, (bx, y - size / 2 + 10), o * ob, "rb" if m.get("side", "left") == "left" else "lb")
         stp = self.spec.get("stamp")
-        if stp:
+        if isinstance(stp, dict):   # hf stat 의 stamp(글자)는 HyperFrames 쪽에서 그림
             t0 = self._t_of(stp)
             if t >= t0:
                 k = G.clamp((t - t0) / 0.22)

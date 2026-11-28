@@ -418,7 +418,7 @@ class HFScene(Editorial):
                 v["svg_anim"] = a
         if isinstance(sp.get("rows"), list) and tpl not in ("bars",):
             v["rows"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp["rows"]]
-        if tpl == "quiz":
+        if tpl in ("quiz", "quizorder"):
             bt = sp.get("_beats") or []
             cl = sp.get("countdown_on", 2)
             k = sp.get("countdown_beat", 1)
@@ -505,7 +505,7 @@ class HFScene(Editorial):
 
     def extra_sfx(self):
         sp = self.spec
-        if sp["template"] == "quiz":
+        if sp["template"] in ("quiz", "quizorder"):
             v = self._vars()
             return [(v["C0"] + i, "tick", 0.7) for i in range(3)] + [(v["RV"], "ding", 0.8), (v["RV"] + 0.4, "pop", 0.5)]
         if sp["template"] == "stat":
@@ -539,8 +539,16 @@ class HFScene(Editorial):
             return ev
         if sp["template"] == "headline":
             return [(ln["T"], "whoosh", 0.4) for ln in self._vars()["lines"]]
+        from .hfstock import SFX as _SS
+        if sp["template"] in _SS:   # 주식 세트 (2026-11-28)
+            v = self._vars()
+            ev = [(v[k], n, g) for k, n, g in _SS[sp["template"]] if k in v]
+            ev += [(v[f["at"]] + f.get("offset", 0), "pop", 0.45) for f in sp.get("flags", []) if f.get("at") in v]
+            ev += [(r["T"] + 0.6, "pop", 0.35) for r in v.get("rows", []) if isinstance(r, dict) and "T" in r]
+            return ev
         return []
 
 
 TYPES.update({"hf": HFScene})
 from . import hfscene2  # noqa: E402,F401  (그림 장면 2탄)
+from . import hfstock  # noqa: E402,F401  (주식채널 세트 · 2026-11-28)
