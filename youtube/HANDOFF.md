@@ -3,7 +3,9 @@
 ## 11/28 새 세션 (session_01XzgYRuMiqWnt41spL6daXw)
 - 쇼츠 배치: 11/29 공개분까지 옛 배치 그대로 · **11/30 공개분부터 15:50 → 16:50~19:50(1시간) → 다음날 06:50~09:50** (STRATEGY.md)
 - 다음 주식 편: **ep027 닷컴 시스코 결말** (AI 거품 × 2000년 '그때의 엔비디아' · 사용자 픽) — 트렌드 · 조회수(나스닥 결말 8.7천) 근거로 선정
-  - 초안 슬라이드 완료(`render.py episodes/ep027_cisco_dotcom --draft` · 38장 · 가이드 4.9분) → **사용자 검수 대기** → 녹음 · 렌더 → 11/29 15:50 공개(옛 배치)
+  - **11/28 업로드 완료(비공개 · 롱폼 tAJeJzNHmtg) → 오늘 11/28 15:50 공개** · 쇼츠 9개: 15:50 · 18 · 20 · 22 · 11/29 07:30 · 09:30 · 12:00 · 13:30 · 15:00
+  - 공개 작업: 옛 세션 트리거가 같은 시각 `due`로 함께 처리 + **이 세션(session_01XzgYRuMiqWnt41spL6daXw)에 3분 뒤 예비 트리거** → 이 세션도 11/29 15:03까지 보관 금지
+  - 주식채널은 매일 15:50 공개(지식채널과 같은 날) — '다음 날'로 미루지 말 것 (11/28 사용자)
   - 데이터: `assets/data/ep027_{csco,amzn,nvda,msft}_daily.csv` (달러 종가 · 배당 제외 · 11.25까지) · 숫자 근거는 episode.yaml 머리 주석
   - 확인할 것: 시스코 2000 회계연도 매출 189억 달러(10-K 원문) · clips 시각은 렌더 후 채우기
 - 새 컨테이너 준비: `python3 tools/fetch_assets.py`(폰트) · `cd hf && npm ci`(HyperFrames) · 배경 영상 mp4 상당수 없음(market_crash_v · money_count_v · datacenter_v · clock_anxiety_v 등 → json만 있음, Pixabay 키 등록 후 다시 받기)
