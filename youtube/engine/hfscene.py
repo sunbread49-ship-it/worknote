@@ -421,6 +421,9 @@ class HFScene(Editorial):
                               **({"TG": self.line_start(r["tag_on"]) + r.get("tag_offset", 0.2)} if r.get("tag_on") else {})) for r in sp["rows"]]
         if isinstance(sp.get("items"), list):   # 11/28 divcal 등
             v["items"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp["items"]]
+        for k_ in ("cols", "lines", "stops"):   # 11/28 ep029 세트: 목록 항목의 on → T
+            if isinstance(sp.get(k_), list) and tpl != "headline" and sp[k_] and isinstance(sp[k_][0], dict) and "on" in sp[k_][0]:
+                v[k_] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp[k_]]
         for k_ in ("left", "right"):   # 11/28 tower 등: {on, offset} → T
             if isinstance(sp.get(k_), dict) and "on" in sp[k_]:
                 v[k_] = dict(sp[k_], T=self.line_start(sp[k_]["on"]) + sp[k_].get("offset", 0.1))
@@ -432,6 +435,12 @@ class HFScene(Editorial):
             if bt and sp.get("beat_line") == cl and len(bt) >= 3 and "countdown_beat" not in sp:   # 11/28: 실제 소리 난 마지막 3박 = 셋 · 둘 · 하나
                 v["BT"] = [self.line_start(cl) + x for x in bt[-3:]]
                 v["C0"] = v["BT"][0]
+            if sp.get("silent_countdown"):   # 무음 카운트다운: 정답 줄 시작 직전 3초에 화면 3 · 2 · 1
+                rv = self.line_start(sp.get("reveal_on", 2))
+                n_ = float(sp["silent_countdown"])
+                v["BT"] = [rv - n_ - 0.1 + i * n_ / 3 for i in range(3)]
+                v["C0"] = v["BT"][0]
+                v["RV"] = rv
             v["RV"] = self.line_start(sp.get("reveal_on", 3)) + sp.get("reveal_offset", 0)
         elif tpl == "stat":
             v["T0"] = self.line_start(sp.get("on", 1)) + sp.get("offset", 0.2)
@@ -562,3 +571,4 @@ TYPES.update({"hf": HFScene})
 from . import hfscene2  # noqa: E402,F401  (그림 장면 2탄)
 from . import hfstock  # noqa: E402,F401  (주식채널 세트 · 2026-11-28)
 from . import hfstock2  # noqa: E402,F401  (주식채널 세트 2 · 11/28)
+from . import hfstock3  # noqa: E402,F401  (주식채널 세트 3 · ep029)

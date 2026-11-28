@@ -52,15 +52,14 @@ def sticker(text, color=YEL, rot=6, size=70, fg=(20, 20, 20)):
     return b.rotate(rot, expand=True, resample=Image.BICUBIC)
 
 
-def make_a():   # 5개 로고 + '까봤더니 1등이…?'
+def make_a():   # 11/28 사용자 픽: 로고 5개 크게 · 첫 줄 가운데 · 메인 "까봤더니 '반전'" 아래
     f = bg((255, 170, 40))
-    pw, gap = 300, 40
+    pw, ph, gap = 340, 240, 22
     x0 = (W - (5 * pw + 4 * gap)) // 2
     for i, (n, lab) in enumerate(LOGOS):
-        TH.shadowed(f, plaque(n, pw, 190, label=lab), (x0 + i * (pw + gap), 90))
-    TH.shadowed(f, TH.T("배당주 5개, 1,000만 원씩 넣고", 96, WHITE), (W // 2, 360), "mt")
-    TH.shadowed(f, TH.T("까봤더니 1등이…", 210, YEL, hl="1등이…", hl_color=RED), (W // 2, 540), "mt")
-    f.alpha_composite(sticker("반전 주의", RED, -8, 64, WHITE), (W - 420, 820))
+        TH.shadowed(f, plaque(n, pw, ph, pad=26, label=lab), (x0 + i * (pw + gap), 60))
+    TH.shadowed(f, TH.T("배당주 5개, 1,000만 원씩 넣고", 110, WHITE), (W // 2, 440), "mt")
+    TH.shadowed(f, TH.T("까봤더니 '반전'", 230, YEL, hl="'반전'", hl_color=RED), (W // 2, 700), "mt")
     return f
 
 

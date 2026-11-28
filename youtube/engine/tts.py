@@ -337,6 +337,13 @@ def plan(scenes, cfg, work_dir: Path, log=print):
             if sc.spec.get("beat_line"):   # 퀴즈 '셋 · 둘 · 하나'를 정확히 1초 간격으로 (녹음 다시 안 함 · 사이에 침묵 삽입)
                 pcm, spans, beats = _beat_line(pcm, spans, sc.spec["beat_line"] - 1, sc.spec.get("beat", 1.0))
                 sc.spec["_beats"] = beats
+            if sc.spec.get("silent_countdown") and len(spans) >= 2:   # 11/28 사용자: 주식 퀴즈는 '셋 둘 하나'를 말하지 않음 → 정답 줄 앞에 침묵
+                li = sc.spec.get("reveal_on", 2) - 1
+                gap = float(sc.spec["silent_countdown"]) + 0.4
+                cut = max(0, int(spans[li][0] * SR) - int(0.05 * SR))
+                pcm = np.concatenate([pcm[:cut], np.zeros(int(gap * SR), dtype=pcm.dtype), pcm[cut:]])
+                spans = [(a_, b_) if i < li else (a_ + gap, b_ + gap) for i, (a_, b_) in enumerate(spans)]
+                sc.spec["_cd_gap"] = gap
             clips.append((t + cur, pcm))
             lines = [(cur + a, cur + b) for a, b in spans]
             cur += len(pcm) / SR + gap
