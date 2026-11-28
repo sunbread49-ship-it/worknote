@@ -205,7 +205,7 @@ class Scene:
         if m and m.get("say"):
             ev.append((self._t_of(m) + 0.25, m.get("sfx", "bubble"), 0.7))
         stp = self.spec.get("stamp")
-        if stp:
+        if isinstance(stp, dict):
             ev.append((self._t_of(stp) + 0.15, stp.get("sfx", "boom"), 0.9))
         for x in self.spec.get("sfx", []):
             ev.append((self._t_of(x), x["name"], x.get("vol", 1.0)))

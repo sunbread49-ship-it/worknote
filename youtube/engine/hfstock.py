@@ -70,8 +70,8 @@ def t_tickerdrop(v, th, dur):
 #chg{{left:140px;top:770px;font-family:Pretendard;font-size:84px;color:{RED};background:rgba(255,90,78,.14);border-radius:16px;padding:4px 24px}}
 #hilo{{left:830px;top:300px;font-size:36px;color:{th['sub']};font-family:Pretendard}}
 #q{{left:0;right:0;top:110px;text-align:center;font-family:Pretendard;font-size:92px;color:#fff;opacity:0}} #q span{{display:inline-block;margin:0 .12em}} #q .hlw{{color:{RED}}}
-#tape{{left:0;right:0;bottom:112px;height:84px;background:#0A1024;border-top:2px solid rgba(255,255,255,.08);overflow:hidden}}
-#tr{{position:absolute;left:0;top:14px;white-space:nowrap;font-family:Pretendard;font-size:44px;color:#DDE3F2}} .tk{{margin-right:70px}} .tk em{{font-style:normal}}"""
+#tape{{left:0;right:0;bottom:0;height:72px;background:#0A1024;border-top:2px solid rgba(255,255,255,.08);overflow:hidden}}
+#tr{{position:absolute;left:0;top:12px;white-space:nowrap;font-family:Pretendard;font-size:38px;color:#DDE3F2}} .tk{{margin-right:70px}} .tk em{{font-style:normal}}"""
     p0, p1, c1 = float(v["from"]), float(v["to"]), float(v["pct"])
     js = _fmt_js(2) + f"""tl.fromTo("#card",{{opacity:0,x:-60}},{{opacity:1,x:0,duration:.6,ease:"expo.out"}},0.05);
 tl.fromTo("#tr",{{x:0}},{{x:-{max(1200, 900 * len(v.get('tape', [])))},duration:{dur:.2f},ease:"none"}},0);
