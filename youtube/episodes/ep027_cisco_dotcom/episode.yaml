@@ -26,6 +26,7 @@ tts:
     GPU: 지피유
     MS: 마이크로소프트
     1,000만: 천만
+    3번: 삼 번
 bgm:
   volume: 0.22
   chapters:
@@ -63,16 +64,16 @@ youtube:
 # 화면 설계 v2 (11/28 사용자: 영상별 템플릿 다변화 · 글 말고 영상화 · CI+건물 · 주식톤 퀴즈)
 #   새 HyperFrames 주식 세트(engine/hfstock.py) 첫 사용: tickerdrop · brandvs · quizorder · journey · gap · road · race · mirror
 #   + 주식 롱폼에서 처음 쓰는 hf stat · hf bars · flow · portrait — 같은 틀 두 번 없음 · 이전 편들의 kinetic 인트로/차트/칸 막대 대신
-clips:   # 렌더 후 시각(start · end)을 채운다 — 지금은 후보 문구
-- {scene: 1, hook: "엔비디아 -37%\nAI 거품 터지나", hl: -37%}
-- {scene: 2, hook: "26년 전에도\n엔비디아가 있었다", hl: 26년 전}
-- {scene: 3, hook: "시스코는 왜\n세계 1위였나", hl: 세계 1위}
-- {scene: 4, hook: "꼭대기 1,000만 원\n원금까지 몇 년?", hl: 몇 년}
-- {scene: 6, hook: "회사는 3배 컸는데\n주가는 제자리", hl: 제자리}
-- {scene: 7, hook: "같은 날 아마존 산 사람\n1,000만 → 6억", hl: 6억}
-- {scene: 9, hook: "원금 회복 경주\n아마존 7년 · 시스코 25년", hl: 25년}
-- {scene: 10, hook: "그때 작은 회사 엔비디아\n1,000만 → 82억", hl: 82억}
-- {scene: 12, hook: "엔비디아 볼 숫자\n딱 하나", hl: 딱 하나}
+clips:   # 본 렌더(11/28) 시각 기준
+- {start: 0.0, end: 37.6, hook: "엔비디아 -37%\nAI 거품 터지나", hl: -37%}
+- {start: 37.9, end: 67.7, hook: "시스코는 왜\n세계 1위였나", hl: 세계 1위}
+- {start: 68.0, end: 97.7, hook: "꼭대기 1,000만 원\n원금까지 몇 년?", hl: 몇 년}
+- {start: 87.0, end: 117.7, hook: "1,000만 원 → 107만 원\n원금까지 25년", hl: 25년}
+- {start: 118.0, end: 139.7, hook: "회사는 3배 컸는데\n주가는 제자리", hl: 제자리}
+- {start: 140.0, end: 164.7, hook: "같은 날 아마존 산 사람\n1,000만 → 6억", hl: 6억}
+- {start: 185.0, end: 224.7, hook: "그때 작은 회사 엔비디아\n1,000만 → 82억", hl: 82억}
+- {start: 225.0, end: 244.7, hook: "엔비디아는\n제2의 시스코일까?", hl: 시스코}
+- {start: 245.0, end: 267.7, hook: "엔비디아 볼 숫자\n딱 하나", hl: 딱 하나}
 scenes:
 # ── 인트로 ──
 - type: hf
@@ -118,6 +119,7 @@ scenes:
 # ── 그때의 엔비디아 ──
 - type: portrait
   chapter: 그때의 엔비디아
+  tts_take: 1   # 11/28 사용자: 이 장면 목소리가 이질적 → 다시 녹음
   photo: john_chambers
   gray: 1.0
   focus: [0.5, 0.3]

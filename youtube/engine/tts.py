@@ -303,7 +303,7 @@ def plan(scenes, cfg, work_dir: Path, log=print):
     if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene":
         for sc in scenes:
             if sc.narration:
-                made[id(sc)] = gemini_scene(list(sc.narration), cfg, cache, log=log)
+                made[id(sc)] = gemini_scene(list(sc.narration), {**cfg, "_take0": int(sc.spec.get("tts_take", 0))}, cache, log=log)   # 11/28: 장면별 다시 녹음 (tts_take: 1 …)
         if cfg.get("unify", True):
             norm = [p_ for sc in scenes if id(sc) in made and not all(l.lstrip().startswith("[낮게]") for l in sc.narration)
                     for p_ in [made[id(sc)][0]]]
@@ -554,7 +554,8 @@ def gemini_scene(lines, cfg, cache, log=print):
     txt = "\n".join(gemini_text(l, cfg.get("say")) for l in lines)
     speed = "낮고 차분한 톤으로, 한 박자 천천히." if low else cfg.get("speed", "빠르게")
     best = None
-    for take in range(3):
+    t0 = cfg.get("_take0", 0) * 10   # 장면별 다시 녹음: tts_take N → take 10N부터 (기존 0~3과 안 겹치게)
+    for take in range(t0, t0 + 3):
         p = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
         try:
             words = _stt_words(p)
