@@ -417,7 +417,13 @@ class HFScene(Editorial):
                         a = a.replace("T_" + k[3:].upper(), f"{v[k[3:]]:.3f}")
                 v["svg_anim"] = a
         if isinstance(sp.get("rows"), list) and tpl not in ("bars",):
-            v["rows"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp["rows"]]
+            v["rows"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05),
+                              **({"TG": self.line_start(r["tag_on"]) + r.get("tag_offset", 0.2)} if r.get("tag_on") else {})) for r in sp["rows"]]
+        if isinstance(sp.get("items"), list):   # 11/28 divcal 등
+            v["items"] = [dict(r, T=self.line_start(r.get("on", 1)) + r.get("offset", 0.05)) for r in sp["items"]]
+        for k_ in ("left", "right"):   # 11/28 tower 등: {on, offset} → T
+            if isinstance(sp.get(k_), dict) and "on" in sp[k_]:
+                v[k_] = dict(sp[k_], T=self.line_start(sp[k_]["on"]) + sp[k_].get("offset", 0.1))
         if tpl in ("quiz", "quizorder"):
             bt = sp.get("_beats") or []
             cl = sp.get("countdown_on", 2)
@@ -552,3 +558,4 @@ class HFScene(Editorial):
 TYPES.update({"hf": HFScene})
 from . import hfscene2  # noqa: E402,F401  (그림 장면 2탄)
 from . import hfstock  # noqa: E402,F401  (주식채널 세트 · 2026-11-28)
+from . import hfstock2  # noqa: E402,F401  (주식채널 세트 2 · 11/28)
