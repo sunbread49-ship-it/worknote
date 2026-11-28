@@ -1,0 +1,17 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.20,0:00:02.61,S,KTX가 시속 300km,\N여객기가 900km예요.
+Dialogue: 0,0:00:02.61,0:00:05.57,S,서울에 앉아 있는\N우리는 1,330km.
+Dialogue: 0,0:00:05.57,0:00:08.90,S,소리의 속도인\N1,225km보다도 빨라요.
+Dialogue: 0,0:00:08.90,0:00:11.26,S,그런데 왜 아무것도\N못 느낄까요?
+Dialogue: 0,0:00:11.26,0:00:15.60,S,땅도, 공기도, 우리도 다 같이\N같은 속도로 달리고 있어서예요.
+Dialogue: 0,0:00:15.60,0:00:18.86,S,비행기 안에서 커피가\N안 쏟아지는 것처럼요.

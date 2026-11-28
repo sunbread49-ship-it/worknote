@@ -1,0 +1,20 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.02,0:00:04.42,S,딸 이자벨이 검사지를 본격적으로\N만든 건 2차 세계대전 때예요.
+Dialogue: 0,0:00:04.42,0:00:07.29,S,1943년, 첫 검사지를\N저작권 등록했죠.
+Dialogue: 0,0:00:07.29,0:00:09.42,S,전쟁 중에 일하러\N나온 사람들이,
+Dialogue: 0,0:00:09.42,0:00:12.04,S,자기에게 맞는 일을\N찾게 돕고 싶었대요.
+Dialogue: 0,0:00:12.68,0:00:13.98,S,그런데 두 사람 중,
+Dialogue: 0,0:00:13.98,0:00:17.91,S,심리학을 정식으로 공부한\N사람은 한 명도 없었어요.
+Dialogue: 0,0:00:17.91,0:00:20.50,S,딸 이자벨은 대학에서\N정치학을 전공했고,
+Dialogue: 0,0:00:20.50,0:00:22.63,S,추리소설을 쓰는\N작가이기도 했죠.
+Dialogue: 0,0:00:22.63,0:00:24.00,S,이게 첫 번째 증거예요.

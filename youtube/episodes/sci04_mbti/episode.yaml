@@ -1,0 +1,523 @@
+title: 당신의 MBTI는 가짜일 수 있다 | 할 때마다 바뀌는 진짜 이유 3가지
+series_tag: 한 번에 정리
+clip_theme: science
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  tone: ivory
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  tempo: 1.08
+  say:
+    MBTI: 엠비티아이
+    ETS: 이티에스
+    E: 이
+    I: 아이
+    INFP: 인프피
+    ESTJ: 엣티제
+bgm:
+  volume: 0.18
+  chapters:
+    인트로: hope
+    증거 1 · 만든 사람: drive
+    증거 2 · 다시 하면 바뀐다: tense
+    증거 3 · 내 얘기 같은 착각: drive
+    진짜 내 성향 찾는 법: hope
+chapter_titles:
+  인트로: 어제는 E, 오늘은 I?
+  증거 1 · 만든 사람: 엄마와 딸 · 융의 심리 유형 · 1943년 첫 검사지
+  증거 2 · 다시 하면 바뀐다: 5주 뒤 다시 하면 · 51점 vs 49점 · 빅5와 비교
+  증거 3 · 내 얘기 같은 착각: 포러의 실험 4.26점 · 바넘 효과 · 무료 검사의 정체
+  진짜 내 성향 찾는 법: 다른 날 세 번 · 안 바뀌는 글자만 진짜
+clips:   # 2026-11-23 쇼츠 9개 (완결된 이야기 단위 · 15~35초)
+- start: 0.0
+  end: 20.5
+  hook: "MBTI 할 때마다\n바뀌는 이유"
+  hl: 바뀌는 이유
+- start: 25.1
+  end: 51.1
+  hook: "MBTI를 만든 건\n엄마와 딸"
+  hl: 엄마와 딸
+- start: 51.4
+  end: 75.7
+  hook: "MBTI 만든 두 사람\n심리학 전공 0명"
+  hl: 0명
+- start: 76.1
+  end: 92.2
+  hook: "5주 뒤 다시 하면\n절반이 바뀐다"
+  hl: 절반
+- start: 92.5
+  end: 127.8
+  hook: "51점 vs 49점\n정반대 유형"
+  hl: 정반대
+- start: 128.2
+  end: 150.0
+  hook: "모두 똑같은 결과지\n4.26점이 나왔다"
+  hl: "4.26점"
+- start: 150.4
+  end: 165.0
+  hook: "딱 내 얘기 같은 착각\n바넘 효과"
+  hl: 바넘 효과
+- start: 165.3
+  end: 181.8
+  hook: "인터넷 무료 MBTI\n공식이 아니다"
+  hl: 공식이 아니다
+- start: 182.2
+  end: 213.1
+  hook: "진짜 내 MBTI\n찾는 법"
+  hl: 찾는 법
+scenes:
+- type: sci_kinetic
+  chapter: 인트로
+  media:
+    kind: photo
+    file: mb_cafe
+    caption: 처음 만나면 꼭 묻는 질문
+    side: right
+  items:
+  - text: '어제는 E
+
+      오늘은 I?'
+    highlight: 오늘은 I
+    'on': 1
+  - text: '바뀐 건 나일까,
+
+      검사일까?'
+    highlight: 검사
+    'on': 2
+  narration:
+  - 엠비티아이 검사, 할 때마다 결과가 달랐던 적 있으시죠? | 어제는 E였는데, 오늘은 I.
+  - 다들 내가 변했나 싶죠. 그런데 바뀐 건 여러분이 아니라, 검사일 수도 있어요.
+- type: grid
+  chapter: 인트로
+  bg:
+    kind: paper
+  kicker: 4글자 · 16가지 유형
+  title: 당신의 MBTI, 가짜일 수 있다
+  highlight: 가짜
+  n: 16
+  cols: 8
+  cell: 150
+  k: 0
+  hits: []
+  labels:
+  - ISTJ
+  - ISFJ
+  - INFJ
+  - INTJ
+  - ISTP
+  - ISFP
+  - INFP
+  - INTP
+  - ESTP
+  - ESFP
+  - ENFP
+  - ENTP
+  - ESTJ
+  - ESFJ
+  - ENFJ
+  - ENTJ
+  step: 0.06
+  headline: 증거는 딱 세 가지
+  headline_hl: 세 가지
+  headline_on: 1
+  narration:
+  - 오늘은 여러분 엠비티아이가 가짜일 수 있는 증거, 딱 세 가지만 보여 드릴게요.
+  - 특히 세 번째 증거는, 지금 이 순간에도 여러분이 속고 있는 거예요.
+- type: sci_title
+  kicker: 악어새 지식창고 · 한 번에
+  title: '당신의 MBTI
+
+    가짜일 수 있다'
+  highlight: 가짜
+  subtitle: 증거 1 만든 사람 · 증거 2 다시 하면 · 증거 3 내 얘기 같은 착각
+  narration:
+  - 악어새 탐사 수첩, 증거 세 개를 하나씩 열어 볼게요.
+- type: accent_simple
+  chapter: 증거 1 · 만든 사람
+  palette: notyet
+  bg: a
+  ink: b
+  pop: c
+  big: 증거 1
+  big_size: 240
+  caption: 만든 사람은 심리학자가 아니었다
+  narration:
+  - 첫 번째 증거. 이 검사를 만든 사람이에요.
+- type: sci_kinetic
+  chapter: 증거 1 · 만든 사람
+  media:
+    kind: photo
+    file: mb_mother_daughter
+    caption: 캐서린 브릭스와 딸 이자벨
+    side: right
+  items:
+  - text: '만든 사람은
+
+      엄마와 딸'
+    highlight: 엄마와 딸
+    'on': 1
+  narration:
+  - 엠비티아이를 만든 건, 미국의 엄마와 딸이에요. 엄마 캐서린 브릭스, 딸 이자벨 마이어스.
+  - 두 사람 이름을 따서, 마이어스 브릭스. 엠비티아이예요.
+- type: sci_kinetic
+  chapter: 증거 1 · 만든 사람
+  media:
+    kind: photo
+    file: mb_jung
+    caption: 카를 융 (1910년)
+    side: left
+  items:
+  - text: '시작은
+
+      융의 책 한 권'
+    highlight: 융
+    'on': 1
+  narration:
+  - 엄마 캐서린은 원래 사람 성격을 유형으로 나누는 데 푹 빠져 있었어요.
+  - 그러다 스위스 정신의학자 카를 융의 책, 심리 유형을 읽고 무릎을 쳤죠. | 외향과 내향이라는 말도, 융이 널리 알린 말이에요.
+- type: timeline
+  chapter: 증거 1 · 만든 사람
+  bg:
+    kind: paper
+  kicker: 거실 연구 → 세계적인 검사
+  title: MBTI가 걸어온 길
+  highlight: 걸어온 길
+  ticks:
+  - label: '1921'
+    sub: 융 · 심리 유형 출간
+  - label: '1943'
+    sub: 첫 검사지 저작권 등록
+    hl: true
+  - label: '1962'
+    sub: 시험 출판사 ETS 연구판
+  - label: '1980'
+    sub: 이자벨 마이어스 별세
+  - label: 2020년대
+    sub: 한국 MBTI 열풍
+  bottom: 2차 세계대전 때, 일자리 찾는 사람들을 도우려고 만들었다
+  bottom_hl: 2차 세계대전
+  bottom_on: 2
+  narration:
+  - 딸 이자벨이 검사지를 본격적으로 만든 건 2차 세계대전 때예요. 1943년, 첫 검사지를 저작권 등록했죠.
+  - 전쟁 중에 일하러 나온 사람들이, 자기에게 맞는 일을 찾게 돕고 싶었대요.
+- type: accent_simple
+  chapter: 증거 1 · 만든 사람
+  palette: notyet
+  bg: a
+  ink: b
+  pop: c
+  big: 0명
+  big_size: 300
+  caption: 두 사람 중 심리학 학위가 있던 사람
+  narration:
+  - 그런데 두 사람 중, 심리학을 정식으로 공부한 사람은 한 명도 없었어요.
+  - 딸 이자벨은 대학에서 정치학을 전공했고, 추리소설을 쓰는 작가이기도 했죠. | 이게 첫 번째 증거예요.
+- type: accent_simple
+  chapter: 증거 2 · 다시 하면 바뀐다
+  palette: coffee
+  bg: a
+  ink: b
+  pop: b
+  big: 증거 2
+  big_size: 240
+  caption: 다시 하면 결과가 바뀐다
+  narration:
+  - 두 번째 증거. 다시 하면, 결과가 바뀐다는 거예요.
+- type: sci_kinetic
+  chapter: 증거 2 · 다시 하면 바뀐다
+  media:
+    kind: photo
+    file: mb_paper_pittenger
+    caption: 피텐저 (2005) · 상담심리학 학술지
+    side: right
+    tilt: 2
+  items:
+  - text: '5주 뒤 다시 하면
+
+      최대 절반이 바뀐다'
+    highlight: 최대 절반
+    'on': 1
+  narration:
+  - 미국 심리학자 데이비드 피텐저는 2005년 학술지에 이렇게 썼어요.
+  - 5주 뒤에 다시 검사하면, 최대 !!절반!!이 다른 유형이 나온다고요. | 물론 검사 회사는, 다시 해도 꽤 일정하다는 자료로 반박하고 있어요.
+- type: profile
+  chapter: 증거 2 · 다시 하면 바뀐다
+  bg:
+    kind: paper
+  kicker: 외향 ↔ 내향 점수, 사람들은 어디에?
+  title: 대부분은 가운데에 몰려 있다
+  highlight: 가운데
+  values:
+  - 1
+  - 3
+  - 7
+  - 13
+  - 18
+  - 13
+  - 7
+  - 3
+  - 1
+  labels:
+  - 완전 내향
+  - ''
+  - ''
+  - ''
+  - 가운데
+  - ''
+  - ''
+  - ''
+  - 완전 외향
+  hl:
+  - 3
+  - 5
+  pins:
+  - text: 여기가 대부분
+    at: 4
+    'on': 1
+  narration:
+  - 비밀은 점수 분포에 있어요. 실제로 사람들 점수는 양 끝보다, 가운데에 훨씬 많이 몰려 있거든요.
+  - 그날 기분이나 컨디션으로 1, 2점만 달라져도, 유형이 휙 바뀌는 거예요.
+- type: duel
+  chapter: 증거 2 · 다시 하면 바뀐다
+  bg:
+    kind: paper
+  heading: 51점과 49점, 정반대 사람?
+  highlight: 정반대
+  left:
+    title: 외향 51 · 내향 49
+    value: E
+    sub: 외향형으로 분류
+    color: up
+    'on': 1
+  right:
+    title: 외향 49 · 내향 51
+    value: I
+    sub: 내향형으로 분류
+    color: down
+    'on': 2
+  narration:
+  - 예를 들어 외향 51, 내향 49인 사람은 E. 외향 49, 내향 51인 사람은 I.
+  - 사실상 똑같은 사람인데, 정반대 유형으로 나뉘는 거죠. | 이게 두 번째 증거예요.
+- type: matrix
+  chapter: 증거 2 · 다시 하면 바뀐다
+  bg:
+    kind: paper
+  title: MBTI vs 빅5 성격 검사
+  highlight: 빅5
+  kicker: 심리학자들이 연구에 주로 쓰는 건?
+  top: 380
+  row_h: 92
+  font: 40
+  best: false
+  cols:
+  - label: MBTI
+    'on': 1
+    color:
+    - 214
+    - 70
+    - 46
+  - label: 빅5
+    'on': 2
+    color:
+    - 30
+    - 62
+    - 178
+  rows:
+  - label: 결과 모양
+    values:
+    - 0
+    - 0
+    texts:
+    - 16칸 중 하나
+    - 5가지 점수
+  - label: 재는 것
+    values:
+    - 0
+    - 0
+    texts:
+    - 4가지
+    - 5가지
+  - label: 감정 기복(불안)
+    values:
+    - 0
+    - 0
+    texts:
+    - 안 잼
+    - 잼
+  - label: 연구에서
+    values:
+    - 0
+    - 0
+    texts:
+    - 드묾
+    - 표준
+  narration:
+  - 그래서 심리학자들은 연구할 때, 빅 파이브라는 다른 검사를 주로 써요.
+  - 칸에 나누지 않고, 다섯 가지 성향을 점수로 보여 줘요. | 엠비티아이에는 없는, 불안하고 예민한 정도도 재고요.
+- type: accent_simple
+  chapter: 증거 3 · 내 얘기 같은 착각
+  palette: dinner
+  bg: a
+  ink: b
+  pop: c
+  big: 증거 3
+  big_size: 240
+  caption: 내 얘기 같은 착각
+  narration:
+  - 세 번째 증거. 결과지를 보면, 왜 딱 내 얘기 같을까요?
+- type: sci_kinetic
+  chapter: 증거 3 · 내 얘기 같은 착각
+  media:
+    kind: photo
+    file: mb_paper_forer
+    caption: 포러 (1949) · 이상·사회심리학 학술지
+    side: left
+    tilt: -2
+  items:
+  - text: '모두에게
+
+      똑같은 결과지'
+    highlight: 똑같은
+    'on': 2
+  narration:
+  - 1949년 심리학자 버트럼 포러가 학생들에게 성격 검사를 시켰어요.
+  - 그리고 한 사람씩 결과지를 나눠 줬죠. 그런데 그 결과지, 사실 모두 똑같은 내용이었어요.
+- type: accent_simple
+  chapter: 증거 3 · 내 얘기 같은 착각
+  palette: dinner
+  bg: a
+  ink: b
+  pop: c
+  big: '4.26'
+  big_size: 300
+  caption: 모두에게 똑같은 결과지를 줬더니 · 5점 만점에
+  narration:
+  - 학생들은 얼마나 맞는지 5점 만점에, 평균 !!4.26점!!을 줬어요. | 거의 다 내 얘기라고 느낀 거죠.
+- type: sci_kinetic
+  chapter: 증거 3 · 내 얘기 같은 착각
+  media:
+    kind: photo
+    file: mb_barnum
+    caption: P. T. 바넘 (서커스 흥행사)
+    side: right
+  items:
+  - text: '누구에게나 맞는 말
+
+      = 바넘 효과'
+    highlight: 바넘 효과
+    'on': 1
+  narration:
+  - 이렇게 누구에게나 해당하는 말을 내 얘기로 느끼는 걸, 바넘 효과라고 불러요. | 누구에게나 뭔가 하나씩은 보여 준다던, 서커스 흥행사 바넘의 이름에서 따왔죠.
+  - 겉으론 밝지만 속은 여린 편. 듣고 보면 다 내 얘기 같잖아요.
+- type: sci_kinetic
+  chapter: 증거 3 · 내 얘기 같은 착각
+  media:
+    kind: photo
+    file: mb_phone_friends
+    caption: 우리가 하는 무료 검사
+    side: left
+  items:
+  - text: '무료 검사는
+
+      공식 MBTI가 아니다'
+    highlight: 공식 MBTI
+    'on': 1
+  narration:
+  - 그리고 지금 이 순간에도 속고 있는 것 하나. 우리가 인터넷에서 하는 무료 검사, 사실 공식 엠비티아이가 아니에요.
+  - 다른 회사가 만든 비슷한 검사라서, 유형 끝에 A나 T가 붙죠. 공식 검사는 돈을 내고, 전문가 해석과 함께 받아요. | 이게 세 번째 증거예요.
+- type: checklist
+  chapter: 진짜 내 성향 찾는 법
+  bg:
+    kind: paper
+  kicker: 그럼 진짜 내 MBTI는?
+  title: 이렇게 찾으세요
+  title_size: 84
+  highlight: 찾으세요
+  items:
+  - text: 다른 날, 세 번 해 보기
+    highlight: 세 번
+    'on': 1
+  - text: 세 번 다 같은 글자 = 진짜 내 성향
+    highlight: 진짜 내 성향
+    'on': 2
+  - text: 바뀌는 글자 = 그 사이에 있는 사람
+    highlight: 그 사이
+    'on': 3
+  narration:
+  - 그럼 진짜 내 엠비티아이는 어떻게 알까요? 방법은 간단해요. 다른 날, 세 번 해 보세요.
+  - 세 번 다 같은 글자만, 진짜 내 성향이에요.
+  - 바뀌는 글자는, 여러분이 딱 그 사이에 있는 사람이라는 뜻이에요. 양쪽 다 가진 거죠.
+- type: sci_kinetic
+  chapter: 진짜 내 성향 찾는 법
+  media:
+    kind: photo
+    file: mb_interview
+    caption: 채용 면접
+    side: right
+  items:
+  - text: 'MBTI는 가짜라기보다
+
+      흐릿한 사진'
+    highlight: 흐릿한 사진
+    'on': 2
+  narration:
+  - 그래서 엠비티아이는, 가짜라기보다는 흐릿한 사진에 가까워요. | 지원서에 엠비티아이를 묻는 회사가 생겨 논란이 되기도 했지만, 채용이나 연애 같은 중요한 판단의 잣대로 쓰기엔 흐릿하죠.
+  - 재밌는 대화 소재로 쓰되, 사람을 16칸에 가두지만 마세요.
+- type: sci_outro
+  heading: '세 번 해 보면
+
+    몇 글자가 그대로?'
+  highlight: 그대로
+  sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
+  subscribe_on: 2
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  signature_on: 3
+  narration:
+  - 여러분도 세 번 해 보시고, 몇 글자가 그대로였는지 댓글로 알려 주세요.
+  - 다음 지식 주제도 댓글로 받을게요.
+  - 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+thumb_pick: T01
+youtube:
+  title: 당신의 MBTI는 가짜일 수 있다 | 할 때마다 바뀌는 진짜 이유 3가지
+  description: 'MBTI 검사, 할 때마다 결과가 달랐던 적 있으시죠? 바뀐 건 여러분이 아니라 검사일 수도 있어요. 당신의 MBTI가 가짜일 수 있는 증거 세 가지를 논문과 실험으로 따라가 봤습니다.
+
+
+    ✔ 증거 1 · 만든 사람: 심리학 학위가 없던 엄마와 딸 (캐서린 브릭스 · 이자벨 마이어스) · 융의 심리 유형 · 1943년 첫 검사지
+
+    ✔ 증거 2 · 다시 하면 바뀐다: 5주 뒤 최대 절반이 다른 유형 (피텐저 2005, 반론도 함께) · 가운데 몰린 점수 · 빅5와 비교
+
+    ✔ 증거 3 · 내 얘기 같은 착각: 포러의 실험(1949) 4.26점 · 바넘 효과 · 무료 검사는 공식 MBTI가 아니다
+
+    ✔ 진짜 내 성향 찾는 법: 다른 날 세 번 → 안 바뀌는 글자만 진짜
+
+
+    세 번 해 보면 몇 글자가 그대로인가요? 댓글로 남겨 주세요.
+
+
+    [자료] Pittenger, D. J. (2005). Cautionary Comments Regarding the Myers-Briggs Type Indicator. Consulting Psychology Journal, 57(3), 210–221 · Forer, B. R. (1949). The Fallacy of Personal Validation. Journal of Abnormal and Social Psychology, 44(1), 118–123 · The Myers-Briggs Company · Myers & Briggs Foundation
+
+    ※ 논문 화면은 서지 정보로 직접 만든 카드입니다.
+
+    [사진] 캐서린 브릭스 · 이자벨 마이어스 (퍼블릭 도메인) · 카를 융 1910 (퍼블릭 도메인) · P. T. 바넘 (매슈 브래디, 퍼블릭 도메인) — Wikimedia Commons / Unsplash — Julio Lopez · Vitaly Gariev · Mina Rad
+
+
+    #MBTI #심리학 #성격검사 #바넘효과 #지식'
+  privacy: private
+  tags:
+  - MBTI
+  - 엠비티아이
+  - 심리학
+  - 성격검사
+  - 바넘효과
+  - 빅5
+  - 성격유형
+  - ENFP
+  - INFP
+  - 지식
+  - 과학
+  - 심리테스트

@@ -1,0 +1,11 @@
+빈틈없이 평면을 채울 수 있는 정다각형은 정삼각형 · 정사각형 · 정육각형 세 가지뿐.
+그중 같은 넓이를 만드는 둘레(벽 길이)는 육각형이 가장 짧습니다. (넓이 1 기준: 삼각형 4.56 · 사각형 4.00 · 육각형 3.72)
+벌에게 벽은 밀랍이고, 밀랍 1kg을 만들려면 꿀 약 6~8kg이 필요하다고 알려져 있습니다.
+기원전 36년 로마의 바로가 언급한 이 '벌집 추측'은 1999년 수학자 토머스 헤일스가 증명했습니다.
+
+사진 출처 (Wikimedia Commons): Matthew T Rader, Western honey bee on a honeycomb (CC BY-SA 4.0) · Richard Bartz, Apis mellifera carnica worker honeycomb (CC BY-SA 2.5) · Vraj Acharya, Fresh honeycomb dripping honey India (CC BY-SA 4.0)
+깊이 추정: Depth Anything V2 (Apache-2.0)
+
+좋아요 누르고, 친구한테도 물어보세요! 더 신기한 지식은 @악어새지식창고
+
+#과학 #수학 #벌집 #육각형 #자연 #지식 #shorts

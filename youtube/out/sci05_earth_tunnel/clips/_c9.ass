@@ -1,0 +1,17 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.24,0:00:01.76,S,네 번째가 제일 신기해요.
+Dialogue: 0,0:00:01.76,0:00:04.04,S,비스듬하게 뚫어도,\N시간이 똑같아요.
+Dialogue: 0,0:00:04.04,0:00:08.77,S,서울에서 부산까지 뚫어도 42분,\N뉴욕까지 뚫어도 42분.
+Dialogue: 0,0:00:08.77,0:00:11.13,S,짧은 터널은 완만한 미끄럼틀,
+Dialogue: 0,0:00:11.13,0:00:14.48,S,긴 터널은 가파른\N미끄럼틀이라서 그래요.
+Dialogue: 0,0:00:14.48,0:00:17.24,S,그래서 이걸 중력\N열차라고 불러요.

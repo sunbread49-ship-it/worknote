@@ -1,0 +1,840 @@
+title: 나스닥 -20%, 지금 사면? 과거 9번 이때 산 사람들의 결말
+series_tag: 폭락장 데이터
+theme: 08
+pace: punchy
+clip_theme: stock
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    S&P500: 에스앤피 오백
+    AI: 에이아이
+    LTCM: 엘티씨엠
+bgm:
+  volume: 0.22
+  chapters:
+    인트로: tense
+    실험 규칙: drive
+    금방 돌아온 4번: hope
+    더 빠진 3번: drive
+    악몽 2번: tense
+    9번 정리: drive
+    그래서 지금은: hope
+chapter_titles:
+  인트로: 나스닥 고점 대비 -20% · 지금 사도 될까
+  실험 규칙: 과거 9번 · -20% 찍은 첫날 1,000만 원
+  금방 돌아온 4번: 1998 · 2018 · 2020 · 2025
+  더 빠진 3번: 1987 블랙먼데이 · 1990 걸프전 · 2022 금리
+  악몽 2번: 2008 금융위기 · 2000 닷컴버블
+  9번 정리: 추가 하락 · 원금 회복 · 1년 뒤 · 한 번에 vs 나눠서
+  그래서 지금은: 지금 확인할 세 가지
+scenes:
+- type: kinetic
+  chapter: 인트로
+  bg:
+    kind: video
+    file: market_crash_v
+    dark: 0.6
+    blur: 3
+  items:
+  - text: '현금, 슬슬
+
+      넣어 볼까?'
+    highlight: 넣어 볼까
+    'on': 1
+    size: 150
+  - text: 나스닥 고점 대비 -20%
+    highlight: -20%
+    hl_color: down
+    'on': 2
+    size: 130
+  narration:
+  - 요즘 현금 들고 계신 분들, 슬슬 넣어 볼까 고민되시죠?
+  - 나스닥이 10월 6일 꼭대기에서, 벌써 !!20%!! 가까이 빠졌거든요.
+- type: chart
+  chapter: 인트로
+  chart:
+    series: ndx
+    start: '2026-06-01'
+    end: '2026-11-20'
+    color:
+    - 240
+    - 84
+    - 84
+    draw:
+      'on': 1
+      dur: 2.0
+    marks:
+    - date: '2026-10-06'
+      label: 사상 최고
+      sub: '10.6'
+      'on': 1
+      offset: 1.2
+      dy: -70
+      dx: -80
+      color: gold
+    - date: '2026-11-20'
+      label: -19.8%
+      sub: 고점 대비
+      'on': 2
+      dy: 60
+      dx: -90
+      color: down
+      size: 36
+    source: '자료: 나스닥100 일간 종가 (11.20 기준)'
+    title: 나스닥100 · 2026년 하반기
+  narration:
+  - 다들 바닥 확인하고 사겠다고 하죠. | 그런데 바닥은, 지나고 나서야 보여요.
+  - 그래서 오늘은 반대로 해 볼게요. 지금처럼 나스닥이 20% 빠진 날, 바로 산 사람들은 어떻게 됐을까?
+- type: grid
+  chapter: 인트로
+  kicker: 1985 ~ 2026 · 나스닥100
+  title: 고점 대비 -20%, 과거 딱 9번
+  highlight: 딱 9번
+  n: 9
+  cols: 9
+  cell: 150
+  k: 0
+  hits: []
+  labels:
+  - '1987'
+  - '1990'
+  - '1998'
+  - '2000'
+  - '2008'
+  - '2018'
+  - '2020'
+  - '2022'
+  - '2025'
+  step: 0.15
+  headline: 이 중 몇 번이 바닥이었을까?
+  headline_hl: 몇 번
+  headline_on: 2
+  narration:
+  - 나스닥 40년 역사에서, 이런 날은 딱 !!9번!!이었어요.
+  - 9번 중 몇 번이 바닥이었을까요? | 반반쯤이라고 생각하시죠? 결과는 생각보다 훨씬 극단적이었어요.
+- type: title
+  kicker: 폭락장 데이터 · 나스닥 40년
+  title: '나스닥 -20%
+
+    그날 산 사람들'
+  highlight: 그날 산 사람들
+  subtitle: 블랙먼데이 · 닷컴 · 금융위기 · 코로나 · 금리 · 관세
+  narration:
+  - 아홉 번의 그날, 1,000만 원씩 넣어 볼게요.
+- type: checklist
+  chapter: 실험 규칙
+  bg:
+    kind: photo
+    file: ev_wallst
+    dark: 0.72
+    blur: 4
+  kicker: 실험 규칙
+  title: 딱 세 가지 규칙
+  title_size: 84
+  highlight: 세 가지
+  items:
+  - text: 직전 2년 꼭대기보다 20% 빠진 첫날, 1,000만 원
+    highlight: 첫날
+    'on': 1
+  - text: 나스닥100 지수 그대로 · 레버리지 없음
+    highlight: 레버리지 없음
+    'on': 2
+  - text: 원금 회복 = 바닥 찍고 산 가격을 되찾은 날
+    highlight: 원금 회복
+    'on': 3
+  narration:
+  - 규칙은 세 가지예요. 직전 2년 꼭대기보다 20% 빠진 첫날, 나스닥 지수에 1,000만 원.
+  - 개별 종목이 아니라 지수 그대로, 레버리지 없이요.
+  - 그리고 원금 회복은, 바닥을 찍고 다시 내가 산 가격으로 돌아온 날로 볼게요. 배당과 환율은 빼고요.
+- type: chart
+  chapter: 금방 돌아온 4번
+  chart:
+    series: ndx
+    start: '2020-03-12'
+    end: '2021-03-12'
+    base: 1000
+    unit: won
+    color:
+    - 70
+    - 210
+    - 150
+    draw:
+      'on': 1
+      dur: 2.2
+    marks:
+    - date: '2020-03-20'
+      label: 바닥 · 963만
+      sub: 8일 뒤 -3.7%
+      'on': 1
+      offset: 1.0
+      dy: 70
+      dx: 60
+      color: down
+    - date: '2021-03-12'
+      label: 1년 뒤 1,781만
+      sub: +78%
+      'on': 2
+      dy: -60
+      dx: -110
+      color: up
+      size: 36
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+    title: 2020년 3월 12일 코로나 · 1,000만 원 (만 원)
+  narration:
+  - 먼저 코로나. 2020년 3월 12일에 샀다면, 딱 8일 뒤가 바닥이었어요. 고작 3.7% 더 빠졌죠.
+  - 원금은 12일 만에 회복, 1년 뒤엔 !!1,781만 원!!이었어요.
+- type: duel
+  chapter: 금방 돌아온 4번
+  heading: 크리스마스이브 폭락 vs 관세 폭탄
+  highlight: 폭락
+  left:
+    title: 2018.12.21 · 무역전쟁
+    value: 5일
+    sub: 원금 회복 · 1년 뒤 +44%
+    color: up
+    'on': 1
+  right:
+    title: 2025.4.4 · 관세 폭탄
+    value: 5일
+    sub: 원금 회복 · 1년 뒤 +39%
+    color: up
+    'on': 2
+  narration:
+  - 2018년 미중 무역전쟁 때는, 크리스마스이브가 바닥이었어요. 산 지 딱 사흘 뒤죠. 원금 회복까지 5일.
+  - 작년 4월 관세 폭탄도 똑같았어요. 원금 회복 5일, 1년 뒤 39%.
+- type: punch
+  chapter: 금방 돌아온 4번
+  big: +110%
+  label: 1998년 8월 31일 · 러시아 국가부도 · LTCM 사태 · 1년 뒤
+  video:
+    file: money_count_v
+    dark: 0.55
+    blur: 2
+  tone: up
+  'on': 1
+  sub: 바닥까지 고작 -1% · 1,000만 원 → 2,102만 원
+  sub_on: 1
+  narration:
+  - 1998년 러시아가 빚을 못 갚겠다고 선언했을 때는, 더 빠진 게 고작 1%. | 1년 뒤엔 !!110%!!, 두 배가 넘었어요.
+- type: kpi
+  chapter: 금방 돌아온 4번
+  bg:
+    kind: video
+    file: clock_anxiety_v
+    dark: 0.7
+    blur: 4
+  kpis:
+  - label: 9번 중 -20%가 거의 바닥
+    value: 4번
+    color: red
+    'on': 1
+  - label: 그때 더 빠진 건 최대
+    value: -3.7%
+    color: navy
+    'on': 2
+  bars:
+  - label: '1998'
+    value: 1.0
+    text: -1.0%
+    hl: false
+  - label: '2018'
+    value: 2.4
+    text: -2.4%
+    hl: false
+  - label: '2020'
+    value: 3.7
+    text: -3.7%
+    hl: true
+  - label: '2025'
+    value: 1.8
+    text: -1.8%
+    hl: false
+  bars_on: 1
+  vmax: 5
+  narration:
+  - 이렇게 9번 중 4번은, -20%가 사실상 바닥이었어요.
+  - 산 뒤에 더 빠진 건 많아야 3.7%. 바닥을 기다린 사람은, 오히려 못 샀죠.
+- type: chart
+  chapter: 더 빠진 3번
+  chart:
+    series: ndx
+    start: '1987-10-19'
+    end: '1988-10-19'
+    base: 1000
+    unit: won
+    color:
+    - 240
+    - 190
+    - 70
+    draw:
+      'on': 1
+      dur: 2.0
+    marks:
+    - date: '1987-10-26'
+      label: 825만 · -17.5%
+      sub: 1주일 뒤
+      'on': 1
+      offset: 1.0
+      dy: 70
+      dx: 70
+      color: down
+    - date: '1987-12-21'
+      label: 원금 회복
+      sub: 63일
+      'on': 2
+      dy: -70
+      dx: 0
+      color: up
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+    title: 1987년 10월 19일 블랙먼데이 · 1,000만 원 (만 원)
+  narration:
+  - 하지만 늘 그렇진 않았어요. 1987년 블랙먼데이 날 샀다면, 일주일 만에 17.5%가 더 빠졌어요.
+  - 그래도 원금은 두 달, 63일 만에 돌아왔어요.
+- type: columns
+  chapter: 더 빠진 3번
+  title: 더 빠졌지만, 돌아왔다
+  highlight: 돌아왔다
+  kicker: -20% 날 산 뒤 추가 하락 → 원금 회복
+  'on': 1
+  rows:
+  - label: '1987'
+    sub: 블랙먼데이 · 원금 63일
+    text: -17.5%
+    value: 17.5
+    sub_hl: 원금 63일
+  - label: '1990'
+    sub: 걸프전 · 원금 110일
+    text: -16.1%
+    value: 16.1
+    sub_hl: 원금 110일
+  - label: '2022'
+    sub: 금리 쇼크 · 원금 382일
+    text: -18.1%
+    value: 18.1
+    sub_hl: 원금 382일
+  narration:
+  - 1990년 걸프전 때도 16% 더 빠졌고, 원금까지 110일.
+  - 2022년 금리 쇼크 때는 18% 더 빠지고, 원금까지 !!1년!!이 넘게 걸렸어요. | 1년 뒤 성적은 -6.5%였죠.
+- type: punch
+  chapter: 악몽 2번
+  big: -42%
+  label: 2008년 1월 23일에 산 1,000만 원 · 11월 바닥
+  photo:
+    file: ev_lehman
+    dark: 0.6
+    focus:
+    - 0.5
+    - 0.4
+  tone: down
+  'on': 1
+  sub: 리먼 파산 · 원금 회복까지 1년 10개월
+  sub_on: 2
+  shake:
+  - 'on': 1
+    offset: 0.1
+    amp: 12
+    dur: 0.4
+  narration:
+  - 그리고 진짜 악몽. 2008년 1월, 나스닥이 20% 빠져서 샀는데,
+  - 그해 9월 리먼 브러더스가 파산하면서, 거기서 !!42%!!가 더 빠졌어요. 원금까지 1년 10개월.
+- type: chart
+  chapter: 악몽 2번
+  chart:
+    series: ndx
+    start: '2000-04-12'
+    end: '2014-06-30'
+    base: 1000
+    unit: won
+    color:
+    - 240
+    - 84
+    - 84
+    draw:
+      'on': 1
+      dur: 2.6
+    marks:
+    - date: '2002-10-07'
+      label: 221만 · -78%
+      sub: '2002.10'
+      'on': 1
+      offset: 1.4
+      dy: 70
+      dx: 60
+      color: down
+      size: 36
+    - date: '2014-02-13'
+      label: 원금 회복
+      sub: '2014.2'
+      'on': 2
+      dy: -70
+      dx: -80
+      color: up
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+    title: 2000년 4월 12일 닷컴버블 · 1,000만 원 (만 원)
+  narration:
+  - 최악은 2000년 닷컴버블이에요. 20% 빠졌다고 샀는데, 거기서 또 !!78%!!가 빠졌어요. 1,000만 원이 221만 원.
+  - 원금을 되찾은 건, 2014년 2월이었어요.
+- type: ticket
+  chapter: 악몽 2번
+  kicker: 닷컴버블 · -20% 날 산 1,000만 원
+  title: 원금 회복까지
+  label: 2000.4.12 매수 → 2014.2.13 원금
+  value: '13'
+  unit: 년 10개월
+  stub: '추가 하락 -78%
+
+    1년 뒤 -53%
+
+    그 사이 금융위기까지'
+  highlight: 13년
+  narration:
+  - 원금까지 무려 !!13년 10개월!!. 서른 살에 샀다면, 마흔넷에 본전이에요.
+- type: lollipop
+  chapter: 9번 정리
+  title: 원금 회복까지 걸린 시간
+  highlight: 원금 회복
+  kicker: 나스닥 -20% 날 산 1,000만 원
+  'on': 1
+  step: 0.4
+  top: 380
+  row_h: 50
+  title_y: 140
+  vmax: 75
+  rows:
+  - label: 2000 닷컴
+    value: 71.1
+    text: 13년 10개월
+    hl: true
+  - label: 2008 금융위기
+    value: 25.7
+    text: 1년 10개월
+  - label: 2022 금리
+    value: 19.5
+    text: 1년
+  - label: 1990 걸프전
+    value: 10.5
+    text: 110일
+  - label: 1987 블랙먼데이
+    value: 7.9
+    text: 63일
+  - label: 1998 러시아
+    value: 6.2
+    text: 39일
+  - label: 2020 코로나
+    value: 3.5
+    text: 12일
+  - label: 2018 무역전쟁
+    value: 2.2
+    text: 5일
+  - label: 2025 관세
+    value: 2.2
+    text: 5일
+  narration:
+  - 아홉 번을 한 줄로 세워 볼게요. | 원금 회복까지, 9번 중 6번은 4개월 안이었어요. 가운데 값은 딱 두 달이고요.
+  - 그런데 단 한 번, 닷컴은 13년 10개월. | 평균이 아니라, 이 한 번이 무서운 거예요.
+  note: 막대 길이는 제곱근 눈금 (짧은 기간도 보이게)
+- type: grid
+  chapter: 9번 정리
+  kicker: -20% 날 산 1,000만 원 · 1년 뒤
+  title: 1년 뒤 성적표
+  highlight: 성적표
+  n: 9
+  cols: 9
+  cell: 150
+  k: 6
+  hits:
+  - 0
+  - 1
+  - 2
+  - 5
+  - 6
+  - 8
+  labels:
+  - '1987'
+  - '1990'
+  - '1998'
+  - '2000'
+  - '2008'
+  - '2018'
+  - '2020'
+  - '2022'
+  - '2025'
+  hit_color:
+  - 70
+  - 210
+  - 150
+  step: 0.12
+  headline: 9번 중 6번 플러스 · 그리고 지금은 9번 모두 플러스
+  headline_hl: 9번 모두
+  headline_on: 2
+  narration:
+  - 1년 뒤 성적은 9번 중 !!6번!!이 플러스. 마이너스는 닷컴, 금융위기, 2022년 금리 쇼크였어요.
+  - 그리고 지금까지 들고 있었다면, 아홉 번 모두 플러스예요. 닷컴 때 산 것도요.
+- type: matrix
+  chapter: 9번 정리
+  title: 한 번에 vs 6개월 나눠서
+  highlight: 나눠서
+  kicker: -20% 날부터 · 1년 뒤 수익률
+  top: 380
+  row_h: 84
+  font: 46
+  cols:
+  - label: 한 번에
+    'on': 1
+    color: &id001
+    - 255
+    - 204
+    - 40
+  - label: 6개월 나눠
+    'on': 2
+    color: &id002
+    - 70
+    - 210
+    - 150
+  rows:
+  - label: 1998 러시아
+    values:
+    - 110
+    - 60
+    texts:
+    - +110%
+    - +60%
+  - label: 2020 코로나
+    values:
+    - 78
+    - 41
+    texts:
+    - +78%
+    - +41%
+  - label: 2022 금리
+    values:
+    - -6.5
+    - -3
+    texts:
+    - -6.5%
+    - -3.0%
+  - label: 2008 금융위기
+    values:
+    - -34
+    - -37
+    texts:
+    - -34%
+    - -37%
+  - label: 2000 닷컴
+    values:
+    - -53
+    - -53
+    texts:
+    - -53%
+    - -53%
+  note: '자료: 나스닥100 · 6개월 나눠 = 매달 1/6씩 · 9번 중 한 번에가 앞선 건 7번'
+  narration:
+  - 그럼 나눠 사면 더 안전할까요? 6개월에 걸쳐 나눠 산 경우와 비교해 봤어요.
+  - 9번 중 7번은, 한 번에 산 쪽이 더 벌었어요. | 그런데 닷컴과 금융위기 땐, 나눠 사도 똑같이 크게 잃었어요.
+  - 나눠 사기는 수익을 지켜 주는 게 아니라, 마음을 지켜 주는 방법인 거죠.
+  title_y: 140
+  title_parts:
+  - - 한 번에
+    - *id001
+  - - vs
+    - null
+  - - 6개월 나눠서
+    - *id002
+  best: row
+- type: chart
+  chapter: 그래서 지금은
+  chart:
+    lines:
+    - series: ndx
+      color: down
+      label: 나스닥100
+    - series: spx
+      color: neutral
+      label: S&P500
+    base: 100
+    start: '2026-07-01'
+    end: '2026-11-20'
+    end_labels: true
+    draw:
+      'on': 1
+      dur: 2.0
+    marks:
+    - date: '2026-10-06'
+      label: 10.6 사상 최고
+      'on': 1
+      offset: 1.0
+      dy: -60
+      color: gold
+    rect:
+    - 300
+    - 200
+    - 1200
+    - 620
+    source: '자료: 일간 종가 (11.20 기준)'
+    title: 지금 · 10번째 -20% (7월 1일 = 100)
+  narration:
+  - 그럼 지금은, 10번째 -20%예요. 2018년처럼 금방 돌아올까요, 2000년처럼 길어질까요?
+  - 솔직히 아무도 몰라요. | 다만 닷컴과 금융위기의 공통점은 있었어요. 주가만이 아니라, 기업 이익까지 크게 무너졌다는 거예요.
+- type: checklist
+  chapter: 그래서 지금은
+  bg:
+    kind: video
+    file: stock_decline_v
+    dark: 0.72
+    blur: 6
+  kicker: 지금 현금 넣기 전에
+  title: 딱 세 가지만 확인하세요
+  title_size: 80
+  highlight: 세 가지
+  items:
+  - text: 주가만 빠졌나, 이익까지 무너지나
+    highlight: 이익까지
+    'on': 1
+  - text: 13년 안 써도 되는 돈인가
+    highlight: 13년
+    'on': 2
+  - text: 지수인가 · 레버리지 · 개별 종목은 다르다
+    highlight: 레버리지
+    'on': 3
+  narration:
+  - 그래서 지금 현금을 넣기 전에, 딱 세 가지만 확인하세요. 첫째, 주가만 빠진 건지, 기업 이익까지 무너지고 있는지.
+  - 둘째, 최악의 경우 13년 동안 안 써도 되는 돈인지.
+  - 셋째, 오늘 이야기는 지수예요. 레버리지나 개별 종목은, 원금이 영영 안 돌아올 수도 있어요.
+- type: outro
+  heading: '나스닥 -20%
+
+    여러분은 지금 사시겠어요?'
+  highlight: 지금 사시겠어요?
+  sub: 지금 · 나눠서 · 더 기다린다 · 댓글로 남겨 주세요
+  subscribe_on: 2
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 3
+  disclaimer: '본 영상은 투자 교육 목적이며, 매수 · 매도 추천이 아닙니다.
+
+    과거 수익률이 미래 수익을 보장하지 않습니다. 배당 · 환율 · 세금 제외 계산입니다.'
+  narration:
+  - 여러분은 지금 사시겠어요, 나눠서 사시겠어요, 아니면 더 기다리시겠어요?
+  - 댓글로 남겨 주시면, 숫자로 같이 따져 드릴게요.
+  - 오늘도 감 말고, 숫자로 투자하세요.
+thumbs10:
+- name: T01
+  p: P01
+  photo: stock_monitor
+  focus:
+  - 0.5
+  - 0.5
+  top: 나스닥 고점 대비 -20%
+  bottom: 지금이 바닥일까?
+  hl: 바닥
+  chips:
+  - '1987'
+  - '2000'
+  - '2008'
+  - '2020'
+  - '2025'
+  chips_y: 46
+- name: T02
+  p: P09
+  photo: nyse_floor
+  focus:
+  - 0.5
+  - 0.45
+  bubble: '현금, 슬슬
+
+    넣어 볼까?'
+  bottom: '나스닥 -20% 때 산
+
+    9번의 결말'
+  bottom_size: 210
+  bottom_w: 1800
+  hl: -20%
+  bubble_size: 120
+- name: T03
+  p: P03
+  photo: stock_monitor
+  before: -20%
+  after: ???
+  sub: 그날 산 1,000만 원 · 과거 9번
+  label: 나스닥100 · 1987 → 2026
+- name: T04
+  p: P01
+  photo: nyse_floor
+  focus:
+  - 0.5
+  - 0.45
+  top: 나스닥 -20%, 지금이니!!
+  bottom: 현금 넣을 때?
+  hl: 현금
+- name: T05
+  p: P08
+  face_l:
+    file: stock_monitor
+    cx: 0.5
+    cy: 0.5
+    scale: 1.0
+    y: 360
+  face_r:
+    file: ev_wallst
+    cx: 0.5
+    cy: 0.5
+    scale: 1.0
+    y: 360
+  top_l:
+  - 지금 산다
+  - -20% 날 바로
+  top_r:
+  - 더 기다린다
+  - 바닥 확인하고
+  res_l: '?'
+  res_r: '?'
+  bottom: 누가 더 벌었을까?
+  hl: 더
+- name: T06
+  p: P10
+  photo: ev_lehman
+  focus:
+  - 0.5
+  - 0.45
+  label: 2008년 1월 · 나스닥 -20% 날 매수
+  top: 여기서 42% 더 빠졌다
+  bottom: 그래도 샀어야 할까?
+  hl: 샀어야
+- name: T07
+  p: P03
+  photo: nyse_floor
+  before: -20% 매수
+  after: 13년
+  sub: 본전까지 걸린 최악의 시간
+  label: 2000년 닷컴버블
+- name: T08
+  p: P09
+  photo: ev_wallst
+  focus:
+  - 0.5
+  - 0.5
+  bubble: '바닥 확인하고
+
+    살래…'
+  bottom: 그러다 못 산 9번 중 4번
+  hl: 9번 중 4번
+- name: T09
+  p: P10
+  photo: stock_monitor
+  focus:
+  - 0.5
+  - 0.5
+  label: 나스닥 한 주 -10% · 고점 대비 -20%
+  top: 물 타? 기다려?
+  bottom: 40년 데이터로 답함
+  hl: 데이터
+- name: T10
+  p: P01
+  photo: ev_lehman
+  focus:
+  - 0.5
+  - 0.45
+  top: 40년 동안 딱 9번
+  bottom: 지금이 10번째 기회?
+  hl: 10번째
+thumb_pick: T02
+youtube:
+  title: 나스닥 -20%, 지금 사면? 과거 9번 이때 산 사람들의 결말
+  description: '나스닥이 10월 6일 고점 대비 약 20% 빠졌어요. 지금 현금을 넣어도 될까요? 지난 40년 동안 나스닥100이 직전 고점 대비 -20%를 처음 찍은 날은 딱 9번. 그날 1,000만 원을 넣었다면 어떻게 됐는지 데이터로 따라가 봤습니다.
+
+
+    ✔ 금방 돌아온 4번: 1998 러시아 · 2018 무역전쟁 · 2020 코로나 · 2025 관세 (추가 하락 4% 이내)
+
+    ✔ 더 빠진 3번: 1987 블랙먼데이 · 1990 걸프전 · 2022 금리 쇼크
+
+    ✔ 악몽 2번: 2008 금융위기(추가 -42%) · 2000 닷컴버블(추가 -78%, 원금까지 13년 10개월)
+
+    ✔ 원금 회복까지 걸린 시간 · 1년 뒤 성적표 (9번 중 6번 플러스)
+
+    ✔ 한 번에 vs 6개월 나눠 사기 비교
+
+    ✔ 지금 현금 넣기 전 확인할 세 가지
+
+
+    여러분은 지금 사시겠어요, 나눠서 사시겠어요, 더 기다리시겠어요? 댓글로 남겨 주세요.
+
+
+    [자료] 나스닥100 · S&P500 일간 종가 (2026.11.20 기준 · 배당 · 환율 · 세금 제외 계산)
+
+    [사진] 리먼 브러더스 본사 2008.9.15 Robert Scoble (CC BY 2.0) · Wall Street 표지판 Acediscovery (CC BY 4.0) — Wikimedia Commons
+
+    본 영상은 투자 교육 목적이며 매수 · 매도 추천이 아닙니다. 과거 수익률이 미래 수익을 보장하지 않습니다.
+
+
+    #나스닥 #미국주식 #폭락장 #나스닥100 #주식'
+  privacy: private
+  tags:
+  - 나스닥
+  - 미국주식
+  - 폭락장
+  - 나스닥100
+  - 주식
+  - S&P500
+  - 엔비디아
+  - 닷컴버블
+  - 금융위기
+  - 코로나
+  - 저점매수
+  - 물타기
+  - 분할매수
+clips:
+- start: 0.0
+  end: 37.5
+  hook: '나스닥 -20%
+
+    지금 사도 될까?'
+  hl: 지금
+- start: 53.5
+  end: 67.1
+  hook: '코로나 때 -20%에 샀다면
+
+    1년 뒤는?'
+  hl: 1년 뒤
+- start: 67.7
+  end: 90.6
+  hook: '크리스마스이브 폭락
+
+    원금까지 5일'
+  hl: 5일
+- start: 91.2
+  end: 101.1
+  hook: '바닥 기다린 사람이
+
+    못 산 4번'
+  hl: 4번
+- start: 101.7
+  end: 127.6
+  hook: '블랙먼데이에
+
+    샀다면?'
+  hl: 블랙먼데이
+- start: 128.2
+  end: 142.1
+  hook: '-20%에 샀는데
+
+    42% 더 빠졌다'
+  hl: 42%
+- start: 142.7
+  end: 161.5
+  hook: '원금까지
+
+    13년 10개월'
+  hl: 13년 10개월
+- start: 162.1
+  end: 193.6
+  hook: '-20%에 산 9번
+
+    1년 뒤 성적표'
+  hl: 성적표
+- start: 194.3
+  end: 213.8
+  hook: '한 번에 vs 나눠서
+
+    9번 중 7번은?'
+  hl: 7번

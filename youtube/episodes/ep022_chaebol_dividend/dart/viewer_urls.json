@@ -1,0 +1,8 @@
+{
+ "현대자동차": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20260318001394&dcmNo=11142427&eleId=133&offset=9372831&length=49721&dtd=dart4.xsd",
+ "삼성전자": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20260310002820&dcmNo=11104488&eleId=118&offset=5394081&length=85057&dtd=dart4.xsd",
+ "현대글로비스": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20260318001205&dcmNo=11140936&eleId=121&offset=6143995&length=30148&dtd=dart4.xsd",
+ "SK하이닉스": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20260317000635&dcmNo=11132576&eleId=119&offset=6686162&length=105059&dtd=dart4.xsd",
+ "SK": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20260318001157&dcmNo=11140551&eleId=114&offset=16996873&length=26425&dtd=dart4.xsd",
+ "LG": "https://dart.fss.or.kr/report/viewer.do?rcpNo=20260318001025&dcmNo=11139557&eleId=117&offset=6678926&length=44221&dtd=dart4.xsd"
+}

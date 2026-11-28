@@ -1,0 +1,26 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.09,0:00:01.08,S,다음은 오천 원.
+Dialogue: 0,0:00:01.08,0:00:02.24,S,율곡 이이가 있죠.
+Dialogue: 0,0:00:02.24,0:00:05.06,S,2006년에 지금\N모습으로 바뀌었어요.
+Dialogue: 0,0:00:05.06,0:00:07.38,S,왼쪽 건물은 율곡이\N태어난 강릉 오죽헌,
+Dialogue: 0,0:00:07.38,0:00:11.17,S,그 위로 솟은 대나무는, 줄기가\N검은 대나무 오죽이에요.
+Dialogue: 0,0:00:11.82,0:00:13.23,S,실제 오죽헌이에요.
+Dialogue: 0,0:00:13.23,0:00:15.70,S,기와 지붕 모양까지\N지폐 그대로죠.
+Dialogue: 0,0:00:16.60,0:00:18.16,S,그런데 오천 원을 뒤집으면,
+Dialogue: 0,0:00:18.16,0:00:20.56,S,율곡의 어머니가 그린\N그림이 들어 있어요.
+Dialogue: 0,0:00:20.56,0:00:22.69,S,동글동글한 수박에 꽃,
+Dialogue: 0,0:00:22.69,0:00:25.01,S,위쪽엔 나비까지 날아다니죠.
+Dialogue: 0,0:00:25.67,0:00:27.69,S,바로 신사임당의 초충도예요.
+Dialogue: 0,0:00:27.69,0:00:30.20,S,풀과 벌레를 섬세하게\N그린 그림이죠.
+Dialogue: 0,0:00:30.20,0:00:31.91,S,실제 그림과 나란히 보면,
+Dialogue: 0,0:00:31.91,0:00:35.49,S,줄무늬 수박이 지폐 속으로\N그대로 들어온 게 보이죠.

@@ -1,0 +1,16 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.08,0:00:01.37,S,그리고 진짜 악몽.
+Dialogue: 0,0:00:01.37,0:00:04.88,S,2008년 1월, 나스닥이\N20% 빠져서 샀는데,
+Dialogue: 0,0:00:04.88,0:00:08.77,S,그해 9월 리먼\N브러더스가 파산하면서,
+Dialogue: 0,0:00:08.77,0:00:11.44,S,거기서 42%가 더 빠졌어요.
+Dialogue: 0,0:00:11.44,0:00:13.87,S,원금까지 1년 10개월.

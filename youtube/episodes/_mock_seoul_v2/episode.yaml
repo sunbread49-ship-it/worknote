@@ -1,0 +1,96 @@
+title: 목업 v3
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+series_tag: 한 번에 정리
+scenes:
+- type: journal
+  chapter: 동대문구 가족
+  gu: 도봉구
+  eng: Dobong-gu
+  color:
+  - 70
+  - 140
+  - 220
+  tag: No.10 동대문구 가족의 손주
+  photo: sp_dobongsan
+  caption: 도봉산 바위 봉우리
+  tilt: -3.5
+  notes:
+  - text: 도봉산, 쌍문동 둘리뮤지엄
+    'on': 1
+  - text: 동대문에서 성북, 성북에서 도봉
+    'on': 2
+    hl: true
+  seal:
+    top: 동대문구 가족
+    big: '1973'
+    bottom: 도봉구
+    'on': 2
+  narration:
+  - 도봉구는 도봉산, 그리고 아기공룡 둘리가 사는 쌍문동이 있는 곳이에요.
+  - 족보로 보면 동대문구의 손주예요. 동대문구에서 성북구가, 성북구에서 1973년에 도봉구가 나왔거든요.
+  - 둘리가 살던 쌍문동이 바로 여기죠.
+  guide:
+    text: '둘리 고향이
+
+      여기였어?'
+    'on': 3
+- type: journal
+  chapter: 원조 그대로
+  gu: 종로구
+  eng: Jongno-gu
+  color:
+  - 226
+  - 160
+  - 50
+  tag: No.1 1943년부터 원조
+  photo: sp_gyeongbok
+  caption: 경복궁 경회루
+  tilt: 3
+  notes:
+  - text: 경복궁, 북촌, 광화문
+    'on': 1
+  - text: 5대 궁궐 중 4곳이 여기
+    'on': 2
+    hl: true
+  seal:
+    top: 원조 7개 구
+    big: '1943'
+    bottom: 종로구
+    'on': 2
+  narration:
+  - 종로구는 조선 600년 서울의 심장이에요. 경복궁, 북촌, 광화문이 다 여기 있죠.
+  - 조선의 5대 궁궐 중 무려 4곳이 종로구에 있어요.
+- type: journal
+  chapter: 성동구 가족
+  gu: 성동구
+  eng: Seongdong-gu
+  color:
+  - 232
+  - 96
+  - 76
+  tag: No.4 강남 3구의 엄마
+  photo: sp_seongsu4
+  caption: 성수동 골목
+  tilt: -2.5
+  notes:
+  - text: 성수동 카페 거리, 서울숲
+    'on': 1
+  - text: 강남 서초 송파 강동 광진의 뿌리
+    'on': 2
+    hl: true
+  seal:
+    top: 엄마 구
+    big: '1943'
+    bottom: 성동구
+    'on': 2
+  narration:
+  - 성동구 성수동은 낡은 공장 골목이 카페와 팝업 거리로 변했어요.
+  - 그런데 이 성동구가, 강남 3구의 엄마예요. 1975년 성동구에서 강남구가 나왔고, 거기서 서초, 송파, 강동이 다시 태어났거든요.
+  guide:
+    text: '강남의 엄마가
+
+      성수동?'
+    'on': 2
+    offset: 1.0

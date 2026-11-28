@@ -1,0 +1,14 @@
+assets/*
+!assets/people/
+!assets/photos/
+!assets/media/
+assets/media/*
+# 사용자 캐릭터 일러스트(원본·배경 제거본·로고)는 보관
+!assets/media/character_croc_bird_src.png
+!assets/media/character_croc_bird_cutout.png
+!assets/media/profile_circle.png
+out/
+__pycache__/
+*.pyc
+# 녹음 원본은 용량이 커서 커밋하지 않음
+episodes/*/audio/

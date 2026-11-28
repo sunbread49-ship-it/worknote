@@ -1,0 +1,17 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.19,0:00:02.51,S,그럼 언젠가 지구가\N완전히 멈출까요?
+Dialogue: 0,0:00:02.51,0:00:04.52,S,이 속도라면 걱정\N안 하셔도 돼요.
+Dialogue: 0,0:00:04.52,0:00:08.50,S,약 50억 년 뒤, 태양은 지금보다\N훨씬 크게 부풀어 올라요.
+Dialogue: 0,0:00:08.50,0:00:11.10,S,그리고 작게 쪼그라들며\N식어 가요.
+Dialogue: 0,0:00:11.10,0:00:15.37,S,지구가 멈추기 한참 전에, 태양이\N먼저 수명을 다하는 거죠.
+Dialogue: 0,0:00:15.37,0:00:20.01,S,오늘도 우리는 시속 1,330km로,\N안전하게 달리고 있어요.

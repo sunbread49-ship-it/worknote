@@ -1,0 +1,17 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.08,0:00:02.26,S,마지막으로 지폐 크기예요.
+Dialogue: 0,0:00:02.26,0:00:05.42,S,네 장 모두, 세로는\N68mm로 똑같아요.
+Dialogue: 0,0:00:05.42,0:00:10.64,S,그런데 가로는 천 원 136,\N오천 원 142, 만 원 148,
+Dialogue: 0,0:00:10.64,0:00:12.07,S,오만 원 154.
+Dialogue: 0,0:00:12.07,0:00:14.68,S,정확히 6mm씩 길어져요.
+Dialogue: 0,0:00:14.68,0:00:17.37,S,지갑 속에서 지폐들이, 키\N순서대로 줄 서 있는 셈이죠.

@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.22,0:00:01.83,S,자, 이제 지구를 멈춰 볼게요.
+Dialogue: 0,0:00:01.83,0:00:02.06,S,쾅.
+Dialogue: 0,0:00:02.06,0:00:03.42,S,땅은 멈췄어요.
+Dialogue: 0,0:00:03.42,0:00:07.74,S,그런데 그 위에 있는 건,\N아무것도 멈추지 않아요.
+Dialogue: 0,0:00:08.37,0:00:11.86,S,버스가 시속 50km로 달리다\N급정거하면 몸이 앞으로 확 쏠리죠?
+Dialogue: 0,0:00:11.86,0:00:14.91,S,지금은 그 속도가 시속\N1,330km예요.
+Dialogue: 0,0:00:14.91,0:00:19.38,S,땅에 붙어 있지 않은 모든 것이\N동쪽으로, 총알처럼 날아가요.
+Dialogue: 0,0:00:19.38,0:00:21.42,S,사람도, 자동차도, 나무도요.

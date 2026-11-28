@@ -1,0 +1,14 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.22,0:00:01.75,S,재밌는 것도 하나 있어요.
+Dialogue: 0,0:00:01.75,0:00:05.74,S,적도에 사는 60kg인 사람은,\N몸무게가 210g쯤 늘어나요.
+Dialogue: 0,0:00:05.74,0:00:09.84,S,지구가 돌면서 바깥으로 밀어내던\N힘, 원심력이 사라지거든요.

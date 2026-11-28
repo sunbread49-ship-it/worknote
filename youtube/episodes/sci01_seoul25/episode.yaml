@@ -1,0 +1,1170 @@
+title: 서울 25개 구 한 번에 정리 | 구의 족보 · 궁궐과 4대문 · 구별 특징
+series_tag: 한 번에 정리
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  tempo: 1.08
+  say:
+    N서울타워: 엔서울타워
+    IT: 아이티
+    DMC: 디엠씨
+    ㎢: 제곱킬로미터
+    4·19: 사일구
+    No.: '넘버 '
+bgm:
+  volume: 0.18
+  chapters:
+    인트로: hope
+    구의 족보: hope
+    원조 그대로: hope
+    궁궐과 4대문: tense
+    성동구 가족: drive
+    동대문구 가족: drive
+    서대문구 가족: hope
+    영등포구 가족: drive
+    정답 공개: hope
+youtube:
+  title: 서울 25개 구 한 번에 정리 | 구의 족보 · 궁궐과 4대문 · 구별 특징
+  description: ''
+  tags:
+  - 서울
+  - 서울25개구
+  - 서울지도
+  - 한양도성
+  - 4대문
+  - 5대궁궐
+  - 서울구
+  - 강남3구
+  - 지식
+  privacy: private
+scenes:
+- type: seoulmap
+  chapter: 인트로
+  bg:
+    kind: paper
+  names: all
+  name_size: 24
+  groups:
+    성동:
+      gus: &id001
+      - 성동구
+      - 광진구
+      - 강남구
+      - 서초구
+      - 송파구
+      - 강동구
+      color:
+      - 232
+      - 96
+      - 76
+      'on': 1
+      offset: 0.0
+    동대문:
+      gus: &id002
+      - 동대문구
+      - 성북구
+      - 도봉구
+      - 노원구
+      - 강북구
+      - 중랑구
+      color:
+      - 70
+      - 140
+      - 220
+      'on': 1
+      offset: 0.3
+    서대문:
+      gus: &id003
+      - 서대문구
+      - 마포구
+      - 은평구
+      color:
+      - 150
+      - 110
+      - 210
+      'on': 1
+      offset: 0.6
+    영등포:
+      gus: &id004
+      - 영등포구
+      - 관악구
+      - 동작구
+      - 강서구
+      - 양천구
+      - 구로구
+      - 금천구
+      color:
+      - 60
+      - 170
+      - 110
+      'on': 1
+      offset: 0.8999999999999999
+    원조:
+      gus: &id005
+      - 종로구
+      - 중구
+      - 용산구
+      color:
+      - 226
+      - 160
+      - 50
+      'on': 1
+      offset: 1.2
+  quiz:
+  - label: 가장 넓은 구
+    'on': 2
+  - label: 사람이 가장 많은 구
+    'on': 2
+    offset: 0.6
+  - label: 가장 작은 구
+    'on': 2
+    offset: 1.2
+  narration:
+  - 서울에는 구가 25개 있어요. 혹시 다 말할 수 있나요?
+  - 그럼 가장 넓은 구, 사람이 가장 많은 구, 가장 작은 구는요? | 정답은 끝에서 공개할게요.
+- type: title
+  skyline: true
+  y: 250
+  kicker: 악어새 지식창고 · 한 번에
+  title: '서울 25개 구
+
+    한 번에 정리'
+  highlight: 25개 구
+  subtitle: 구의 족보 · 궁궐과 4대문 · 구별 특징
+  narration:
+  - 오늘은 악어새 탐사 수첩을 들고, 서울 25개 구를 한 바퀴 돌아볼게요.
+- type: seoulmap
+  chapter: 구의 족보
+  bg:
+    kind: paper
+  names: all
+  name_size: 22
+  groups:
+    성동:
+      gus: *id001
+      color:
+      - 232
+      - 96
+      - 76
+      'on': 2
+      offset: 0.0
+    동대문:
+      gus: *id002
+      color:
+      - 70
+      - 140
+      - 220
+      'on': 2
+      offset: 0.9
+    서대문:
+      gus: *id003
+      color:
+      - 150
+      - 110
+      - 210
+      'on': 2
+      offset: 1.8
+    영등포:
+      gus: *id004
+      color:
+      - 60
+      - 170
+      - 110
+      'on': 2
+      offset: 2.7
+    원조:
+      gus: *id005
+      color:
+      - 226
+      - 160
+      - 50
+      'on': 2
+      offset: 3.6
+  guide:
+    text: '25개 구,
+
+      뿌리는 딱 7개!'
+    'on': 1
+    xy:
+    - 1300
+    - 860
+    size: 200
+    font: 44
+  credit: '구 신설 · 분리 연혁: 서울특별시 행정구역 변천 (오늘날 경계 기준으로 표시)'
+  narration:
+  - 그런데 이 25개 구, 뿌리를 따라가면 딱 7개예요.
+  - 1943년 처음 생긴 구 7개가, 서울이 커질 때마다 쪼개지고 또 쪼개졌거든요. | 같은 색이 한 집안이에요.
+  - 그래서 오늘은 집안별로, 족보를 따라가 볼게요.
+- type: journal
+  chapter: 원조 그대로
+  gu: 종로구
+  eng: Jongno-gu
+  color:
+  - 226
+  - 160
+  - 50
+  family: *id005
+  tag: No.1 1943년부터 원조
+  photo: sp_gyeongbok
+  caption: 경복궁 경회루
+  tilt: 3
+  notes:
+  - text: 경복궁, 북촌, 광화문
+    'on': 2
+  - text: 5대 궁궐 중 4곳이 여기
+    'on': 3
+    hl: true
+  seal:
+    top: 원조 7개 구
+    big: '1943'
+    bottom: 종로구
+    'on': 3
+  narration:
+  - 먼저, 처음 모습 그대로인 원조 3형제부터 볼게요.
+  - 종로구는 조선 600년 서울의 심장이에요. 경복궁, 북촌, 광화문이 다 여기 있죠.
+  - 처음 7개 구 중 하나로, 지금까지 쪼개지지 않고 그대로예요.
+- type: journal
+  chapter: 원조 그대로
+  gu: 중구
+  eng: Jung-gu
+  color:
+  - 226
+  - 160
+  - 50
+  family: *id005
+  tag: No.2 1943년부터 원조
+  photo: gu_jung
+  caption: 남대문시장
+  tilt: -2.5
+  notes:
+  - text: 명동, 남대문시장, 서울역
+    'on': 1
+  - text: 서울에서 가장 작은 구?
+    'on': 2
+    hl: true
+  seal:
+    top: 원조 7개 구
+    big: '1943'
+    bottom: 중구
+    'on': 2
+  narration:
+  - 중구는 명동과 남대문시장, 서울역이 있는 서울 한가운데예요.
+  - 이곳도 처음 모습 그대로인 원조 구예요.
+- type: journal
+  chapter: 원조 그대로
+  gu: 용산구
+  eng: Yongsan-gu
+  color:
+  - 226
+  - 160
+  - 50
+  family: *id005
+  tag: No.3 1943년부터 원조
+  photo: gu_yongsan
+  caption: N서울타워
+  tilt: 2.5
+  notes:
+  - text: N서울타워, 이태원, 국립중앙박물관
+    'on': 1
+  - text: 남산과 한강 사이
+    'on': 1
+    hl: true
+  seal:
+    top: 원조 7개 구
+    big: '1943'
+    bottom: 용산구
+    'on': 1
+  narration:
+  - 용산구는 남산 N서울타워부터 이태원, 국립중앙박물관까지, 남산과 한강 사이에 있어요.
+- type: seoulmap
+  chapter: 궁궐과 4대문
+  bg:
+    kind: paper
+  focus:
+  - 종로구
+  - 중구
+  names: all
+  name_size: 40
+  card_side: false
+  groups:
+    원조:
+      gus:
+      - 종로구
+      - 중구
+      color:
+      - 226
+      - 160
+      - 50
+      'on': 1
+  markers:
+  - name: 경복궁
+    kind: palace
+    'on': 2
+    offset: 0.0
+    dx: -10
+    dy: -44
+  - name: 창덕궁
+    kind: palace
+    'on': 2
+    offset: 0.5
+    dx: 30
+    dy: -44
+  - name: 창경궁
+    kind: palace
+    'on': 2
+    offset: 1.0
+    dx: 100
+    dy: 14
+  - name: 경희궁
+    kind: palace
+    'on': 2
+    offset: 1.5
+    dx: -110
+    dy: -30
+  - name: 덕수궁
+    kind: palace
+    'on': 2
+    offset: 2.0
+    dx: -110
+    dy: 10
+  - name: 숭례문
+    kind: gate
+    label: 남대문 숭례문
+    'on': 3
+    offset: 0.0
+    dx: 0
+    dy: 46
+  - name: 흥인지문
+    kind: gate
+    label: 동대문 흥인지문
+    'on': 3
+    offset: 0.5
+    dx: 0
+    dy: 48
+  - name: 숙정문
+    kind: gate
+    label: 북대문 숙정문
+    'on': 3
+    offset: 1.0
+    dx: 0
+    dy: -46
+  - name: 돈의문
+    kind: gate
+    label: 서대문 돈의문 (터)
+    'on': 3
+    offset: 1.5
+    dx: -190
+    dy: -6
+  nudge:
+    종로구:
+    - 60
+    - -120
+    중구:
+    - 110
+    - 10
+  guide:
+    text: '동대문구엔
+
+      동대문이 없다?'
+    'on': 4
+    xy:
+    - 1380
+    - 880
+    size: 170
+  narration:
+  - 종로구와 중구는 조선의 수도, 한양이었던 곳이에요.
+  - 조선의 5대 궁궐, 경복궁, 창덕궁, 창경궁, 경희궁, 덕수궁. | 그중 덕수궁만 중구, 나머지 넷은 모두 종로구예요.
+  - 한양을 둘러싼 4대문도 볼까요? 남대문 숭례문은 중구. | 동대문 흥인지문, 북대문 숙정문, 그리고 터만 남은 서대문 돈의문은 모두 종로구예요.
+  - 그러니까 동대문구엔 동대문이 없고, 서대문구엔 서대문이 없어요.
+- type: journal
+  chapter: 성동구 가족
+  gu: 성동구
+  eng: Seongdong-gu
+  color:
+  - 232
+  - 96
+  - 76
+  family: *id001
+  tag: No.4 강남 3구의 엄마
+  photo: sp_seongsu4
+  caption: 성수동 골목
+  tilt: -3.5
+  notes:
+  - text: 성수동 카페 거리, 서울숲
+    'on': 2
+  - text: 강남 서초 송파 강동 광진의 뿌리
+    'on': 3
+    hl: true
+  seal:
+    top: 성동구 가족
+    big: '1943'
+    bottom: 성동구
+    'on': 3
+  narration:
+  - 이제 가장 화려한 집안, 성동구 가족이에요.
+  - 성동구 성수동은 낡은 공장 골목이 카페와 팝업 거리로 변했어요.
+  - 그런데 이 성동구가, 강남 3구의 엄마예요.
+  guide:
+    text: '강남의 엄마가
+
+      성수동?'
+    'on': 3
+- type: journal
+  chapter: 성동구 가족
+  gu: 강남구
+  eng: Gangnam-gu
+  color:
+  - 232
+  - 96
+  - 76
+  family: *id001
+  tag: No.5 성동구의 첫째
+  photo: gu_gangnam
+  caption: 코엑스 별마당 도서관
+  tilt: 3
+  notes:
+  - text: 테헤란로, 코엑스, 압구정
+    'on': 1
+  - text: 성동구에서 1975년
+    'on': 1
+    hl: true
+  seal:
+    top: 성동구 가족
+    big: '1975'
+    bottom: 강남구
+    'on': 1
+  narration:
+  - 1975년, 성동구에서 강남구가 나왔어요. 지금은 테헤란로와 코엑스가 있는 곳이죠.
+- type: journal
+  chapter: 성동구 가족
+  gu: 서초구
+  eng: Seocho-gu
+  color:
+  - 232
+  - 96
+  - 76
+  family: *id001
+  tag: No.6 성동구의 손주
+  photo: gu_seocho
+  caption: 예술의전당
+  tilt: -2.5
+  notes:
+  - text: 예술의전당, 서초동 법원
+    'on': 1
+  - text: 성동에서 강남, 강남에서 서초
+    'on': 1
+    hl: true
+  seal:
+    top: 성동구 가족
+    big: '1988'
+    bottom: 서초구
+    'on': 1
+  narration:
+  - 1988년엔 강남구에서 서초구가 나뉘었어요. 예술의전당과 법원들이 모인 곳이에요.
+- type: journal
+  chapter: 성동구 가족
+  gu: 강동구
+  eng: Gangdong-gu
+  color:
+  - 232
+  - 96
+  - 76
+  family: *id001
+  tag: No.7 성동구의 손주
+  photo: gu_gangdong
+  caption: 암사동 신석기 갈돌과 갈판
+  tilt: 2.5
+  notes:
+  - text: 암사동 선사유적지, 고덕
+    'on': 1
+  - text: 성동에서 강남, 강남에서 강동
+    'on': 1
+    hl: true
+  seal:
+    top: 성동구 가족
+    big: '1979'
+    bottom: 강동구
+    'on': 1
+  narration:
+  - 강동구도 강남구에서 나왔어요. 암사동에는 6천 년 전 신석기 사람들의 집터가 남아 있죠.
+- type: journal
+  chapter: 성동구 가족
+  gu: 송파구
+  eng: Songpa-gu
+  color:
+  - 232
+  - 96
+  - 76
+  family: *id001
+  tag: No.8 성동구의 증손주
+  photo: gu_songpa
+  caption: 롯데월드타워
+  tilt: -3.5
+  notes:
+  - text: 롯데월드타워, 올림픽공원
+    'on': 1
+  - text: 성동, 강남, 강동, 그리고 송파
+    'on': 1
+    hl: true
+  seal:
+    top: 성동구 가족
+    big: '1988'
+    bottom: 송파구
+    'on': 1
+  narration:
+  - 송파구는 그 강동구에서 다시 나뉜, 성동구의 증손주예요. 123층 롯데월드타워가 여기 있죠.
+  guide:
+    text: 증손주라니!
+    'on': 1
+    offset: 1.5
+- type: journal
+  chapter: 성동구 가족
+  gu: 광진구
+  eng: Gwangjin-gu
+  color:
+  - 232
+  - 96
+  - 76
+  family: *id001
+  tag: No.9 성동구의 막내
+  photo: gu_gwangjin
+  caption: 어린이대공원
+  tilt: 3
+  notes:
+  - text: 건대, 어린이대공원, 뚝섬 한강공원
+    'on': 1
+  - text: 성동구에서 1995년
+    'on': 1
+    hl: true
+  seal:
+    top: 성동구 가족
+    big: '1995'
+    bottom: 광진구
+    'on': 1
+  narration:
+  - 막내는 광진구. 1995년 성동구에서 나왔고, 건대와 어린이대공원이 있어요.
+- type: journal
+  chapter: 동대문구 가족
+  gu: 동대문구
+  eng: Dongdaemun-gu
+  color:
+  - 70
+  - 140
+  - 220
+  family: *id002
+  tag: No.10 동북쪽의 엄마
+  photo: gu_dongdaemun
+  caption: 경동시장
+  tilt: -2.5
+  notes:
+  - text: 경동시장, 청량리역, 경희대
+    'on': 2
+  - text: 그런데 동대문은 종로구에
+    'on': 3
+    hl: true
+  seal:
+    top: 동대문구 가족
+    big: '1943'
+    bottom: 동대문구
+    'on': 3
+  narration:
+  - 다음은 동북쪽을 가득 채운 동대문구 가족이에요.
+  - 동대문구는 경동시장과 청량리역이 있는 동네예요.
+  - 그런데 이름은 동대문구인데, 정작 동대문은 바로 옆 종로구에 있어요.
+  guide:
+    text: '동대문구에
+
+      동대문이 없다고?'
+    'on': 3
+- type: journal
+  chapter: 동대문구 가족
+  gu: 성북구
+  eng: Seongbuk-gu
+  color:
+  - 70
+  - 140
+  - 220
+  family: *id002
+  tag: No.11 동대문구의 첫째
+  photo: gu_seongbuk
+  caption: 성북동 길상사
+  tilt: 2.5
+  notes:
+  - text: 고려대, 성신여대, 성북동
+    'on': 1
+  - text: 동대문구에서 1949년
+    'on': 1
+    hl: true
+  seal:
+    top: 동대문구 가족
+    big: '1949'
+    bottom: 성북구
+    'on': 1
+  narration:
+  - 1949년, 동대문구에서 성북구가 나왔어요. 고려대 같은 대학가와 성북동 옛 골목이 함께 있죠.
+- type: journal
+  chapter: 동대문구 가족
+  gu: 도봉구
+  eng: Dobong-gu
+  color:
+  - 70
+  - 140
+  - 220
+  family: *id002
+  tag: No.12 동대문구의 손주
+  photo: sp_dobongsan
+  caption: 도봉산 바위 봉우리
+  tilt: -3.5
+  notes:
+  - text: 도봉산, 쌍문동 둘리뮤지엄
+    'on': 1
+  - text: 동대문에서 성북, 성북에서 도봉
+    'on': 1
+    hl: true
+  seal:
+    top: 동대문구 가족
+    big: '1973'
+    bottom: 도봉구
+    'on': 1
+  narration:
+  - 성북구에서 다시 나온 도봉구. 도봉산, 그리고 아기공룡 둘리가 사는 쌍문동이 여기예요.
+  guide:
+    text: '둘리 고향이
+
+      여기였어?'
+    'on': 1
+    offset: 2.0
+- type: journal
+  chapter: 동대문구 가족
+  gu: 노원구
+  eng: Nowon-gu
+  color:
+  - 70
+  - 140
+  - 220
+  family: *id002
+  tag: No.13 동대문구의 증손주
+  photo: gu_nowon
+  caption: 불암산
+  tilt: 3
+  notes:
+  - text: 중계동 학원가, 불암산
+    'on': 1
+  - text: 성북, 도봉, 그리고 노원
+    'on': 1
+    hl: true
+  seal:
+    top: 동대문구 가족
+    big: '1988'
+    bottom: 노원구
+    'on': 1
+  narration:
+  - 도봉구에서 1988년 노원구가 나왔어요. 거대한 아파트 단지와 중계동 학원가로 유명하죠.
+- type: journal
+  chapter: 동대문구 가족
+  gu: 강북구
+  eng: Gangbuk-gu
+  color:
+  - 70
+  - 140
+  - 220
+  family: *id002
+  tag: No.14 동대문구의 증손주
+  photo: gu_gangbuk
+  caption: 북한산 백운대
+  tilt: -2.5
+  notes:
+  - text: 북한산, 국립 4.19 민주묘지
+    'on': 1
+  - text: 도봉구에서 1995년
+    'on': 1
+    hl: true
+  seal:
+    top: 동대문구 가족
+    big: '1995'
+    bottom: 강북구
+    'on': 1
+  narration:
+  - 1995년엔 도봉구에서 강북구도 나왔어요. 북한산 아래, 국립4·19민주묘지가 있는 곳이에요.
+- type: journal
+  chapter: 동대문구 가족
+  gu: 중랑구
+  eng: Jungnang-gu
+  color:
+  - 70
+  - 140
+  - 220
+  family: *id002
+  tag: No.15 동대문구의 둘째
+  photo: gu_jungnang
+  caption: 중랑천
+  tilt: 2.5
+  notes:
+  - text: 중랑천, 망우역사문화공원
+    'on': 1
+  - text: 동대문구에서 1988년
+    'on': 1
+    hl: true
+  seal:
+    top: 동대문구 가족
+    big: '1988'
+    bottom: 중랑구
+    'on': 1
+  narration:
+  - 중랑구는 1988년 동대문구에서 바로 나왔어요. 중랑천이 흐르는 서울 동쪽 동네예요.
+- type: journal
+  chapter: 서대문구 가족
+  gu: 서대문구
+  eng: Seodaemun-gu
+  color:
+  - 150
+  - 110
+  - 210
+  family: *id003
+  tag: No.16 서북쪽의 엄마
+  photo: gu_seodaemun
+  caption: 서대문형무소역사관
+  tilt: -3.5
+  notes:
+  - text: 신촌, 독립문, 서대문형무소역사관
+    'on': 2
+  - text: 서대문도 종로구에
+    'on': 3
+    hl: true
+  seal:
+    top: 서대문구 가족
+    big: '1943'
+    bottom: 서대문구
+    'on': 3
+  narration:
+  - 서북쪽은 서대문구 가족이에요.
+  - 서대문구는 연세대, 이화여대가 있는 신촌, 그리고 독립문과 서대문형무소역사관이 있어요.
+  - 그런데 여기도 서대문은 없어요. 서대문 돈의문 터는 종로구에 있거든요.
+- type: journal
+  chapter: 서대문구 가족
+  gu: 마포구
+  eng: Mapo-gu
+  color:
+  - 150
+  - 110
+  - 210
+  family: *id003
+  tag: No.17 서대문구의 첫째
+  photo: gu_mapo
+  caption: 홍대 거리
+  tilt: 3
+  notes:
+  - text: 홍대, 망원시장, 상암 DMC
+    'on': 1
+  - text: 서대문구에서 1944년
+    'on': 1
+    hl: true
+  seal:
+    top: 서대문구 가족
+    big: '1944'
+    bottom: 마포구
+    'on': 1
+  narration:
+  - 마포구는 1944년 서대문구에서 나왔어요. 홍대 거리와 방송사들이 모인 상암동이 있죠.
+- type: journal
+  chapter: 서대문구 가족
+  gu: 은평구
+  eng: Eunpyeong-gu
+  color:
+  - 150
+  - 110
+  - 210
+  family: *id003
+  tag: No.18 서대문구의 둘째
+  photo: gu_eunpyeong
+  caption: 은평한옥마을
+  tilt: -2.5
+  notes:
+  - text: 은평한옥마을, 진관사
+    'on': 1
+  - text: 서대문구에서 1979년
+    'on': 1
+    hl: true
+  seal:
+    top: 서대문구 가족
+    big: '1979'
+    bottom: 은평구
+    'on': 1
+  narration:
+  - 은평구는 1979년 서대문구에서 나왔어요. 북한산 자락에 은평한옥마을이 있어요.
+- type: journal
+  chapter: 영등포구 가족
+  gu: 영등포구
+  eng: Yeongdeungpo-gu
+  color:
+  - 60
+  - 170
+  - 110
+  family: *id004
+  tag: No.19 서남쪽 일곱 형제의 엄마
+  photo: gu_yeongdeungpo
+  caption: 여의도 국회의사당
+  tilt: 2.5
+  notes:
+  - text: 여의도 국회, 증권가, 63빌딩
+    'on': 2
+  - text: 서남권 7개 구의 뿌리
+    'on': 3
+    hl: true
+  seal:
+    top: 영등포구 가족
+    big: '1943'
+    bottom: 영등포구
+    'on': 3
+  narration:
+  - 마지막은 서남쪽, 영등포구 가족이에요.
+  - 영등포구는 여의도 국회와 증권가가 모인 곳이에요.
+  - 그리고 한강 아래 서쪽 7개 구가, 전부 이 영등포구 집안이에요.
+  guide:
+    text: '서남권이
+
+      한 집안?'
+    'on': 3
+- type: journal
+  chapter: 영등포구 가족
+  gu: 관악구
+  eng: Gwanak-gu
+  color:
+  - 60
+  - 170
+  - 110
+  family: *id004
+  tag: No.20 영등포구의 첫째
+  photo: gu_gwanak
+  caption: 서울대학교 정문
+  tilt: -3.5
+  notes:
+  - text: 서울대, 신림동, 관악산
+    'on': 1
+  - text: 영등포구에서 1973년
+    'on': 1
+    hl: true
+  seal:
+    top: 영등포구 가족
+    big: '1973'
+    bottom: 관악구
+    'on': 1
+  narration:
+  - 1973년 영등포구에서 관악구가 나왔어요. 서울대와 관악산, 그리고 혼자 사는 청년이 많은 신림동이 있죠.
+- type: journal
+  chapter: 영등포구 가족
+  gu: 동작구
+  eng: Dongjak-gu
+  color:
+  - 60
+  - 170
+  - 110
+  family: *id004
+  tag: No.21 영등포구의 손주
+  photo: gu_dongjak
+  caption: 노량진 수산시장
+  tilt: 3
+  notes:
+  - text: 노량진 수산시장, 국립서울현충원
+    'on': 1
+  - text: 영등포에서 관악, 관악에서 동작
+    'on': 1
+    hl: true
+  seal:
+    top: 영등포구 가족
+    big: '1980'
+    bottom: 동작구
+    'on': 1
+  narration:
+  - 관악구에서 다시 나온 동작구. 노량진 수산시장과 국립서울현충원이 있어요.
+- type: journal
+  chapter: 영등포구 가족
+  gu: 강서구
+  eng: Gangseo-gu
+  color:
+  - 60
+  - 170
+  - 110
+  family: *id004
+  tag: No.22 영등포구의 둘째
+  photo: gu_gangseo
+  caption: 김포국제공항
+  tilt: -2.5
+  notes:
+  - text: 김포공항, 마곡지구
+    'on': 1
+  - text: 영등포구에서 1977년
+    'on': 1
+    hl: true
+  seal:
+    top: 영등포구 가족
+    big: '1977'
+    bottom: 강서구
+    'on': 1
+  narration:
+  - 강서구는 1977년 영등포구에서 나왔어요. 김포공항과 마곡이 있고, 꽤 넓어요.
+- type: journal
+  chapter: 영등포구 가족
+  gu: 양천구
+  eng: Yangcheon-gu
+  color:
+  - 60
+  - 170
+  - 110
+  family: *id004
+  tag: No.23 영등포구의 손주
+  photo: gu_yangcheon
+  caption: 안양천과 목동
+  tilt: 2.5
+  notes:
+  - text: 목동 아파트, 학원가
+    'on': 1
+  - text: 영등포에서 강서, 강서에서 양천
+    'on': 1
+    hl: true
+  seal:
+    top: 영등포구 가족
+    big: '1988'
+    bottom: 양천구
+    'on': 1
+  narration:
+  - 양천구는 강서구에서 나온 손주예요. 목동 아파트와 학원가로 유명하죠.
+- type: journal
+  chapter: 영등포구 가족
+  gu: 구로구
+  eng: Guro-gu
+  color:
+  - 60
+  - 170
+  - 110
+  family: *id004
+  tag: No.24 영등포구의 셋째
+  photo: gu_guro
+  caption: 고척스카이돔
+  tilt: -3.5
+  notes:
+  - text: 구로디지털단지, 고척스카이돔
+    'on': 1
+  - text: 영등포구에서 1980년
+    'on': 1
+    hl: true
+  seal:
+    top: 영등포구 가족
+    big: '1980'
+    bottom: 구로구
+    'on': 1
+  narration:
+  - 구로구는 1980년 영등포구에서 나왔어요. 옛 공장 단지가 IT 회사들이 모인 디지털단지로 바뀌었죠.
+- type: journal
+  chapter: 영등포구 가족
+  gu: 금천구
+  eng: Geumcheon-gu
+  color:
+  - 60
+  - 170
+  - 110
+  family: *id004
+  tag: No.25 영등포구의 손주
+  photo: gu_geumcheon
+  caption: 가산디지털단지
+  tilt: 3
+  notes:
+  - text: 가산디지털단지
+    'on': 1
+  - text: 영등포에서 구로, 구로에서 금천
+    'on': 1
+    hl: true
+  seal:
+    top: 영등포구 가족
+    big: '1995'
+    bottom: 금천구
+    'on': 1
+  narration:
+  - 그리고 막내 금천구. 1995년 구로구에서 나왔고, 가산디지털단지가 있어요.
+- type: seoulmap
+  chapter: 정답 공개
+  bg:
+    kind: paper
+  names: all
+  name_size: 20
+  values:
+    종로구: 23.91
+    중구: 9.96
+    용산구: 21.87
+    성동구: 16.86
+    광진구: 17.06
+    동대문구: 14.22
+    중랑구: 18.5
+    성북구: 24.57
+    강북구: 23.6
+    도봉구: 20.65
+    노원구: 35.44
+    은평구: 29.71
+    서대문구: 17.63
+    마포구: 23.85
+    양천구: 17.41
+    강서구: 41.45
+    구로구: 20.12
+    금천구: 13.02
+    영등포구: 24.55
+    동작구: 16.35
+    관악구: 29.57
+    서초구: 46.97
+    강남구: 39.51
+    송파구: 33.88
+    강동구: 24.59
+  fmt: '{:.1f}'
+  values_on: 1
+  value_color:
+  - 200
+  - 120
+  - 40
+  quiz:
+  - label: 가장 넓은 구
+    'on': 1
+    answer: 서초구 46.97㎢
+    reveal_on: 2
+  - label: 가장 작은 구
+    'on': 1
+    answer: 중구 9.96㎢
+    reveal_on: 3
+  credit: '면적: 서울특별시 기본통계 (2024)'
+  narration:
+  - 자, 정답 공개! 먼저 넓이예요. 색이 진할수록 넓은 구예요.
+  - 가장 넓은 구는 서초구, 46.97제곱킬로미터. | 2위는 김포공항이 있는 강서구죠.
+  - 가장 작은 구는 중구. 서초구의 5분의 1 정도예요.
+- type: seoulmap
+  chapter: 정답 공개
+  bg:
+    kind: paper
+  names: all
+  name_size: 20
+  values:
+    종로구: 13.6
+    중구: 11.7
+    용산구: 19.9
+    성동구: 27.4
+    광진구: 33.0
+    동대문구: 35.3
+    중랑구: 37.7
+    성북구: 42.1
+    강북구: 27.7
+    도봉구: 29.7
+    노원구: 47.9
+    은평구: 45.2
+    서대문구: 29.9
+    마포구: 35.6
+    양천구: 42.0
+    강서구: 54.8
+    구로구: 38.2
+    금천구: 22.2
+    영등포구: 37.1
+    동작구: 36.9
+    관악구: 47.7
+    서초구: 42.4
+    강남구: 55.1
+    송파구: 64.7
+    강동구: 49.7
+  fmt: '{:.1f}만'
+  values_on: 1
+  value_color:
+  - 60
+  - 120
+  - 200
+  quiz:
+  - label: 사람이 가장 많은 구
+    'on': 1
+    answer: 송파구 64.7만 명
+    reveal_on: 2
+  - label: 사람이 가장 적은 구
+    'on': 1
+    answer: 중구 11.7만 명
+    reveal_on: 3
+  guide:
+    text: '가구 수 1위는
+
+      관악구!'
+    'on': 3
+    offset: 2.5
+    xy:
+    - 1380
+    - 1000
+    size: 150
+  credit: '인구: 행정안전부 주민등록 인구통계 (2026년 10월 말)'
+  narration:
+  - 이번엔 사람 수예요.
+  - 사람이 가장 많은 구는 송파구, 64만 7천 명이에요.
+  - 가장 적은 구는 이번에도 중구, 11만 7천 명. | 덤으로, 가구 수가 가장 많은 구는 관악구예요. 혼자 사는 사람이 많아서죠.
+- type: outro
+  heading: 여러분이 사는 구는?
+  highlight: 사는 구는?
+  sub: 우리 구 자랑 한 줄, 댓글로 남겨 주세요
+  subscribe_on: 2
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  signature_on: 3
+  narration:
+  - 여러분이 사는 구는 어느 집안이었나요? 우리 구 자랑 한 줄, 댓글로 남겨 주세요.
+  - 다음엔 다른 도시도 한 번에 정리해 드릴게요.
+  - 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+clip_theme: science
+clips:
+- start: 87.6
+  end: 127.9
+  hook: '강남 3구의 엄마가
+
+    성수동이라고?'
+  hl: 성수동
+- start: 59.5
+  end: 87.6
+  hook: '동대문구엔
+
+    동대문이 없다?'
+  hl: 없다?
+- start: 0.0
+  end: 31.5
+  hook: '서울 25개 구
+
+    엄마는 딱 7명?'
+  hl: 7명?
+- start: 147.4
+  end: 175.0
+  hook: '둘리 고향은
+
+    서울 어디?'
+  hl: 어디?
+- start: 209.9
+  end: 241.9
+  hook: '서남권 7개 구가
+
+    전부 한 집안?'
+  hl: 한 집안?
+- start: 260.4
+  end: 288.3
+  hook: '서울에서 가장 넓은 구
+
+    사람 제일 많은 구는?'
+  hl: 가장 넓은 구
+- start: 182.2
+  end: 209.9
+  hook: '서대문구에
+
+    서대문이 없는 이유'
+  hl: 없는 이유
+- start: 235.3
+  end: 260.4
+  hook: '구로와 금천이
+
+    원래 한 구였다?'
+  hl: 한 구
+- start: 31.5
+  end: 59.5
+  hook: '80년 넘게 안 쪼개진
+
+    서울 원조 3형제'
+  hl: 원조 3형제

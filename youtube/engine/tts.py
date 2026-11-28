@@ -1,0 +1,761 @@
+"""AI 음성(TTS) 생성. 문장마다 따로 만들어 캐시하고, 장면·문장 타이밍을 정확히 맞춘다.
+
+  provider: google
+  인증: 클라우드 환경의 Network secrets 에 texttospeech.googleapis.com / 헤더 X-Goog-Api-Key 로 키 등록
+        (요청에 키가 자동으로 붙음). 로컬 PC에서는 환경 변수 GOOGLE_TTS_API_KEY 로도 가능.
+  voice 예: ko-KR-Chirp3-HD-Charon (남), ko-KR-Chirp3-HD-Kore (여), ko-KR-Neural2-C (남), ko-KR-Neural2-A (여)
+  목소리 목록·샘플: python tools/tts_voices.py
+"""
+import base64
+import re
+import hashlib
+import json
+import os
+import subprocess
+import urllib.error
+import urllib.request
+import wave
+from pathlib import Path
+
+import numpy as np
+
+SR = 48000
+API = "https://texttospeech.googleapis.com/v1"
+
+
+def _headers():
+    h = {"Content-Type": "application/json"}
+    k = os.environ.get("GOOGLE_TTS_API_KEY")
+    if k:  # 로컬 실행용. 클라우드에서는 Network secrets 가 헤더를 자동으로 붙임
+        h["X-Goog-Api-Key"] = k
+    return h
+
+
+def _call(url, body=None, timeout=60):
+    req = urllib.request.Request(url, data=json.dumps(body).encode() if body is not None else None, headers=_headers())
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        msg = e.read().decode()[:300]
+        if e.code in (401, 403):
+            raise SystemExit(f"Google TTS 인증 실패({e.code}). Network secrets 설정(허용 웹사이트 "
+                             f"texttospeech.googleapis.com, 헤더 X-Goog-Api-Key)과 API 사용 설정을 확인하세요.\n{msg}")
+        raise RuntimeError(f"Google TTS 오류 {e.code}: {msg}")
+
+
+def _post(path, body):
+    return _call(f"{API}/{path}", body)
+
+
+def list_voices(lang="ko-KR"):
+    return _call(f"{API}/voices?languageCode={lang}", timeout=30).get("voices", [])
+
+
+def synth(text, voice, rate=1.0, pitch=0.0, cache_dir=Path("."), lang="ko-KR"):
+    """문장 하나 → mp3 파일 경로 (같은 문장·목소리면 캐시 재사용 → 다시 만들어도 무료 사용량 안 씀)"""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    h = hashlib.sha1(json.dumps([text, voice, rate, pitch, "markup-v1"]).encode()).hexdigest()[:16]
+    out = cache_dir / f"{h}.mp3"
+    if out.exists():
+        return out
+    cfg = {"audioEncoding": "MP3", "sampleRateHertz": 24000}
+    if abs(rate - 1.0) > 1e-3:
+        cfg["speakingRate"] = rate
+    if pitch and "Chirp" not in voice:
+        cfg["pitch"] = pitch
+    if "Chirp3" in voice:  # Chirp3는 쉼표에서 거의 안 쉼 → 쉼 표시(markup)로 실제 쉼을 넣음
+        import re
+        mk = re.sub(r",\s+", ", [pause short] ", text)
+        inp = {"markup": mk}
+    else:
+        inp = {"text": text}
+    body = {"input": inp, "voice": {"languageCode": lang, "name": voice}, "audioConfig": cfg}
+    try:
+        res = _post("text:synthesize", body)
+    except RuntimeError as e:
+        if "speakingRate" in cfg and "rate" in str(e).lower():  # 속도 조절 미지원 목소리
+            cfg.pop("speakingRate")
+            res = _post("text:synthesize", body)
+        else:
+            raise
+    out.write_bytes(base64.b64decode(res["audioContent"]))
+    return out
+
+
+# 음성용 발음 사전 (자막 글자는 그대로, 읽는 소리만 바뀜). 에피소드 tts.say 로 추가 가능
+SAY = {
+    "산더미": "산떠미",   # 2026-11-15 사용자: 산더미 X · 산떠미 O
+    "TQQQ": "티큐큐큐", "SQQQ": "에스큐큐큐", "QQQ": "큐큐큐", "ETF": "이티에프", "S&P500": "에스앤피 오백",
+    "VIX": "빅스", "9·11": "구일일", "AI": "에이아이", "SOXL": "속슬",
+    "무려, 302배": "무려, 삼백, 이 배", "302배": "삼백 이 배",
+    "%p": "퍼센트포인트",
+    "연예인급": "연예인끕", "역대급": "역대끕", "국가대표급": "국가대표끕", "재벌급": "재벌끕",  # 된소리 (EP014)
+    "OECD": "오이씨디", "IRP": "아이알피", "KB": "케이비", "GDP": "지디피", "CEO": "씨이오", "CFO": "씨에프오",  # 2026-11-11: 퍼센트피 → 퍼센트포인트
+}
+
+
+_DIG = "영일이삼사오육칠팔구"
+
+
+def hangul_num(n):
+    """정수 → 한자어 수 읽기 (1억 8천 → 일억 팔천에 쓰임). 1 앞의 '일'은 십·백·천에서 생략."""
+    if n == 0:
+        return "영"
+    out = ""
+    for big, name in ((10 ** 8, "억"), (10 ** 4, "만"), (1, "")):
+        part, n = divmod(n, big)
+        if not part:
+            continue
+        s = ""
+        for unit, un in ((1000, "천"), (100, "백"), (10, "십"), (1, "")):
+            d, part = divmod(part, unit)
+            if d:
+                s += ("" if (d == 1 and un) else _DIG[d]) + un
+        out += s + name
+    return out
+
+
+def _money_words(t):
+    """'1억 8천만 원', '1,000만 원', '30억' 같은 금액을 붙여 읽는 한글로 ('일억팔천만 원')"""
+    import re
+    unit = r"(억|천만|백만|만|천)"
+
+    def one(m):
+        n = int(m.group(1).replace(",", ""))
+        return hangul_num(n) + m.group(2)
+    # '4천8백만', '3천1백7십만' 처럼 숫자+천/백/십이 섞인 금액 → 한 덩어리 한글 (삼천백칠십만 · EP007 피드백)
+    def mixed(m):
+        v = 0
+        for d, u in re.findall(r"(\d+)([천백십])", m.group(1)):
+            v += int(d) * {"천": 1000, "백": 100, "십": 10}[u]
+        tail = re.sub(r"^(?:\d+[천백십])+", "", m.group(1))
+        v += int(tail) if tail else 0
+        return hangul_num(v) + (m.group(2) or "")
+    t = re.sub(r"(?<![\d.])((?:\d+[천백십])+\d*)(만|억)(?=[\s원이을은가도의에,.?!]|$)", mixed, t)
+    t = re.sub(r"(?<![\d.])(\d[\d,]*)" + unit + r"(?=[\s원이을은가도의에만,.?!]|$)", one, t)
+    t = re.sub(r"억\s+(?=[일이삼사오육칠팔구십백천]+(천만|천|만))", "억", t)  # 일억 팔천 → 일억팔천
+    return t
+
+
+_N1 = ["", "한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉"]
+_N10 = ["", "열", "스물", "서른", "마흔", "쉰", "예순", "일흔", "여든", "아흔"]
+
+
+def native_count(n, ordinal=False):
+    """횟수 읽기: 19번 → 열아홉 번, 20번 → 스무 번, 1번째 → 첫 번째"""
+    if ordinal and n == 1:
+        return "첫"
+    if n == 20:
+        return "스무"
+    t, o = divmod(n, 10)
+    return _N10[t] + _N1[o]
+
+
+def _numbers_ko(t):
+    """피드백으로 정한 숫자 읽기 규칙 (SCRIPT_STYLE.md 참고)"""
+    import re
+    # 횟수: N번째 / N번 → 고유어 (99 이하)
+    t = re.sub(r"(?<![\d.])(\d{1,2})번째", lambda m: native_count(int(m.group(1)), True) + " 번째", t)
+    t = re.sub(r"(?<![\d.])(\d{1,2})번(?!째)", lambda m: native_count(int(m.group(1))) + " 번", t)
+    # 연도·기간: N년 → 한자어로 붙여 읽기 (1990년엔 → 천구백구십년엔, 76년 → 칠십육년)
+    t = re.sub(r"(?<![\d.,])(\d{1,4})년", lambda m: hangul_num(int(m.group(1))) + "년", t)
+    # 날짜: 3월 16일엔 → 삼월 십육일엔 (숫자와 '일엔/일에' 사이가 끊겨 읽히는 문제 · EP005 피드백)
+    _mon = {6: "유월", 10: "시월"}
+    t = re.sub(r"(?<![\d.,])(\d{1,2})월", lambda m: _mon.get(int(m.group(1)), hangul_num(int(m.group(1))) + "월"), t)
+    t = re.sub(r"(?<![\d.,])(\d{1,2})일(?=[가-힣\s,.!?]|$)", lambda m: hangul_num(int(m.group(1))) + "일", t)
+    # 'N조 달러' → 붙여 읽기 (오조달러 · EP009 피드백)
+    t = re.sub(r"(?<![\d.,])(\d+)조\s*달러", lambda m: hangul_num(int(m.group(1))) + "조달러", t)
+    t = re.sub(r"(?<![\d.,])(\d+)조(?=[\s,.]|$)", lambda m: hangul_num(int(m.group(1))) + "조", t)
+    # 쉼표 숫자: 7,568 → 칠천오백육십팔
+    t = re.sub(r"(?<![\d.])(\d{1,3}(?:,\d{3})+)(?![\d.])", lambda m: hangul_num(int(m.group(1).replace(",", ""))), t)
+    # "-30%에 사도" → 에와 사를 붙여 자연스럽게
+    t = re.sub(r"%에 (사|팔)", r"%에\1", t)
+    # 2026-11-12 (EP014): 남은 숫자를 TTS에 맡기지 않고 직접 읽기로 바꿈
+    t = re.sub(r"(?<![\d.,])(\d+)\s?%", lambda m: hangul_num(int(m.group(1))) + " 퍼센트", t)          # 13% → 십삼 퍼센트
+    t = re.sub(r"(?<![\d.,])(\d+)층", lambda m: hangul_num(int(m.group(1))) + "층", t)                    # 1층 → 일층
+    t = re.sub(r"(?<![\d.,])(\d{1,2})배", lambda m: (native_count(int(m.group(1))) if int(m.group(1)) <= 10 else hangul_num(int(m.group(1)))) + " 배", t)  # 4배 → 네 배 · 15배 → 십오 배
+    t = re.sub(r"(?<![\d.,])(\d{1,2})\s?(명|가지|개|살|마리|군데|시간|가구)", lambda m: (native_count(int(m.group(1))) if int(m.group(1)) < 100 else hangul_num(int(m.group(1)))) + " " + m.group(2), t)  # 3가지 → 세 가지
+    t = re.sub(r"([가-힣])(\d+)(?![\d.,])", lambda m: m.group(1) + " " + hangul_num(int(m.group(2))), t)   # 코스피200 → 코스피 이백
+    t = re.sub(r"(?<![\d.,])(\d+)(?![\d.,])", lambda m: hangul_num(int(m.group(1))), t)                    # 그 밖의 숫자는 한자어로
+    # 띄어 읽기 → 붙여 읽기
+    for a, b in (("년 치", "년치"), ("다음 해", "다음해"), ("전 해", "전해"), ("1등", "일뜽")):
+        t = t.replace(a, b)
+    return t
+
+
+def speakable(text, extra=None):
+    """TTS가 어색하게 읽는 표현을 소리 내기 좋은 형태로 바꾼다."""
+    import re
+    t = text.replace("[낮게]", "").replace(" | ", " ").replace("|", "").replace("**", "").replace("!!", "")  # 자막 강조 표시 제거
+    # 소수 끝자리 0은 읽지 않음: 2.60억 → 2.6억, 3.70억 → 3.7억, 1.0억 → 1억 (EP011 피드백)
+    t = re.sub(r"(\d+\.\d*?[1-9])0+(?=\s?억)", r"\1", t)
+    t = re.sub(r"(\d+)\.0+(?=\s?억)", r"\1", t)
+    for k, v in sorted({**SAY, **(extra or {})}.items(), key=lambda kv: -len(kv[0])):
+        t = t.replace(k, v)
+    t = re.sub(r"(?<![\w.])-(\d)", r"마이너스 \1", t)      # -80% → 마이너스 80%
+    t = re.sub(r"(?<![\w.])\+(\d)", r"플러스 \1", t)      # +4% → 플러스 4%
+    t = t.replace("…", ",").replace("...", ",")
+    t = re.sub(r"[\'\"‘’“”]", "", t)                      # 따옴표는 소리로 쉼을 만들어 어색 → 제거
+    # 소수: 46.1% → 사십육점일 퍼센트 · 9.5% → 구점오 퍼센트 · 8.3배 → 팔점삼 배 ('점' 앞뒤가 끊겨 들림 · EP014 피드백)
+    # 2026-11-13: 소수점은 말하듯 '쩜' (구쩜오 퍼센트 · 오쩜일배 · 사용자 피드백 "점이 아니라 쩜")
+    t = re.sub(r"(?<![\d.,])(\d+)\.(\d+)(?![\d.])", lambda m: hangul_num(int(m.group(1))) + "쩜" + "".join(_DIG[int(c)] for c in m.group(2)) + " ", t)
+    t = re.sub(r" +(%|퍼센트)", " 퍼센트", t)
+    t = re.sub(r"쩜([영일이삼사오육칠팔구]+) (?=[억만배조년])", r"쩜\1", t)
+    t = _money_words(t)
+    t = re.sub(r"억(?=[이일][백천십만])", "억 ", t)   # 이억이백만 → 이억 이백만 ('이이백'으로 끌림 · EP014)
+    t = _numbers_ko(t)
+    t = re.sub(r"(\S)\?\s", r"\1? ", t)
+    # 조사 바로 뒤 극적인 쉼표("1억이, 450원")는 소리로는 어색 → 제거
+    t = re.sub(r"([가-힣])(이|가|은|는|을|를),\s(?=[\d가-힣])", r"\1\2 ", t)
+    t = re.sub(r",\s*,", ",", t).strip(" ,")
+    return t
+
+
+def _pcm(path):
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(path), "-ac", "1", "-ar", str(SR),
+                          "-f", "s16le", "-"], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype="<i2").astype(np.float32) / 32768
+
+
+def _pieces(text, voice, rate, cfg, cache):
+    parts = re.split(r"\s(//?)\s", text)
+    pcm = []
+    for i, seg in enumerate(parts):
+        if i % 2:
+            pcm.append(np.zeros(int(SR * (0.3 if seg == "//" else 0.12)), dtype=np.float32))
+            continue
+        a = _pcm(synth(speakable(seg, cfg.get("say")), voice, rate, cfg.get("pitch", 0.0), cache))
+        nz = np.where(np.abs(a) > 0.01)[0]
+        pcm.append(a[max(0, nz[0] - 240): nz[-1] + 1200] if len(nz) else a)
+    key = [speakable(p_, cfg.get("say")) if i % 2 == 0 else p_ for i, p_ in enumerate(parts)]   # 읽기 규칙이 바뀌면 다시 만듦
+    out = cache / (hashlib.sha1(json.dumps([key, voice, rate], ensure_ascii=False).encode()).hexdigest()[:16] + ".pcs.wav")
+    if not out.exists():
+        with wave.open(str(out), "wb") as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
+            w.writeframes((np.clip(np.concatenate(pcm), -1, 1) * 32767).astype("<i2").tobytes())
+    return out
+
+
+def scene_stats(path):
+    """장면 음성의 (음높이 중앙값 Hz, 크기 dB) — voice_check와 같은 방식(16kHz 자기상관)"""
+    import sys as _s
+    _s.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+    from voice_check import _f0 as _vf0, SR as _VSR
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(path), "-ac", "1", "-ar", str(_VSR), "-f", "s16le", "-"],
+                         capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, dtype="<i2").astype(np.float32) / 32768
+    nz = np.where(np.abs(x) > 0.01)[0]
+    x = x[nz[0]:nz[-1]] if len(nz) else x
+    f0 = _vf0(x)
+    v = f0[f0 > 0]
+    rms = 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)
+    return (float(np.median(v)) if len(v) > 20 else None), float(rms)
+
+
+def unify_scenes(paths, log=print, f0_tol=0.05, db_tol=1.5, sps_tol=0.15, texts=None):
+    """2026-11-23: Gemini는 장면마다 음높이 · 크기가 달라짐(MBTI 편 13곳) → 새 음성 없이
+    장면별로 에피소드 중앙값에 맞춤: 크기(volume) · 속도(atempo ±8%) 만. 음높이 가공(rubberband)은 금지 — 기계음 (2026-11-24).
+    속도(글자/초)가 중앙값에서 15% 넘게 벗어나면 atempo로 맞춤 → 반환 tempo로 문장 시각도 같이 맞춤
+    paths: 장면 wav 목록([낮게] 장면 제외) → {원본 경로: (맞춘 경로, tempo)}"""
+    st = {p: scene_stats(p) for p in paths}
+    sps = {}
+    for i, p in enumerate(paths):
+        if texts:
+            n = len(re.findall(r"[가-힣]", texts[i]))
+            sps[p] = n / max(len(_pcm(p)) / SR, 0.1)
+    spm = float(np.median(list(sps.values()))) if sps else 0
+    f0s = [v[0] for v in st.values() if v[0]]
+    if not f0s:
+        return {}
+    f0m, dbm = float(np.median(f0s)), float(np.median([v[1] for v in st.values()]))
+    out = {}
+    for p, (f0, db) in st.items():
+        af = []
+        tempo = 1.0
+        if sps and spm and abs(sps[p] / spm - 1) > sps_tol:
+            tempo = max(0.92, min(1.08, spm / sps[p]))   # 속도도 ±8% 안에서만 (크게 바꾸면 소리가 뭉개짐)
+            af.append(f"atempo={tempo:.4f}")
+        # 2026-11-24 사용자: '기계음이 겁나 심하다' (구글 편 · MBTI 편) — 원인은 이 음높이 강제 변경(rubberband ±30%)이었음.
+        # → 음높이는 절대 소리를 가공해서 맞추지 않는다. 음높이 통일은 take 고르기(gemini_scene)로만. 여기선 크기 · 속도만.
+        if abs(db - dbm) > db_tol:
+            af.append(f"volume={max(-6.0, min(6.0, dbm - db)):.2f}dB")
+        if not af:
+            continue
+        q = Path(str(p) + ".u" + hashlib.sha1(",".join(af).encode()).hexdigest()[:8] + ".wav")
+        if not q.exists():
+            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(p), "-af", ",".join(af), str(q)], check=True)
+        out[p] = (q, tempo)
+        log(f"  장면 음성 맞춤: {Path(p).name[:14]} 크기 {db - dbm:+.1f}dB · 속도 x{tempo:.2f} (음높이는 가공 안 함)")
+    return out
+
+
+def plan(scenes, cfg, work_dir: Path, log=print):
+    """각 장면에 start/dur/lines를 채우고 내레이션 wav 경로 반환"""
+    # 2026-11-11 두 채널 통일: 남자 15번(Umbriel) 1.15배 — 롱폼 · 쇼츠 모두 (에피소드 tts에 따로 적으면 그게 우선)
+    voice = cfg.get("voice", "ko-KR-Chirp3-HD-Umbriel")
+    rate = cfg.get("rate", 1.15)
+    gap = cfg.get("line_gap", 0.28)          # 문장 사이 쉼
+    lead, tail = cfg.get("scene_pad", [0.2, 0.45])
+    cache = work_dir / "tts_cache"
+    clips, t = [], 0.0
+    made, fix = {}, {}
+    if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene":
+        for sc in scenes:
+            if sc.narration:
+                made[id(sc)] = gemini_scene(list(sc.narration), {**cfg, "_take0": int(sc.spec.get("tts_take", 0))}, cache, log=log)   # 11/28: 장면별 다시 녹음 (tts_take: 1 …)
+        if cfg.get("unify", True):
+            norm = [p_ for sc in scenes if id(sc) in made and not all(l.lstrip().startswith("[낮게]") for l in sc.narration)
+                    for p_ in [made[id(sc)][0]]]
+            texts = [" ".join(speakable(l, cfg.get("say")) for l in sc.narration) for sc in scenes
+                     if id(sc) in made and not all(l.lstrip().startswith("[낮게]") for l in sc.narration)]
+            fix = unify_scenes(norm, log=log, texts=texts)
+    for sc in scenes:
+        sc.start = t
+        cur, lines = lead, []
+        if cfg.get("provider") == "gemini" and cfg.get("unit", "scene") == "scene" and sc.narration:
+            p_, spans = made[id(sc)]
+            if p_ in fix:   # 장면 음성 통일(음높이 · 크기 · 속도)
+                p_, tq = fix[p_]
+                spans = [(a / tq, b / tq) for a, b in spans]
+            tempo = float(cfg.get("tempo", 1.0))   # 2026-11-21: 지식창고 롱폼 = 쇼츠(1.2)의 0.9 → 1.08 (음높이 유지)
+            if abs(tempo - 1.0) > 1e-3:
+                tp = Path(str(p_) + f".t{tempo:.3f}.wav")
+                if not tp.exists():
+                    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(p_), "-af", f"atempo={tempo}", str(tp)], check=True)
+                p_, spans = tp, [(a / tempo, b / tempo) for a, b in spans]
+            pcm = _pcm(p_)
+            if spans:   # 대본 끝 뒤 덧붙은 말 제거 (마지막 문장 끝 + 0.25초)
+                pcm = pcm[:int((spans[-1][1] + 0.25) * SR)]
+            nz = np.where(np.abs(pcm) > 0.01)[0]
+            st0 = nz[0] if len(nz) else 0
+            pcm = pcm[max(0, st0 - 480):]
+            off = max(0, st0 - 480) / SR
+            spans = [(max(0.0, a - off), max(0.0, b - off)) for a, b in spans]
+            off = 0.0
+            pcm, spans = _squeeze_pauses(pcm, spans, cfg.get("max_pause", 0.8), cfg.get("squeeze_to", 0.45))
+            if sc.spec.get("beat_line"):   # 퀴즈 '셋 · 둘 · 하나'를 정확히 1초 간격으로 (녹음 다시 안 함 · 사이에 침묵 삽입)
+                pcm, spans, beats = _beat_line(pcm, spans, sc.spec["beat_line"] - 1, sc.spec.get("beat", 1.0))
+                sc.spec["_beats"] = beats
+            if sc.spec.get("silent_countdown") and len(spans) >= 2:   # 11/28 사용자: 주식 퀴즈는 '셋 둘 하나'를 말하지 않음 → 정답 줄 앞에 침묵
+                li = sc.spec.get("reveal_on", 2) - 1
+                gap = float(sc.spec["silent_countdown"]) + 0.4
+                cut = max(0, int(spans[li][0] * SR) - int(0.05 * SR))
+                pcm = np.concatenate([pcm[:cut], np.zeros(int(gap * SR), dtype=pcm.dtype), pcm[cut:]])
+                spans = [(a_, b_) if i < li else (a_ + gap, b_ + gap) for i, (a_, b_) in enumerate(spans)]
+                sc.spec["_cd_gap"] = gap
+            clips.append((t + cur, pcm))
+            lines = [(cur + a, cur + b) for a, b in spans]
+            cur += len(pcm) / SR + gap
+            sc.lines = lines
+            sc.dur = max(cur - gap + tail, sc.spec.get("min_dur", 2.0))
+            t += sc.dur
+            continue
+        for text in sc.narration:
+            # 첫째 · 둘째 · 셋째는 따로 떼어 차분하게 (쉼표 억양 · [pause] 모두 어색 · EP013 · EP014 피드백)
+            text = re.sub(r"(첫째|둘째|셋째|넷째),\s", r"\1 / ", text)
+            if cfg.get("provider") == "gemini":   # 2026-11-14: Gemini 음성 (줄 통째로 · 받아쓰기 확인 후 재생성)
+                mp3 = gemini_line(text, cfg, cache)
+            elif re.search(r"\s//?\s", text):   # ' / ' 짧은 쉼(0.12초) · ' // ' 긴 쉼(0.3초): 조각마다 따로 만들어 이어 붙임
+                mp3 = _pieces(text, voice, rate, cfg, cache)
+            else:
+                mp3 = synth(speakable(text, cfg.get("say")), voice, rate, cfg.get("pitch", 0.0), cache)
+            if text.lstrip().startswith("[낮게]") and cfg.get("provider") != "gemini":
+                # soft(기본): 음 높이는 그대로, 5% 느리게 · 살짝 작게 → 기계음 없음 (EP013 피드백)
+                # pitch: 음 높이 -1.2음 + 6% 느리게 (EP012에서 사용, rubberband 특유의 기계음이 남)
+                mode = cfg.get("low", "soft")
+                low = mp3.with_suffix(".low.wav" if mode == "pitch" else ".soft.wav")
+                af = "rubberband=pitch=0.93:formant=preserved,atempo=0.94" if mode == "pitch" else "atempo=0.95,volume=0.9"
+                if not low.exists():
+                    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp3), "-af", af, str(low)], check=True)
+                mp3 = low
+            pcm = _pcm(mp3)
+            # 앞뒤 무음 다듬기
+            nz = np.where(np.abs(pcm) > 0.01)[0]
+            if len(nz):
+                pcm = pcm[max(0, nz[0] - 480): nz[-1] + 2400]
+            d = len(pcm) / SR
+            lines.append((cur, cur + d))
+            clips.append((t + cur, pcm))
+            cur += d + gap
+        sc.lines = lines
+        sc.dur = max(cur - gap + tail, sc.spec.get("min_dur", 2.0))
+        t += sc.dur
+    buf = np.zeros(int(t * SR) + SR, dtype=np.float32)
+    for st, pcm in clips:
+        s = int(st * SR)
+        buf[s:s + len(pcm)] += pcm
+    out = work_dir / "tts_narration.wav"
+    with wave.open(str(out), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes((np.clip(buf, -1, 1) * 32767).astype("<i2").tobytes())
+    log(f"  AI 음성: {voice} · 속도 {rate} · 문장 {len(clips)}개 · {t / 60:.1f}분")
+    return out, f"AI 음성({voice})"
+
+
+# ══ Gemini TTS (2026-11-14 사용자 결정: 블라인드 테스트에서 '압도적으로' 자연스러움 → 두 채널 모두 사용) ══════════
+# 키: 환경 Network secrets — generativelanguage.googleapis.com / 헤더 x-goog-api-key (요청에 자동으로 붙음)
+GEMINI_MODEL = "gemini-2.5-flash-preview-tts"
+GEMINI_MODELS = ["gemini-2.5-flash-preview-tts", "gemini-2.5-pro-preview-tts"]   # 하루 한도가 모델마다 따로 (Tier 1: 각 100번)
+import os as _os
+if _os.environ.get("GEMINI_ONLY"):   # 2026-11-19: 한 영상 = 한 모델 — 다른 모델로 만든 캐시도 안 씀 (톤 통일)
+    GEMINI_MODEL = _os.environ["GEMINI_ONLY"]
+    GEMINI_MODELS = [GEMINI_MODEL]
+_G_DEAD = set()
+NO_NEW_SYNTH = bool(_os.environ.get("TTS_CACHE_ONLY"))   # 2026-11-23: voice_check가 켜거나 TTS_CACHE_ONLY=1 이면 캐시만 씀 (하루 한도 보호)
+GEMINI_MIN_GAP = 7.0   # 초 · 분당 약 8번 (429 방지)
+_G_LAST = 0.0   # pro 모델은 긴 글에서 502가 잦음
+GEMINI_STYLE = ("다음 한국어 대본을 그대로 읽어 줘. 경제 유튜브 진행자 말투로, 친구에게 이야기하듯 자연스럽고 생생하게. "
+                "{speed} 숫자는 또렷하게, 질문은 진짜 궁금한 듯이, 반전 앞에서는 한 박자 쉬어 줘. "
+                "목소리 높낮이와 톤은 처음부터 끝까지 같은 사람이 이어서 말하듯 일정하게, 들뜨거나 갑자기 낮아지지 않게.")
+GEMINI_PRON = {"물건": "'물건'은 된소리 없이 [물건]으로 읽어 줘 (물껀 X)."}   # 2026-11-15 사용자 피드백
+GEMINI_SPEED = {"보통": "차분하지만 지루하지 않은 보통 속도로.", "빠르게": "템포 빠르고 경쾌하게, 쇼츠처럼 몰입감 있게."}
+
+
+def gemini_text(text, extra=None):
+    """Gemini용 가벼운 다듬기: 자막 표시 · 쉼 표시 제거 + 발음 사전 + 소수 '쩜' (나머지 숫자는 Gemini가 자연스럽게 읽음)"""
+    t = re.sub(r"\s//?\s", " ", text).replace("[낮게]", "").replace(" | ", " ").replace("|", "").replace("**", "").replace("!!", "")
+    for k, v in sorted({**SAY, **(extra or {})}.items(), key=lambda kv: -len(kv[0])):
+        t = t.replace(k, v)
+    t = re.sub(r"(?<![\d.,])0\s?(원|주|명|개)", r"영 \1", t)
+    t = re.sub(r"(?<![\d.,])(\d{1,2})번(가|길)", lambda m: hangul_num(int(m.group(1))) + "번" + m.group(2), t)   # 8번가 → 팔번가 (11/22)   # 0원을 '영혼'으로 읽음 (2026-11-22 EP022 받아쓰기)
+    t = re.sub(r"(?<![\d.,])(\d+)\.(\d+)(?![\d.])", lambda m: hangul_num(int(m.group(1))) + "쩜" + "".join(_DIG[int(c)] for c in m.group(2)), t)
+    # 2026-11-14 (EP016 피드백: '9개 회사'를 구 개, '10배'를 십 배, '14년'을 열네 년으로 읽음) → 단위 붙은 작은 숫자는 직접 풀어 줌
+    t = re.sub(r"(?<![\d.,])(\d{1,3})배", lambda m: (native_count(int(m.group(1))) if int(m.group(1)) <= 10 else hangul_num(int(m.group(1)))) + " 배", t)   # 10배 → 열 배 · 110배 → 백십 배
+    t = re.sub(r"(?<![\d.,])(\d{1,2})\s?(명|가지|개|곳|살|마리|군데|시간|가구|번|자리)(?![가-힣]*월)", lambda m: native_count(int(m.group(1))) + " " + m.group(2), t)
+    t = re.sub(r"(?<![\d.,])(\d{1,2})\s?달(?!러)", lambda m: native_count(int(m.group(1))) + " 달", t)   # 6달 → 여섯 달 (육 달 X · 2026-11-18 사용자) · 달러는 제외   # 9개 → 아홉 개 · 8자리 → 여덟 자리 (2026-11-16 사용자)
+    t = re.sub(r"(?<![\d.,])(\d{1,2})\s?(년|개월|주|일째)", lambda m: hangul_num(int(m.group(1))) + " " + m.group(2), t)   # 14년 → 십사 년
+    return t.strip()
+
+
+def gemini_synth(text, voice="Umbriel", speed="보통", cache_dir=Path("."), style=None, take=0):
+    """문장/문단 → wav(24kHz) 경로. 같은 입력이면 캐시. take를 바꾸면 다시 만든다(어색할 때 재시도)."""
+    import time
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    global GEMINI_MODEL
+    prompt = (style or GEMINI_STYLE).format(speed=GEMINI_SPEED.get(speed, speed))
+    hints = [h for w_, h in GEMINI_PRON.items() if w_ in text]
+    if hints:   # 철자를 바꿀 수 없는 발음은 지시문으로 (2026-11-15 '물건' → 물껀 X)
+        prompt += " 발음 주의: " + " ".join(hints)
+    for m_ in GEMINI_MODELS:   # 어느 모델로 만든 것이든 캐시에 있으면 그대로
+        h_ = hashlib.sha1(json.dumps([text, voice, prompt, m_, take], ensure_ascii=False).encode()).hexdigest()[:16]
+        if (cache_dir / f"g_{h_}.wav").exists():
+            return cache_dir / f"g_{h_}.wav"
+    if NO_NEW_SYNTH:   # 점검 모드: 캐시에 없는 음성은 새로 만들지 않음 (하루 한도 보호)
+        raise RuntimeError("점검 모드: 캐시에 없는 음성")
+    h = hashlib.sha1(json.dumps([text, voice, prompt, GEMINI_MODEL, take], ensure_ascii=False).encode()).hexdigest()[:16]
+    out = cache_dir / f"g_{h}.wav"
+    body = {"contents": [{"parts": [{"text": prompt + "\n\n대본:\n" + text}]}],
+            "generationConfig": {"responseModalities": ["AUDIO"],
+                                 "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": voice}}}}}
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+    last = None
+    global _G_LAST
+    for k in range(10):
+        gap = time.time() - _G_LAST
+        if gap < GEMINI_MIN_GAP:   # 분당 요청 한도 → 요청 사이 간격 유지
+            time.sleep(GEMINI_MIN_GAP - gap)
+        _G_LAST = time.time()
+        try:
+            req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=240) as r:
+                res = json.loads(r.read())
+            pcm = base64.b64decode(res["candidates"][0]["content"]["parts"][0]["inlineData"]["data"])
+            with wave.open(str(out), "wb") as w:
+                w.setnchannels(1)
+                w.setsampwidth(2)
+                w.setframerate(24000)
+                w.writeframes(pcm)
+            return out
+        except urllib.error.HTTPError as e:  # 429(잠깐 많음) · 502(서버) → 서버가 말한 만큼 기다렸다 재시도
+            last = e
+            wait = 15 + 15 * k
+            try:
+                body_ = e.read().decode()
+                if "per_day" in body_ or "PerDay" in body_:   # 하루 한도 → 다른 모델로 넘어감 (모델마다 한도가 따로)
+                    rest = [m_ for m_ in GEMINI_MODELS if m_ not in _G_DEAD and m_ != GEMINI_MODEL]
+                    _G_DEAD.add(GEMINI_MODEL)
+                    if not rest:
+                        raise RuntimeError("Gemini TTS 하루 한도 소진 (모든 모델) — 한국 시간 17시쯤 초기화")
+                    GEMINI_MODEL = rest[0]
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+                    h = hashlib.sha1(json.dumps([text, voice, prompt, GEMINI_MODEL, take], ensure_ascii=False).encode()).hexdigest()[:16]
+                    out = cache_dir / f"g_{h}.wav"
+                    print(f"  Gemini 하루 한도 → {GEMINI_MODEL} 로 전환")
+                    continue
+                m = re.search(r'"retryDelay":\s*"(\d+)', body_)
+                if m:
+                    wait = int(m.group(1)) + 3
+            except RuntimeError:
+                raise
+            except Exception:
+                pass
+            time.sleep(min(wait, 120))
+        except Exception as e:
+            last = e
+            time.sleep(10 + 10 * k)
+    raise RuntimeError(f"Gemini TTS 실패: {last}")
+
+
+def gemini_line(text, cfg, cache, log=print):
+    """롱폼 한 줄 → Gemini 음성 wav. [낮게]는 말투 지시로. 받아쓰기 일치율이 낮으면 최대 3번 다시 만들어 가장 좋은 것."""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parents[1] / "tools"))
+    low = text.lstrip().startswith("[낮게]")
+    txt = gemini_text(text, cfg.get("say"))
+    speed = "낮고 차분한 톤으로, 한 박자 천천히." if low else cfg.get("speed", "빠르게")
+    best = None
+    for take in range(3):
+        p = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
+        try:
+            import voice_check as VC
+            x = VC._pcm(p)
+            key = str(p) + ".stt"
+            ratio, diffs = VC.stt_diff(text, VC.stt(x, {}))
+        except Exception:
+            return p
+        if best is None or ratio > best[0]:
+            best = (ratio, p)
+        if ratio >= 0.88:
+            break
+        log(f"  Gemini 다시 만듦({ratio:.2f}): {text[:30]} {diffs[:2]}")
+    return best[1]
+
+
+# ── Gemini 장면 단위 (2026-11-14: 요청 수 1/4 · 블라인드 테스트 1등 방식) ──────────────────────
+def _stt_words(path):
+    """받아쓰기 + 단어별 시작 시각 [(단어, 시작초, 끝초)] — 60초 이하"""
+    import base64 as _b
+    x = _pcm(path)
+    x16 = x[::3]
+    pad = np.zeros(8000, np.float32)
+    raw = (np.clip(np.concatenate([pad, x16, pad]), -1, 1) * 32767).astype("<i2").tobytes()
+    body = {"config": {"encoding": "LINEAR16", "sampleRateHertz": 16000, "languageCode": "ko-KR", "model": "latest_long",
+                       "enableWordTimeOffsets": True},
+            "audio": {"content": _b.b64encode(raw).decode()}}
+    req = urllib.request.Request("https://speech.googleapis.com/v1/speech:recognize", data=json.dumps(body).encode(),
+                                 headers={"Content-Type": "application/json"})
+    res = json.loads(urllib.request.urlopen(req, timeout=120).read())
+    out = []
+    for r in res.get("results", []):
+        for w in r["alternatives"][0].get("words", []):
+            st = float(w["startTime"].rstrip("s")) - 0.5
+            en = float(w["endTime"].rstrip("s")) - 0.5
+            out.append((w["word"], max(0.0, st), max(0.0, en)))
+    return out
+
+
+def _hn(t):
+    return re.sub(r"[^가-힣0-9]", "", speakable(t))
+
+
+def gemini_scene(lines, cfg, cache, log=print):
+    """장면의 문장들을 한 번에 → (wav 경로, [(문장 시작, 문장 끝)] 장면 기준 초). 받아쓰기 일치율이 낮으면 최대 3번."""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parents[1] / "tools"))
+    low = any(l.lstrip().startswith("[낮게]") for l in lines) and all(l.lstrip().startswith("[낮게]") for l in lines)
+    txt = "\n".join(gemini_text(l, cfg.get("say")) for l in lines)
+    speed = "낮고 차분한 톤으로, 한 박자 천천히." if low else cfg.get("speed", "빠르게")
+    best = None
+    t0 = cfg.get("_take0", 0) * 10   # 장면별 다시 녹음: tts_take N → take 10N부터 (기존 0~3과 안 겹치게)
+    for take in range(t0, t0 + 3):
+        p = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
+        try:
+            words = _stt_words(p)
+        except Exception:
+            words = []
+        heard = "".join(w for w, _, _ in words)
+        import difflib
+        ratio = difflib.SequenceMatcher(None, _hn(" ".join(lines)), _hn(heard)).ratio() if words else 0.5
+        if best is None or ratio > best[0]:
+            best = (ratio, p, words)
+        if ratio >= 0.88:
+            break
+        log(f"  Gemini 장면 다시 만듦({ratio:.2f}): {lines[0][:24]}")
+    ratio, p, words = best
+    # 2026-11-22 사용자: '음성이 아직 통일이 안 된다' → 장면마다 음높이가 ±17%까지 달랐음(EP023).
+    # 첫 장면 음높이를 기준으로, 벗어나면(±7%) take를 더 만들어 기준에 가장 가까운 것을 쓴다 ([낮게] 장면은 제외)
+    # 2026-11-25 사용자: "1편에 한도가 꽉 차" → 음높이 맞춤용 추가 녹음은 기본 끔(장면당 1번). 필요한 편만 tts.voice_lock: true
+    if cfg.get("voice_lock", False) and not low:
+        try:
+            from voice_check import _f0 as _vf0
+            def _med(path):
+                x_ = _pcm(path)
+                v_ = _vf0(x_[:int(SR * 12)])
+                v_ = v_[v_ > 0]
+                return float(np.median(v_)) if len(v_) > 20 else None
+            # 2026-11-25 한도 절약: ① 기준 = 지금까지 받아들인 장면들의 중앙값(첫 장면 하나에 휘둘리지 않게)
+            #   ② 음높이 측정의 옥타브 오류(절반 · 두 배로 잘못 잼)는 접어서 비교 ③ 허용 ±10% · 추가 take 최대 1개
+            def _dev(m, r):
+                q = m / r
+                while q > 1.6:
+                    q /= 2
+                while q < 0.625:
+                    q *= 2
+                return abs(q - 1)
+            m0 = _med(p)
+            hist = cfg.setdefault("_f0_hist", [])
+            ref = float(np.median(hist)) if hist else None
+            if ref is None and m0:
+                hist.append(m0)
+            elif m0 and _dev(m0, ref) <= 0.10:
+                hist.append(m0)
+            elif m0:
+                cand = [(_dev(m0, ref), ratio, p, words)]
+                for take in range(3, 4):   # 추가 take 최대 1개
+                    p2 = gemini_synth(txt, cfg.get("voice", "Umbriel"), speed, cache, take=take)
+                    m2 = _med(p2)
+                    if not m2:
+                        continue
+                    w2 = _stt_words(p2)
+                    import difflib as _dl
+                    r2 = _dl.SequenceMatcher(None, _hn(" ".join(lines)), _hn("".join(w for w, _, _ in w2))).ratio()
+                    if r2 >= 0.85:
+                        cand.append((_dev(m2, ref), r2, p2, w2))
+                cand.sort(key=lambda c: c[0])
+                hist.append(_med(cand[0][2]) or ref)
+                log(f"  음높이 맞춤: {lines[0][:20]} {cand[-1][0] * 100 if len(cand) > 1 else 0:.0f}% → {cand[0][0] * 100:.0f}% (take {len(cand)}개 중)")
+                _, ratio, p, words = cand[0]
+        except Exception as e:
+            log(f"  음높이 맞춤 생략: {str(e)[:60]}")
+    dur = len(_pcm(p)) / SR
+    # 문장 경계: 대본 글자 수 누적 비율 ↔ 받아쓰기 단어 글자 수 누적 → 해당 단어의 시작 시각
+    L = [max(1, len(_hn(l))) for l in lines]
+    bounds = [0.0]
+    if words:
+        wl = [max(1, len(_hn(w))) for w, _, _ in words]
+        tot_w, tot_l = sum(wl), sum(L)
+        # 2026-11-21: 대본 끝 뒤에 Gemini가 덧붙인 말(숨소리 · '그래서…') 찾기 — 대본 마지막 3글자가 들린 곳 뒤에 말이 더 있으면 잘라냄
+        heard = ""
+        owner = []
+        for wi, (w, _, _) in enumerate(words):
+            h = _hn(w)
+            heard += h
+            owner += [wi] * len(h)
+        tail = _hn(lines[-1])[-3:]
+        pos = heard.rfind(tail) if len(tail) == 3 else -1
+        cut_at = None
+        if pos >= 0:
+            wl_end = owner[pos + len(tail) - 1]
+            rest = heard[pos + len(tail):]
+            if len(rest) >= 2 and wl_end + 1 < len(words):
+                cut_at = wl_end
+        extra = 0
+        scale = tot_w
+        if cut_at is not None:
+            scale = sum(wl[:cut_at + 1])
+        acc, cum = 0, []
+        for n_ in wl:
+            acc += n_
+            cum.append(acc / scale)
+        a = 0
+        for n_ in L[:-1]:
+            a += n_
+            target = a / tot_l
+            i = min(range(len(cum)), key=lambda j: abs(cum[j] - target))
+            nxt = words[i + 1][1] if i + 1 < len(words) else words[i][2]
+            bounds.append((words[i][2] + nxt) / 2)
+        if cut_at is not None:
+            cut = min(dur, (words[cut_at][2] + words[cut_at + 1][1]) / 2 + 0.12)
+            log(f"  덧붙은 말 잘라냄 ({dur - cut:.1f}초): …{lines[-1][-14:]} | 뒤: {''.join(w for w, _, _ in words[cut_at + 1:])[:20]}")
+            dur = cut
+        elif words and dur - words[-1][2] > 0.6:   # 마지막 단어 뒤 숨소리 · 잡음 정리
+            log(f"  끝 숨소리 정리 ({dur - words[-1][2] - 0.4:.1f}초): …{lines[-1][-14:]}")
+            dur = words[-1][2] + 0.4
+    else:
+        a = 0
+        for n_ in L[:-1]:
+            a += n_
+            bounds.append(dur * a / sum(L))
+    bounds.append(dur)
+    return p, [(bounds[i], bounds[i + 1]) for i in range(len(lines))]
+
+
+def _squeeze_pauses(pcm, spans, max_pause=0.8, to=0.45):
+    """11/26 사용자: 장면 한 번 녹음 안에서 문장 사이 침묵이 너무 길면(예: 2.5초) 줄임 · 문장 시각도 같이 당김"""
+    if not max_pause:
+        return pcm, spans
+    win = int(SR * 0.02)
+    n = len(pcm) // win
+    if n < 3:
+        return pcm, spans
+    env = np.abs(pcm[:n * win]).reshape(n, win).max(axis=1)
+    quiet = env < 0.012
+    cuts = []   # (시작 샘플, 잘라낼 샘플 수)
+    i = 0
+    while i < n:
+        if quiet[i]:
+            j = i
+            while j < n and quiet[j]:
+                j += 1
+            dur = (j - i) * win / SR
+            if dur > max_pause and j < n:      # 끝부분 침묵은 원래 로직에 맡김
+                keep = int(to * SR)
+                a = i * win + keep // 2
+                cuts.append((a, (j - i) * win - keep))
+            i = j
+        else:
+            i += 1
+    if not cuts:
+        return pcm, spans
+    out, last = [], 0
+    for a, k in cuts:
+        out.append(pcm[last:a]); last = a + k
+    out.append(pcm[last:])
+
+    def mp(tt):
+        x = tt * SR
+        sh = 0
+        for a, k in cuts:
+            if x >= a + k:
+                sh += k
+            elif x > a:
+                sh += x - a
+        return (x - sh) / SR
+    return np.concatenate(out), [(mp(a), mp(b)) for a, b in spans]
+
+
+def _beat_line(pcm, spans, li, beat=1.0):
+    """spans[li] 안의 말 덩어리 시작점 간격을 최소 beat초로 벌림. 반환: pcm, spans, 덩어리 시작 시각(그 줄 시작 기준)"""
+    if li >= len(spans):
+        return pcm, spans, []
+    a, b = spans[li]
+    ia, ib = int(a * SR), int(b * SR)
+    win = int(SR * 0.01)
+    seg = pcm[ia:ib]
+    n = len(seg) // win
+    env = np.abs(seg[:n * win]).reshape(n, win).max(axis=1) > 0.012
+    onsets, q = [], 99
+    for i, v in enumerate(env):
+        if v and q >= 12:          # 0.12초 이상 조용하다가 소리 시작
+            onsets.append(i * win)
+        q = 0 if v else q + 1
+    if not onsets:
+        return pcm, spans, []
+    parts, last, shift, ins, beats = [], 0, 0, [], []
+    for k, o in enumerate(onsets):
+        if k:
+            want = beats[-1] + beat
+            cur = (o + shift) / SR
+            if cur < want:
+                add = int((want - cur) * SR)
+                g = o - int(0.06 * SR)                 # 소리 바로 앞 조용한 곳에 끼움
+                parts.append(seg[last:g]); parts.append(np.zeros(add, dtype=seg.dtype)); last = g
+                ins.append((ia + g, add)); shift += add
+        beats.append((o + shift) / SR)
+    parts.append(seg[last:])
+    # 마지막 '하나'도 1초를 다 채우고 다음 문장(정답)으로 (11/26 사용자: 화면 1이 0.2초만 보임)
+    tail_need = int((beats[-1] + beat) * SR) - (len(seg) + shift)
+    if tail_need > 0:
+        parts.append(np.zeros(tail_need, dtype=seg.dtype)); ins.append((ib - 1, tail_need)); shift += tail_need
+    new = np.concatenate([pcm[:ia]] + parts + [pcm[ib:]])
+
+    def mp(t):
+        x = int(t * SR)
+        return (x + sum(k for g, k in ins if x > g)) / SR
+    spans2 = [(mp(x), mp(y)) if i != li else (x, mp(y)) for i, (x, y) in enumerate(spans)]
+    return new, spans2, beats

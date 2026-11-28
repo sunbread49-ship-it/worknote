@@ -1,0 +1,23 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.18,0:00:03.21,S,그런데 강남이라는 이름,\N사실 꽤 최근 거예요.
+Dialogue: 0,0:00:03.21,0:00:06.76,S,1970년대 개발 때 이\N동네 이름은 영동이었어요.
+Dialogue: 0,0:00:06.76,0:00:08.98,S,영등포의 동쪽이라서 영동.
+Dialogue: 0,0:00:08.98,0:00:13.01,S,지금도 영동대로, 영동시장에\N그 흔적이 남아 있죠.
+Dialogue: 0,0:00:13.67,0:00:15.47,S,강 건너 강남 쪽도 볼게요.
+Dialogue: 0,0:00:15.47,0:00:19.42,S,서초는 서리풀이라는 순우리말\N마을 이름에서 왔어요.
+Dialogue: 0,0:00:19.42,0:00:21.40,S,한자로는 상서로울 서, 풀 초.
+Dialogue: 0,0:00:21.40,0:00:22.60,S,대치동은 한티.
+Dialogue: 0,0:00:22.60,0:00:24.19,S,한은 크다, 티는 고개.
+Dialogue: 0,0:00:24.19,0:00:25.99,S,큰 고개라는 뜻이에요.
+Dialogue: 0,0:00:25.99,0:00:30.57,S,옛날엔 넘기 힘든 고개였는데,\N지금은 학원비가 큰 고개죠.
+Dialogue: 0,0:00:30.57,0:00:30.90,S,잠원동에도 누에가 있어요.

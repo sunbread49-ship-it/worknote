@@ -1,0 +1,20 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.08,0:00:02.64,S,아홉 번을 한 줄로\N세워 볼게요.
+Dialogue: 0,0:00:02.64,0:00:06.91,S,원금 회복까지, 9번 중\N6번은 4개월 안이었어요.
+Dialogue: 0,0:00:06.91,0:00:09.25,S,가운데 값은 딱 두 달이고요.
+Dialogue: 0,0:00:09.25,0:00:12.59,S,그런데 단 한 번,\N닷컴은 13년 10개월.
+Dialogue: 0,0:00:12.59,0:00:15.93,S,평균이 아니라, 이 한\N번이 무서운 거예요.
+Dialogue: 0,0:00:16.58,0:00:19.48,S,1년 뒤 성적은 9번\N중 6번이 플러스.
+Dialogue: 0,0:00:19.48,0:00:23.93,S,마이너스는 닷컴, 금융위기,\N2022년 금리 쇼크였어요.
+Dialogue: 0,0:00:23.93,0:00:29.78,S,그리고 지금까지 들고 있었다면,\N아홉 번 모두 플러스예요.
+Dialogue: 0,0:00:29.78,0:00:31.50,S,닷컴 때 산 것도요.

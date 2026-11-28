@@ -1,0 +1,24 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.20,0:00:03.36,S,요즘 현금 들고 계신 분들,\N슬슬 넣어 볼까 고민되시죠?
+Dialogue: 0,0:00:03.36,0:00:07.14,S,나스닥이 10월 6일\N꼭대기에서, 벌써 20%
+Dialogue: 0,0:00:07.14,0:00:08.83,S,가까이 빠졌거든요.
+Dialogue: 0,0:00:09.48,0:00:11.76,S,다들 바닥 확인하고\N사겠다고 하죠.
+Dialogue: 0,0:00:11.76,0:00:14.20,S,그런데 바닥은, 지나고\N나서야 보여요.
+Dialogue: 0,0:00:14.20,0:00:16.70,S,그래서 오늘은\N반대로 해 볼게요.
+Dialogue: 0,0:00:16.70,0:00:19.20,S,지금처럼 나스닥이\N20% 빠진 날,
+Dialogue: 0,0:00:19.20,0:00:21.71,S,바로 산 사람들은\N어떻게 됐을까?
+Dialogue: 0,0:00:22.36,0:00:26.05,S,나스닥 40년 역사에서,\N이런 날은 딱 9번이었어요.
+Dialogue: 0,0:00:26.05,0:00:28.63,S,9번 중 몇 번이\N바닥이었을까요?
+Dialogue: 0,0:00:28.63,0:00:30.81,S,반반쯤이라고 생각하시죠?
+Dialogue: 0,0:00:30.81,0:00:33.98,S,결과는 생각보다 훨씬\N극단적이었어요.
+Dialogue: 0,0:00:34.63,0:00:37.50,S,아홉 번의 그날, 1,000만\N원씩 넣어 볼게요.

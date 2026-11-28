@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+  @font-face { font-family: "Myeongjo"; src: url("assets/fonts/NanumMyeongjo-ExtraBold.ttf"); }
+  @font-face { font-family: "Pen"; src: url("assets/fonts/NanumPenScript-Regular.ttf"); }
+  @font-face { font-family: "Pretendard"; src: url("assets/fonts/Pretendard-Black.otf"); }
+  :root { --paper:#F7F1E4; --ink:#262834; --acc:#E25C40; --mark:#FFD678; --sub:#786E5E; }
+  html, body { margin:0; background:var(--paper); }
+  #root { position:relative; width:1920px; height:1080px; overflow:hidden; background:var(--paper);
+    font-family: "Myeongjo"; color:var(--ink); }
+  .abs { position:absolute; }
+  #kicker { left:0; right:0; top:70px; text-align:center; font-family:"Pen"; font-size:96px; color:var(--acc); }
+  #q { left:0; right:0; top:180px; text-align:center; font-size:120px; }
+  #q span { display:inline-block; position:relative; margin:0 .12em; }
+  #mk { position:absolute; left:-6px; right:-6px; bottom:10px; height:40px; background:var(--mark); z-index:-1; transform-origin:left center; }
+  .card { top:440px; width:500px; height:330px; perspective:1400px; }
+  .inner { position:absolute; inset:0; transform-style:preserve-3d; }
+  .face { position:absolute; inset:0; border-radius:30px; display:flex; align-items:center; justify-content:center;
+          font-size:84px; backface-visibility:hidden; box-shadow: 0 14px 30px rgba(60,40,20,.16); }
+  .front { background:#FFFDF6; border:6px solid var(--ink); }
+  .back { background:var(--acc); color:#fff; transform: rotateY(180deg); }
+  .num { position:absolute; left:28px; top:16px; font-size:56px; color:var(--sub); }
+  .back .num { color:#ffe2d8; }
+  #hint { left:0; right:0; top:820px; text-align:center; font-family:"Pen"; font-size:78px; color:var(--sub); }
+  #timer { left:1630px; top:60px; width:220px; height:220px; }
+  #timer svg { position:absolute; inset:0; }
+  #digit { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:140px; color:var(--acc); }
+  #stamp { left:1130px; top:370px; font-family:"Pretendard"; font-size:58px; color:var(--acc); border:7px solid var(--acc);
+           border-radius:18px; padding:4px 22px; background:rgba(255,253,246,.9); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="12.4" data-width="1920" data-height="1080">
+  <div id="grid" class="abs" style="inset:0;background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px);background-size:60px 60px"></div>
+  <div id="kicker" class="abs">퀴즈 1</div>
+  <div id="q" class="abs"><span>압구정의</span><span>'<b style="font-weight:inherit;position:relative">압<i id="mk"></i></b>',</span><span>무슨</span><span>뜻?</span></div>
+
+  <div id="c0" class="abs card" style="left:160px"><div class="inner"><div class="face front"><span class="num">①</span>누르다</div><div class="face back"><span class="num">①</span>누르다</div></div></div>
+  <div id="c1" class="abs card" style="left:710px"><div class="inner" id="flip"><div class="face front"><span class="num">②</span>친하다</div><div class="face back"><span class="num">②</span>친하다</div></div></div>
+  <div id="c2" class="abs card" style="left:1260px"><div class="inner"><div class="face front"><span class="num">③</span>오리</div><div class="face back"><span class="num">③</span>오리</div></div></div>
+
+  <div id="hint" class="abs">힌트 · 한강에 사는 새와 관련 있어요</div>
+
+  <div id="timer" class="abs">
+    <svg viewBox="0 0 220 220"><circle cx="110" cy="110" r="100" fill="#FFFDF6" stroke="#262834" stroke-width="7"/>
+      <circle id="ring" cx="110" cy="110" r="86" fill="none" stroke="#E25C40" stroke-width="16" stroke-linecap="round"
+              stroke-dasharray="540.35" stroke-dashoffset="0" transform="rotate(-90 110 110)"/></svg>
+    <div id="digit">3</div>
+  </div>
+  <div id="stamp" class="abs">정답!</div>
+</div>
+<script>
+  // 장면 안 시각 (TTS 박자에서 계산): 카운트 '셋' = C0, 정답 = RV
+  const C0 = 4.29, RV = 7.29;
+  const tl = gsap.timeline({ paused: true });
+  // 제목: 단어마다 흐림 → 선명 (0.067초 간격, 이동 없음)
+  tl.fromTo("#kicker", { opacity: 0, rotation: -6, scale: .8 }, { opacity: 1, rotation: -2, scale: 1, duration: .5, ease: "back.out(1.6)" }, 0.05);
+  tl.fromTo("#q span", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: .18, ease: "power4.out", stagger: .067 }, 0.15);
+  tl.fromTo("#mk", { scaleX: 0 }, { scaleX: 1, duration: .45, ease: "expo.out" }, 0.75);
+  // 카드: 아래에서 스프링(0.8 감쇠 느낌) · 80ms 간격
+  tl.fromTo(".card", { opacity: 0, y: 90, scale: .92 }, { opacity: 1, y: 0, scale: 1, duration: .7, ease: "back.out(1.4)", stagger: .08 }, 0.55);
+  tl.fromTo("#hint", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: .25, ease: "power3.out" }, 1.6);
+  // 타이머 등장
+  tl.fromTo("#timer", { opacity: 0, scale: .4, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: .5, ease: "back.out(1.7)" }, C0 - 0.45);
+  for (let i = 0; i < 3; i++) {
+    const t = C0 + i;
+    tl.set("#digit", { textContent: String(3 - i) }, t);
+    tl.fromTo("#digit", { scale: 1.7, opacity: .2 }, { scale: 1, opacity: 1, duration: .35, ease: "expo.out" }, t);
+    tl.fromTo("#ring", { strokeDashoffset: 0 }, { strokeDashoffset: 540.35, duration: .98, ease: "none" }, t);
+    // 숫자마다 카드가 살짝 긴장(같이 숨쉬는 대신 박자에 맞춘 한 번의 움찔)
+    tl.fromTo(".card", { y: 0 }, { y: -10, duration: .12, ease: "power2.out", yoyo: true, repeat: 1 }, t);
+  }
+  // 정답: 타이머 빠르게 퇴장 · 오답 흐려짐 · 정답 카드 뒤집힘 · 도장
+  tl.to("#timer", { opacity: 0, scale: .6, duration: .2, ease: "power3.in" }, RV - 0.05);
+  tl.to(["#c0", "#c2"], { opacity: .35, filter: "blur(3px)", scale: .95, duration: .35, ease: "power2.out" }, RV);
+  tl.to("#flip", { rotationY: 180, duration: .6, ease: "back.out(1.3)" }, RV);
+  tl.to("#c1", { scale: 1.08, y: -16, duration: .6, ease: "back.out(1.6)" }, RV);
+  tl.fromTo("#stamp", { opacity: 0, scale: 2.2, rotation: 18 }, { opacity: 1, scale: 1, rotation: -8, duration: .35, ease: "power4.out" }, RV + .4);
+  tl.set({}, {}, 12.39);
+  window.__timelines = window.__timelines || {};
+  window.__timelines["root"] = tl;
+</script>
+</body>
+</html>

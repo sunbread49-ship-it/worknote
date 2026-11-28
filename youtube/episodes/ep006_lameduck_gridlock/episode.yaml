@@ -1,0 +1,673 @@
+# EP006 · 주식 궁금증, 숫자로 풀기 — 레임덕 + 여소야대, 주식시장엔 악재일까?
+# 대본 작성 규칙: youtube/SCRIPT_STYLE.md
+# 기준: 2026-11-03 중간선거(민주당 상·하원 장악 보도, 11.6 기준 미확정 경합 일부 남음) · S&P500·나스닥100 종가 2026-11-05
+title: "레임덕에 여소야대, 주식시장엔 악재일까? 1950~2026 백테스트"
+
+tts:
+  voice: ko-KR-Chirp3-HD-Sadaltager
+  rate: 1.12
+
+youtube:
+  title: "트럼프 레임덕 + 여소야대, 주식은 떨어질까? 76년 데이터로 본 결과"
+  description: |
+    2026년 11월 3일 중간선거, 민주당이 상원과 하원을 모두 가져갔습니다(11월 6일 보도 기준).
+    트럼프 대통령의 남은 2년은 레임덕에 여소야대. 그럼 주식시장엔 악재일까요?
+    1950년부터 76년 치 S&P500 데이터로 정부 구성별 수익률, 역대 레임덕 5번, 셧다운까지 확인했습니다.
+
+    ✔ 대통령·의회 조합 5가지, 어느 쪽 주가가 가장 좋았나
+    ✔ '꼴찌' 조합이 하필 지금? 숫자 뒤에 숨은 진짜 이유
+    ✔ 역대 레임덕 5번, 놀랍게도 전부 같은 상황이었다
+    ✔ 레임덕 2년 안에 숨어 있던 -33%, -46%
+    ✔ 2028년, 현직 대통령이 못 나오는 대선 해의 주가
+    ✔ 셧다운 5번, 그때 주가는?
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·ETF의 매수·매도 추천이 아니고, 특정 정당을 지지하지 않습니다.
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 투자 판단과 책임은 본인에게 있습니다.
+
+    [자료] S&P500 일간 종가(배당 제외) · 나스닥100 · 연간 수익률은 달력 연도 기준(1950~2025)
+    정부 구성: 대통령 소속 정당 + 상·하원 다수당 (2001년은 상원 다수당이 중간에 바뀌어 '의회 분할'로 분류)
+    레임덕: 재선 대통령 임기 6년 차 중간선거일(1958·1986·1998·2006·2014) → 다음 대선일
+    셧다운: 1995.11 · 1995.12~96.1 · 2013.10 · 2018.12~19.1 · 2025.10~11 (시작 전날 종가 → 종료일 종가)
+    2026 중간선거 결과: AP·CBS·CNBC 11월 4~6일 보도 기준
+  tags: [중간선거, 레임덕, 여소야대, 트럼프, 미국주식, S&P500, 나스닥, 셧다운, 대통령임기, 백테스트]
+  privacy: private
+
+# 클릭 유도형 썸네일 (tools/thumbs.py) 7종
+thumbs:
+  - template: calc
+    tag: "공화 대통령 + 민주 의회"
+    lcd_label: "S&P500 연평균"
+    value: "+4.9%"
+    lines:
+      - {text: "여소야대", size: 160}
+      - {text: "5개 중 꼴찌", size: 150, color: yellow}
+      - {text: "진짜 악재?", size: 130}
+  - template: receipt
+    tag: "역대 레임덕 5번"
+    lines:
+      - {text: "레임덕에", size: 130}
+      - {text: "주식 산 사람", size: 120}
+      - {text: "영수증", size: 170, color: yellow}
+    receipt_sub: "6년 차 중간선거일 매수"
+    rows:
+      - {k: "1년 뒤 상승", v: "5번 중 5번", color: up}
+      - {k: "1년 평균", v: "+8.9%", color: up}
+      - {k: "2년 안 최대 낙폭", v: "-45.8%", color: down}
+      - {k: "마지막 해 평균", v: "-5.9%", color: down}
+    total: "남은 2년은?"
+    total_color: [30, 30, 30]
+  - template: clipping
+    tag: "2026년 11월 3일"
+    masthead: "THE DAILY MARKET"
+    date: "2026년 11월 · 미국 중간선거"
+    headline: "민주당 상·하원 장악, 레임덕 시작"
+    stamp: {text: "6번째", sub: "레임덕 + 여소야대", size: 170, color: [220, 40, 40], pos: [760, 720]}
+    lines:
+      - {text: "앞선 5번", size: 150}
+      - {text: "주가는?", size: 150, color: yellow}
+      - {text: "다 알려준다", size: 150}
+  - template: diagonal
+    ant: false
+    a: {label: "부시 레임덕 2년", value: "-27.3%", color: red, chart: {series: spx, start: "2006-11-07", end: "2008-11-04", color: [255, 140, 140]}}
+    b: {label: "클린턴 레임덕 2년", value: "+28.9%", color: teal, chart: {series: spx, start: "1998-11-03", end: "2000-11-07", color: [170, 255, 240]}}
+    center: "같은 레임덕 + 여소야대"
+    bottom: "이번엔 어느 쪽?"
+  - template: question
+    lines:
+      - {text: "트럼프 레임덕", size: 120}
+      - {text: "+ 여소야대", size: 120}
+      - {text: "주식 떨어진다", size: 130, color: down}
+      - {text: "는데", size: 110}
+      - {text: "진짜일까?", size: 190, color: yellow}
+  - template: big_number
+    glow: [40, 60, 160]
+    lines:
+      - {text: "대통령 못 나오는 대선 해", size: 100}
+      - {text: "-5.9%", size: 270, color: down}
+      - {text: "현직이 나오면 11번 중 11번 상승", size: 80, color: yellow, hl: "11번 중 11번", hl_color: up}
+    props:
+      - {kind: chart, series: spx, start: "2008-01-01", end: "2008-12-31", color: [90, 160, 255], w: 640, h: 480, pos: [1580, 640]}
+  - template: vs_numbers
+    top: "레임덕 + 여소야대, 그 뒤 주가는?"
+    top_hl: "그 뒤 주가는?"
+    left: {label: "1년 뒤", value: "5/5", sub: "전부 상승", color: up}
+    right: {label: "2년 안 최대 낙폭", value: "-46%", sub: "2008년", color: down}
+
+shorts:
+  - title: "여소야대 꼴찌"
+    start: "1:14.0"
+    end: "2:15.0"
+    yt_title: "공화당 대통령 + 민주당 의회, 주가 5개 조합 중 꼴찌? 76년 데이터 #여소야대 #중간선거 #shorts"
+    yt_desc: "1950~2025 S&P500, 대통령·의회 조합 5가지 중 지금 같은 조합이 연평균 꼴찌였습니다. 그런데 숫자 뒤엔 이유가 있었어요. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 특정 정당 지지·매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: gold, top: "레임덕 + 여소야대", label: "공화 대통령 + 민주 의회", big: "5개 중 꼴찌", sub: "S&P500 연평균 +4.9% · 진짜 악재?"}
+  - title: "레임덕 5번"
+    start: "3:13.0"
+    end: "3:52.0"
+    yt_title: "역대 레임덕 5번, 놀랍게도 전부 같았다… 그 뒤 1년 주가는? #레임덕 #트럼프 #shorts"
+    yt_desc: "재선 대통령의 6년 차 중간선거 5번, 모두 야당이 상·하원을 차지했습니다. 그리고 2026년이 6번째. 그 뒤 1년 S&P500은? 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 특정 정당 지지·매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: up, top: "역대 레임덕 5번", label: "중간선거 → 1년 뒤 S&P500", big: "5번 중 5번", sub: "그리고 2026년이 6번째"}
+  - title: "2028 마지막 해"
+    start: "4:59.0"
+    end: "5:56.0"
+    yt_title: "대통령이 못 나오는 대선 해, 주가는 평균 -5.9%였다 #2028대선 #미국주식 #shorts"
+    yt_desc: "1952년 이후 현직 대통령이 재선에 나선 해는 11번 중 11번 상승. 연임 제한으로 못 나온 해는 평균 -5.9%. 2028년이 바로 그 해입니다. 전체 영상은 '주식 악어새' 채널에서 확인하세요.\n※ 투자 교육 목적이며 특정 정당 지지·매수·매도 추천이 아닙니다."
+    cover: {style: punch, tone: down, top: "2028년, 대통령이 못 나오는 대선", label: "레임덕 마지막 해 S&P500", big: "평균 -5.9%", sub: "현직이 나온 해는 11번 중 11번 상승"}
+
+checks:
+  - {name: "통합 민주 연평균(%)", kind: gov_mean, cfg: uD}
+  - {name: "통합 공화 연평균(%)", kind: gov_mean, cfg: uR}
+  - {name: "공화 대통령+민주 의회 연평균(%)", kind: gov_mean, cfg: RpDc}
+  - {name: "공화 대통령+민주 의회 햇수", kind: gov_n, cfg: RpDc}
+  - {name: "공화 대통령+민주 의회 상승 해", kind: gov_up, cfg: RpDc}
+  - {name: "민주 대통령+공화 의회 연평균(%)", kind: gov_mean, cfg: DpRc}
+  - {name: "의회 분할 연평균(%)", kind: gov_mean, cfg: split}
+  - {name: "공화+민주의회, 73·74·08 제외(%)", kind: gov_mean, cfg: RpDc, exclude: [1973, 1974, 2008]}
+  - {name: "분점 정부 연평균(%)", kind: gov_mean, cfg: divided}
+  - {name: "단점 정부 연평균(%)", kind: gov_mean, cfg: unified}
+  - {name: "1958 중간선거→1년(%)", kind: ret, series: spx, start: "1958-11-04", end: "1959-11-04"}
+  - {name: "1986 중간선거→1년(%)", kind: ret, series: spx, start: "1986-11-04", end: "1987-11-04"}
+  - {name: "1998 중간선거→1년(%)", kind: ret, series: spx, start: "1998-11-03", end: "1999-11-03"}
+  - {name: "2006 중간선거→1년(%)", kind: ret, series: spx, start: "2006-11-07", end: "2007-11-07"}
+  - {name: "2014 중간선거→1년(%)", kind: ret, series: spx, start: "2014-11-04", end: "2015-11-04"}
+  - {name: "1986→1988 대선(%)", kind: ret, series: spx, start: "1986-11-04", end: "1988-11-08"}
+  - {name: "2006→2008 대선(%)", kind: ret, series: spx, start: "2006-11-07", end: "2008-11-04"}
+  - {name: "1998→2000 대선 나스닥100(%)", kind: ret, series: ndx, start: "1998-11-03", end: "2000-11-07"}
+  - {name: "1986~88 최대낙폭(%)", kind: max_dd_window, series: spx, start: "1986-11-04", end: "1988-11-08"}
+  - {name: "2006~08 최대낙폭(%)", kind: max_dd_window, series: spx, start: "2006-11-07", end: "2008-11-04"}
+  - {name: "셧다운 2018.12~19.1(%)", kind: ret, series: spx, start: "2018-12-21", end: "2019-01-25"}
+  - {name: "셧다운 2025.10~11(%)", kind: ret, series: spx, start: "2025-09-30", end: "2025-11-12"}
+  - {name: "셧다운 2013.10(%)", kind: ret, series: spx, start: "2013-09-30", end: "2013-10-17"}
+  - {name: "2011 최대낙폭(%)", kind: max_dd_window, series: spx, start: "2011-01-01", end: "2011-12-31"}
+  - {name: "2000년(%)", kind: ret, series: spx, start: "1999-12-31", end: "2000-12-31"}
+  - {name: "1960년(%)", kind: ret, series: spx, start: "1959-12-31", end: "1960-12-31"}
+  - {name: "2016년(%)", kind: ret, series: spx, start: "2015-12-31", end: "2016-12-31"}
+  - {name: "1988년(%)", kind: ret, series: spx, start: "1987-12-31", end: "1988-12-31"}
+  - {name: "2026 선거 다음 날 S&P500(%)", kind: ret, series: spx, start: "2026-11-03", end: "2026-11-04"}
+  - {name: "2026.11.5 S&P500(%)", kind: ret, series: spx, start: "2026-11-04", end: "2026-11-05"}
+
+scenes:
+# ── 인트로 ─────────────────────────────────────────
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "민주당, 상원·하원\n모두 장악", on: 1, size: 130, highlight: '모두 장악'}
+  narration: ['11월 3일, 미국 중간선거. 민주당이 상원과 하원을 모두 가져갔습니다.']
+  bg_word: '2026'
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "트럼프의 남은 2년\n레임덕 + 여소야대", on: 1, size: 120, highlight: '레임덕 + 여소야대', hl_color: down}
+  narration: ['트럼프 대통령의 남은 2년은, 이제 레임덕에 여소야대예요. | 법 하나 통과시키기도 쉽지 않은 상황이죠.']
+- type: chart
+  chapter: 인트로
+  chart:
+    series: spx
+    start: '2026-09-01'
+    end: '2026-11-05'
+    color: [240, 84, 84]
+    title: S&P500 · 2026년 9월 ~ 11월 5일
+    draw: {on: 1, dur: 1.8}
+    marks:
+    - {date: '2026-11-03', label: 중간선거, sub: '11.3', on: 1, offset: 1.0, dy: -80, dx: -90, color: gold}
+    - {date: '2026-11-05', label: '-4.4%', sub: '11.5 하루', on: 2, dy: 60, dx: -80, color: down, size: 36}
+    source: '자료: S&P500 지수 일간 종가 (11.5 기준)'
+  narration: ['선거 다음 날, 주가는 1.6% 올랐어요.', '그런데 그다음 날, S&P500이 4.4%, 나스닥100은 6% 넘게 빠졌죠. | 이건 지난 영상에서 자세히 다뤘고요.']
+- type: kinetic
+  chapter: 인트로
+  items:
+  - {text: "레임덕에 여소야대\n주식시장엔 악재일까?", on: 1, size: 120, highlight: '악재일까?', hl_color: gold}
+  narration: ['그래서 오늘 질문은 이거예요. | 레임덕에 여소야대, 주식시장엔 정말 악재일까요?']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "레임덕 + 여소야대\n주가는 어땠을까?"
+  highlight: 주가는 어땠을까?
+  subtitle: 1950년부터 76년 치 S&P500으로 확인했습니다
+  narration: ['1950년부터 76년 치 S&P500 데이터로, | 대통령과 의회 조합별 주가, 역대 레임덕, 그리고 셧다운까지 전부 확인해 봤습니다.']
+- type: card
+  chapter: 인트로
+  heading: 오늘 확인할 것
+  highlight: 확인할 것
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 34
+  bullets:
+  - {text: '대통령 + 의회 조합별 주가', on: 1}
+  - {text: '역대 레임덕 5번, 그 뒤 2년', on: 2}
+  - {text: '2028년, 대통령이 못 나오는 대선 해', on: 3}
+  - {text: '셧다운 때 주가', on: 4}
+  narration: ['오늘은 네 가지를 볼게요. | 첫째, 대통령과 의회 조합별 주가.', '둘째, 역대 레임덕 5번과 그 뒤 2년.', '셋째, 2028년처럼 대통령이 못 나오는 대선 해.', '그리고 마지막으로, 셧다운 때 주가요.']
+- type: kinetic
+  items:
+  - {text: '정치 영상 아닙니다', on: 1, size: 110, highlight: '아닙니다', hl_color: down, sub: '특정 정당 지지 · 종목 추천이 아닙니다'}
+  narration: ['아, 먼저요. 어느 정당이 좋다, 나쁘다 하는 영상은 절대 아닙니다. | 숫자만 볼게요.']
+
+# ── 조합 5가지 ──────────────────────────────────────
+- type: card
+  chapter: 정부 조합 5가지
+  heading: 대통령 + 의회, 조합은 5가지
+  highlight: 5가지
+  width: 1500
+  size: 48
+  numbered: true
+  gap: 30
+  bullets:
+  - {text: '민주당이 다 가진 정부', on: 1}
+  - {text: '공화당이 다 가진 정부', on: 1, offset: 0.5}
+  - {text: '공화당 대통령 + 민주당 의회', on: 2, highlight: '공화당 대통령 + 민주당 의회', hl_color: gold}
+  - {text: '민주당 대통령 + 공화당 의회', on: 3}
+  - {text: '상원·하원이 갈라진 의회', on: 3, offset: 0.5}
+  narration: ['미국 정부는 대통령과 의회 조합으로 보면, 크게 5가지예요. | 한 정당이 다 가진 정부가 두 가지,', '그리고 지금 같은, 공화당 대통령에 민주당 의회.', '그 반대인 민주당 대통령에 공화당 의회, | 마지막으로 상원과 하원이 갈라진 경우요.']
+- type: kinetic
+  chapter: 정부 조합 5가지
+  items:
+  - {text: "어느 조합일 때\n주가가 가장 좋았을까?", on: 1, size: 120, highlight: '가장 좋았을까?'}
+  narration: ['자, 예상해 보세요. 어느 조합일 때 주가가 가장 좋았을까요?']
+- type: bars
+  chapter: 정부 조합 5가지
+  heading: 정부 조합별 S&P500 연평균 수익률
+  subheading: 1950 ~ 2025 · 달력 연도 기준 · 배당 제외
+  subheading_on: 1
+  bars:
+    unit: '%'
+    rect: [160, 330, 1600, 430]
+    source: '자료: S&P500 일간 종가 (배당 제외)'
+    groups:
+    - label: "민주 대통령\n+ 공화 의회 (8년)"
+      on: 1
+      vmax: 20
+      bars:
+      - {label: 연평균, color: up, stat: {kind: gov_mean, cfg: DpRc}}
+    - label: "공화가 다 가짐\n(9년)"
+      on: 2
+      vmax: 20
+      bars:
+      - {label: 연평균, color: up, stat: {kind: gov_mean, cfg: uR}}
+    - label: "의회 분할\n(16년)"
+      on: 2
+      vmax: 20
+      bars:
+      - {label: 연평균, color: up, stat: {kind: gov_mean, cfg: split}}
+    - label: "민주가 다 가짐\n(21년)"
+      on: 3
+      vmax: 20
+      bars:
+      - {label: 연평균, color: up, stat: {kind: gov_mean, cfg: uD}}
+    - label: "공화 대통령\n+ 민주 의회 (22년)"
+      on: 4
+      vmax: 20
+      bars:
+      - {label: 연평균, color: down, stat: {kind: gov_mean, cfg: RpDc}}
+  narration: ['1등은 민주당 대통령에 공화당 의회였어요. 연평균 16.3%.', '공화당이 다 가졌을 땐 13.3%, 의회가 갈라졌을 땐 11.0%.', '민주당이 다 가졌을 땐 9.2%.', '그리고 꼴찌가, 공화당 대통령에 민주당 의회. 4.9%였습니다.']
+- type: punch
+  chapter: 정부 조합 5가지
+  tone: gold
+  label: '공화당 대통령 + 민주당 의회'
+  big: '5개 중 꼴찌'
+  sub: '연평균 +4.9% · 1950 ~ 2025'
+  sub_on: 2
+  narration: ['5개 중에 꼴찌.', '그리고 2027년부터 2년이, 바로 이 조합이에요.']
+- type: kinetic
+  chapter: 정부 조합 5가지
+  items:
+  - {text: "그럼 악재 확정?\n잠깐만요", on: 1, size: 120, highlight: '잠깐만요', hl_color: gold}
+  narration: ['어? 그럼 악재 확정일까요? | 잠깐만요. 이 22년이 언제였는지 보면 얘기가 달라져요.']
+
+# ── 숫자 뒤의 진짜 이유 ─────────────────────────────
+- type: card
+  chapter: 숫자 뒤 이유
+  heading: 공화 대통령 + 민주 의회였던 해
+  highlight: 해
+  width: 1500
+  size: 46
+  gap: 30
+  bullets:
+  - {text: '1955~60  아이젠하워', on: 1}
+  - {text: '1969~76  닉슨 · 포드', on: 1, offset: 0.5}
+  - {text: '1987~92  레이건 · 부시', on: 1, offset: 1.0}
+  - {text: '2007~08  부시', on: 1, offset: 1.5}
+  narration: ['아이젠하워 때, 닉슨과 포드 때, 레이건과 아버지 부시 때, | 그리고 아들 부시 때입니다.']
+- type: card
+  chapter: 숫자 뒤 이유
+  heading: 이 22년 안에 있던 일
+  highlight: 있던 일
+  width: 1500
+  size: 50
+  gap: 38
+  bullets:
+  - {text: '1973 ~ 74  오일쇼크 · 워터게이트  -17% · -30%', on: 1, highlight: '-17% · -30%', hl_color: down}
+  - {text: '2008  글로벌 금융위기  -38.5%', on: 2, highlight: '-38.5%', hl_color: down}
+  narration: ['그런데 이 안에, 1973년과 74년 오일쇼크가 들어 있어요. 2년 동안 마이너스 17%, 마이너스 30%.', '그리고 2008년 금융위기. 마이너스 38.5%.']
+- type: versus
+  chapter: 숫자 뒤 이유
+  heading: 공화 대통령 + 민주 의회 · 연평균
+  left: {title: '22년 전부', value: '+4.9%', sub: '1950 ~ 2025', color: neutral, on: 1}
+  right: {title: '1973·74·2008 빼면', value: '+10.2%', sub: '19년 · 전체 평균 +9.6%와 비슷', color: up, on: 2}
+  narration: ['이 3년만 빼고 계산하면요?', '연평균 10.2%. 76년 전체 평균 9.6%랑 거의 같아요.']
+- type: versus
+  chapter: 숫자 뒤 이유
+  heading: 나스닥100 연평균 · 1986 ~ 2025
+  left: {title: '민주 대통령 + 공화 의회', value: '+33.8%', sub: '8년 · 1위', color: up, on: 1}
+  right: {title: '공화 대통령 + 민주 의회', value: '+11.3%', sub: '8년 · 5위', color: neutral, on: 2}
+  narration: ['나스닥으로 봐도 순서는 비슷해요. 1986년부터 보면, 민주당 대통령에 공화당 의회가 연평균 33.8%로 1등.', '공화당 대통령에 민주당 의회는 11.3%로 꼴찌였어요. | 그래도 플러스였다는 게 중요하죠. 여기에도 2008년이 들어 있고요.']
+- type: kinetic
+  chapter: 숫자 뒤 이유
+  items:
+  - {text: "주가를 흔든 건\n정치보다 사건", on: 1, size: 120, highlight: '사건', hl_color: gold}
+  narration: ['결국 주가를 크게 흔든 건 정부 조합이라기보다, | 오일쇼크나 금융위기 같은 큰 사건이었던 거죠.']
+- type: versus
+  chapter: 숫자 뒤 이유
+  heading: S&P500 연평균 · 1950 ~ 2025
+  left: {title: '한 정당이 다 가진 정부', value: '+10.5%', sub: '30년', color: neutral, on: 1}
+  right: {title: '권력이 나뉜 정부', value: '+9.0%', sub: '46년', color: neutral, on: 1}
+  narration: ['크게 묶어 봐도 그래요. 한 정당이 다 가졌을 땐 10.5%, 권력이 나뉘었을 땐 9.0%. | 차이가 생각보다 작죠.']
+- type: quote
+  chapter: 숫자 뒤 이유
+  original: "No man's life, liberty, or property are safe while the Legislature is in session."
+  text: 의회가 열려 있는 동안에는, 누구의 생명도 자유도 재산도 안전하지 않다.
+  highlight: 재산도 안전하지 않다
+  source: 기디언 터커 판사 (1866) · 흔히 마크 트웨인의 말로 잘못 알려짐
+  narration: ['월가엔 이런 농담 같은 말이 있어요.', '의회가 열려 있는 동안에는, 누구의 재산도 안전하지 않다. | 1866년 미국의 한 판사가 남긴 말이에요.']
+- type: kinetic
+  chapter: 숫자 뒤 이유
+  items:
+  - {text: "아무것도 못 하는 의회 =\n시장엔 편하다?", on: 1, size: 110, highlight: '편하다?', hl_color: up}
+  narration: ['그래서 여소야대로 의회가 아무것도 못 하면, | 오히려 시장엔 편하다는 말도 있죠. 큰 정책 변화가 없으니까요.']
+
+# ── 역대 레임덕 5번 ─────────────────────────────────
+- type: kinetic
+  chapter: 역대 레임덕
+  items:
+  - {text: "그럼 레임덕은?", on: 1, size: 140, highlight: 레임덕}
+  narration: ['그럼 이번엔 레임덕이요.']
+- type: card
+  chapter: 역대 레임덕
+  heading: 재선 대통령의 6년 차 중간선거
+  highlight: 6년 차
+  width: 1500
+  size: 48
+  gap: 30
+  bullets:
+  - {text: '1958  아이젠하워', on: 1}
+  - {text: '1986  레이건', on: 1, offset: 0.4}
+  - {text: '1998  클린턴', on: 1, offset: 0.8}
+  - {text: '2006  아들 부시', on: 1, offset: 1.2}
+  - {text: '2014  오바마', on: 1, offset: 1.6}
+  narration: ['재선에 성공한 대통령이, 임기 6년 차에 중간선거를 치른 건 1950년 이후 5번이에요.', '아이젠하워, 레이건, 클린턴, 아들 부시, 오바마.']
+- type: punch
+  chapter: 역대 레임덕
+  tone: gold
+  label: '6년 차 중간선거 뒤 의회'
+  big: '5번 모두 야당'
+  sub: '상원·하원 둘 다 · 2026년까지 6번째'
+  sub_on: 2
+  narration: ['그런데요, 놀라운 공통점이 있어요. 5번 모두, 선거가 끝나고 보니 야당이 상원과 하원을 둘 다 차지하고 있었습니다.', '그리고 이번 2026년이, 6번째예요.']
+- type: kinetic
+  chapter: 역대 레임덕
+  items:
+  - {text: "레임덕 + 여소야대는\n이변이 아니라 공식", on: 1, size: 120, highlight: '공식', hl_color: gold}
+  narration: ['그러니까 레임덕에 여소야대는, 이변이 아니라 거의 공식이었던 거죠. | 그럼 그 뒤 주가는요?']
+- type: bars
+  chapter: 역대 레임덕
+  heading: 6년 차 중간선거일에 샀다면 · 1년 뒤 S&P500
+  subheading: 중간선거일 종가 → 1년 뒤
+  subheading_on: 1
+  bars:
+    unit: '%'
+    rect: [160, 330, 1600, 430]
+    source: '자료: S&P500 일간 종가 (배당 제외)'
+    groups:
+    - label: '1958'
+      on: 1
+      vmax: 25
+      bars:
+      - {label: 1년 뒤, color: up, stat: {kind: ret, series: spx, start: '1958-11-04', end: '1959-11-04'}}
+    - label: '1986'
+      on: 1
+      vmax: 25
+      bars:
+      - {label: 1년 뒤, color: up, stat: {kind: ret, series: spx, start: '1986-11-04', end: '1987-11-04'}}
+    - label: '1998'
+      on: 1
+      vmax: 25
+      bars:
+      - {label: 1년 뒤, color: up, stat: {kind: ret, series: spx, start: '1998-11-03', end: '1999-11-03'}}
+    - label: '2006'
+      on: 1
+      vmax: 25
+      bars:
+      - {label: 1년 뒤, color: up, stat: {kind: ret, series: spx, start: '2006-11-07', end: '2007-11-07'}}
+    - label: '2014'
+      on: 1
+      vmax: 25
+      bars:
+      - {label: 1년 뒤, color: up, stat: {kind: ret, series: spx, start: '2014-11-04', end: '2015-11-04'}}
+  narration: ['6년 차 중간선거일에 샀다면, 1년 뒤 S&P500은 5번 모두 플러스였어요.', '평균 8.9%.']
+- type: punch
+  chapter: 역대 레임덕
+  tone: up
+  label: '레임덕 중간선거 → 1년 뒤'
+  big: '5번 중 5번 상승'
+  sub: '평균 +8.9%'
+  narration: ['5번 중 5번, 전부 올랐습니다.']
+- type: versus
+  chapter: 역대 레임덕
+  heading: 중간선거일 → 1년 뒤 S&P500 평균
+  left: {title: '모든 중간선거 (19번)', value: '+14.8%', sub: '1950 ~ 2022 · 19번 모두 상승', color: up, on: 1}
+  right: {title: '레임덕 중간선거 (5번)', value: '+8.9%', sub: '5번 모두 상승', color: neutral, on: 2}
+  narration: ['다만, 3편에서 봤던 모든 중간선거 평균은 14.8%였죠.', '레임덕 때는 8.9%. 오르긴 올랐는데, 조금 덜 올랐어요.']
+- type: kinetic
+  chapter: 역대 레임덕
+  items:
+  - {text: "근데 2년으로 늘려 보면", on: 1, size: 130, highlight: '2년'}
+  narration: ['근데요, 기간을 다음 대선까지, 2년으로 늘려 보면 얘기가 좀 달라집니다.']
+- type: quote
+  chapter: 역대 레임덕
+  original: "If it moves, tax it. If it keeps moving, regulate it. And if it stops moving, subsidize it."
+  text: 움직이면 세금을 매기고, 계속 움직이면 규제하고, 멈추면 보조금을 준다.
+  highlight: 멈추면 보조금
+  source: 로널드 레이건 (1986) · 정부가 경제를 보는 방식을 풍자하며
+  narration: ['레이건은 레임덕 직전인 1986년에, 정부를 이렇게 꼬집기도 했어요.', '움직이면 세금을 매기고, 계속 움직이면 규제하고, 멈추면 보조금을 준다.']
+- type: chart
+  chapter: 역대 레임덕
+  chart:
+    series: spx
+    start: '1986-11-04'
+    end: '1988-11-08'
+    color: [74, 144, 255]
+    title: S&P500 · 레이건 레임덕 (1986.11 ~ 1988.11)
+    draw: {on: 1, dur: 2.0}
+    marks:
+    - {date: '1987-10-19', label: '블랙먼데이', sub: '1987.10', on: 1, offset: 1.2, dy: 60, dx: 90, color: down}
+    - {date: '1988-11-08', label: '+11.8%', sub: 2년 뒤, on: 2, dy: -60, dx: -70, color: up, size: 36}
+    source: '자료: S&P500 일간 종가 (배당 제외)'
+  narration: ['레이건 레임덕 땐, 중간에 블랙먼데이가 있었어요. 고점에서 33.5%가 빠졌죠.', '그래도 2년 뒤엔 11.8% 플러스로 끝났습니다.']
+- type: chart
+  chapter: 역대 레임덕
+  chart:
+    series: ndx
+    start: '1998-11-03'
+    end: '2000-11-07'
+    color: [240, 84, 84]
+    title: 나스닥100 · 클린턴 레임덕 (1998.11 ~ 2000.11)
+    draw: {on: 1, dur: 2.0}
+    marks:
+    - {date: '2000-03-27', label: '닷컴 버블 고점', sub: '2000.3', on: 1, offset: 1.2, dy: -60, dx: -90, color: gold}
+    - {date: '2000-11-07', label: '+134%', sub: 2년 뒤, on: 2, dy: -60, dx: -70, color: up, size: 36}
+    source: '자료: 나스닥100 일간 종가 (배당 제외)'
+  narration: ['클린턴 레임덕 때는 닷컴 버블이 한창이었어요.', '나스닥100이 2년 동안 134%. 두 배가 넘었죠. | 다만 그 직후에 버블이 터집니다.']
+- type: chart
+  chapter: 역대 레임덕
+  chart:
+    series: spx
+    start: '2006-11-07'
+    end: '2008-11-04'
+    color: [74, 144, 255]
+    title: S&P500 · 부시 레임덕 (2006.11 ~ 2008.11)
+    draw: {on: 1, dur: 2.0}
+    marks:
+    - {date: '2007-10-09', label: 고점, sub: '2007.10', on: 1, offset: 1.0, dy: -60, dx: -70, color: gold}
+    - {date: '2008-11-04', label: '-27.3%', sub: 2년 뒤, on: 2, dy: 60, dx: -80, color: down, size: 36}
+    source: '자료: S&P500 일간 종가 (배당 제외)'
+  narration: ['그리고 아들 부시 레임덕. 1년 차까진 좋았는데,', '2년 차에 금융위기가 터지면서, 2년 뒤엔 마이너스 27.3%로 끝났어요.']
+- type: punch
+  chapter: 역대 레임덕
+  tone: down
+  label: '부시 레임덕 2년 안에'
+  big: '-45.8%'
+  sub: '고점 대비 최대 낙폭 · 2008 금융위기'
+  narration: ['그 2년 안에서 가장 크게 빠졌을 땐, 고점 대비 마이너스 45.8%까지 갔습니다.']
+- type: card
+  chapter: 역대 레임덕
+  heading: 레임덕 2년 · S&P500 정리
+  highlight: 정리
+  width: 1500
+  size: 46
+  gap: 26
+  bullets:
+  - {text: '1958 ~ 60  +5.9%   (최대 낙폭 -14.0%)', on: 1}
+  - {text: '1986 ~ 88  +11.8%  (최대 낙폭 -33.5%)', on: 1, offset: 0.4, highlight: '-33.5%', hl_color: down}
+  - {text: '1998 ~ 00  +28.9%  (최대 낙폭 -12.9%)', on: 1, offset: 0.8}
+  - {text: '2006 ~ 08  -27.3%  (최대 낙폭 -45.8%)', on: 1, offset: 1.2, highlight: '-45.8%', hl_color: down}
+  - {text: '2014 ~ 16  +6.3%   (최대 낙폭 -14.2%)', on: 1, offset: 1.6}
+  narration: ['정리하면, 레임덕 2년 동안 5번 중 4번은 플러스로 끝났어요.', '그런데 5번 모두, 중간에 12% 넘게 빠지는 구간이 있었습니다. | 두 번은 30%가 넘었고요.']
+- type: kinetic
+  chapter: 역대 레임덕
+  items:
+  - {text: "1년은 순했고\n2년은 거칠었다", on: 1, size: 120, highlight: '거칠었다', hl_color: down}
+  narration: ['1년은 순했고, 2년은 거칠었다. | 이게 레임덕 데이터가 보여준 모습이에요.']
+
+# ── 2028년, 마지막 해 ────────────────────────────────
+- type: kinetic
+  chapter: 마지막 해
+  items:
+  - {text: "그리고 2028년\n대통령이 못 나오는 대선", on: 1, size: 120, highlight: '못 나오는 대선', hl_color: gold}
+  narration: ['그리고 하나 더 볼 게 있어요. 2028년 대선이요.', '트럼프 대통령은 연임 제한 때문에 출마할 수 없죠. | 현직 대통령이 못 나오는 대선이에요.']
+- type: versus
+  chapter: 마지막 해
+  heading: 대선이 있는 해 · S&P500 연간 수익률 (1952 ~ 2020)
+  left: {title: '현직 대통령이 다시 나온 해', value: '11번 중 11번 상승', sub: '평균 +12.8%', color: up, on: 1}
+  right: {title: '연임 제한으로 못 나온 해', value: '5번 중 2번 상승', sub: '평균 -5.9%', color: down, on: 2}
+  narration: ['1952년 이후 대선이 있던 해를 보면요. 현직 대통령이 재선에 나선 해는, 11번 중 11번 주가가 올랐어요. 평균 12.8%.', '그런데 연임 제한으로 대통령이 못 나온 해는요? 5번 중 2번만 올랐습니다. 평균 마이너스 5.9%.']
+  note: '2024년은 현직 대통령이 중도 사퇴해 제외 · 1952 · 1968은 현직이 불출마'
+- type: punch
+  chapter: 마지막 해
+  tone: down
+  label: '레임덕 대통령의 마지막 해'
+  big: '평균 -5.9%'
+  sub: '1960 · 1988 · 2000 · 2008 · 2016'
+  narration: ['레임덕 대통령의 마지막 해, 평균 마이너스 5.9%.']
+- type: card
+  chapter: 마지막 해
+  heading: 레임덕 마지막 해 · S&P500
+  highlight: 마지막 해
+  width: 1500
+  size: 48
+  gap: 30
+  bullets:
+  - {text: '1960  아이젠하워 마지막 해   -3.0%', on: 1}
+  - {text: '1988  레이건 마지막 해   +12.4%', on: 1, offset: 0.4}
+  - {text: '2000  클린턴 마지막 해   -10.1%  (닷컴 버블 붕괴)', on: 1, offset: 0.8}
+  - {text: '2008  부시 마지막 해   -38.5%  (금융위기)', on: 1, offset: 1.2, highlight: '-38.5%', hl_color: down}
+  - {text: '2016  오바마 마지막 해   +9.5%', on: 1, offset: 1.6}
+  narration: ['하나씩 보면, 2000년엔 닷컴 버블이 터졌고, 2008년엔 금융위기가 있었어요.', '2008년 하나만 빼도 평균은 플러스 2.2%로 바뀝니다. | 표본이 5개뿐이라, 이걸 공식처럼 믿으면 안 되고요.']
+- type: kinetic
+  chapter: 마지막 해
+  items:
+  - {text: "현직이 뛰는 해엔\n경기를 띄울 동기가 있다", on: 1, size: 110, highlight: '띄울 동기'}
+  narration: ['왜 이런 차이가 났을까요? 흔히 나오는 설명은 이거예요. | 재선에 나서는 대통령은, 어떻게든 선거 전에 경기를 띄우고 싶어 하죠.', '못 나오는 대통령은, 그럴 동기가 상대적으로 약하고요. | 물론 이건 해석일 뿐, 숫자가 증명한 건 아닙니다.']
+
+# ── 셧다운 ──────────────────────────────────────────
+- type: kinetic
+  chapter: 셧다운
+  items:
+  - {text: "여소야대의 단골 손님\n셧다운", on: 1, size: 120, highlight: '셧다운', hl_color: down}
+  narration: ['여소야대가 되면 꼭 나오는 단어가 있죠. 셧다운.', '예산안이 통과 안 돼서, 정부 기관이 멈추는 거예요.']
+- type: card
+  chapter: 셧다운
+  heading: 셧다운 기간 S&P500
+  highlight: S&P500
+  width: 1500
+  size: 46
+  gap: 26
+  bullets:
+  - {text: '1995.11  클린턴 · 5일   +1.3%', on: 1}
+  - {text: '1995.12 ~ 96.1  클린턴 · 21일   +0.1%', on: 1, offset: 0.4}
+  - {text: '2013.10  오바마 · 16일   +3.1%', on: 1, offset: 0.8}
+  - {text: '2018.12 ~ 19.1  트럼프 · 35일   +10.3%', on: 1, offset: 1.2, highlight: '+10.3%', hl_color: up}
+  - {text: '2025.10 ~ 11  트럼프 · 43일   +2.4%', on: 1, offset: 1.6}
+  narration: ['1995년 이후, 길게 이어진 셧다운 5번을 보면요.', '클린턴 때 두 번, 오바마 때 한 번, 트럼프 때 두 번. | 작년 가을엔 역대 최장 43일이었죠.']
+- type: punch
+  chapter: 셧다운
+  tone: up
+  label: '셧다운 기간 S&P500'
+  big: '5번 중 5번 상승'
+  sub: '정부는 멈춰도 시장은 멈추지 않았다'
+  sub_on: 2
+  narration: ['셧다운 기간 동안 S&P500은, 5번 모두 올랐어요.', '정부는 멈춰도, 시장은 멈추지 않았던 거죠.']
+- type: bignum
+  chapter: 셧다운
+  label: 셧다운이 끝나고 3개월 뒤 S&P500
+  from: 0
+  to: 6.5
+  fmt: '+{:.1f}%'
+  size: 200
+  on: 1
+  dur: 1.0
+  color: up
+  sub: 5번 모두 플러스
+  sub_on: 2
+  narration: ['셧다운이 끝나고 3개월 뒤까지 봐도, 평균 6.5% 올랐어요.', '이것도 5번 모두 플러스였습니다.']
+- type: kinetic
+  chapter: 셧다운
+  items:
+  - {text: "단, 2011년 부채한도 협상은\n-19%", on: 1, size: 110, highlight: '-19%', hl_color: down}
+  narration: ['단, 예외도 있어요. 2011년엔 셧다운은 아니었지만, 나랏빚 한도를 두고 대통령과 야당 의회가 크게 부딪혔죠.']
+
+- type: chart
+  chapter: 셧다운
+  chart:
+    series: spx
+    start: '2011-04-01'
+    end: '2012-03-30'
+    color: [74, 144, 255]
+    title: S&P500 · 2011 부채한도 협상 · 신용등급 강등
+    draw: {on: 1, dur: 1.8}
+    marks:
+    - {date: '2011-08-05', label: '신용등급 강등', sub: '2011.8.5', on: 1, offset: 1.0, dy: -70, dx: 80, color: gold}
+    - {date: '2011-10-03', label: '-19.4%', sub: 고점 대비, on: 2, dy: 60, dx: 80, color: down, size: 36}
+    source: '자료: S&P500 일간 종가 (배당 제외)'
+  narration: ['그해 8월 5일, 미국 신용등급이 처음으로 한 단계 내려갔고,', '10월 초엔 고점 대비 19.4%까지 빠졌어요. | 여소야대가 진짜 시장을 흔든 건, 셧다운보다 이런 나랏빚 협상 쪽이었습니다.']
+# ── 결론 ────────────────────────────────────────────
+- type: quote
+  chapter: 결론
+  original: "If you mix your politics with your investment decisions, you're making a big mistake."
+  text: 정치와 투자 판단을 섞는다면, 큰 실수를 하는 겁니다.
+  highlight: 큰 실수
+  source: 워런 버핏
+  narration: ['워런 버핏이 한 말이 있어요.', '정치와 투자 판단을 섞는다면, 큰 실수를 하는 겁니다.']
+- type: quote
+  chapter: 결론
+  original: "If you spend more than 13 minutes analyzing economic and market forecasts, you've wasted 10 minutes."
+  text: 경제와 시장 전망을 분석하는 데 13분 넘게 쓴다면, 10분은 낭비한 것이다.
+  highlight: 10분은 낭비
+  source: 피터 린치
+  narration: ['전설의 펀드매니저 피터 린치는 이렇게 말했죠.', '경제와 시장 전망을 분석하는 데 13분 넘게 쓴다면, 10분은 낭비한 것이다.']
+- type: quote
+  chapter: 결론
+  original: "It will fluctuate."
+  text: 주가는 오르내릴 겁니다.
+  highlight: 오르내릴 겁니다
+  source: J.P. 모건 · 주가가 어떻게 될 것 같냐는 질문에
+  narration: ['100년 전, 월가의 전설 J.P. 모건은 주가가 어떻게 될 것 같냐는 질문에 이렇게 답했다고 해요.', '주가는 오르내릴 겁니다. | 누가 대통령이든, 누가 의회를 잡든 말이죠.']
+- type: card
+  chapter: 결론
+  heading: 레임덕 + 여소야대 앞에서
+  highlight: 앞에서
+  width: 1500
+  size: 50
+  numbered: true
+  gap: 38
+  bullets:
+  - {text: '정부 조합만으로 주가를 점치지 않기', on: 1}
+  - {text: '2년 안에 큰 하락이 올 수 있다고 미리 생각하기', on: 2}
+  - {text: '정치 뉴스보다 이익 · 금리 · 사건 보기', on: 3}
+  narration: ['그래서 레임덕과 여소야대 앞에서 할 일은요. | 첫째, 정부 조합만으로 주가를 점치지 않기.', '둘째, 2년 안에 큰 하락이 한 번쯤 올 수 있다고 미리 생각해 두기. | 역대 레임덕 5번 모두 그랬으니까요.', '셋째, 정치 뉴스보다, 기업 이익과 금리, 그리고 큰 사건을 보기.']
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: 오늘의 결론, on: 1, size: 140}
+  narration: ['자, 오늘 확인한 거 정리해 볼게요.']
+  bg_word: CHECK
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '공화 대통령 + 민주 의회', on: 1, size: 110}
+  narration: ['공화당 대통령에 민주당 의회는, 연평균 수익률 꼴찌였어요.']
+  stamp: {text: '사건 3년 빼면 평균 수준', color: up, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 64}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '레임덕 중간선거 → 1년', on: 1, size: 110}
+  narration: ['레임덕 중간선거 뒤 1년은, 5번 모두 플러스.']
+  stamp: {text: '5번 중 5번 상승', color: up, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: kinetic
+  chapter: 오늘의 결론
+  items:
+  - {text: '레임덕 2년 안에는', on: 1, size: 110}
+  narration: ['하지만 2년 안에는, 5번 모두 12% 넘는 하락이 있었습니다.']
+  stamp: {text: '5번 모두 -12% 이상', color: down, on: 1, offset: 0.6, pos: [960, 700], rot: -5, size: 72}
+- type: outro
+  heading: "정치는 시끄러워도\n숫자는 조용히 말한다"
+  highlight: 숫자
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: "본 영상은 투자 교육 목적이며, 특정 종목·ETF의 매수·매도 추천이 아니고 특정 정당을 지지하지 않습니다.\n과거 데이터는 미래 수익을 보장하지 않습니다."
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['정치는 시끄러워도, 숫자는 조용히 말해 줍니다.', '여러분은 남은 2년, 어떻게 보세요? | 궁금했던 주제, 종목, 매매법, 뭐든 댓글로 남겨 주세요. 다음 영상에서 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']

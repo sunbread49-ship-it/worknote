@@ -1,0 +1,16 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.21,0:00:03.64,S,두 번째. 84분, 어디서\N들어 본 것 같지 않나요?
+Dialogue: 0,0:00:03.64,0:00:07.45,S,땅 바로 위를 스치듯 지구를\N한 바퀴 도는 인공위성.
+Dialogue: 0,0:00:07.45,0:00:09.36,S,그 시간도 84분이에요.
+Dialogue: 0,0:00:09.36,0:00:12.56,S,보세요. 위성이랑 악어새의\N높이가 계속 똑같아요.
+Dialogue: 0,0:00:12.56,0:00:12.90,S,둘은 사실 같은 움직임이에요.

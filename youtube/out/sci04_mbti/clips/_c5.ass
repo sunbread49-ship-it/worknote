@@ -1,0 +1,24 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.05,0:00:01.73,S,비밀은 점수 분포에 있어요.
+Dialogue: 0,0:00:01.73,0:00:03.73,S,실제로 사람들\N점수는 양 끝보다,
+Dialogue: 0,0:00:03.73,0:00:05.88,S,가운데에 훨씬 많이\N몰려 있거든요.
+Dialogue: 0,0:00:05.88,0:00:09.08,S,그날 기분이나 컨디션으로\N1, 2점만 달라져도,
+Dialogue: 0,0:00:09.08,0:00:10.76,S,유형이 휙 바뀌는 거예요.
+Dialogue: 0,0:00:11.42,0:00:14.80,S,예를 들어 외향 51,\N내향 49인 사람은 E.
+Dialogue: 0,0:00:14.80,0:00:17.39,S,외향 49, 내향\N51인 사람은 I.
+Dialogue: 0,0:00:17.39,0:00:21.54,S,사실상 똑같은 사람인데,\N정반대 유형으로 나뉘는 거죠.
+Dialogue: 0,0:00:21.54,0:00:23.24,S,이게 두 번째 증거예요.
+Dialogue: 0,0:00:23.92,0:00:25.72,S,그래서 심리학자들은 연구할 때,
+Dialogue: 0,0:00:25.72,0:00:27.79,S,빅 파이브라는 다른\N검사를 주로 써요.
+Dialogue: 0,0:00:27.79,0:00:31.32,S,칸에 나누지 않고, 다섯 가지\N성향을 점수로 보여 줘요.
+Dialogue: 0,0:00:31.32,0:00:35.01,S,엠비티아이에는 없는, 불안하고\N예민한 정도도 재고요.

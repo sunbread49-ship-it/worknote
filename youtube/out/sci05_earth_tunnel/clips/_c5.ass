@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.17,0:00:01.95,S,이 구멍엔 무서운\N소문도 있어요.
+Dialogue: 0,0:00:01.95,0:00:05.22,S,구멍에 마이크를 넣었더니,\N지옥의 비명이 들렸다는 거예요.
+Dialogue: 0,0:00:05.22,0:00:06.66,S,결론은, 가짜예요.
+Dialogue: 0,0:00:06.66,0:00:09.75,S,공포 영화 소리를\N이어 붙인 거였어요.
+Dialogue: 0,0:00:10.41,0:00:13.32,S,땅속 깊이 파기는,\N나라끼리 경쟁도 했어요.
+Dialogue: 0,0:00:13.32,0:00:17.27,S,미국이 먼저 바다 밑을 팠는데,\N돈이 너무 들어서 멈췄어요.
+Dialogue: 0,0:00:17.27,0:00:19.84,S,소련은 12km,\N세계 기록을 세웠죠.
+Dialogue: 0,0:00:19.84,0:00:24.34,S,지금은 일본 배 지큐가, 바다\N밑을 계속 파고 있어요.

@@ -1,0 +1,418 @@
+# EP017 · 주식 궁금증, 숫자로 풀기 — 월배당 커버드콜, 이렇게만 사면 된다 (국내 1위 · 2위 · 서학개미 1위 세후 비교)
+# 4요소: 감정 = 바람(월급처럼 매달 들어오는 돈) → 충격(원금 -5% · 지수보다 수백만 원 덜) → 반전(같은 월배당인데 72% 비과세)
+#        → 해법(국내 주식형은 그대로 · 해외형은 연금 · ISA 계좌 · 자라야 할 돈은 지수) = 제목의 약속을 영상 안에서 지킨다
+#        알고리즘 = 구글 트렌드 한국 '커버드 콜' 500+ (11.16 · 서학개미 커버드콜 분배금 환급 이의제기 첫 인정 보도)
+#        대상 = 실제로 가장 많이 산 상품 (사용자 11.16: 많이 산 게 곧 우리 시청자) — 네이버 금융 시가총액 · 서학개미 보관금액
+# 숫자: 네이버 차트 종가는 분배금만큼 과거를 깎은 수정 주가 → engine/data.py cc_series 로 실제 가격 복원 후 계산 (상장가 ≈ 1만 원 확인)
+# 2주 시험: 롱폼 16:00 (11/17부터) + 같은 날 쇼츠 12:00 · 21:00
+title: '커버드콜 이렇게만 사면 된다, 국내 1위 · 2위 · 서학개미 1위 세후 비교'
+series_tag: 월배당 커버드콜
+pace: punchy
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  say:
+    JEPQ: 젭큐
+    KODEX 200: 코덱스 이백
+    코스피200: 코스피 이백
+    200타겟위클리: 이백 타겟위클리
+    KODEX: 코덱스
+    TIGER: 타이거
+    ISA: 아이에스에이
+    QQQ: 큐큐큐
+    S&P500: 에스앤피 오백
+bgm:
+  volume: 0.24
+  chapters: {인트로: tense, 월세의 함정: drive, 인기 1위들: drive, 1000만 원의 결과: tense, 세금 반전: hope, 이렇게만 사면 된다: hope, 정리: hope}
+chapter_titles:
+  인트로: '커버드콜 분배금 72% 비과세? 원금 -5%?'
+  월세의 함정: '커버드콜이란 · 월세 받고 집값은 포기'
+  인기 1위들: '국내 커버드콜 ETF 순위 · 서학개미 JEPQ'
+  1000만 원의 결과: '커버드콜 1,000만 원 세후 수익 vs 지수'
+  세금 반전: 'KODEX 200타겟위클리커버드콜 비과세 이유'
+  이렇게만 사면 된다: '커버드콜 절세 · 연금저축 · ISA 계좌'
+  정리: '정리: 커버드콜 이렇게 사면 된다'
+youtube:
+  title: '커버드콜 이렇게만 사면 된다, 국내 1위 · 2위 · 서학개미 1위 세후 비교'
+  description: '매달 월급처럼 들어오는 커버드콜 분배금. 그런데 같은 1,000만 원, 같은 월배당인데 세금을 떼고 나면 결과가 크게 달랐습니다.
+
+    한국 투자자가 가장 많이 산 커버드콜 ETF 국내 1위 · 2위 · 3위와 서학개미 1위 JEPQ를, 상장일부터 실제 가격 · 분배금 · 세금까지 계산했습니다.
+
+
+    ✔ 국내 1위 KODEX 200타겟위클리커버드콜 · 2위 TIGER 미국나스닥100타겟데일리커버드콜 · 3위 TIGER 배당커버드콜액티브 · 서학개미 1위 JEPQ
+
+    ✔ 월배당 받는 동안 원금은? 나스닥 커버드콜 -5%
+
+    ✔ 분배금을 다 받아도 지수보다 적었다 (세후)
+
+    ✔ 반전: 같은 월배당인데 분배금 72%가 비과세인 커버드콜
+
+    ✔ 이렇게만 사면 된다: 국내 주식형 · 연금저축 · ISA · 그리고 커버드콜을 사면 안 되는 돈
+
+
+    궁금한 종목, 주제, 매매법을 댓글로 남겨 주세요. 다음 영상에서 숫자로 풀어 드립니다.
+
+    📌 주식 악어새 구독하고 다음 백테스트도 받아보세요.
+
+
+    ※ 본 영상은 투자 교육 목적의 콘텐츠이며, 특정 종목·상품의 매수·매도 추천이 아닙니다.
+
+    ※ 과거 데이터가 미래 수익을 보장하지 않습니다. 각 ETF 상장일 ~ 2026.11.13 (미국 상장은 11.12 종가), 분배금은 재투자하지 않고 받은 것으로 계산했습니다.
+
+    ※ 세금은 단순 계산입니다: 국내 상장 = 과세표준 × 15.4%, 미국 상장 = 분배금 × 15%(미국 원천징수). 금융소득종합과세 · 건강보험료 · 환율은 반영하지 않았습니다. 계좌별 세제(연금저축 · IRP · ISA)는 가입 조건 · 한도 · 시행 시기에 따라 다르니 금융회사에서 꼭 확인하세요.
+
+
+    [자료]
+
+    국내 ETF 종가: 네이버 차트(분배금 반영 수정 주가 → 분배금으로 실제 가격 복원) · 분배금 · 과세표준: FunETF
+
+    미국 ETF: 일별 종가 · 분배금 (Yahoo Finance)
+
+    인기 순위: 네이버 금융 ETF 시가총액 (2026.11.16) · 서학개미 보관금액: 자본시장뉴스 (2026.10.12, 한국예탁결제원 집계 인용)
+
+    분배금 과세 논란: 한국경제 (2026.11.5) · 이의제기 첫 인정 보도 (2026.11.16)
+
+
+    [3D] 동전 탑: Blender로 직접 제작 (실제 데이터) · [사진 · 영상] Pixabay — Hassas_Arts · MrWashingt0n · DesignScape · MrWashingt0n · kostkarubika005 / Wikimedia Commons — BillCramer (CC BY-SA 4.0) · Nick (CC BY 2.0) · USA International Trade Administration (Public domain) · 로고: JPMorgan Chase · 미래에셋 · 삼성자산운용 · 한국경제 (상표는 해당 회사를 가리키는 용도로만 사용, 제휴 · 추천 아님) / 그림: AI 생성 (Gemini)
+
+    '
+  tags: [커버드콜, 월배당, JEPQ, 커버드콜ETF, KODEX200타겟위클리커버드콜, 타이거나스닥커버드콜, 배당ETF, 절세, 연금저축, ISA]
+  privacy: private
+checks:
+- {name: 나스닥 CC 원금 (2024.6.25 →), kind: ret, series: 'cc:486290:raw', start: '2024-06-25', end: '2026-11-13'}
+- {name: 나스닥 CC 원금+분배 세후 (만), kind: ret, series: 'cc:486290:paid', start: '2024-06-25', end: '2026-11-13'}
+- {name: TIGER 나스닥100 같은 기간 세후, kind: ret, series: 'cc:133690:paid', start: '2024-06-25', end: '2026-11-13'}
+- {name: KODEX 200타겟위클리 원금, kind: ret, series: 'cc:498400:raw', start: '2024-12-03', end: '2026-11-13'}
+- {name: JEPQ 원금 (11.12 미국 종가), kind: ret, series: 'cc:JEPQ:raw', start: '2022-05-04', end: '2026-11-12'}
+scenes:
+# ── 인트로: 1초 숫자 · 3초 질문 · 5초 약속 · 빠른 컷 ─────────────────
+- type: punch
+  chapter: 인트로
+  tone: gold
+  video: {file: money_count_v, dark: 0.55, blur: 2}
+  credit: '영상: Hassas_Arts (Pixabay)'
+  label: 국내 1위 커버드콜 · 1,000만 원이 받은 분배금 중
+  big: '72% 비과세'
+  sub: 세금이 안 붙었다
+  'on': 1
+  sub_on: 1
+  sfx: [{name: 'mx:2003', on: 1, offset: 0.0, vol: 0.85}]
+  narration: ['같은 월배당인데, 분배금의 !!72%!!에 세금이 안 붙는 커버드콜이 있어요.']
+- type: kinetic
+  chapter: 인트로
+  bg: {kind: video, file: stock_decline_v, dark: 0.62, blur: 6}
+  items:
+  - {text: "근데 왜\n누구는 세금폭탄?", on: 1, size: 150, highlight: '세금폭탄?', hl_color: down}
+  narration: ['그런데 누구는 왜, 세금폭탄을 맞을까요?']
+- type: punch
+  chapter: 인트로
+  tone: down
+  video: {file: market_crash_v, dark: 0.5, blur: 2}
+  credit: '영상: MrWashingt0n (Pixabay)'
+  label: 국내 2위 나스닥 커버드콜 · 월배당 받는 2년 5개월 동안 원금은
+  big: '-5%'
+  sub: 끝까지 보면, '이렇게만 사면 된다'가 보여요
+  'on': 1
+  sub_on: 2
+  sfx: [{name: 'mx:2182', on: 1, offset: 0.1, vol: 0.8}]
+  shake: [{on: 1, offset: 0.15, amp: 14, dur: 0.4}]
+  narration: ['게다가 매달 분배금을 받는 사이, 원금은 오히려 !!-5%!!가 된 커버드콜도 있어요.', '끝까지 보시면, 커버드콜은 이렇게만 사면 된다, 딱 정리해 드릴게요.']
+- type: title
+  skyline: true
+  y: 250
+  kicker: 주식 궁금증, 숫자로 풀기
+  title: "커버드콜,\n이렇게만 사면 된다"
+  highlight: 이렇게만
+  subtitle: 국내 1위 · 2위 · 서학개미 1위 · 세금까지 뗀 결과
+  narration: ['오늘은 한국 사람들이 가장 많이 산 커버드콜 네 개를, | 세금까지 떼고 비교해 볼게요.']
+# ── 월세의 함정 (커버드콜이란) ─────────────────────────────
+- type: clips
+  chapter: 월세의 함정
+  title: 요즘 커버드콜 기사 제목
+  highlight: 커버드콜
+  bg: {kind: video, file: skyline_v, dark: 0.7, blur: 8}
+  items:
+  - {outlet: 한국경제, date: 2026.11.5, headline: '원금 돌려받았는데 왜…서학개미, 미 커버드콜 수천억 세금 환급 집단 반발', on: 1, hl: true, logo: logo_hankyung}
+  - {outlet: 단독 보도, date: 2026.11.16, headline: '과세관청, 서학개미 이의제기 첫 인정…미 커버드콜 분배금 환급 잇따르나', on: 2}
+  credit: '기사 제목: 한국경제 (2026.11.5) · 단독 보도 (2026.11.16) — 보도 그대로'
+  narration: ['요즘 커버드콜 기사, 이래요. | 원금을 돌려받았는데, 거기에 세금을 뗐다며 서학개미들이 집단으로 반발했고,', '오늘은, 세무 당국이 그 이의제기를 처음으로 인정했다는 보도까지 나왔죠.']
+- type: qa
+  chapter: 월세의 함정
+  visual: ai_landlord_cap
+  q: '커버드콜이\n**대체 뭐길래?**'
+  a: '집 세 주고 **월세 받기.**\n대신 집값 오르면 **일부 포기.**'
+  a_on: 2
+  narration: ['커버드콜이 대체 뭘까요? 집으로 비유하면 쉬워요.', '집을 세 주고 매달 월세를 받아요. | 대신, 집값이 크게 오르면 그 상승분 일부를 남에게 넘기기로 약속한 거예요.', '그 약속값이, 매달 들어오는 높은 분배금이죠.']
+- type: kinetic
+  chapter: 월세의 함정
+  bg: {kind: video, file: datacenter_v, dark: 0.66, blur: 6}
+  items:
+  - {text: "월세는 받고\n대박은 판다", on: 1, size: 140, highlight: '대박은 판다', hl_color: down}
+  narration: ['그래서 시장이 크게 오를수록, 커버드콜은 뒤처지기 쉬워요. | 이걸 기억하고 숫자를 보세요.']
+# ── 인기 1위들 ──────────────────────────────────────────
+- type: leaderboard
+  chapter: 인기 1위들
+  kicker: 국내 상장 커버드콜 ETF · 시가총액 (네이버 금융, 2026.11.16)
+  title: 한국 사람이 가장 많이 산 커버드콜
+  highlight: 가장 많이
+  'on': 1
+  rows:
+  - {label: KODEX 200타겟위클리CC, logo: logo_kodex, sub: '코스피200을 덮음 · 2024.12 상장', value: 4.9, text: 4.9조, color: [255, 204, 40]}
+  - {label: TIGER 나스닥100타겟데일리CC, logo: logo_mirae, sub: '나스닥100을 덮음 · 2024.6 상장', value: 2.5, text: 2.5조, color: [120, 220, 180]}
+  - {label: TIGER 배당CC액티브, logo: logo_mirae, sub: '국내 배당주 · 2023.12 상장', value: 2.3, text: 2.3조, color: [150, 180, 240]}
+  - {label: KODEX 미국배당CC액티브, logo: logo_kodex, sub: '미국 배당주 · 2022.9 상장', value: 1.7, text: 1.7조, color: [200, 206, 220]}
+  note: CC = 커버드콜 · 커버드콜 · 프리미엄 이름이 들어간 국내 상장 ETF 기준
+  vmax: 7.5
+  narration: ['먼저, 한국 사람들이 실제로 가장 많이 산 커버드콜이에요.', '4위 코덱스 미국배당커버드콜, 1.7조. | 3위 타이거 배당커버드콜액티브, 2.3조.', '2위는 나스닥100을 덮은 타이거 커버드콜, 2.5조.', '그리고 1위는, 코스피200을 덮은 코덱스 200타겟위클리커버드콜. !!4.9조!!예요.']
+- type: punch
+  chapter: 인기 1위들
+  tone: gold
+  photo: {file: nyse_floor, focus: [0.5, 0.5], dark: 0.6}
+  logo: logo_jpmorgan
+  label: 서학개미 보관 1위 커버드콜 · JEPQ (JP모건 운용 · 2026.10 집계)
+  big: 18억 달러
+  sub: 미국 주식 전체 25위
+  'on': 1
+  sub_on: 1
+  sfx: [{name: 'mx:2003', on: 1, offset: 0.05, vol: 0.6}]
+  narration: ['미국에 직접 투자하는 서학개미 쪽에선, 제이피모건이 운용하는 젭큐가 1위예요. | 보관금액만 18억 달러죠.']
+# ── 1000만 원의 결과 ────────────────────────────────────
+- type: chart
+  chapter: 1000만 원의 결과
+  chart:
+    lines:
+    - {series: 'cc:133690:raw', color: neutral, label: 나스닥100 (그냥 지수)}
+    - {series: 'cc:486290:raw', color: [240, 84, 84], label: 나스닥 커버드콜 원금}
+    start: '2024-06-25'
+    end: '2026-11-13'
+    end_labels: true
+    rect: [300, 200, 1200, 620]
+    title: 1,000만 원 · 원금만 보면 (만 원, 2024.6.25 상장일 → 2026.11.13)
+    draw: {on: 1, dur: 2.6}
+    source: '자료: 네이버 차트 · FunETF 분배금 (수정 주가를 실제 가격으로 복원)'
+  sfx: [{name: fall_burn, on: 3, offset: 0.2, vol: 0.6}]
+  narration: ['그럼 1,000만 원씩 넣어 볼게요. 먼저 2위, 나스닥 커버드콜이에요.', '회색은 그냥 나스닥100, 빨간색이 커버드콜의 원금이에요.', '나스닥은 38% 올랐는데, | 커버드콜 원금은 !!953만 원!!. 오히려 줄었어요.']
+- type: phone
+  chapter: 1000만 원의 결과
+  mode: account
+  bg: dark
+  app: TIGER 나스닥100CC
+  phone_x: 560
+  from: 10000000
+  to: 9533000
+  drop_on: 2
+  drop_dur: 3.0
+  holdings:
+  - {name: '보유 1,009주 · 원금', pct: -4.7}
+  income: {label: '받은 분배금(세후)', to: 3084000, on: 1, dur: 4.0}
+  notes:
+  - {text: '2024.7  분배금  +102,524원', on: 1}
+  - {text: '2024.8  분배금  +99,960원', on: 1, offset: 0.7}
+  - {text: '2024.9  분배금  +100,815원', on: 1, offset: 1.4}
+  - {text: '2024.10  분배금  +105,941원', on: 1, offset: 2.1}
+  - {text: '… 2026.9  분배금  +114,485원', on: 2, offset: 0.3}
+  - {text: '2026.10  분배금  +105,941원', on: 2, offset: 0.9}
+  side_text: "들어온 돈 +308만\n계좌는 -47만"
+  side_highlight: '-47만'
+  side_hl_color: down
+  side_on: 3
+  narration: ['그래도 매달 분배금은 들어왔잖아요? | 맞아요. 1,000만 원이면 세금 떼고도 매달 10만 원 넘게 들어왔어요.', '2년 5개월 동안 28번, 모두 308만 원. 그런데 계좌 평가금액은요,', '1,000만 원에서 !!953만 원!!. 들어온 만큼, 계좌에서는 덜어져 나간 셈이에요.']
+- type: media
+  chapter: 1000만 원의 결과
+  file: coins_ep017.mp4
+  fit: cover
+  hold: true
+  speed: 0.55
+  narration: ['동전 탑으로 쌓아 볼게요. 동전 하나가 50만 원이에요. | 왼쪽은 그냥 나스닥100, 가운데는 커버드콜의 원금, 금색은 매달 받은 분배금이에요.', '2년 5개월 뒤, 금색 분배금을 다 더해도 1,262만 원. | 그냥 나스닥은 1,396만 원까지 자랐어요.']
+- type: hbars
+  chapter: 1000만 원의 결과
+  kicker: 상장일에 1,000만 원 → 2026.11.13 · 원금 + 받은 분배금 (세후)
+  title: 분배금까지 다 더하면
+  highlight: 다 더하면
+  title_y: 90
+  bar_h: 28
+  row_gap: 8
+  vmax: 2700
+  rows:
+  - {label: '국내 1위 · KODEX 200타겟위클리CC', value: 2009, text: 2009만, color: up, on: 1}
+  - {label: '  KODEX 200 · 같은 1년 11개월', value: 2548, text: 2548만, color: neutral, on: 1, offset: 0.3}
+  - {label: '국내 2위 · TIGER 나스닥100타겟데일리CC', value: 1262, text: 1262만, color: up, on: 2}
+  - {label: '  TIGER 미국나스닥100 · 같은 2년 5개월', value: 1396, text: 1396만, color: neutral, on: 2, offset: 0.3}
+  - {label: '서학개미 1위 · JEPQ', value: 1548, text: 1548만, color: up, hl: true, on: 3}
+  - {label: '  QQQ · 같은 4년 6개월 · 달러 기준', value: 2119, text: 2119만, color: neutral, on: 3, offset: 0.3}
+  narration: ['코덱스 200타겟위클리는 2,009만 원. 그냥 코스피200은 2,548만 원이에요.', '나스닥 커버드콜은 1,262만 원, 나스닥은 1,396만 원.', '4년 반 들고 있던 젭큐는 1,548만 원. | 같은 기간 나스닥은 !!2,119만 원!!이었어요.']
+- type: duel
+  chapter: 1000만 원의 결과
+  heading: 서학개미 1위 JEPQ · 4년 6개월 · 1,000만 원
+  left: {title: 'JEPQ', value: '1,548만', sub: '원금 +11% · 분배금 514만 → 세후 437만', color: down, on: 1}
+  right: {title: '그냥 나스닥 (QQQ)', value: '2,119만', sub: '원금 +109% · 차이 571만 원 · 달러 기준', color: up, on: 2}
+  sfx: [{name: 'mx:2182', on: 2, offset: 0.2, vol: 0.7}]
+  narration: ['젭큐는 월배당을 514만 원 받았지만, 세금 15%를 떼면 437만 원.', '그 사이 원금은 11%밖에 안 올랐어요. | 그냥 나스닥을 들고 있었다면, !!571만 원!!을 더 벌었죠.']
+- type: kinetic
+  chapter: 1000만 원의 결과
+  bg: {kind: video, file: clock_anxiety_v, dark: 0.6, blur: 4}
+  items:
+  - {text: "월급은 받았는데\n원금이 안 자랐다", on: 1, size: 120, highlight: '원금이 안 자랐다', hl_color: down}
+  narration: ['월세는 꼬박꼬박 받았는데, | 집값 오른 몫을 넘겨준 거예요. 앞에서 본 그 약속이죠.']
+# ── 세금 반전 ────────────────────────────────────────────
+- type: kinetic
+  chapter: 세금 반전
+  bg: {kind: video, file: skyline_v, dark: 0.6, blur: 4}
+  items:
+  - {text: "그런데\n세금에서 반전", on: 1, size: 160, highlight: '반전', hl_color: gold}
+  narration: ['그런데 여기서 반전이 있어요. | 세금이에요.']
+- type: receipt
+  chapter: 세금 반전
+  bg: dark
+  heading: 같은 1,000만 원 · 분배금 영수증
+  highlight: 영수증
+  receipts:
+  - title: KODEX 200타겟위클리CC
+    sub: '1,000만 원 · 1년 11개월 · 분배금 23번'
+    lines:
+    - {label: 받은 분배금, value: '509만 원', on: 1}
+    - {label: '세금 붙는 부분 (28%)', value: '142만 원', on: 1, offset: 0.6}
+    - {label: '세금 (15.4%)', value: '-22만 원', color: down, on: 1, offset: 1.2}
+    total: {label: 손에 쥔 돈, value: '487만 원', color: up, on: 1, offset: 1.8}
+  - title: TIGER 배당CC액티브
+    sub: '1,000만 원 · 2년 11개월 · 분배금 35번'
+    lines:
+    - {label: 받은 분배금, value: '694만 원', on: 2}
+    - {label: '세금 붙는 부분 (100%)', value: '694만 원', on: 2, offset: 0.6}
+    - {label: '세금 (15.4%)', value: '-107만 원', color: down, on: 2, offset: 1.2}
+    total: {label: 손에 쥔 돈, value: '587만 원', on: 2, offset: 1.8}
+  narration: ['영수증으로 볼게요. 코덱스 200타겟위클리가 준 분배금 509만 원 중, | 세금이 붙은 건 28%뿐이었어요. 떼인 세금은 22만 원.', '반면 타이거 배당커버드콜은, 분배금 전부에 세금이 붙어서 | 107만 원이 빠져나갔어요.']
+- type: qa
+  chapter: 세금 반전
+  visual: ai_tax_bite
+  q: '왜 **72%**는\n세금이 없을까?'
+  a: '국내 주식 · 국내 지수 옵션 이익은\n원래 **비과세**라서'
+  a_on: 2
+  narration: ['왜 72%는 세금이 없을까요?', '한국 주식이나 코스피200 옵션에서 난 이익은, | 원래 세금을 안 매기거든요.', '그래서 코스피를 덮은 커버드콜은, 분배금의 상당 부분이 비과세로 나와요.']
+- type: card
+  chapter: 세금 반전
+  heading: 분배금에 붙는 세금 · 한눈에
+  highlight: 한눈에
+  size: 46
+  gap: 30
+  width: 1500
+  bullets:
+  - {text: '국내 주식형 커버드콜 (코스피200 등) · 상당 부분 비과세', highlight: 비과세, hl_color: up, on: 1}
+  - {text: '국내 상장 해외형 커버드콜 (나스닥 · 미국배당) · 15.4%', on: 2}
+  - {text: '미국 상장 (JEPQ 등) · 미국에서 15% 떼고 입금', on: 3}
+  - {text: '금융소득 연 2,000만 원 넘으면 · 종합과세 주의', highlight: 2,000만 원, hl_color: down, on: 4}
+  credit: '단순 정리 · 개인별 세금은 소득 · 계좌에 따라 다름'
+  narration: ['정리하면 이래요. 국내 주식형 커버드콜은 분배금의 상당 부분이 비과세.', '나스닥이나 미국 배당주를 덮은 국내 상장 커버드콜은 15.4%.', '미국에 상장된 젭큐는, 미국에서 15%를 먼저 떼고 들어와요.', '그리고 분배금이 크다 보니, | 금융소득이 한 해 2,000만 원을 넘으면 종합과세까지 갈 수 있어요. 진짜 세금폭탄은 여기죠.']
+- type: saying
+  chapter: 세금 반전
+  photo: charlie_munger
+  move: {zoom: 0.1, dx: 0.01, dy: -0.01}
+  focus: [0.5, 0.3]
+  face_focus: [0.5, 0.3]
+  name: 찰리 멍거
+  role: 버크셔 해서웨이 전 부회장 · 워런 버핏의 동반자
+  en: 'The first rule of compounding: Never interrupt it unnecessarily.'
+  ko: '복리의 제1원칙,\n**쓸데없이 끊지 마라.**'
+  ko_on: 1
+  narration: ['워런 버핏의 동반자, 찰리 멍거는 이렇게 말했어요. | 복리의 제1원칙, **쓸데없이 끊지 마라.**', '매달 분배금에서 떼이는 세금이, 바로 복리를 끊는 가위예요.']
+# ── 이렇게만 사면 된다 ─────────────────────────────────────
+- type: qa
+  chapter: 이렇게만 사면 된다
+  visual: ai_two_jars
+  q: '해외형 커버드콜은\n**세금을 피할 방법이?**'
+  a: '**연금저축 · ISA**\n계좌에 담기'
+  a_on: 2
+  narration: ['그럼 나스닥이나 미국 배당 커버드콜은, 세금을 피할 방법이 없을까요?', '있어요. 계좌를 바꾸는 거예요. | 연금저축이나 아이알피, 그리고 아이에스에이 계좌요.']
+- type: duel
+  chapter: 이렇게만 사면 된다
+  heading: 같은 커버드콜, 계좌만 바꾸면
+  left: {title: '연금저축 · IRP', value: '세금 미루기', sub: '분배금 세금 없이 계속 굴리고 · 나중에 연금으로 받으면 3.3 ~ 5.5%', color: up, on: 1}
+  right: {title: 'ISA', value: '일부 비과세', sub: '일정 금액까지 비과세 · 넘는 부분도 9.9% 분리과세 · 3년 유지', color: up, on: 2}
+  narration: ['연금저축과 아이알피는, 분배금에 세금을 떼지 않고 그대로 다시 굴려요. | 나중에 연금으로 받을 때 3.3에서 5.5% 수준이죠.', '아이에스에이는 일정 금액까지 비과세, | 넘는 부분도 9.9%로 따로 계산돼서 종합과세를 피할 수 있어요.']
+- type: kinetic
+  chapter: 이렇게만 사면 된다
+  bg: {kind: video, file: datacenter_v, dark: 0.66, blur: 6}
+  items:
+  - {text: "단, JEPQ는\n못 넣어요", on: 1, size: 140, highlight: '못 넣어요', hl_color: down}
+  narration: ['단, 미국에 상장된 젭큐 같은 상품은 이 계좌들에 넣을 수 없어요. | 그래서 국내에 상장된 비슷한 커버드콜을 골라야 해요.']
+- type: checklist
+  chapter: 이렇게만 사면 된다
+  kicker: 월배당 커버드콜
+  title: 이렇게만 사면 된다
+  highlight: 이렇게만
+  title_size: 90
+  icon: photo:ai_two_jars
+  icon_on: 1
+  icon_x: 1620
+  items:
+  - {text: '일반 계좌라면 · 국내 주식형 커버드콜', on: 2, highlight: 국내 주식형}
+  - {text: '나스닥 · 미국형이라면 · 연금저축 · ISA 안에서', on: 3, highlight: 연금저축 · ISA}
+  - {text: '불려야 할 돈이라면 · 커버드콜 말고 지수', on: 4, highlight: 지수}
+  narration: ['정리할게요. 이렇게만 사면 돼요.', '첫째, 일반 계좌에서 산다면, 분배금 상당 부분이 비과세인 국내 주식형 커버드콜.', '둘째, 나스닥이나 미국형 커버드콜이 좋다면, 연금저축이나 아이에스에이 안에서.', '셋째, 아직 불려야 할 돈이라면, 커버드콜 말고 지수예요. | 오늘 본 것처럼, 대박은 팔고 월세만 받는 상품이니까요.']
+- type: saying
+  chapter: 이렇게만 사면 된다
+  photo: john_bogle
+  move: {zoom: 0.1, dx: 0.0, dy: -0.01}
+  focus: [0.5, 0.3]
+  face_focus: [0.5, 0.2]
+  name: 존 보글
+  role: 뱅가드 창업자 · 인덱스 펀드의 아버지
+  en: "Don't look for the needle in the haystack. Just buy the haystack!"
+  ko: '건초 더미에서 바늘을 찾지 마라.\n**건초 더미를 통째로 사라.**'
+  ko_on: 1
+  narration: ['인덱스 펀드를 처음 만든 존 보글은 이렇게 말했어요. | 건초 더미에서 바늘을 찾지 마라. **건초 더미를 통째로 사라.**', '월배당이라는 반짝이는 바늘보다, | 시장 전체가 자라는 힘을 믿으라는 거죠.']
+- type: card
+  chapter: 정리
+  heading: 오늘의 숫자
+  highlight: 숫자
+  numbered: true
+  size: 46
+  gap: 30
+  width: 1500
+  bullets:
+  - {text: '나스닥 커버드콜 · 월배당 받는 2년 5개월, 원금 -5%', on: 2}
+  - {text: 'JEPQ 1,000만 원 · 4년 반 뒤 1,548만 vs 나스닥 2,119만', highlight: 2,119만, hl_color: up, on: 2}
+  - {text: 'KODEX 200타겟위클리 · 분배금 72% 비과세', highlight: 72%, hl_color: up, on: 3}
+  - {text: '해외형은 연금저축 · ISA · 불릴 돈은 지수', highlight: 연금저축 · ISA, hl_color: up, on: 4}
+  narration: ['오늘 본 숫자를 정리해 볼게요.', '나스닥 커버드콜은 월배당을 받는 동안 원금이 -5%였고, | 젭큐 1,000만 원은 4년 반 뒤 1,548만 원, 그냥 나스닥은 2,119만 원이었어요.', '하지만 코스피를 덮은 커버드콜은 분배금의 72%가 비과세였죠.', '그래서 해외형은 연금저축과 아이에스에이에서, | 불려야 할 돈은 지수로.']
+- type: saying
+  chapter: 정리
+  photo: buffett_2015
+  move: {zoom: 0.1, dx: -0.01, dy: -0.01}
+  focus: [0.5, 0.3]
+  face_focus: [0.5, 0.3]
+  name: 워런 버핏
+  role: 버크셔 해서웨이 회장
+  en: "Someone's sitting in the shade today because someone planted a tree a long time ago."
+  ko: '오늘 누군가 그늘에 앉아 있는 건,\n**오래전 누군가 나무를 심었기 때문이다.**'
+  ko_on: 1
+  narration: ['워런 버핏의 말로 마무리할게요. | 오늘 누군가 그늘에 앉아 있는 건, 오래전 누군가 나무를 심었기 때문이다.', '월배당이라는 그늘도, | 먼저 나무가 자라야 생기는 거예요.']
+- type: kinetic
+  chapter: 정리
+  items:
+  - {text: "월배당은 월급이 아니라\n월세다", on: 1, size: 120, highlight: '월세다'}
+  narration: ['커버드콜의 월배당은, 공짜 월급이 아니에요.', '[낮게]집값 오를 몫을 미리 팔고 받는, 월세예요.']
+- type: outro
+  heading: "월배당은\n계좌부터 고르자"
+  highlight: 계좌부터
+  sub: 궁금한 주제 · 종목 · 매매법, 댓글로 남겨주세요
+  disclaimer: '본 영상은 투자 교육 목적이며, 특정 종목·상품의 매수·매도 추천이 아닙니다.
+
+    과거 데이터는 미래 수익을 보장하지 않으며 세금은 단순 계산입니다. 계좌별 세제는 금융회사에서 확인하세요.'
+  subscribe_on: 3
+  signature: 오늘도 감 말고, 숫자로 투자하세요.
+  signature_on: 4
+  narration: ['여러분은 어떤 커버드콜 들고 계세요? 어느 계좌에 담으셨나요?', '댓글로 남겨 주세요.', '다음엔 어떤 걸 숫자로 확인해 볼까요? 궁금한 주제나 종목도 같이 남겨 주시면, 데이터로 끝까지 파헤쳐 드리겠습니다.', '구독과 좋아요는, 영상 분석과 제작에 큰 힘이 됩니다.', '오늘도 감 말고, 숫자로 투자하세요.']
+thumb_pick: P02   # 2026-11-16 사용자 확정
+thumbs10:   # 썸네일 문구 = 제목 후보 2번 '이렇게 사면 분배금 72%가 비과세? 서학개미가 몰랐던 방법' (사용자 11.16)
+- {p: P01, photo: krw_10000, top: '커버드콜 이렇게 사면', bottom: '분배금 72% 비과세?', hl: '72%', sticker: 절세}
+- {p: P02, photo: krw_coins, theme: gold, top: '월배당 커버드콜', num: '72%', unit: '비과세', bottom: '서학개미가 몰랐던 방법'}
+- {p: P03, photo: krw_coins, theme: red, label: '같은 1,000만 원 월배당 · 떼인 세금', before: '107만', after: '22만', sub: '사는 법 하나 차이'}
+- {p: P10, name: P04, photo: ai_tax_bite, label: '(국내 1위 커버드콜 · 받은 분배금 중)', top: '세금 안 붙은 돈', bottom: '무려 72%'}
+- {p: P05, photo: nyse_floor, line1: '서학개미 1위 JEPQ', line2: '4년 반 들고 있었더니', line3: '세금 떼면…', sticker: '실제 수익', chart: {series: 'cc:JEPQ:raw', start: '2022-05-04', end: '2026-11-13'}}
+- {p: P06, photo: krw_10000, top: '커버드콜 이렇게 사면', bottom: '세금폭탄', sticker: '경고!'}
+- {p: P07, photo: krw_coins, label: 'KODEX 200타겟위클리 vs TIGER 배당커버드콜', top: '같은 월배당인데', bottom: '세금 5배 차이', red: true}
+- {p: P08, left: krw_coins, right: nyse_floor, text_l: '국내', text_r: '미국', name_l: 분배금 72% 비과세, name_r: 15% 떼고 입금, bottom: '어디서 사야 할까?'}
+- {p: P09, photo: krw_10000, person: {file: worker_stressed_cut, h: 900, side: right, dy: 60}, bubble: "월배당 받는데\n세금이 왜 이래??", bottom: '이렇게만 사면 된다'}
+- {p: P10, photo: ai_two_jars, label: '(연금저축 · ISA)', top: '커버드콜 이 통에 담으면', bottom: '세금 확 준다'}

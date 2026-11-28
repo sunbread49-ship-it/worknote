@@ -1,0 +1,707 @@
+title: 지폐 속 숨은 그림 | 만 원의 별자리 · 엄마와 아들 · 끝내 못 나온 10만 원
+series_tag: 한 번에 정리
+clip_theme: science
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  tone: ivory
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  tempo: 1.08
+  say:
+    오천 원: 오천 원
+    혼천의: 혼천의
+    68mm: 육십팔 밀리미터
+    6mm: 육 밀리미터
+bgm:
+  volume: 0.18
+  chapters:
+    인트로: tense
+    만 원의 비밀: hope
+    엄마와 아들: hope
+    천 원의 그림: drive
+    사라진 10만 원: tense
+    지폐 키 재기: drive
+    정리: hope
+chapter_titles:
+  인트로: 만 원 뒷면, 보신 적 있나요
+  만 원의 비밀: 1973 첫 만 원 · 세종대왕 · 천상열차분야지도 · 혼천의
+  엄마와 아들: 오천 원 율곡 · 뒷면 초충도 · 오만 원 신사임당
+  천 원의 그림: 퇴계 이황 · 겸재 정선 계상정거도
+  사라진 10만 원: 김구 · 대동여지도 · 독도 논란 · 발행 중지
+  지폐 키 재기: 세로 68mm · 가로 6mm씩
+  정리: 다음 지폐는 뒷면부터
+thumb_pick: T07
+clips:
+- start: 24.8
+  end: 40.6
+  hook: '만 원에 부처님이
+
+    들어갈 뻔했다'
+  hl: 부처님
+- start: 41.2
+  end: 59.5
+  hook: '만 원 앞면에
+
+    숨은 병풍 그림'
+  hl: 병풍 그림
+- start: 60.1
+  end: 96.0
+  hook: '만 원 뒷면엔
+
+    600년 전 하늘'
+  hl: 600년 전
+- start: 108.5
+  end: 144.0
+  hook: '오천 원 뒷면은
+
+    엄마의 그림'
+  hl: 엄마의 그림
+- start: 144.6
+  end: 158.1
+  hook: '지갑 속에
+
+    엄마와 아들이?'
+  hl: 엄마와 아들
+- start: 158.7
+  end: 177.8
+  hook: '오만 원은
+
+    세워서 보세요'
+  hl: 세워서
+- start: 178.4
+  end: 216.5
+  hook: '천 원 뒷면
+
+    이 그림 어디?'
+  hl: 어디
+- start: 217.1
+  end: 247.1
+  hook: '끝내 못 나온
+
+    10만 원'
+  hl: 10만 원
+- start: 247.7
+  end: 265.1
+  hook: '지폐 키 재기
+
+    6mm의 비밀'
+  hl: 6mm
+scenes:
+- type: banknote
+  chapter: 인트로
+  title: 만 원 뒷면, 보신 적 있나요?
+  highlight: 뒷면
+  notes:
+  - value: 10000
+    side: back
+    motif: 별자리 지도 · 혼천의 · 망원경
+    'on': 1
+    items:
+    - text: 600년 넘은 별자리 지도
+      xy:
+      - 0.3
+      - 0.5
+      'on': 2
+    img: bok2_10000_b
+  narration:
+  - 지갑 속 만 원짜리, 뒷면 자세히 보신 적 있나요?
+  - 여기엔 600년도 넘은 별자리 지도가 숨어 있어요. | 그리고 원래 이 지폐엔, 세종대왕 대신 부처님이 들어갈 뻔했죠.
+  credit: '화폐 도안: 한국은행'
+- type: banknote
+  chapter: 인트로
+  mode: pair
+  notes:
+  - value: 5000
+    person: 율곡 이이
+    'on': 1
+    img: bok2_5000_f
+  - value: 50000
+    person: 신사임당
+    'on': 1
+    offset: 0.4
+    img: bok2_50000_f
+  memo: 지갑 속에 엄마와 아들이?
+  memo_on: 1
+  guide:
+    text: '한 번도 못 나온
+
+      지폐도 있어요!'
+    'on': 2
+    xy:
+    - 120
+    - 1000
+    size: 150
+  narration:
+  - 게다가 지갑 속엔 엄마와 아들이 함께 들어 있고,
+  - 세상에 한 번도 나오지 못한 지폐도 있어요. | 오늘은 지폐 속에 숨은 이야기를 하나씩 펼쳐 볼게요.
+  credit: '화폐 도안: 한국은행 (오만 원권은 한국은행 제공 보기·SPECIMEN 표시 이미지)'
+- type: sci_title
+  kicker: 악어새 지식창고 · 한 번에
+  title: '지폐 속
+
+    숨은 그림'
+  highlight: 숨은 그림
+  subtitle: 만 원의 별자리 · 엄마와 아들 · 끝내 못 나온 10만 원
+  narration:
+  - 악어새 탐사 수첩, 이번엔 지갑을 열어 볼게요.
+- type: accent_simple
+  chapter: 만 원의 비밀
+  palette: notyet
+  bg: a
+  ink: b
+  pop: c
+  big: '1973'
+  caption: 첫 만 원, 원래 도안은 석굴암
+  narration:
+  - 만 원짜리가 처음 나온 건 1973년이에요.
+- type: banknote
+  chapter: 만 원의 비밀
+  mode: pair
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
+  notes:
+  - value: 10000
+    img: bok_10000_1973_f
+    'on': 1
+  - value: 10000
+    img: bok_10000_1973_b
+    'on': 1
+    offset: 0.4
+  memo: 1973년 첫 만 원 · 세종대왕과 경복궁 근정전
+  memo_on: 2
+  narration:
+  - 원래 계획은 앞면에 석굴암 부처님, 뒷면엔 불국사였어요.
+  - 그런데 도안 소재가 문제가 됐고, 결국 세종대왕과 근정전으로 바뀌었죠. | 종교계 반발 때문이었다는 이야기도 있어요.
+- type: notezoom
+  mode: loupe
+  zooms:
+  - box:
+    - 0.27
+    - 0.33
+    - 0.62
+    - 0.66
+    label: 일월오봉도
+    'on': 2
+  narration:
+  - 지금 쓰는 만 원은 2007년에 나왔어요. 앞면엔 세종대왕,
+  - 그 왼쪽 초록 산봉우리 보이시죠? 임금의 자리 뒤에 두던 병풍 그림, 일월오봉도예요.
+  chapter: 만 원의 비밀
+  bill:
+    img: bok2_10000_f
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.27
+    - 0.33
+    - 0.62
+    - 0.66
+    label: 지폐 속 일월오봉도
+  real:
+    file: bn_irwol
+    label: 실제 그림
+    caption: 일월오봉도 병풍
+    focus:
+    - 0.5
+    - 0.5
+  same: true
+  narration:
+  - 실제 일월오봉도예요. 해와 달, 다섯 봉우리, 그리고 소나무와 물결까지.
+  - 경복궁 같은 궁궐에 가면, 왕의 자리 뒤에 이 병풍이 그대로 서 있어요.
+  chapter: 만 원의 비밀
+  bill:
+    img: bok2_10000_f
+    'on': 1
+- type: notezoom
+  mode: loupe
+  zooms:
+  - box:
+    - 0.13
+    - 0.2
+    - 0.46
+    - 1.0
+    label: 혼천의
+    'on': 2
+  - box:
+    - 0.53
+    - 0.3
+    - 0.73
+    - 0.98
+    label: 보현산 천문대 망원경
+    'on': 3
+  - box:
+    - 0.36
+    - 0.08
+    - 0.62
+    - 0.6
+    label: 바탕의 별자리 지도
+    'on': 4
+  narration:
+  - 진짜 비밀은 뒷면이에요. 뒤집어 볼게요.
+  - 가운데 크게 있는 건, 천문 관측 기구 혼천의.
+  - 오른쪽엔 경북 영천 보현산 천문대의 망원경.
+  - 그리고 바탕에 옅게 깔린 점과 선, 이게 별자리 지도예요.
+  chapter: 만 원의 비밀
+  bill:
+    img: bok2_10000_b
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.36
+    - 0.08
+    - 0.62
+    - 0.6
+    label: 지폐 바탕 별자리
+  real:
+    file: bn_cheonsang
+    label: 실제 (국보)
+    caption: 천상열차분야지도 각석
+    focus:
+    - 0.5
+    - 0.45
+  same: true
+  narration:
+  - 바로 천상열차분야지도. 1395년 태조가 돌에 새기게 한, 조선의 별자리 지도예요.
+  - 하늘의 별 1,400여 개를 새긴 지도가, 만 원 뒷면에 옅게 깔려 있는 거죠.
+  chapter: 만 원의 비밀
+  bill:
+    img: bok2_10000_b
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.13
+    - 0.2
+    - 0.46
+    - 1.0
+    label: 지폐 속 혼천의
+  real:
+    file: bn_honcheonui_crop
+    label: 실제 (복원품)
+    caption: 혼천의
+  same: true
+  narration:
+  - 혼천의도 실물과 나란히 놓고 보면, 고리 하나하나까지 그대로 옮겨 놨어요.
+  - 600년 전 하늘과 오늘의 망원경이, 지폐 한 장에 같이 들어 있는 거죠.
+  chapter: 만 원의 비밀
+  bill:
+    img: bok2_10000_b
+    'on': 1
+- type: accent_simple
+  chapter: 만 원의 비밀
+  palette: dinner
+  bg: a
+  ink: b
+  pop: c
+  big: '?'
+  big_size: 380
+  caption: 지폐 속 혼천의, 세종 때 것이 아니다?
+  narration:
+  - 그런데 발행 직후엔 논란도 있었어요. 지폐 속 혼천의가 세종 때 것이 아니라는 지적이었죠.
+  - 한국은행은 세종 때 실물이 남아 있지 않아서, 다른 혼천의를 넣었다고 설명했어요.
+- type: notezoom
+  mode: loupe
+  zooms:
+  - box:
+    - 0.3
+    - 0.45
+    - 0.6
+    - 0.66
+    label: 오죽헌
+    'on': 2
+  - box:
+    - 0.27
+    - 0.04
+    - 0.45
+    - 0.5
+    label: 검은 대나무, 오죽
+    'on': 3
+  narration:
+  - 다음은 오천 원. 율곡 이이가 있죠. 2006년에 지금 모습으로 바뀌었어요.
+  - 왼쪽 건물은 율곡이 태어난 강릉 오죽헌,
+  - 그 위로 솟은 대나무는, 줄기가 검은 대나무 오죽이에요.
+  chapter: 엄마와 아들
+  bill:
+    img: bok2_5000_f
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.28
+    - 0.42
+    - 0.6
+    - 0.7
+    label: 지폐 속 오죽헌
+  real:
+    file: bn_ojukheon
+    label: 실제 (강릉)
+    caption: 강릉 오죽헌
+  same: true
+  narration:
+  - 실제 오죽헌이에요. 기와 지붕 모양까지 지폐 그대로죠.
+  chapter: 엄마와 아들
+  bill:
+    img: bok2_5000_f
+    'on': 1
+- type: notezoom
+  mode: loupe
+  zooms:
+  - box:
+    - 0.14
+    - 0.4
+    - 0.48
+    - 1.0
+    label: 수박 · 맨드라미
+    'on': 2
+  - box:
+    - 0.12
+    - 0.12
+    - 0.24
+    - 0.38
+    label: 나비
+    'on': 3
+  narration:
+  - 그런데 오천 원을 뒤집으면, 율곡의 어머니가 그린 그림이 들어 있어요.
+  - 동글동글한 수박에 꽃,
+  - 위쪽엔 나비까지 날아다니죠.
+  chapter: 엄마와 아들
+  bill:
+    img: bok2_5000_b
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.14
+    - 0.4
+    - 0.48
+    - 1.0
+    label: 지폐 속 수박
+  real:
+    file: bn_cc_watermelon
+    label: 실제 그림
+    caption: 신사임당 초충도 「수박과 들쥐」
+    focus:
+    - 0.5
+    - 0.62
+  same: true
+  narration:
+  - 바로 신사임당의 초충도예요. 풀과 벌레를 섬세하게 그린 그림이죠.
+  - 실제 그림과 나란히 보면, 줄무늬 수박이 지폐 속으로 그대로 들어온 게 보이죠.
+  chapter: 엄마와 아들
+  bill:
+    img: bok2_5000_b
+    'on': 1
+- type: banknote
+  chapter: 엄마와 아들
+  mode: pair
+  notes:
+  - value: 5000
+    person: 율곡 이이
+    'on': 1
+    img: bok2_5000_f
+  - value: 50000
+    person: 신사임당
+    'on': 1
+    offset: 0.4
+    img: bok2_50000_f
+  memo: 지갑 속 엄마와 아들
+  memo_on: 3
+  narration:
+  - 그리고 2009년 6월 23일, 엄마가 직접 지폐 앞면에 나왔어요. 오만 원권이죠.
+  - 원화 지폐 최초의 여성 인물이고, 1973년 만 원 이후 36년 만에 나온 최고액권이었어요.
+  - 그래서 지갑 속엔, 엄마와 아들이 함께 들어 있는 셈이에요.
+  credit: '화폐 도안: 한국은행 (보기 · SPECIMEN 표시 이미지)'
+- type: notezoom
+  mode: loupe
+  zooms:
+  - box:
+    - 0.08
+    - 0.12
+    - 0.5
+    - 0.96
+    label: 어몽룡 「월매도」
+    'on': 2
+  - box:
+    - 0.46
+    - 0.25
+    - 0.72
+    - 0.95
+    label: 이정 「풍죽도」
+    'on': 3
+  narration:
+  - 오만 원 뒷면엔 또 다른 특징이 있어요. 그림을 세로로 그렸거든요.
+  - 달밤의 매화를 그린 어몽룡의 월매도와,
+  - 바람에 흔들리는 대나무, 이정의 풍죽도예요.
+  chapter: 엄마와 아들
+  bill:
+    img: bok2_50000_b
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.08
+    - 0.12
+    - 0.5
+    - 0.96
+    label: 지폐를 세워 보면
+    rot: 90
+  real:
+    file: bn_wolmae
+    label: 실제 그림
+    caption: 어몽룡 「월매도」
+    fit: contain
+  same: true
+  narration:
+  - 지폐를 세워서 실제 월매도와 비교해 볼까요?
+  - 부러진 굵은 줄기에서, 곧게 뻗은 매화 가지. 똑같죠.
+  chapter: 엄마와 아들
+  bill:
+    img: bok2_50000_b
+    'on': 1
+- type: notezoom
+  mode: loupe
+  zooms:
+  - box:
+    - 0.22
+    - 0.47
+    - 0.6
+    - 0.65
+    label: 성균관 명륜당
+    'on': 2
+  - box:
+    - 0.27
+    - 0.32
+    - 0.4
+    - 0.58
+    label: 매화
+    'on': 3
+  narration:
+  - 천 원엔 퇴계 이황이 있어요.
+  - 왼쪽 기와 건물은 성균관 명륜당,
+  - 그 위엔 매화가 피어 있죠. 퇴계는 매화를 유난히 아껴서, 매화 시만 100편 넘게 남겼어요.
+  chapter: 천 원의 그림
+  bill:
+    img: bok2_1000_f
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.22
+    - 0.47
+    - 0.6
+    - 0.65
+    label: 지폐 속 명륜당
+  real:
+    file: bn_myeongnyun
+    label: 실제 (서울)
+    caption: 성균관 명륜당
+  same: true
+  narration:
+  - 명륜당은 조선 최고 교육기관, 성균관의 강의실이에요. 지금도 서울 명륜동에 그대로 있죠.
+  - 퇴계는 이 성균관의 최고 책임자, 대사성을 지냈어요.
+  chapter: 천 원의 그림
+  bill:
+    img: bok2_1000_f
+    'on': 1
+- type: notezoom
+  mode: loupe
+  zooms:
+  - box:
+    - 0.12
+    - 0.15
+    - 0.72
+    - 0.92
+    label: 정선 「계상정거도」
+    'on': 1
+    offset: 1.2
+  - box:
+    - 0.43
+    - 0.38
+    - 0.66
+    - 0.72
+    label: 계곡 옆 작은 서당
+    'on': 2
+  narration:
+  - 뒷면엔 진경산수화로 유명한 겸재 정선의 그림, 계상정거도가 들어 있죠.
+  - 가운데 작은 집 보이시나요? 퇴계가 머물며 공부하던 계곡의 서당이에요.
+  chapter: 천 원의 그림
+  bill:
+    img: bok2_1000_b
+    'on': 1
+- type: notezoom
+  mode: compare
+  zooms:
+  - box:
+    - 0.43
+    - 0.38
+    - 0.66
+    - 0.72
+    label: 그림 속 서당
+  real:
+    file: bn_dosanseodang
+    label: 실제 (안동)
+    caption: 퇴계가 세운 도산서당
+  same: false
+  narration:
+  - 퇴계는 훗날 안동에 도산서당을 짓고 제자들을 가르쳤어요. 이 서당도 지금까지 그 자리에 남아 있죠.
+  chapter: 천 원의 그림
+  bill:
+    img: bok2_1000_b
+    'on': 1
+- type: press
+  chapter: 사라진 10만 원
+  bg:
+    kind: paper
+  title: 끝내 나오지 못한 십만 원
+  highlight: 십만 원
+  clips:
+  - outlet: 한국은행 보도자료
+    date: 2007.12.31
+    headline: 100,000원권 및 50,000원권 2009년 상반기 중 발행 의결
+    hl: 100,000원권
+    'on': 1
+  - outlet: 아주경제
+    date: 2008.12.17
+    headline: 정부, 10만원권 발행 무기보류 확정
+    hl: 무기보류
+    'on': 2
+  narration:
+  - 그리고 끝내 세상에 나오지 못한 지폐가 있어요. 십만 원권이에요.
+  - 2007년 말, 앞면은 백범 김구, 뒷면엔 대동여지도를 넣기로 정했죠.
+- type: sci_kinetic
+  chapter: 사라진 10만 원
+  media:
+    kind: photo
+    file: bn_daedong
+    caption: 대동여지도
+    side: right
+  items:
+  - text: '대동여지도에
+
+      독도가 없다?'
+    'on': 1
+    highlight: 독도
+  narration:
+  - 그런데 문제가 터졌어요. 뒷면에 넣을 대동여지도 목판본에, 독도가 없었던 거예요.
+  - 독도를 그려 넣자니 원본에 없는 걸 넣는다는 비판, 빼자니 독도 빠진 지도라는 비판.
+  - 결국 2009년 2월, 십만 원권 발행은 공식 중지됐어요.
+- type: accent_simple
+  chapter: 사라진 10만 원
+  palette: coffee
+  bg: a
+  ink: b
+  pop: b
+  big: 100,000
+  big_size: 180
+  caption: 끝내 나오지 못한 지폐
+  narration:
+  - 섬 하나 때문에, 지폐 한 장이 사라진 셈이죠.
+- type: banknote
+  chapter: 지폐 키 재기
+  mode: sizes
+  title: 지폐 키 재기
+  highlight: 키 재기
+  notes:
+  - value: 50000
+    'on': 1
+    img: bok2_50000_f
+  - value: 10000
+    'on': 1
+    img: bok2_10000_f
+  - value: 5000
+    'on': 1
+    img: bok2_5000_f
+  - value: 1000
+    'on': 1
+    img: bok2_1000_f
+  memo: 세로는 모두 68mm, 가로는 6mm씩
+  memo_on: 2
+  narration:
+  - 마지막으로 지폐 크기예요. 네 장 모두, 세로는 68mm로 똑같아요.
+  - 그런데 가로는 천 원 136, 오천 원 142, 만 원 148, 오만 원 154. 정확히 6mm씩 길어져요.
+  - 지갑 속에서 지폐들이, 키 순서대로 줄 서 있는 셈이죠.
+  credit: '화폐 도안: 한국은행 (오만 원권은 한국은행 제공 보기·SPECIMEN 표시 이미지)'
+- type: sci_kinetic
+  chapter: 정리
+  items:
+  - text: '다음 지폐는
+
+      뒷면부터!'
+    'on': 2
+    highlight: 뒷면부터
+  narration:
+  - 정리할게요. 만 원엔 600년 전 하늘, 오천 원과 오만 원엔 엄마와 아들, 그리고 섬 하나 때문에 사라진 십만 원.
+  - 다음에 지폐 받으시면, 뒷면부터 한 번 보세요.
+- type: sci_outro
+  heading: '새 지폐 인물,
+
+    누가 좋을까요?'
+  highlight: 누가
+  sub: 댓글로 남겨 주세요 · 다음 지식 주제도 받아요
+  subscribe_on: 2
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  signature_on: 3
+  narration:
+  - 여러분이 새 지폐 인물을 고른다면, 누구를 넣고 싶으세요?
+  - 댓글로 남겨 주시면, 그 인물 이야기도 찾아볼게요.
+  - 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+youtube:
+  title: 지폐 속 숨은 그림 | 만 원의 별자리 · 엄마와 아들 · 끝내 못 나온 10만 원
+  description: '만 원 뒷면에는 600년 전 별자리 지도가, 오천 원 뒷면에는 율곡의 어머니 신사임당의 그림이 숨어 있어요. 지폐 속 그림을 하나씩 확대해서, 실제 그림 · 건물과 나란히 비교해 봤습니다.
+
+
+    ✔ 1973년 첫 만 원 · 원래 도안은 석굴암과 불국사
+
+    ✔ 만 원 앞면 일월오봉도 · 뒷면 혼천의 · 보현산 천문대 망원경 · 천상열차분야지도
+
+    ✔ 오천 원 오죽헌 · 오죽 · 뒷면 신사임당 초충도
+
+    ✔ 오만 원 신사임당 · 뒷면 어몽룡 월매도 · 이정 풍죽도 (세로 그림)
+
+    ✔ 천 원 성균관 명륜당 · 매화 · 뒷면 정선 계상정거도
+
+    ✔ 끝내 나오지 못한 10만 원 (김구 · 대동여지도 · 독도 논란)
+
+    ✔ 지폐 가로 길이는 정확히 6mm씩
+
+
+    여러분이 새 지폐 인물을 고른다면 누구를 넣고 싶으세요? 댓글로 남겨 주세요.
+
+
+    [화폐 도안] 한국은행 (한국은행 홈페이지 현용은행권 · 은행권의 변천 이미지, 한국은행권 및 주화의 도안 이용기준 준수 · 오만 원권은 한국은행 제공 ''보기·SPECIMEN'' 표시 이미지)
+
+    [자료] 한국은행 보도자료(2007.12.31) · 아주경제(2008.12.17)
+
+    [그림 · 사진] 국립중앙박물관 신사임당 초충도 「수박과 들쥐」(공공누리 제1유형) · 어몽룡 「월매도」(퍼블릭 도메인) · 일월오봉도(퍼블릭 도메인) · 천상열차분야지도 Salamander724(퍼블릭 도메인) · 혼천의 이정우/문화체육관광부(CC BY-SA 4.0) · 오죽헌 InSapphoWeTrust(CC BY-SA 2.0, Flickr) · 성균관 명륜당 Christian Bolz(CC BY-SA 3.0) · 도산서당 Xlargebee(CC BY-SA 4.0) · 대동여지도(CC0, Rawpixel) — Wikimedia Commons 외
+
+
+    #지폐 #한국은행 #신사임당 #만원 #오천원 #지식'
+  privacy: private
+  tags:
+  - 지폐
+  - 한국은행
+  - 만원
+  - 오천원
+  - 오만원
+  - 천원
+  - 신사임당
+  - 율곡
+  - 퇴계
+  - 초충도
+  - 천상열차분야지도
+  - 혼천의
+  - 10만원권
+  - 지식
+  - 한국사

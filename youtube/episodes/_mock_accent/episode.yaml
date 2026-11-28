@@ -1,0 +1,52 @@
+title: 포인트 심플 샘플
+series_tag: 한 번에 정리
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  tone: ivory
+tts:
+  provider: gemini
+  voice: Umbriel
+scenes:
+- type: accent_simple
+  palette: neon
+  bg: a
+  ink: c
+  pop: c
+  big: 47%
+  caption: 9호선 색, 투표로 골드
+  narration:
+  - 9호선 색은 투표로 뽑았어요.
+- type: accent_simple
+  palette: dinner
+  bg: a
+  ink: b
+  pop: c
+  big: '8'
+  big_size: 380
+  line:
+  - 8
+  caption: 분홍 = 낭만과 사랑
+  narration:
+  - 8호선 분홍색엔 낭만과 사랑이라는 뜻도 붙었어요.
+- type: accent_simple
+  palette: coffee
+  bg: a
+  ink: b
+  pop: b
+  big: '1974'
+  big_size: 240
+  line:
+  - 1
+  caption: 서울 첫 지하철 1호선
+  narration:
+  - 이야기는 1974년 8월 15일에 시작돼요.
+- type: accent_simple
+  palette: notyet
+  bg: a
+  ink: b
+  pop: c
+  big: RED
+  caption: 빨간 1호선, 노선도에서 퇴장
+  narration:
+  - 그렇게 빨간 1호선은 노선도에서 사라졌죠.

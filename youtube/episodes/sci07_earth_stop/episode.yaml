@@ -1,0 +1,584 @@
+title: 지구가 딱 1초 멈추면 생기는 일 | 시속 1,330km의 비밀
+series_tag: 상상 실험
+clip_theme: science
+channel:
+  name: 악어새 지식창고
+  disclaimer_corner: ''
+  outro_fixed: 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  tone: ivory
+tts:
+  provider: gemini
+  voice: Umbriel
+  speed: 빠르게
+  tempo: 1.08
+  say:
+    2번: 이 번
+    1,330km: 천삼백삼십 킬로미터
+    1,670km: 천육백칠십 킬로미터
+    1,225km: 천이백이십오 킬로미터
+    940km: 구백사십 킬로미터
+    900km: 구백 킬로미터
+    300km: 삼백 킬로미터
+    216km: 이백십육 킬로미터
+    486km: 사백팔십육 킬로미터
+    50km: 오십 킬로미터
+    21km: 이십일 킬로미터
+    4만 km: 사만 킬로미터
+    1.7밀리초: 일쩜칠 밀리초
+    210g: 이백십 그램
+    60kg: 육십 킬로그램
+    KTX: 케이티엑스
+    1851년: 천팔백오십일 년
+    1.8마이크로초: 일쩜팔 마이크로초
+    17배: 십칠 배
+    1시간 25분: 한 시간 이십오 분
+    50억 년: 오십억 년
+bgm:
+  volume: 0.18
+  chapters:
+    인트로: tense
+    지금도 달리는 중: drive
+    멈추는 순간: tense
+    계속 멈춰 있다면: drive
+    진짜 지구는: hope
+    엔딩: hope
+chapter_titles:
+  인트로: 지금 이 순간에도 시속 1,330km · 퀴즈 1
+  지금도 달리는 중: 적도 1,670km · 서울 1,330km · 소리보다 빠르다
+  멈추는 순간: 동쪽으로 날아가는 모든 것 · 바람 · 바다
+  계속 멈춰 있다면: 퀴즈 2 · 하루가 1년 · 몸무게
+  진짜 지구는: 하루는 점점 길어지는 중
+  엔딩: 멈추기 전에 태양이 먼저
+youtube:
+  title: 지구가 딱 1초 멈추면 생기는 일 | 시속 1,330km의 비밀
+  description: '지금 이 순간에도 서울은 시속 1,330km로 달리고 있어요. 지구가 갑자기 딱 1초만 멈추면 무슨 일이 벌어질까?
+
+
+    ✔ 퀴즈 2개 · 3초 안에 맞혀 보세요
+
+    ✔ 적도 1,670km · 서울 1,330km · 북극점 0km
+
+    ✔ 멈추는 순간: 동쪽으로 날아가는 모든 것 · 토네이도의 3배 바람 · 해일
+
+    ✔ 계속 멈춰 있다면: 하루 = 1년 · 바다가 남극·북극으로 · 몸무게 +210g
+
+    ✔ 진짜 지구는 지금도 느려지는 중 · 태양이 먼저 꺼진다
+
+
+    참고: NASA · 기상청(태풍 매미 2003) · NOAA · Winter et al. (2020, Paleoceanography and Paleoclimatology) · Stephenson et al. (2016, Proc. R. Soc. A)
+
+    사진·자료: NASA(Earth Observatory · SDO · Apollo 17) · 위키미디어 공용(각 출처 화면 표기) · 가쓰시카 호쿠사이 〈가나가와 해변의 높은 파도〉(퍼블릭 도메인)'
+  tags:
+  - 지구
+  - 상상실험
+  - 과학
+  - 지구자전
+  - 지구가멈추면
+  - 원심력
+  - 지식
+  - 악어새지식창고
+clips:
+- start: 0
+  end: 22.6
+  hook: '지구가 1초 멈추면
+
+    우리는?'
+  hl: 1초
+- start: 52.8
+  end: 65.4
+  hook: '서울은 시속
+
+    1,330km로 달리는 중'
+  hl: 1,330km
+- start: 65.6
+  end: 84.8
+  hook: '소리보다 빠른데
+
+    왜 못 느낄까?'
+  hl: 못 느낄까
+- start: 84.9
+  end: 106.6
+  hook: '지구 급정거
+
+    총알처럼 날아간다'
+  hl: 급정거
+- start: 106.8
+  end: 129.2
+  hook: '토네이도 3배
+
+    바람이 분다'
+  hl: 3배
+- start: 139.8
+  end: 168.5
+  hook: '멈춘 지구에서
+
+    해는 1년에 몇 번?'
+  hl: 몇 번
+- start: 185.9
+  end: 196.0
+  hook: '지구가 멈추면
+
+    몸무게가 는다'
+  hl: 몸무게
+- start: 196.2
+  end: 213.9
+  hook: '17배 빨리 돌면
+
+    몸무게 0'
+  hl: 몸무게 0
+- start: 253.7
+  end: 274.0
+  hook: '지구가 멈추기 전에
+
+    태양이 먼저'
+  hl: 태양
+scenes:
+- type: hf
+  template: globe3d
+  chapter: 인트로
+  theme: space
+  title: 지금 이 순간에도 서울은
+  tag: 시속 1,330km
+  lon0: 116
+  spin: 4
+  title_on:
+  - 1
+  - 0.2
+  tag_on:
+  - 1
+  - 1.6
+  narration:
+  - 지금 이 순간에도 서울은, 시속 1,330km로 달리고 있어요.
+  - 의자에 가만히 앉아 있는 여러분도요. | 소리보다 빠르게요.
+  tilt_x: 0.6
+  cam_y: 0.0
+  zoom: 0.82
+- type: hf
+  template: quiz
+  chapter: 인트로
+  theme: space
+  kicker: 퀴즈 1
+  question: 지구가 딱 1초 멈추면, 우리는?
+  highlight: 1초
+  choices:
+  - 그대로 있다
+  - 동쪽으로 날아간다
+  - 하늘로 뜬다
+  answer: 1
+  hint: 힌트 · 버스가 급정거하면?
+  countdown_on: 2
+  beat_line: 2
+  reveal_on: 3
+  narration:
+  - 그럼 지구가 갑자기, 딱 1초만 멈추면 어떻게 될까요? 그 순간 우리는?
+  - 3초 드릴게요. | 셋. | 둘. | 하나.
+  - 정답은 2번. 동쪽으로 날아가요. | 그것도 총알처럼요.
+- type: sci_title
+  chapter: 인트로
+  kicker: 악어새 지식창고 · 상상 실험
+  title: '지구가 딱 1초
+
+    멈추면'
+  highlight: 1초
+  subtitle: 시속 1,330km · 바람 · 바다 · 하루가 1년이 되는 세상
+  narration:
+  - 오늘은 지구를 딱 1초만 멈춰 볼게요. 무슨 일이 벌어지는지, 순서대로 따라가 봐요.
+  tone: night
+- type: sci_kinetic
+  chapter: 지금도 달리는 중
+  tone: night
+  media:
+    kind: photo
+    file: sn_foucault
+    caption: 파리 팡테옹의 푸코 진자
+    side: right
+  items:
+  - text: '1851
+
+      푸코의 진자'
+    highlight: '1851'
+    'on': 1
+  - text: '돈 건 추가 아니라
+
+      지구'
+    highlight: 지구
+    'on': 2
+  narration:
+  - 지구가 돈다는 걸 눈으로 처음 보여 준 건 1851년, 프랑스의 푸코예요.
+  - 커다란 추를 매달아 흔들었더니, 몇 시간 뒤 흔들리는 방향이 조금씩 돌아가 있었어요. | 추가 아니라, 바닥이, 지구가 돌고 있었던 거죠.
+- type: hf
+  template: stat
+  chapter: 지금도 달리는 중
+  theme: space
+  kicker: 적도에서 지구가 도는 속도
+  value: 1670
+  suffix: km/h
+  sub: 하루에 한 바퀴, 둘레 4만 km
+  sub_hl: 4만 km
+  'on': 2
+  sub_on: 1
+  narration:
+  - 지구 둘레는 약 4만 km예요. 이걸 하루 24시간에 한 바퀴 돌아요.
+  - 그러니까 적도에 사는 사람은, 시속 1,670km로 돌고 있는 셈이에요.
+- type: hf
+  template: latitude
+  chapter: 지금도 달리는 중
+  theme: space
+  title: 북쪽으로 갈수록 느려진다
+  title_hl: 느려진다
+  rows:
+  - label: 적도
+    lat: 0
+    kmh: 1670
+    'on': 1
+    offset: 0.6
+  - label: 서울
+    lat: 37.6
+    kmh: 1330
+    hl: true
+    'on': 2
+  - label: 모스크바
+    lat: 55.75
+    kmh: 940
+    'on': 2
+    offset: 2.2
+  - label: 북극점
+    lat: 88
+    kmh: 0
+    'on': 3
+  narration:
+  - 그런데 북쪽으로 갈수록 도는 원이 작아져요. 그래서 속도도 느려져요.
+  - 서울은 시속 1,330km, 모스크바는 940km.
+  - 북극점은 0이에요. 그 자리에서 빙글빙글 돌기만 하죠.
+- type: speedrace
+  chapter: 지금도 달리는 중
+  title: 서울의 나 vs 가장 빠른 것들
+  highlight: 서울의 나
+  me_pill: 소리보다 빠르다
+  lanes:
+  - label: KTX
+    kind: train
+    kmh: 300
+    'on': 1
+  - label: 여객기
+    kind: plane
+    kmh: 900
+    'on': 1
+    offset: 0.6
+  - label: 서울의 나
+    kind: me
+    kmh: 1330
+    'on': 2
+  narration:
+  - KTX가 시속 300km, 여객기가 900km예요.
+  - 서울에 앉아 있는 우리는 1,330km. 소리의 속도인 1,225km보다도 빨라요.
+  - 그런데 왜 아무것도 못 느낄까요? 땅도, 공기도, 우리도 다 같이 같은 속도로 달리고 있어서예요. | 비행기 안에서 커피가 안 쏟아지는 것처럼요.
+- type: hf
+  template: impact
+  chapter: 멈추는 순간
+  theme: space
+  title: 딱 1초, 멈춘다면
+  title_hl: 1초
+  caption: 서울의 자전 속도
+  fly: 그 위의 모든 건 계속 1,330km/h →
+  at_stop:
+  - 2
+  - 0.15
+  at_fly_at:
+  - 2
+  - 1.4
+  narration:
+  - 자, 이제 지구를 멈춰 볼게요.
+  - 쾅. | 땅은 멈췄어요. 그런데 그 위에 있는 건, 아무것도 멈추지 않아요.
+- type: hf
+  template: horizon
+  chapter: 멈추는 순간
+  theme: space
+  at_a:
+  - 1
+  - 1.6
+  at_b:
+  - 2
+  - 0.2
+  at_c:
+  - 3
+  - 0.2
+  narration:
+  - 버스가 시속 50km로 달리다 급정거하면 몸이 앞으로 확 쏠리죠?
+  - 지금은 그 속도가 시속 1,330km예요.
+  - 땅에 붙어 있지 않은 모든 것이 동쪽으로, 총알처럼 날아가요. | 사람도, 자동차도, 나무도요.
+- type: hf
+  template: bars
+  chapter: 멈추는 순간
+  theme: space
+  title: 더 무서운 건 바람
+  title_hl: 바람
+  vmax: 1400
+  rows:
+  - label: 태풍 매미
+    value: 216
+    text: 216km
+    'on': 2
+  - label: 최강 토네이도
+    value: 486
+    text: 486km
+    'on': 2
+    offset: 2.2
+  - label: 멈춘 지구의 바람
+    value: 1330
+    text: 1,330km
+    hl: true
+    'on': 3
+  narration:
+  - 더 무서운 건 공기예요. 하늘의 공기도 멈추지 않고 계속 달리거든요.
+  - 2003년 우리나라를 덮친 태풍 매미의 순간 최고 풍속이 시속 216km, 역사상 가장 강한 토네이도가 시속 486km였어요.
+  - 멈춘 지구에는 그 세 배 가까운 바람이, 지구 전체에 한꺼번에 불어요. | 건물도 숲도 남아나지 않아요.
+- type: hf
+  template: artwave
+  chapter: 멈추는 순간
+  theme: space
+  assets:
+  - sn_greatwave.jpg
+  - sn_greatwave_cut.png
+  at_a:
+  - 1
+  - 0.4
+  at_b:
+  - 1
+  - 1.8
+  at_c:
+  - 2
+  - 0.0
+  narration:
+  - 바다도 마찬가지예요. 바닷물이 통째로 동쪽으로 쏟아지면서, 대륙의 동쪽 해안을 거대한 해일이 덮쳐요.
+  - 딱 1초 멈췄을 뿐인데, 지구 표면은 완전히 다른 모습이 돼요.
+- type: hf
+  template: quiz
+  chapter: 계속 멈춰 있다면
+  theme: space
+  kicker: 퀴즈 2
+  question: 멈춘 지구에서 해는 1년에 몇 번 뜰까?
+  highlight: 몇 번
+  choices:
+  - 365번
+  - 1번
+  - 0번
+  answer: 1
+  hint: 힌트 · 지구는 여전히 태양 주위를 돌아요
+  countdown_on: 2
+  beat_line: 2
+  reveal_on: 3
+  narration:
+  - 그럼 지구가 그대로 계속 멈춰 있으면요? 해는 1년에 몇 번 뜰까요?
+  - 3초 드릴게요. | 셋. | 둘. | 하나.
+  - 정답은 2번, 딱 한 번이에요.
+- type: hf
+  template: orbit
+  chapter: 계속 멈춰 있다면
+  theme: space
+  title: 하루 = 1년
+  at_orbit:
+  - 2
+  - 0.0
+  at_orbit_end:
+  - 3
+  - 0.0
+  at_hotcold:
+  - 3
+  - 0.3
+  narration:
+  - 지구는 멈춰도 태양 주위는 계속 돌거든요. 그래서 하루가 1년이 돼요.
+  - 6개월은 계속 낮, 6개월은 계속 밤이에요.
+  - 낮인 쪽은 뜨겁게 타들어 가고, 밤인 쪽은 꽁꽁 얼어붙어요. | 사람이 살 수 있는 곳은 그 경계의 좁은 띠뿐이에요.
+- type: hf
+  template: photo25d
+  chapter: 계속 멈춰 있다면
+  theme: space
+  shots:
+  - file: sn_bluemarble
+    at:
+    - 1
+    - 0
+    zoom: 0.03
+    dx: 0
+    dy: 0
+    dark: 0.0
+    contain: true
+    size: 860
+    cy: 500
+    rot: 3
+  svg: <ellipse id="bo" cx="960" cy="500" rx="470" ry="417" fill="none" stroke="#FFC93C" stroke-width="6" stroke-dasharray="16 12" opacity="0"/><line id="eq" x1="500" y1="500" x2="1420" y2="500" stroke="#FFC93C" stroke-width="4" stroke-dasharray="12 10" opacity="0"/><ellipse id="pn" cx="960" cy="125" rx="210" ry="50" fill="#3D8BFF" opacity="0"/><ellipse id="ps" cx="960" cy="875" rx="210" ry="50" fill="#3D8BFF" opacity="0"/><path id="an" d="M 1360 470 Q 1340 250 1140 150" fill="none" stroke="#7FC8FF" stroke-width="10" opacity="0"/><path id="as" d="M 1360 530 Q 1340 750 1140 850" fill="none" stroke="#7FC8FF" stroke-width="10" opacity="0"/><rect id="band" x="548" y="465" width="824" height="70" rx="35" fill="#C9965A" opacity="0"/>
+  svg_anim: 'tl.fromTo("#bo",{opacity:0,attr:{rx:417}},{opacity:1,attr:{rx:470},duration:1,ease:"expo.out"},T_BULGE);
+
+    tl.fromTo("#eq",{opacity:0},{opacity:1,duration:.4},T_BULGE+0.2);
+
+    tl.to("#bo",{attr:{rx:417},opacity:.35,duration:1.2,ease:"power2.inOut"},T_FLOW);
+
+    tl.fromTo(["#an","#as"],{opacity:0,strokeDasharray:"0 600"},{opacity:1,strokeDasharray:"600 0",duration:.9,ease:"power2.out"},T_FLOW+0.2);
+
+    tl.fromTo(["#pn","#ps"],{opacity:0,attr:{ry:0}},{opacity:.75,attr:{ry:50},duration:1,ease:"expo.out"},T_FLOW+0.8);
+
+    tl.fromTo("#band",{opacity:0,scaleX:.2,transformOrigin:"960px 500px"},{opacity:.85,scaleX:1,duration:.7,ease:"expo.out"},T_LAND);
+
+    '
+  at_bulge:
+  - 1
+  - 0.3
+  at_flow:
+  - 2
+  - 0.3
+  at_land:
+  - 3
+  - 0.3
+  chips:
+  - text: 적도 21km 볼록
+    at:
+    - 1
+    - 0.8
+    x: 70
+    y: 420
+  - text: (과장해서 표현)
+    at:
+    - 1
+    - 1.0
+    x: 70
+    y: 500
+  - text: 바다 → 북극 · 남극
+    at:
+    - 2
+    - 0.8
+    x: 1440
+    y: 150
+  - text: 적도엔 거대한 대륙
+    at:
+    - 3
+    - 0.6
+    x: 1450
+    y: 560
+  narration:
+  - 지금 지구는 빨리 돌아서, 적도가 극지방보다 21km쯤 볼록 튀어나와 있어요.
+  - 회전이 멈추면 이 볼록함을 붙잡던 힘이 사라져요. 그래서 바닷물이 남극과 북극 쪽으로 흘러가요.
+  - 결국 바다는 위아래 두 개로 갈라지고, 적도엔 지구를 한 바퀴 두르는 거대한 대륙이 드러난다고 해요.
+- type: hf
+  template: product
+  chapter: 계속 멈춰 있다면
+  theme: space
+  assets:
+  - sn_scale_cut.png
+  kicker: 적도에 사는 60kg인 사람
+  at_a:
+  - 1
+  - 1.4
+  at_b:
+  - 2
+  - 0.1
+  narration:
+  - 재밌는 것도 하나 있어요. 적도에 사는 60kg인 사람은, 몸무게가 210g쯤 늘어나요.
+  - 지구가 돌면서 바깥으로 밀어내던 힘, 원심력이 사라지거든요.
+- type: hf
+  template: equation
+  chapter: 계속 멈춰 있다면
+  theme: space
+  kicker: 반대로, 더 빨리 돌면?
+  question: 적도에서 둥둥 뜨려면?
+  q_hl: 둥둥
+  answer: 1시간 25분
+  op: ÷
+  parts:
+  - text: 하루 24시간
+    key: 24시간
+  - text: 17배
+    key: '17'
+  signs:
+  - 적도 위 무중력
+  - 인공위성처럼
+  a0:
+  - 1
+  - 0.1
+  a1:
+  - 2
+  - 0.2
+  a2:
+  - 2
+  - 1.8
+  a3:
+  - 3
+  - 0.2
+  narration:
+  - 그럼 반대로, 지구가 더 빨리 돌면 어떻게 될까요?
+  - 지금보다 17배 빨리 돌면, 하루가 1시간 25분이 돼요. | 그러면 적도에 서 있는 사람은 바깥으로 밀어내는 힘이 중력과 똑같아져서,
+  - 몸무게가 0이 돼요. 땅 위에 서 있는데도 인공위성처럼 둥둥 떠다니는 거죠.
+- type: hf
+  template: daylength
+  chapter: 진짜 지구는
+  theme: space
+  title: 지구는 진짜로 느려지는 중
+  title_hl: 느려지는 중
+  at_then:
+  - 2
+  - 0.1
+  at_now:
+  - 3
+  - 0.0
+  at_future:
+  - 3
+  - 1.6
+  narration:
+  - 그런데 사실, 지구는 진짜로 조금씩 느려지고 있어요. 달이 바닷물을 잡아당기면서 브레이크를 걸거든요.
+  - 공룡이 살던 7천만 년 전엔 하루가 23시간 30분이었어요.
+  - 지금도 100년마다 하루가 1.7밀리초씩 길어지고 있어요. | 눈 한 번 깜빡이는 시간의 백분의 일이요.
+- type: cheatsheet
+  chapter: 진짜 지구는
+  title: 지구의 하루를 바꾸는 것들
+  highlight: 하루
+  rows:
+  - h: 月
+    ko: 달의 브레이크
+    ex: 100년에 1.7밀리초 길어짐
+    'on': 1
+  - h: 震
+    ko: 2011 동일본 대지진
+    ex: 하루가 1.8마이크로초 짧아짐
+    'on': 2
+  - h: 氷
+    ko: 녹는 빙하
+    ex: 물이 적도로 퍼지며 하루가 길어짐
+    'on': 3
+  narration:
+  - 하루의 길이를 바꾸는 범인은 셋이에요. 첫째는 달, 지금 본 브레이크예요.
+  - 둘째는 지진. 2011년 동일본 대지진 때 지구 질량이 살짝 안쪽으로 몰리면서, 하루가 1.8마이크로초 짧아졌어요.
+  - 셋째는 녹는 빙하예요. 극지방 얼음이 녹아 물이 적도 쪽으로 퍼지면, 피겨 선수가 팔을 벌릴 때처럼 회전이 느려져요.
+  tone: night
+- type: hf
+  template: sunend
+  chapter: 엔딩
+  theme: space
+  assets:
+  - sn_sun_cut.png
+  - sn_earth_cut.png
+  at_a:
+  - 1
+  - 0.3
+  at_b:
+  - 2
+  - 0.0
+  at_c:
+  - 3
+  - 0.0
+  narration:
+  - 그럼 언젠가 지구가 완전히 멈출까요? 이 속도라면 걱정 안 하셔도 돼요.
+  - 약 50억 년 뒤, 태양은 지금보다 훨씬 크게 부풀어 올라요.
+  - 그리고 작게 쪼그라들며 식어 가요. 지구가 멈추기 한참 전에, 태양이 먼저 수명을 다하는 거죠. | 오늘도 우리는 시속 1,330km로, 안전하게 달리고 있어요.
+- type: sci_outro
+  chapter: 엔딩
+  heading: '여러분이라면
+
+    멈춘 지구 어디에 살래요?'
+  highlight: 어디에
+  sub: 낮 쪽 · 밤 쪽 · 경계의 띠 · 댓글로 알려 주세요
+  signature: 세상의 지식, 악어새가 쏙쏙 골라 드릴게요.
+  narration:
+  - 여러분이라면 멈춘 지구의 어디에 살래요? 낮 쪽, 밤 쪽, 아니면 경계의 띠? 댓글로 알려 주세요.
+  - 구독과 좋아요는 다음 지식 제작에 큰 힘이 됩니다.
+  tone: night

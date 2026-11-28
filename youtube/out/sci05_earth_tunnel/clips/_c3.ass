@@ -1,0 +1,19 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
+Style: S,Pretendard Black,66,&H00FFFFFF,&H00000000,&H80000000,1,7,2,2,50,50,590
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.18,0:00:03.14,S,그럼 반대편도 땅인 곳은\N없을까요? 있어요.
+Dialogue: 0,0:00:03.14,0:00:05.75,S,스페인 마드리드에서\N똑바로 뚫으면,
+Dialogue: 0,0:00:05.75,0:00:08.01,S,뉴질랜드 웰링턴 근처로 나와요.
+Dialogue: 0,0:00:08.67,0:00:11.88,S,중국 베이징에서 뚫으면,\N아르헨티나로 나오고요.
+Dialogue: 0,0:00:11.88,0:00:13.81,S,하지만 이런 짝꿍은 드물어요.
+Dialogue: 0,0:00:13.81,0:00:16.22,S,땅 100곳 중에\N10곳 남짓이에요.
+Dialogue: 0,0:00:16.22,0:00:18.15,S,지구는 대부분이 바다거든요.
+Dialogue: 0,0:00:18.80,0:00:19.90,S,자, 드릴로 구멍을 뚫고!
