@@ -44,3 +44,7 @@
 - 퀴즈: 지식채널(종이 카드 · 원형 타이머)과 다르게 — 주식채널은 **호가창 퀴즈(quizorder)**: 주문 줄 · '체결까지 3' · 정답 '체결' 도장
 - 주식 HyperFrames 세트 `engine/hfstock.py`: tickerdrop · brandvs · quizorder · journey · gap · road · race · mirror (ep027 첫 사용)
 - 사용 기록(겹침 확인용): ep027 = hf[tickerdrop · brandvs · quizorder · journey · gap · stat · road · race · bars · mirror · headline] + portrait · flow · outro
+
+## 퀴즈 음성 규칙 (2026-11-28 사용자 · 주식채널)
+- **"셋 · 둘 · 하나"를 음성으로 읽지 않는다.** 화면에만 3 · 2 · 1이 조용히(틱 소리만) 나가고, 음성은 질문 → (3초 침묵) → "정답은 ~"부터.
+- 대본: 퀴즈 장면 narration = [질문, 정답 줄] 두 줄 · `silent_countdown: 3` (엔진이 질문과 정답 사이에 3초 침묵을 넣고 화면 숫자를 그 3초에 맞춤)
