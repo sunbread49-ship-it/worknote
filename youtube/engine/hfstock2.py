@@ -203,3 +203,70 @@ TEMPLATES.update({"bankpush": t_bankpush, "divcal": t_divcal, "divbars": t_divba
 from .hfstock import SFX  # noqa: E402
 SFX.update({"bankpush": [("a", "pop", 0.6)], "divcal": [], "divbars": [], "tower": [("m", "boom", 0.5)],
             "meltdown": [("b", "whoosh", 0.5), ("c", "boom", 0.6)], "teaser": [("b", "riser", 0.5)]})
+
+
+# ── verdict (11/28 사용자: "삼성으로 배당 파이어는 아니다"를 분명히) ─────────────
+def t_verdict(v, th, dur):
+    """왼쪽 로고 패 + 넣은 돈 → 화살표 → 오른쪽 한 달 배당이 굴러 올라감 → 가운데 큰 판정 도장 · 아래 한 줄"""
+    A, B, C = v.get("a", 0.4), v.get("b", 2.5), v.get("c", 5.0)
+    from .hfstock import _plq, PLQ_CSS
+    body = f"""<div id="kk" class="abs">{_esc(v.get('kicker', ''))}</div>
+<div id="lf" class="abs">{_plq(v['logo'], 360, 130)}<div class="iv">{_esc(v.get('invest', ''))}</div></div>
+<div id="ar" class="abs">→</div>
+<div id="rt" class="abs"><div class="rl">{_esc(v.get('right_label', ''))}</div><div class="rv"><span id="mv">0</span>{_esc(v.get('unit', '원'))}</div><div class="rs">{_esc(v.get('right_sub', ''))}</div></div>
+<div id="st" class="abs">{_esc(v.get('stamp', ''))}</div>
+<div id="bt" class="abs">{_hl(v.get('bottom', ''), v.get('bottom_hl'), 'mb')}</div>"""
+    css = f"""{PLQ_CSS}
+#kk{{left:0;right:0;top:150px;text-align:center;font-family:Pretendard;font-size:52px;color:#C9D2E8}}
+#lf{{left:200px;top:330px;text-align:center}} .iv{{margin-top:20px;font-family:Pretendard;font-size:72px;color:#fff}}
+#ar{{left:700px;top:360px;font-family:Pretendard;font-size:140px;color:{GOLD}}}
+#rt{{left:930px;top:300px;width:820px;text-align:center;font-family:Pretendard}} .rl{{font-size:44px;color:#C9D2E8}} .rv{{font-size:170px;color:{GREEN};line-height:1.1}} .rs{{font-size:36px;color:{th['sub']}}}
+#st{{left:0;right:0;margin:0 auto;width:fit-content;top:640px;font-family:Pretendard;font-size:110px;color:{RED};border:12px solid {RED};border-radius:28px;padding:6px 40px;background:#0E1630;opacity:0}}
+#bt{{left:0;right:0;top:860px;text-align:center;font-family:Pretendard;font-size:56px;color:#fff;opacity:0}} #bt span{{display:inline-block;margin:0 .1em}} #bt .hlw{{color:{GOLD}}}"""
+    js = _fmt_js(0) + f"""tl.fromTo("#kk",{{opacity:0,y:-20}},{{opacity:1,y:0,duration:.4,ease:"expo.out"}},0.05);
+tl.fromTo("#lf",{{opacity:0,x:-60}},{{opacity:1,x:0,duration:.5,ease:"expo.out"}},{A:.3f});
+tl.fromTo("#ar",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.4,ease:"expo.out"}},{A + 0.6:.3f});
+tl.fromTo("#rt",{{opacity:0}},{{opacity:1,duration:.3}},{A + 0.9:.3f});
+const M={{v:0}}; tl.to(M,{{v:{float(v['value'])},duration:1.3,ease:"power3.out",onUpdate:()=>{{document.getElementById('mv').textContent=fmt(M.v);}}}},{A + 0.9:.3f});
+tl.fromTo("#st",{{opacity:0,scale:2.6,rotation:16}},{{opacity:1,scale:1,rotation:-6,duration:.35,ease:"power4.out"}},{B:.3f});
+tl.to(["#lf","#ar","#rt"],{{opacity:.55,duration:.3}},{B:.3f});
+tl.set("#bt",{{opacity:1}},{C:.3f});
+tl.fromTo("#bt span",{{opacity:0,filter:"blur(8px)"}},{{opacity:1,filter:"blur(0px)",duration:.2,stagger:.06}},{C:.3f});
+tl.fromTo("#mb",{{scaleX:0}},{{scaleX:1,duration:.45,ease:"expo.out"}},{C + 0.5:.3f});
+"""
+    return body, css, js
+
+
+# ── nextbonus (주주 훅: 1월에 또 올까?) ─────────────────────────────
+def t_nextbonus(v, th, dur):
+    """찢는 달력 한 장(2027년 1월) + 봉투(?) → 오른쪽에 '그날 확인할 것' 줄이 하나씩"""
+    rows = v.get("rows", [])
+    items = "".join(f'<div id="r{i}" class="it"><b>{i + 1}</b><span>{_esc(r["text"])}</span></div>' for i, r in enumerate(rows))
+    body = f"""<div id="ttl" class="abs" style="left:0;right:0;top:140px;text-align:center;font-size:72px;font-family:Pretendard">{_hl(v.get('title', ''), v.get('title_hl'), 'mk')}</div>
+<div id="cal" class="abs"><div class="ch">{_esc(v.get('cal_top', '2027'))}</div><div class="cm">{_esc(v.get('cal_month', '1월'))}</div><div class="cs">{_esc(v.get('cal_sub', '이사회 · 4분기 실적'))}</div></div>
+<div id="env" class="abs"><div class="flap"></div><div class="q">?</div></div>
+<div id="lst" class="abs">{items}</div>
+<div id="nt" class="abs">{_esc(v.get('note', ''))}</div>"""
+    css = f"""#ttl span{{display:inline-block;margin:0 .12em}}
+#cal{{left:200px;top:300px;width:420px;height:470px;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.5);text-align:center;font-family:Pretendard;color:#111}}
+.ch{{background:{RED};color:#fff;font-size:56px;padding:18px 0}} .cm{{font-size:200px;line-height:1.15}} .cs{{font-size:34px;color:#555}}
+#env{{left:500px;top:640px;width:260px;height:170px;background:{GOLD};border-radius:14px;box-shadow:0 20px 40px rgba(0,0,0,.5)}}
+.flap{{position:absolute;left:0;top:0;width:0;height:0;border-left:130px solid transparent;border-right:130px solid transparent;border-top:95px solid #D9A520}}
+.q{{position:absolute;left:0;right:0;top:40px;text-align:center;font-family:Pretendard;font-size:110px;color:#111}}
+#lst{{left:860px;top:330px;width:900px}} .it{{display:flex;align-items:center;gap:26px;background:#141E3C;border-radius:18px;padding:22px 28px;margin-bottom:26px;opacity:0}}
+.it b{{flex:none;width:70px;height:70px;border-radius:50%;background:{GOLD};color:#111;font-family:Pretendard;font-size:44px;display:flex;align-items:center;justify-content:center}}
+.it span{{font-family:Pretendard;font-size:46px;color:#fff;line-height:1.25}}
+#nt{{left:860px;top:860px;width:900px;font-family:Pretendard;font-size:34px;color:{th['sub']};opacity:0}}"""
+    js = _ttl(v)[2].replace("#ttl span", "#ttl span") + f"""tl.fromTo("#cal",{{opacity:0,y:-80,rotation:-6}},{{opacity:1,y:0,rotation:-2,duration:.6,ease:"back.out(1.6)"}},0.3);
+tl.fromTo("#env",{{opacity:0,y:60,rotation:10}},{{opacity:1,y:0,rotation:6,duration:.6,ease:"back.out(1.8)"}},0.8);
+tl.fromTo("#env .q",{{scale:1}},{{scale:1.25,duration:.25,yoyo:true,repeat:1,ease:"power2.out"}},1.5);
+"""
+    for i, r in enumerate(v.get("rows", [])):
+        js += f'tl.fromTo("#r{i}",{{opacity:0,x:60}},{{opacity:1,x:0,duration:.45,ease:"expo.out"}},{r["T"]:.3f});\n'
+    if v.get("n"):
+        js += f'tl.fromTo("#nt",{{opacity:0}},{{opacity:1,duration:.4}},{v["n"]:.3f});\n'
+    return body, css, js
+
+
+TEMPLATES.update({"verdict": t_verdict, "nextbonus": t_nextbonus})
+SFX.update({"verdict": [("b", "boom", 0.7), ("c", "whoosh", 0.4)], "nextbonus": []})
