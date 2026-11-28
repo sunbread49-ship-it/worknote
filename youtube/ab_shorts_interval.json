@@ -1,0 +1,108 @@
+{
+ "week1_30min_2026-11-21_27": {
+  "ep021_ent_ceo_pay": {
+   "id": "fPhIarxaCjA",
+   "publish": "2026-11-21T14:05",
+   "views": 103,
+   "from_shorts_link": 9,
+   "sources": {
+    "NO_LINK_OTHER": 1,
+    "SUBSCRIBER": 71,
+    "YT_SEARCH": 14,
+    "RELATED_VIDEO": 7,
+    "EXT_URL": 1,
+    "SHORTS_CONTENT_LINKS": 9
+   }
+  },
+  "ep022_chaebol_dividend": {
+   "id": "Gn5jD61JbZo",
+   "publish": "2026-11-22T15:50",
+   "views": 700,
+   "from_shorts_link": 1,
+   "sources": {
+    "NO_LINK_OTHER": 2,
+    "SUBSCRIBER": 681,
+    "YT_CHANNEL": 4,
+    "YT_SEARCH": 12,
+    "SHORTS_CONTENT_LINKS": 1
+   }
+  },
+  "ep023_nasdaq_minus20": {
+   "id": "mKgNwz--Qe8",
+   "publish": "2026-11-23T15:50",
+   "views": 8712,
+   "from_shorts_link": 6,
+   "sources": {
+    "NO_LINK_OTHER": 53,
+    "SUBSCRIBER": 8552,
+    "YT_CHANNEL": 9,
+    "YT_SEARCH": 14,
+    "RELATED_VIDEO": 59,
+    "YT_OTHER_PAGE": 11,
+    "EXT_URL": 6,
+    "PLAYLIST": 2,
+    "SHORTS_CONTENT_LINKS": 6
+   }
+  },
+  "ep024_google": {
+   "id": "Wj-MzTkDgf4",
+   "publish": "2026-11-25T15:50",
+   "views": 52,
+   "from_shorts_link": 2,
+   "sources": {
+    "NO_LINK_OTHER": 0,
+    "SUBSCRIBER": 42,
+    "YT_CHANNEL": 1,
+    "RELATED_VIDEO": 7,
+    "SHORTS_CONTENT_LINKS": 2
+   }
+  },
+  "ep025_kospi_fund": {
+   "id": "P4gT3Rd0npk",
+   "publish": "2026-11-26T15:50",
+   "views": 1,
+   "from_shorts_link": 0,
+   "sources": {
+    "SUBSCRIBER": 1
+   }
+  },
+  "sci02_subway_colors": {
+   "id": "BjP5snu6Ia8",
+   "publish": "2026-11-22T15:50",
+   "views": 290,
+   "from_shorts_link": 6,
+   "sources": {
+    "NO_LINK_OTHER": 0,
+    "SUBSCRIBER": 268,
+    "YT_CHANNEL": 1,
+    "YT_SEARCH": 6,
+    "RELATED_VIDEO": 9,
+    "SHORTS_CONTENT_LINKS": 6
+   }
+  },
+  "sci03_banknotes": {
+   "id": "_5eUELO1SVE",
+   "publish": "2026-11-23T15:50",
+   "views": 30,
+   "from_shorts_link": 0,
+   "sources": {
+    "SUBSCRIBER": 22,
+    "YT_CHANNEL": 1,
+    "RELATED_VIDEO": 7
+   }
+  },
+  "sci04_mbti": {
+   "id": "0VgPvPFeD7k",
+   "publish": "2026-11-25T00:10",
+   "views": 87,
+   "from_shorts_link": 0,
+   "sources": {
+    "NO_LINK_OTHER": 0,
+    "SUBSCRIBER": 76,
+    "YT_CHANNEL": 1,
+    "RELATED_VIDEO": 9,
+    "YT_OTHER_PAGE": 1
+   }
+  }
+ }
+}
